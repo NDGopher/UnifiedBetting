@@ -1,0 +1,8 @@
+{
+  "chrome_user_data_dir": "C:/Users/youruser/AppData/Local/Google/Chrome/User Data",
+  "chrome_profile_dir": "Default",
+  "timeouts": {
+    "page_load": 30
+  }
+}
+

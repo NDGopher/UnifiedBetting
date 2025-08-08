@@ -1,0 +1,36 @@
+{
+  "betbck": {
+    "url": "https://betbck.com/Qubic/livebettinggs.php",
+    "iframe_selector": "iframe#frame1",
+    "event_row_selector": "div.event, li.event, .event-row",
+    "home_team_selector": ".team.home, .home .team-name",
+    "away_team_selector": ".team.away, .away .team-name",
+    "market_container_selector": ".market, .selection, .price",
+    "price_selector": ".price, .odd, .coefficient"
+  },
+  "pto": {
+    "url": "https://picktheodds.app/en/live",
+    "event_row_selector": ".MuiBox-root.css-1t6isfq, .game-row",
+    "team_title_selector": "span[title]",
+    "home_team_selector": "",
+    "away_team_selector": "",
+    "market_container_selector": "",
+    "price_selector": "",
+    "book_cell_selector": ".MuiBox-root.css-fa7ybv, .MuiBox-root.css-1difu8q, .MuiBox-root.css-1au0dro",
+    "book_icon_selector": "img[alt], [aria-label] img, [aria-label]",
+    "book_odds_value_selector": ".MuiTypography-oddsRobotoMono"
+  },
+  "pto_multi": [
+    {
+      "sport": "MLB",
+      "market": "moneyline",
+      "url": "https://picktheodds.app/en/odds-screen?league=MLB&betGroup=MONEYLINE&group=MONEY_LINE&time=MONEY_LINE&betView=false",
+      "event_row_selector": ".MuiBox-root.css-1t6isfq",
+      "team_title_selector": "span[title]",
+      "book_cell_selector": ".MuiBox-root.css-fa7ybv, .MuiBox-root.css-1difu8q, .MuiBox-root.css-1au0dro",
+      "book_icon_selector": "img[alt], [aria-label] img, [aria-label]",
+      "book_odds_value_selector": ".MuiTypography-oddsRobotoMono"
+    }
+  ]
+}
+

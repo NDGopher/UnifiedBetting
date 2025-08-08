@@ -1,0 +1,7 @@
+selenium==4.21.0
+webdriver-manager==4.0.2
+rapidfuzz==3.9.6
+rich==13.7.1
+websocket-client==1.8.0
+python-socketio[client]==5.11.3
+requests==2.32.3

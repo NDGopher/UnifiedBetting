@@ -1,0 +1,47 @@
+{
+  "counts": {
+    "pto": 0,
+    "plive": 3,
+    "betbck_iframe": 0,
+    "matches": 0,
+    "live_rows": 3
+  },
+  "sample_plive": [
+    {
+      "sport": "NFL",
+      "market": "total",
+      "home": "NFL Preseason",
+      "away": "Game",
+      "books": {
+        "betbck": {
+          "home": "-132",
+          "away": "+100"
+        }
+      }
+    },
+    {
+      "sport": "NFL",
+      "market": "total",
+      "home": "Game",
+      "away": "Spread",
+      "books": {
+        "betbck": {
+          "home": "-132",
+          "away": "+100"
+        }
+      }
+    },
+    {
+      "sport": "NFL",
+      "market": "moneyline",
+      "home": "Las Vegas Raiders",
+      "away": "Seattle Seahawks",
+      "books": {
+        "betbck": {
+          "home": "-132",
+          "away": "+100"
+        }
+      }
+    }
+  ]
+}

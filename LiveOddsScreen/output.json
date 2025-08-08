@@ -1,0 +1,52 @@
+{
+  "rows": [
+    {
+      "sport": "NFL",
+      "market": "total",
+      "home": "NFL Preseason",
+      "away": "Game",
+      "best_home": "betbck -115",
+      "best_away": "betbck -115",
+      "avg_home": -115.0,
+      "avg_away": -115.0,
+      "books": {
+        "betbck": {
+          "home": "-115",
+          "away": "-115"
+        }
+      }
+    },
+    {
+      "sport": "NFL",
+      "market": "total",
+      "home": "Game",
+      "away": "Spread",
+      "best_home": "betbck -115",
+      "best_away": "betbck -115",
+      "avg_home": -115.0,
+      "avg_away": -115.0,
+      "books": {
+        "betbck": {
+          "home": "-115",
+          "away": "-115"
+        }
+      }
+    },
+    {
+      "sport": "NFL",
+      "market": "moneyline",
+      "home": "Las Vegas Raiders",
+      "away": "Seattle Seahawks",
+      "best_home": "betbck -115",
+      "best_away": "betbck -115",
+      "avg_home": -115.0,
+      "avg_away": -115.0,
+      "books": {
+        "betbck": {
+          "home": "-115",
+          "away": "-115"
+        }
+      }
+    }
+  ]
+}

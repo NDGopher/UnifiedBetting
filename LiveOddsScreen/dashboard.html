@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Live Odds Dashboard</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background: #0f1216; color: #e7e7e7; margin: 0; }
+      header { padding: 12px 16px; border-bottom: 1px solid #222; display: flex; align-items: center; justify-content: space-between; }
+      .tag { background: #1f2430; color: #b5cfff; padding: 2px 6px; border-radius: 6px; font-size: 12px; }
+      table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+      th, td { padding: 8px 10px; border-bottom: 1px solid #1f2430; font-size: 12px; vertical-align: middle; }
+      th { position: sticky; top: 0; background: #12161c; z-index: 1; text-align: left; }
+      tr:hover { background: #141a22; }
+      .best { color: #74ff7e; font-weight: 600; }
+      .mono { font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+      .container { padding: 10px 14px; }
+      .section-title { margin: 14px 0 6px; font-size: 14px; color: #aab4c4; }
+      .matchup { display: flex; flex-direction: column; gap: 2px; }
+      .team { font-weight: 600; }
+      .sub { color: #98a2b3; font-size: 11px; }
+      .book-head { display: flex; align-items: center; justify-content: center; }
+      .book-head img { width: 18px; height: 18px; opacity: 0.95; display: block; }
+      th.book, td.book { text-align: center; width: 90px; }
+      th.matchup, td.matchup { width: 220px; }
+      .cell-odds { display: flex; flex-direction: column; line-height: 1.2; }
+      .cell-odds span { display: block; }
+      .cell-odds .h { color: #d1eaff; }
+      .cell-odds .a { color: #ffd1d1; }
+      .highlight { background: rgba(116,255,126,0.08); border-radius: 6px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <strong>Live Odds Dashboard</strong>
+      </div>
+      <div>
+        <span class="tag">Live via WebSocket</span>
+      </div>
+    </header>
+    <div class="container">
+      <div class="section-title">Moneyline</div>
+      <table id="tbl-moneyline">
+        <thead>
+          <tr>
+            <th class="matchup">Matchup</th>
+            <th>Best</th>
+            <th>Average</th>
+            <th class="book"><div class="book-head"><span style="font-size:12px;color:#cbd5e1;">BetBCK</span></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/fanduel.png" alt="FanDuel" title="FanDuel"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/mgm.png" alt="BetMGM" title="BetMGM"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/draftkings.png" alt="DraftKings" title="DraftKings"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/caesars.png" alt="Caesars" title="Caesars"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/espnbet.png" alt="ESPNBet" title="ESPNBet"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/pinnacle.png" alt="Pinnacle" title="Pinnacle"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/bet365.png" alt="BetOnline" title="BetOnline"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/betrivers.png" alt="BetRivers" title="BetRivers"/></div></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="section-title" style="margin-top:18px;">Spread</div>
+      <table id="tbl-spread">
+        <thead>
+          <tr>
+            <th class="matchup">Matchup</th>
+            <th>Best</th>
+            <th>Average</th>
+            <th class="book"><div class="book-head"><span style="font-size:12px;color:#cbd5e1;">BetBCK</span></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/fanduel.png" alt="FanDuel" title="FanDuel"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/mgm.png" alt="BetMGM" title="BetMGM"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/draftkings.png" alt="DraftKings" title="DraftKings"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/caesars.png" alt="Caesars" title="Caesars"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/espnbet.png" alt="ESPNBet" title="ESPNBet"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/pinnacle.png" alt="Pinnacle" title="Pinnacle"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/bet365.png" alt="BetOnline" title="BetOnline"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/betrivers.png" alt="BetRivers" title="BetRivers"/></div></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="section-title" style="margin-top:18px;">Total</div>
+      <table id="tbl-total">
+        <thead>
+          <tr>
+            <th class="matchup">Matchup</th>
+            <th>Best</th>
+            <th>Average</th>
+            <th class="book"><div class="book-head"><span style="font-size:12px;color:#cbd5e1;">BetBCK</span></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/fanduel.png" alt="FanDuel" title="FanDuel"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/mgm.png" alt="BetMGM" title="BetMGM"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/draftkings.png" alt="DraftKings" title="DraftKings"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/caesars.png" alt="Caesars" title="Caesars"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/espnbet.png" alt="ESPNBet" title="ESPNBet"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/pinnacle.png" alt="Pinnacle" title="Pinnacle"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/bet365.png" alt="BetOnline" title="BetOnline"/></div></th>
+            <th class="book"><div class="book-head"><img src="book_icons/betrivers.png" alt="BetRivers" title="BetRivers"/></div></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <script>
+      const booksOrder = ["betbck","fanduel","betmgm","draftkings","caesars","espnbet","pinnacle","betonline","betrivers"];
+      function renderOddsCell(r, book) {
+        const b = (r.books||{})[book] || {home:null, away:null};
+        const bestH = r.best_home === book;
+        const bestA = r.best_away === book;
+        const cls = (bestH || bestA) ? 'cell-odds highlight' : 'cell-odds';
+        const h = b.home ?? '';
+        const a = b.away ?? '';
+        return `<div class="${cls}"><span class="h">${h}</span><span class="a">${a}</span></div>`;
+      }
+      function renderMatchup(r) {
+        return `<div class="matchup"><span class="team">${r.away}</span><span class="team">${r.home}</span><span class="sub">${r.sport} · ${r.market}</span></div>`;
+      }
+      async function load() {
+        try {
+          const res = await fetch('output.json', { cache: 'no-store' });
+          if (!res.ok) return;
+          const data = await res.json();
+          const markets = ['moneyline','spread','total'];
+          markets.forEach(m => {
+            const tbody = document.querySelector(`#tbl-${m} tbody`);
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            (data.rows || []).filter(r => (r.market||'').toLowerCase().includes(m)).forEach(r => {
+              const tr = document.createElement('tr');
+              const avg = (r.avg_home ?? '') + ' / ' + (r.avg_away ?? '');
+              const best = (r.best_home || '') + ' / ' + (r.best_away || '');
+              tr.innerHTML = `
+                <td class="matchup">${renderMatchup(r)}</td>
+                <td class="mono">${best}</td>
+                <td class="mono">${avg}</td>
+                ${booksOrder.map(b => `<td class=\"book\">${renderOddsCell(r,b)}</td>`).join('')}
+              `;
+              tbody.appendChild(tr);
+            });
+          });
+        } catch (e) {}
+      }
+      load();
+      setInterval(load, 5000);
+    </script>
+  </body>
+  </html>
+
