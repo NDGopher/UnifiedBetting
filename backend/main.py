@@ -1480,7 +1480,8 @@ def get_buckeye_results():
                     "betbck_odds": market.get("betbck_odds", ""),
                     "pinnacle_nvp": market.get("pin_nvp", ""),
                     "ev": market.get("ev", ""),
-                    "start_time": market.get("start_time", "")
+                    "start_time": market.get("start_time", ""),
+                    "pinnacle_limit": market.get("max_bet")
                 })
         return JSONResponse({
             "status": "success",

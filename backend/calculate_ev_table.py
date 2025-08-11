@@ -181,6 +181,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
             game_id = str(event_id)
             # --- Moneyline ---
             ml = period_0_data.get('money_line', {})
+            meta_limits = (period_0_data.get('meta') or {}) if isinstance(period_0_data.get('meta'), dict) else {}
             pin_ml_home_dec = ml.get('nvp_home')
             pin_ml_away_dec = ml.get('nvp_away')
             pin_ml_draw_dec = ml.get('nvp_draw')
@@ -207,7 +208,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                     'ev_val': ev_ml_home,
                     'start_time': start_time_fmt,
                     'league': league,
-                    'max_bet': ml.get('max_money_line'),
+                    'max_bet': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'event_id': event_id
                 })
             if ev_ml_away is not None:
@@ -222,7 +223,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                     'ev_val': ev_ml_away,
                     'start_time': start_time_fmt,
                     'league': league,
-                    'max_bet': ml.get('max_money_line'),
+                    'max_bet': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'event_id': event_id
                 })
             if ev_ml_draw is not None:
@@ -237,7 +238,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                     'ev_val': ev_ml_draw,
                     'start_time': start_time_fmt,
                     'league': league,
-                    'max_bet': ml.get('max_money_line'),
+                    'max_bet': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'event_id': event_id
                 })
             # --- Spreads ---
@@ -290,7 +291,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                                 'ev_val': ev,
                                 'start_time': start_time_fmt,
                                 'league': league,
-                                'max_bet': pin_spread_market.get('max') if pin_spread_market else None,
+                                'max_bet': (pin_spread_market.get('max') if pin_spread_market else None) or meta_limits.get('max_spread'),
                                 'event_id': event_id
                             })
                     else:
@@ -339,7 +340,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                                 'ev_val': ev,
                                 'start_time': start_time_fmt,
                                 'league': league,
-                                'max_bet': pin_spread_market.get('max') if pin_spread_market else None,
+                                'max_bet': (pin_spread_market.get('max') if pin_spread_market else None) or meta_limits.get('max_spread'),
                                 'event_id': event_id
                             })
                     else:
@@ -383,7 +384,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                                 'ev_val': ev_over,
                                 'start_time': start_time_fmt,
                                 'league': league,
-                                'max_bet': pin_total_market.get('max'),
+                                'max_bet': pin_total_market.get('max') or meta_limits.get('max_total'),
                                 'event_id': event_id
                             })
                     if bck_under_am is not None and nvp_pin_under is not None:
@@ -401,7 +402,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                                 'ev_val': ev_under,
                                 'start_time': start_time_fmt,
                                 'league': league,
-                                'max_bet': pin_total_market.get('max'),
+                                'max_bet': pin_total_market.get('max') or meta_limits.get('max_total'),
                                 'event_id': event_id
                             })
         except Exception as e:

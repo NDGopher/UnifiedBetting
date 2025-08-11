@@ -861,9 +861,9 @@ class AceScraper:
         
         if 'mlb' in league_lower or 'baseball' in league_lower:
             return 'baseball'
-        elif 'nfl' in league_lower or 'football' in league_lower:
+        elif 'nfl' in league_lower or 'ncaaf' in league_lower or 'college football' in league_lower or 'football' in league_lower:
             return 'football'
-        elif 'nba' in league_lower or 'basketball' in league_lower:
+        elif 'nba' in league_lower or 'wnba' in league_lower or 'ncaab' in league_lower or 'college basketball' in league_lower or 'basketball' in league_lower:
             return 'basketball'
         elif 'nhl' in league_lower or 'hockey' in league_lower:
             return 'hockey'
@@ -1376,6 +1376,7 @@ class AceScraper:
                                         "bet": bet_description,
                                         "betbck_odds": result.get("betbck_odds", ""),
                                         "pinnacle_nvp": result.get("pinnacle_nvp", ""),
+                                        "pinnacle_limit": result.get("pinnacle_limit"),
                                         "ev": result.get("ev", "0%"),
                                         "ev_val": float(str(result.get('ev', '0')).replace('%', '')) / 100 if result.get('ev') else 0,
                                         "start_time": game.get("date_time", ""),
@@ -1407,9 +1408,9 @@ class AceScraper:
             
             safe_print(f"[ACE] Showing ALL {len(filtered_markets)} markets (no EV filtering)")
             
-            # Sort markets by EV (highest first) and limit to top 50 (like Buckeye but more markets)
+            # Sort markets by EV (highest first) and limit to top 150
             filtered_markets.sort(key=lambda x: float(x.get('ev', '0').replace('%', '')), reverse=True)
-            top_50_markets = filtered_markets[:50]  # Top 50 markets for backend processing
+            top_50_markets = filtered_markets[:150]  # Top 150 markets for backend processing
             
             # Count ALL EV markets (including negative EV)
             total_with_ev_filtered = len(filtered_markets)
@@ -1420,7 +1421,7 @@ class AceScraper:
             
             # Save results in Buckeye format
             ace_results = {
-                "events": top_50_markets,  # Top 50 markets in Buckeye format
+                "events": top_50_markets,  # Top markets in Buckeye format
                 "last_run": datetime.now().isoformat(),
                 "total_processed": len(ace_games),
                 "total_matched": total_matched,

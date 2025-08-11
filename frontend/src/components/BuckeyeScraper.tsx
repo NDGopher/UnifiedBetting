@@ -37,6 +37,8 @@ const BuckeyeScraper: React.FC = () => {
   const [topMarkets, setTopMarkets] = useState<any[]>([]);
   const [stats, setStats] = useState({ pinnacleEvents: 0, betbckMatches: 0, matchRate: 0 });
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<'ev' | 'start_time' | 'pinnacle_limit'>('ev');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const isPolling = useRef(false);
@@ -57,6 +59,27 @@ const BuckeyeScraper: React.FC = () => {
     pollingRef.current = null;
   };
 
+  // Normalize start_time coming from different backends (Buckeye includes year, Ace is M/D HH:mm)
+  const parseStartTime = (raw: any) => {
+    if (!raw) return null;
+    if (typeof raw === 'string') {
+      // If it parses directly (likely includes year), use it
+      const direct = dayjs(raw);
+      if (direct.isValid()) return direct;
+      // Ace style: "MM/DD HH:mm" (no year)
+      const mdhm = raw.match(/^(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):(\d{2})$/);
+      if (mdhm) {
+        const month = parseInt(mdhm[1], 10) - 1;
+        const date = parseInt(mdhm[2], 10);
+        const hour = parseInt(mdhm[3], 10);
+        const minute = parseInt(mdhm[4], 10);
+        const now = dayjs();
+        return now.year(now.year()).month(month).date(date).hour(hour).minute(minute).second(0).millisecond(0);
+      }
+    }
+    return null;
+  };
+
   const fetchEvents = async () => {
     setLoading(true);
     setError(null);
@@ -70,9 +93,8 @@ const BuckeyeScraper: React.FC = () => {
         setLastUpdate(data.data.last_update || null);
         const allMarkets = data.data.markets || [];
         allMarkets.sort((a: any, b: any) => parseFloat(b.ev) - parseFloat(a.ev));
-        // Count positive EV markets
-        const positiveEVMarkets = allMarkets.filter((market: any) => parseFloat(market.ev) > 0);
-        const displayLimit = positiveEVMarkets.length > 10 ? 25 : 10;
+        // Show up to 150 markets (sorted by EV desc initially)
+        const displayLimit = 150;
         setTopMarkets(allMarkets.length > 0 ? allMarkets.slice(0, displayLimit) : []);
       } else {
         setError(data.message || 'Failed to fetch results');
@@ -213,18 +235,16 @@ const BuckeyeScraper: React.FC = () => {
         setLastUpdate(data.last_update || null);
         const allMarkets = data.markets || [];
         allMarkets.sort((a: any, b: any) => parseFloat(b.ev) - parseFloat(a.ev));
-        // Count positive EV markets
-        const positiveEVMarkets = allMarkets.filter((market: any) => parseFloat(market.ev) > 0);
-        const displayLimit = positiveEVMarkets.length > 10 ? 25 : 10;
+        // Show up to 150 markets (sorted by EV desc initially)
+        const displayLimit = 150;
         setTopMarkets(allMarkets.length > 0 ? allMarkets.slice(0, displayLimit) : []);
         stopPolling(); // Stop polling when results are loaded
       } else if (data.status === 'partial_success') {
         setLastUpdate(data.last_update || null);
         const allMarkets = data.markets || [];
         allMarkets.sort((a: any, b: any) => parseFloat(b.ev) - parseFloat(a.ev));
-        // Count positive EV markets
-        const positiveEVMarkets = allMarkets.filter((market: any) => parseFloat(market.ev) > 0);
-        const displayLimit = positiveEVMarkets.length > 10 ? 25 : 10;
+        // Show up to 150 markets
+        const displayLimit = 150;
         setTopMarkets(allMarkets.length > 0 ? allMarkets.slice(0, displayLimit) : []);
         setMessage(data.message || 'Partial results loaded');
         stopPolling(); // Stop polling when results are loaded
@@ -238,9 +258,8 @@ const BuckeyeScraper: React.FC = () => {
           setLastUpdate(data.data.last_update || null);
           const allMarkets = data.data.markets || [];
           allMarkets.sort((a: any, b: any) => parseFloat(b.ev) - parseFloat(a.ev));
-          // Count positive EV markets
-          const positiveEVMarkets = allMarkets.filter((market: any) => parseFloat(market.ev) > 0);
-          const displayLimit = positiveEVMarkets.length > 10 ? 25 : 10;
+          // Show up to 150 markets
+          const displayLimit = 150;
           setTopMarkets(allMarkets.length > 0 ? allMarkets.slice(0, displayLimit) : []);
           stopPolling(); // Stop polling when results are loaded
         } else {
@@ -352,14 +371,66 @@ const BuckeyeScraper: React.FC = () => {
               <TableCell sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>Bet</TableCell>
               <TableCell align="center" sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>Book Odds</TableCell>
               <TableCell align="center" sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>Pinnacle NVP</TableCell>
-              <TableCell align="center" sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>EV</TableCell>
-              <TableCell sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>Start Time</TableCell>
+              <TableCell
+                align="center"
+                onClick={() => {
+                  setSortBy('ev');
+                  setSortDir(d => (sortBy === 'ev' && d === 'desc' ? 'asc' : 'desc'));
+                  setTopMarkets(prev => {
+                    const sorted = [...prev].sort((a: any, b: any) => (parseFloat(a.ev) - parseFloat(b.ev)) * (sortBy === 'ev' && sortDir === 'asc' ? 1 : -1));
+                    return sorted;
+                  });
+                }}
+                sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem', cursor: 'pointer', userSelect: 'none' }}
+                title="Sort by EV"
+              >
+                EV
+              </TableCell>
+              <TableCell
+                onClick={() => {
+                  setSortBy('start_time');
+                  setSortDir(d => (sortBy === 'start_time' && d === 'desc' ? 'asc' : 'desc'));
+                  setTopMarkets(prev => {
+                    const sorted = [...prev].sort((a: any, b: any) => {
+                      const da = parseStartTime(a.start_time);
+                      const db = parseStartTime(b.start_time);
+                      const va = da ? da.valueOf() : 0;
+                      const vb = db ? db.valueOf() : 0;
+                      return (va - vb) * (sortBy === 'start_time' && sortDir === 'asc' ? 1 : -1);
+                    });
+                    return sorted;
+                  });
+                }}
+                sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem', cursor: 'pointer', userSelect: 'none' }}
+                title="Sort by Start Time"
+              >
+                Start Time
+              </TableCell>
+              <TableCell
+                align="right"
+                onClick={() => {
+                  setSortBy('pinnacle_limit');
+                  setSortDir(d => (sortBy === 'pinnacle_limit' && d === 'desc' ? 'asc' : 'desc'));
+                  setTopMarkets(prev => {
+                    const sorted = [...prev].sort((a: any, b: any) => {
+                      const va = a.pinnacle_limit ?? -1;
+                      const vb = b.pinnacle_limit ?? -1;
+                      return (va - vb) * (sortBy === 'pinnacle_limit' && sortDir === 'asc' ? 1 : -1);
+                    });
+                    return sorted;
+                  });
+                }}
+                sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem', whiteSpace: 'nowrap', cursor: 'pointer', userSelect: 'none' }}
+                title="Sort by Pin Limit"
+              >
+                Pin Limit
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {topMarkets.length === 0 && !loading && !error ? (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ color: '#888', fontStyle: 'italic' }}>
+                <TableCell colSpan={8} align="center" sx={{ color: '#888', fontStyle: 'italic' }}>
                   No valid markets found. Click RUN CALCULATIONS to populate or check backend filters.
                 </TableCell>
               </TableRow>
@@ -394,8 +465,21 @@ const BuckeyeScraper: React.FC = () => {
                       <span>{row.ev}</span>
                     )}
                   </TableCell>
-                  <TableCell align="left">
-                    {dayjs(row.start_time).format('M/D/YYYY [at] h:mm A')}
+                  <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
+                    {(() => {
+                      const parsed = parseStartTime(row.start_time);
+                      return parsed ? parsed.format('M/D/YYYY [at] h:mm A') : (typeof row.start_time === 'string' ? row.start_time : '');
+                    })()}
+                    {(() => {
+                      const start = parseStartTime(row.start_time);
+                      const isSoon = !!start && start.isAfter(dayjs()) && start.diff(dayjs(), 'hour') <= 24;
+                      return isSoon ? (
+                        <Box component="span" sx={{ display: 'inline-block', ml: 1, width: 8, height: 8, bgcolor: '#FFD54F', borderRadius: '50%' }} />
+                      ) : null;
+                    })()}
+                  </TableCell>
+                  <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+                    {row.pinnacle_limit != null ? `${row.pinnacle_limit}` : ''}
                   </TableCell>
                 </TableRow>
               ))

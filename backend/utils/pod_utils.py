@@ -388,6 +388,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
         
         # --- Moneyline ---
         ml = full_game.get('money_line', {})
+        meta_limits = full_game.get('meta') if isinstance(full_game.get('meta'), dict) else {}
         
         # Additional null checks for moneyline
         if ml is None:
@@ -410,6 +411,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                     'selection': 'Home',
                     'line': '',
                     'pinnacle_nvp': ml.get('nvp_american_home', 'N/A'),
+                    'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'betbck_odds': bet_data_copy['home_moneyline_american'],
                     'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
                     'home_team': home_team,
@@ -430,6 +432,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                     'selection': 'Away',
                     'line': '',
                     'pinnacle_nvp': ml.get('nvp_american_away', 'N/A'),
+                    'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'betbck_odds': bet_data_copy['away_moneyline_american'],
                     'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
                     'home_team': home_team,
@@ -450,6 +453,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                     'selection': 'Draw',
                     'line': '',
                     'pinnacle_nvp': ml.get('nvp_american_draw', 'N/A'),
+                    'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'betbck_odds': bet_data_copy['draw_moneyline_american'],
                     'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
                     'home_team': home_team,
@@ -482,6 +486,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                                 'selection': 'Home',
                                 'line': str(line),
                                 'pinnacle_nvp': pin_spread.get('nvp_american_home', 'N/A'),
+                                'pinnacle_limit': pin_spread.get('max') or meta_limits.get('max_spread'),
                                 'betbck_odds': s.get('odds'),
                                 'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
                                 'home_team': home_team,
@@ -508,6 +513,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                                 'selection': 'Away',
                                 'line': str(-line),
                                 'pinnacle_nvp': pin_spread.get('nvp_american_away', 'N/A'),
+                                'pinnacle_limit': pin_spread.get('max') or meta_limits.get('max_spread'),
                                 'betbck_odds': s.get('odds'),
                                 'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
                                 'home_team': home_team,
@@ -553,6 +559,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                                     'selection': 'Over',
                                     'line': str(pin_line),
                                     'pinnacle_nvp': pin_total.get('nvp_american_over', 'N/A'),
+                                    'pinnacle_limit': pin_total.get('max') or meta_limits.get('max_total'),
                                     'betbck_odds': bck_total['over_odds'],
                                     'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
                                     'ev_val': ev,
@@ -575,6 +582,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                                     'selection': 'Under',
                                     'line': str(pin_line),
                                     'pinnacle_nvp': pin_total.get('nvp_american_under', 'N/A'),
+                                    'pinnacle_limit': pin_total.get('max') or meta_limits.get('max_total'),
                                     'betbck_odds': bck_total['under_odds'],
                                     'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
                                     'ev_val': ev,
