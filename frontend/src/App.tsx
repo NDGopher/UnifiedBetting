@@ -7,105 +7,133 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { AppBar, Toolbar, IconButton } from "@mui/material";
-import { TrendingUp, Analytics, Calculate } from "@mui/icons-material";
+import { 
+  TrendingUp, 
+  Analytics, 
+  Calculate, 
+  NotificationsActive,
+  Build,
+  SportsEsports,
+  AutoMode
+} from "@mui/icons-material";
 import PODAlerts from "./components/PODAlerts";
 import EVCalculator from "./components/EVCalculator";
 import PropBuilder from "./components/PropBuilder";
 import BuckeyeScraper from './components/BuckeyeScraper';
 import BetBCKStatusPopup from './components/BetBCKStatusPopup';
-import HighEVHistory from './components/HighEVHistory';
+// import HighEVHistory from './components/HighEVHistory'; // Removed - replaced with Auto Bet Placement
 
-// Modern dark theme inspired by Onlook
+// Premium minimalist theme inspired by Swiss design principles
 const modernTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#43a047", // Green
-      light: "#66bb6a",
-      dark: "#2e7031",
+      main: "#2E7D32", // Refined forest green
+      light: "#4CAF50",
+      dark: "#1B5E20",
     },
     secondary: {
-      main: "#bdbdbd", // Light gray
-      light: "#e0e0e0",
-      dark: "#757575",
+      main: "#9E9E9E", // Sophisticated gray
+      light: "#BDBDBD",
+      dark: "#616161",
     },
     background: {
-      default: "#181c24", // Deep gray
-      paper: "#23272f", // Slightly lighter gray
+      default: "#0A0A0A", // Deep charcoal
+      paper: "#1A1A1A", // Refined dark gray
     },
     text: {
-      primary: "#fff",
-      secondary: "#bdbdbd",
+      primary: "#FFFFFF",
+      secondary: "#B0B0B0",
     },
     error: {
-      main: "#e53935",
+      main: "#F44336",
     },
     success: {
-      main: "#43a047",
+      main: "#2E7D32",
     },
     warning: {
-      main: "#ffb300",
+      main: "#FF9800",
     },
     info: {
-      main: "#00bcd4",
+      main: "#2196F3",
     },
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"SF Pro Display", "Inter", "Helvetica Neue", "Arial", sans-serif',
     h4: {
-      fontWeight: 800,
-      letterSpacing: "-0.02em",
+      fontWeight: 600,
+      letterSpacing: "-0.025em",
+      fontSize: "1.75rem",
     },
     h6: {
-      fontWeight: 700,
-      letterSpacing: "-0.01em",
-      fontSize: "1.25rem",
+      fontWeight: 500,
+      letterSpacing: "-0.015em",
+      fontSize: "1.125rem",
     },
     subtitle1: {
-      fontWeight: 600,
-      fontSize: "1.1rem",
+      fontWeight: 500,
+      fontSize: "1rem",
+      letterSpacing: "0.01em",
     },
+    body1: {
+      fontSize: "0.875rem",
+      lineHeight: 1.5,
+    },
+    body2: {
+      fontSize: "0.8125rem",
+      lineHeight: 1.4,
+    },
+  },
+  spacing: 8,
+  shape: {
+    borderRadius: 12,
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundColor: "#23272f",
-          border: "1px solid #333",
-          borderRadius: "14px",
-          boxShadow: "0 4px 32px 0 rgba(67, 160, 71, 0.08)",
+          backgroundColor: "#1A1A1A",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          borderRadius: "12px",
+          boxShadow: "0 2px 16px rgba(0, 0, 0, 0.4)",
+          backdropFilter: "blur(20px)",
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          background: "#181c24",
-          borderBottom: "1px solid #333",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+          background: "rgba(10, 10, 10, 0.95)",
+          backdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+          boxShadow: "0 1px 8px rgba(0, 0, 0, 0.3)",
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          fontWeight: 700,
+          fontWeight: 500,
           borderRadius: 8,
           textTransform: "none",
+          letterSpacing: "0.02em",
+          padding: "8px 16px",
         },
         containedPrimary: {
-          backgroundColor: "#43a047",
-          color: "#fff",
+          backgroundColor: "#2E7D32",
+          color: "#FFFFFF",
+          boxShadow: "0 2px 8px rgba(46, 125, 50, 0.3)",
           '&:hover': {
-            backgroundColor: "#388e3c",
+            backgroundColor: "#1B5E20",
+            boxShadow: "0 4px 12px rgba(46, 125, 50, 0.4)",
           },
         },
-        outlinedSecondary: {
-          borderColor: "#bdbdbd",
-          color: "#bdbdbd",
+        outlined: {
+          borderColor: "rgba(255, 255, 255, 0.2)",
+          color: "#B0B0B0",
           '&:hover': {
-            borderColor: "#fff",
-            color: "#fff",
+            borderColor: "rgba(255, 255, 255, 0.3)",
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
           },
         },
       },
@@ -114,7 +142,7 @@ const modernTheme = createTheme({
       styleOverrides: {
         root: {
           '&:hover': {
-            backgroundColor: 'rgba(67, 160, 71, 0.08)',
+            backgroundColor: 'rgba(46, 125, 50, 0.06)',
           },
         },
       },
@@ -122,14 +150,23 @@ const modernTheme = createTheme({
     MuiTableCell: {
       styleOverrides: {
         root: {
-          borderBottom: '1px solid #333',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          padding: "12px 16px",
         },
       },
     },
     MuiDivider: {
       styleOverrides: {
         root: {
-          background: 'rgba(255,255,255,0.07)',
+          background: 'rgba(255, 255, 255, 0.08)',
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 6,
+          fontWeight: 500,
         },
       },
     },
@@ -159,39 +196,54 @@ function App() {
         <Box
           sx={{
             minHeight: "100vh",
-            background: "#101214",
+            background: "linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%)",
           }}
         >
-          {/* Modern Header */}
+          {/* Premium Header */}
           <AppBar position="static" elevation={0}>
-            <Toolbar sx={{ py: 1, justifyContent: 'center', minHeight: 56 }}>
+            <Toolbar sx={{ py: 3, justifyContent: 'center', minHeight: 80 }}>
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 1,
-                  p: 1,
-                  borderRadius: "8px",
-                  background: "rgba(67, 160, 71, 0.12)",
-                  border: "1px solid #43a047",
-                  width: '100%',
-                  justifyContent: 'center',
-                  maxWidth: 700,
+                  gap: 2,
+                  px: 4,
+                  py: 2,
+                  borderRadius: "20px",
+                  background: "rgba(26, 26, 26, 0.8)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  backdropFilter: "blur(20px)",
+                  maxWidth: 500,
                   mx: 'auto',
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
                 }}
               >
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "12px",
+                    background: "linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 4px 16px rgba(46, 125, 50, 0.3)",
+                  }}
+                >
+                  <Analytics sx={{ fontSize: 24, color: "#FFFFFF" }} />
+                </Box>
                 <Typography
-                  variant="h5"
+                  variant="h4"
                   component="div"
                   sx={{
                     fontWeight: 700,
-                    background:
-                      "linear-gradient(135deg, #43a047 0%, #bdbdbd 100%)",
+                    color: "#FFFFFF",
+                    letterSpacing: "-0.03em",
+                    fontSize: "1.75rem",
+                    background: "linear-gradient(135deg, #FFFFFF 0%, #B0B0B0 100%)",
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
-                    textAlign: 'center',
-                    width: '100%',
                   }}
                 >
                   Unified Betting
@@ -199,32 +251,22 @@ function App() {
               </Box>
             </Toolbar>
           </AppBar>
-          <Container maxWidth="xl" sx={{ py: 4 }}>
-            <Grid container spacing={3}>
+          
+          <Container maxWidth="xl" sx={{ py: 6, px: { xs: 2, sm: 3 } }}>
+            <Grid container spacing={4}>
               {/* POD Alerts Section */}
               <Grid item xs={12}>
                 <Paper
                   sx={{
-                    p: 3,
+                    p: 4,
                     display: "flex",
                     flexDirection: "column",
                     position: "relative",
                     overflow: "hidden",
-                    transition: 'box-shadow 0.2s, transform 0.2s',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
-                      boxShadow: '0 8px 32px 0 rgba(67, 160, 71, 0.18)',
-                      transform: 'scale(1.012)',
-                    },
-                    border: '1.5px solid #333',
-                    '::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '3px',
-                      background: 'linear-gradient(90deg, #43a047 0%, #23272f 100%)',
-                      zIndex: 1,
+                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
+                      transform: 'translateY(-2px)',
                     },
                   }}
                 >
@@ -233,33 +275,48 @@ function App() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 2,
-                      mb: 2,
+                      mb: 3,
                     }}
                   >
+                    <NotificationsActive sx={{ fontSize: 24, color: "#2E7D32" }} />
                     <Typography
                       component="h2"
                       variant="h6"
-                      sx={{ color: '#fff', fontWeight: 700 }}
+                      sx={{ 
+                        color: '#FFFFFF', 
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em"
+                      }}
                     >
                       POD Alerts
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box
                       sx={{
-                        px: 1.5,
-                        py: 0.2,
-                        borderRadius: '12px',
-                        background: '#23272f',
-                        border: '1px solid #bdbdbd',
-                        height: 22,
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: '8px',
+                        background: 'rgba(46, 125, 50, 0.1)',
+                        border: '1px solid rgba(46, 125, 50, 0.3)',
                         display: 'flex',
                         alignItems: 'center',
-                        fontSize: '0.85rem',
-                        color: '#bdbdbd',
-                        fontWeight: 600,
-                        letterSpacing: 0,
+                        gap: 0.5,
+                        fontSize: '0.75rem',
+                        color: '#2E7D32',
+                        fontWeight: 500,
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
                       }}
                     >
+                      <Box
+                        sx={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          backgroundColor: '#2E7D32',
+                          animation: 'pulse 2s infinite',
+                        }}
+                      />
                       LIVE
                     </Box>
                   </Box>
@@ -270,26 +327,15 @@ function App() {
               <Grid item xs={12}>
                 <Paper
                   sx={{
-                    p: 3,
+                    p: 4,
                     display: "flex",
                     flexDirection: "column",
                     position: "relative",
                     overflow: "hidden",
-                    transition: 'box-shadow 0.2s, transform 0.2s',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
-                      boxShadow: '0 8px 32px 0 rgba(67, 160, 71, 0.18)',
-                      transform: 'scale(1.012)',
-                    },
-                    border: '1.5px solid #333',
-                    '::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '3px',
-                      background: 'linear-gradient(90deg, #43a047 0%, #23272f 100%)',
-                      zIndex: 1,
+                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
+                      transform: 'translateY(-2px)',
                     },
                   }}
                 >
@@ -298,13 +344,18 @@ function App() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 2,
-                      mb: 2,
+                      mb: 3,
                     }}
                   >
+                    <Build sx={{ fontSize: 24, color: "#2E7D32" }} />
                     <Typography
                       component="h2"
                       variant="h6"
-                      sx={{ color: '#fff', fontWeight: 700 }}
+                      sx={{ 
+                        color: '#FFFFFF', 
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em"
+                      }}
                     >
                       PropBuilder EV
                     </Typography>
@@ -316,26 +367,15 @@ function App() {
               <Grid item xs={12}>
                 <Paper
                   sx={{
-                    p: 3,
+                    p: 4,
                     display: "flex",
                     flexDirection: "column",
                     position: "relative",
                     overflow: "hidden",
-                    transition: 'box-shadow 0.2s, transform 0.2s',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
-                      boxShadow: '0 8px 32px 0 rgba(67, 160, 71, 0.18)',
-                      transform: 'scale(1.012)',
-                    },
-                    border: '1.5px solid #333',
-                    '::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '3px',
-                      background: 'linear-gradient(90deg, #43a047 0%, #23272f 100%)',
-                      zIndex: 1,
+                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
+                      transform: 'translateY(-2px)',
                     },
                   }}
                 >
@@ -344,13 +384,18 @@ function App() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 2,
-                      mb: 2,
+                      mb: 3,
                     }}
                   >
+                    <SportsEsports sx={{ fontSize: 24, color: "#2E7D32" }} />
                     <Typography
                       component="h2"
                       variant="h6"
-                      sx={{ color: '#fff', fontWeight: 700 }}
+                      sx={{ 
+                        color: '#FFFFFF', 
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em"
+                      }}
                     >
                       EV Bets
                     </Typography>
@@ -358,30 +403,19 @@ function App() {
                   <BuckeyeScraper />
                 </Paper>
               </Grid>
-              {/* High EV History Section */}
+              {/* Auto Bet Placement Section */}
               <Grid item xs={12}>
                 <Paper
                   sx={{
-                    p: 3,
+                    p: 4,
                     display: "flex",
                     flexDirection: "column",
                     position: "relative",
                     overflow: "hidden",
-                    transition: 'box-shadow 0.2s, transform 0.2s',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
-                      boxShadow: '0 8px 32px 0 rgba(67, 160, 71, 0.18)',
-                      transform: 'scale(1.012)',
-                    },
-                    border: '1.5px solid #333',
-                    '::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '3px',
-                      background: 'linear-gradient(90deg, #43a047 0%, #23272f 100%)',
-                      zIndex: 1,
+                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
+                      transform: 'translateY(-2px)',
                     },
                   }}
                 >
@@ -390,18 +424,80 @@ function App() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 2,
-                      mb: 2,
+                      mb: 3,
                     }}
                   >
+                    <AutoMode sx={{ fontSize: 24, color: "#2E7D32" }} />
                     <Typography
                       component="h2"
                       variant="h6"
-                      sx={{ color: '#fff', fontWeight: 700 }}
+                      sx={{ 
+                        color: '#FFFFFF', 
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em"
+                      }}
                     >
-                      High EV Alert History
+                      Auto Bet Placement
+                    </Typography>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Box
+                      sx={{
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: '8px',
+                        background: 'rgba(255, 152, 0, 0.1)',
+                        border: '1px solid rgba(255, 152, 0, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        fontSize: '0.75rem',
+                        color: '#FF9800',
+                        fontWeight: 500,
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          backgroundColor: '#FF9800',
+                        }}
+                      />
+                      COMING SOON
+                    </Box>
+                  </Box>
+                  
+                  <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    py: 6,
+                    textAlign: 'center'
+                  }}>
+                    <AutoMode sx={{ 
+                      fontSize: 64, 
+                      color: 'rgba(46, 125, 50, 0.3)', 
+                      mb: 3 
+                    }} />
+                    <Typography variant="h6" sx={{ 
+                      color: '#B0B0B0', 
+                      mb: 2,
+                      fontWeight: 500
+                    }}>
+                      Automated Bet Placement
+                    </Typography>
+                    <Typography variant="body2" sx={{ 
+                      color: '#9E9E9E',
+                      maxWidth: 400,
+                      lineHeight: 1.6
+                    }}>
+                      This feature will automatically place bets on high EV opportunities 
+                      based on your configured parameters and risk management settings.
                     </Typography>
                   </Box>
-                  <HighEVHistory />
                 </Paper>
               </Grid>
               
@@ -409,29 +505,39 @@ function App() {
               <Grid item xs={12}>
                 <Paper
                   sx={{
-                    p: 3,
+                    p: 4,
                     display: "flex",
                     flexDirection: "column",
                     position: "relative",
                     overflow: "hidden",
-                    transition: 'box-shadow 0.2s, transform 0.2s',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
-                      boxShadow: '0 8px 32px 0 rgba(67, 160, 71, 0.18)',
-                      transform: 'scale(1.012)',
-                    },
-                    border: '1.5px solid #333',
-                    '::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '3px',
-                      background: 'linear-gradient(90deg, #43a047 0%, #23272f 100%)',
-                      zIndex: 1,
+                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
+                      transform: 'translateY(-2px)',
                     },
                   }}
                 >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                      mb: 3,
+                    }}
+                  >
+                    <Calculate sx={{ fontSize: 24, color: "#2E7D32" }} />
+                    <Typography
+                      component="h2"
+                      variant="h6"
+                      sx={{ 
+                        color: '#FFFFFF', 
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em"
+                      }}
+                    >
+                      EV Calculator
+                    </Typography>
+                  </Box>
                   <EVCalculator />
                 </Paper>
               </Grid>

@@ -39,24 +39,135 @@ const BuckeyeScraper: React.FC = () => {
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'ev' | 'start_time' | 'pinnacle_limit'>('ev');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+  const [pipelineRunning, setPipelineRunning] = useState(false);
 
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const isPolling = useRef(false);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  // Connect WebSocket on component mount
+  useEffect(() => {
+    connectWebSocket();
+    
+    return () => {
+      disconnectWebSocket();
+      stopPolling();
+    };
+  }, []);
+
+  const checkPipelineStatus = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/pipeline-status`);
+      const data = await res.json();
+      if (data.status === 'success') {
+        const running = data.data.running;
+        const taskDone = data.data.task_done;
+        setPipelineRunning(running);
+        
+        if (running) {
+          console.log('[BuckeyeScraper] Pipeline is running...');
+        } else if (taskDone) {
+          console.log('[BuckeyeScraper] Pipeline completed!');
+          setMessage('Pipeline completed successfully');
+          fetchEvents(); // Fetch results when pipeline is done
+          stopPolling();
+        }
+      }
+    } catch (err) {
+      console.error('[BuckeyeScraper] Error checking pipeline status:', err);
+    }
+  };
 
   const startPolling = () => {
     if (pollingRef.current) clearInterval(pollingRef.current);
-    // Don't start polling immediately - wait for the first interval
+    setPipelineRunning(true);
+    // Check pipeline status every 2 seconds
     pollingRef.current = setInterval(() => {
       if (!isPolling.current && !loading) {
         isPolling.current = true;
-        fetchAceEvents().finally(() => { isPolling.current = false; });
+        checkPipelineStatus().finally(() => { isPolling.current = false; });
       }
-    }, 3000);
+    }, 2000);
   };
 
   const stopPolling = () => {
     if (pollingRef.current) clearInterval(pollingRef.current);
     pollingRef.current = null;
+    setPipelineRunning(false);
+  };
+
+  const connectWebSocket = () => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) return;
+    
+    const ws = new WebSocket('ws://localhost:5001/ws');
+    wsRef.current = ws;
+    
+    ws.onopen = () => {
+      console.log('[BuckeyeScraper] WebSocket connected');
+    };
+    
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log('[BuckeyeScraper] WebSocket message:', data);
+        
+        if (data.type === 'buckeye_update') {
+          // Real-time update from streaming pipeline
+          const { events, total_events, last_run, streaming, batch_completed, total_batches } = data.data;
+          
+          if (events && events.length > 0) {
+            // Sort by EV (high to low) before setting
+            const sortedEvents = [...events].sort((a: any, b: any) => {
+              const evA = parseFloat(a.ev?.replace('%', '') || '0');
+              const evB = parseFloat(b.ev?.replace('%', '') || '0');
+              return evB - evA;
+            });
+            
+            setTopMarkets(sortedEvents);
+            setLastUpdate(last_run);
+            setMessage(`Streaming: ${batch_completed}/${total_batches} batches completed (${total_events} events)`);
+            console.log(`[BuckeyeScraper] Real-time update: ${events.length} events added to table (sorted by EV)`);
+          }
+        } else if (data.type === 'buckeye_complete') {
+          // Pipeline completed
+          const { events, total_events, last_run, total_processed, total_matched } = data.data;
+          
+          if (events && events.length > 0) {
+            // Sort by EV (high to low) before setting
+            const sortedEvents = [...events].sort((a: any, b: any) => {
+              const evA = parseFloat(a.ev?.replace('%', '') || '0');
+              const evB = parseFloat(b.ev?.replace('%', '') || '0');
+              return evB - evA;
+            });
+            
+            setTopMarkets(sortedEvents);
+            setLastUpdate(last_run);
+            setMessage(`Pipeline completed: ${total_matched} games matched, ${total_events} events found`);
+            console.log(`[BuckeyeScraper] Pipeline completed: ${total_events} events total (sorted by EV)`);
+          }
+          
+          setPipelineRunning(false);
+          stopPolling();
+        }
+      } catch (err) {
+        console.error('[BuckeyeScraper] Error parsing WebSocket message:', err);
+      }
+    };
+    
+    ws.onclose = () => {
+      console.log('[BuckeyeScraper] WebSocket disconnected');
+    };
+    
+    ws.onerror = (error) => {
+      console.error('[BuckeyeScraper] WebSocket error:', error);
+    };
+  };
+
+  const disconnectWebSocket = () => {
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
   };
 
   // Normalize start_time coming from different backends (Buckeye includes year, Ace is M/D HH:mm)
@@ -141,29 +252,27 @@ const BuckeyeScraper: React.FC = () => {
     setTopMarkets([]); // Clear any old data immediately
     setLastUpdate(null); // Clear last update timestamp
     try {
-      console.log('[BuckeyeScraper] Running calculations (via pipeline)...');
-      const res = await fetch(`${API_BASE}/api/run-pipeline`, { method: 'POST' });
+      console.log('[BuckeyeScraper] Starting streaming Buckeye pipeline...');
+      const res = await fetch(`${API_BASE}/api/run-streaming-pipeline`, { method: 'POST' });
       const data = await res.json();
-      console.log('[BuckeyeScraper] Run Calculations (pipeline) response:', data);
-      if (data.status === 'success' && data.data && data.data.final_result) {
-        setMessage(data.data.final_result.message || 'Calculations completed');
-        // Update stats if available
-        if (data.data.final_result.data) {
-          setStats(s => ({
-            ...s,
-            pinnacleEvents: data.data.final_result.data.total_events || 0,
-            betbckMatches: data.data.final_result.data.total_matches || 0,
-            matchRate: data.data.final_result.data.match_rate || 0
-          }));
-        }
-        fetchEvents(); // Only fetch events after calculations
+      console.log('[BuckeyeScraper] Streaming pipeline start response:', data);
+      
+      if (data.status === 'success') {
+        setMessage(data.message || 'Streaming pipeline started - results will appear in real-time');
+        console.log('[BuckeyeScraper] Streaming pipeline started successfully - watching for real-time updates...');
+        
+        // Connect WebSocket for real-time updates
+        connectWebSocket();
+        
+        // Start polling for results while pipeline runs (fallback)
+        startPolling();
       } else {
-        setError(data.message || 'Failed to run calculations');
+        setError(data.message || 'Failed to start streaming pipeline');
         setTopMarkets([]);
       }
     } catch (err) {
-      console.error('[BuckeyeScraper] Error running calculations:', err);
-      setError('Failed to run calculations');
+      console.error('[BuckeyeScraper] Error starting streaming pipeline:', err);
+      setError('Failed to start streaming pipeline');
       setTopMarkets([]);
     } finally {
       setLoading(false);
@@ -280,25 +389,25 @@ const BuckeyeScraper: React.FC = () => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', gap: 2, mb: 2, justifyContent: 'flex-start' }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3, justifyContent: 'flex-start', flexWrap: 'wrap' }}>
         <Button
           variant="outlined"
           size="small"
           sx={{
-            color: '#43a047',
-            borderColor: '#43a047',
+            color: '#2E7D32',
+            borderColor: '#2E7D32',
             borderRadius: 2,
-            fontWeight: 600,
-            px: 1,
-            py: 0.25,
-            fontSize: '0.92rem',
-            minWidth: 0,
-            height: 32,
+            fontWeight: 500,
+            px: 2,
+            py: 0.5,
+            fontSize: '0.875rem',
+            minWidth: 'auto',
+            height: 36,
             textTransform: 'none',
             lineHeight: 1.2,
             '&:hover': {
-              bgcolor: '#1b2b1b',
-              borderColor: '#43a047',
+              bgcolor: 'rgba(46, 125, 50, 0.1)',
+              borderColor: '#2E7D32',
             },
           }}
           onClick={handleGetEventIds}
@@ -308,45 +417,46 @@ const BuckeyeScraper: React.FC = () => {
         <Button
           variant="outlined"
           size="small"
+          disabled={pipelineRunning}
           sx={{
-            color: '#b0b3b8',
-            borderColor: '#b0b3b8',
+            color: pipelineRunning ? '#2E7D32' : '#B0B0B0',
+            borderColor: pipelineRunning ? '#2E7D32' : 'rgba(255, 255, 255, 0.2)',
             borderRadius: 2,
-            fontWeight: 600,
-            px: 1,
-            py: 0.25,
-            fontSize: '0.92rem',
-            minWidth: 0,
-            height: 32,
+            fontWeight: 500,
+            px: 2,
+            py: 0.5,
+            fontSize: '0.875rem',
+            minWidth: 'auto',
+            height: 36,
             textTransform: 'none',
             lineHeight: 1.2,
             '&:hover': {
-              bgcolor: '#23272f',
-              borderColor: '#b0b3b8',
+              bgcolor: pipelineRunning ? 'rgba(46, 125, 50, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+              borderColor: pipelineRunning ? '#2E7D32' : 'rgba(255, 255, 255, 0.3)',
             },
           }}
           onClick={handleRunCalculations}
         >
-          Buckeye
+          {pipelineRunning ? 'Running...' : 'Buckeye'}
         </Button>
         <Button
           variant="outlined"
           size="small"
           sx={{
-            color: '#b0b3b8',
-            borderColor: '#b0b3b8',
+            color: '#B0B0B0',
+            borderColor: 'rgba(255, 255, 255, 0.2)',
             borderRadius: 2,
-            fontWeight: 600,
-            px: 1,
-            py: 0.25,
-            fontSize: '0.92rem',
-            minWidth: 0,
-            height: 32,
+            fontWeight: 500,
+            px: 2,
+            py: 0.5,
+            fontSize: '0.875rem',
+            minWidth: 'auto',
+            height: 36,
             textTransform: 'none',
             lineHeight: 1.2,
             '&:hover': {
-              bgcolor: '#23272f',
-              borderColor: '#b0b3b8',
+              bgcolor: 'rgba(255, 255, 255, 0.05)',
+              borderColor: 'rgba(255, 255, 255, 0.3)',
             },
           }}
           onClick={handleRunAceCalculations}
@@ -362,15 +472,61 @@ const BuckeyeScraper: React.FC = () => {
       {loading && <CircularProgress sx={{ mb: 2 }} />}
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
-      <TableContainer sx={{ background: 'rgba(34,34,34,0.95)', borderRadius: 2, boxShadow: 0, border: '1px solid rgba(255,255,255,0.07)' }}>
+      {pipelineRunning && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Streaming pipeline is running... Results will appear in real-time as matches are found.
+        </Alert>
+      )}
+      <TableContainer sx={{ 
+        background: 'rgba(26, 26, 26, 0.8)', 
+        borderRadius: 2, 
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(20px)'
+      }}>
         <Table size="small">
           <TableHead>
-            <TableRow>
-              <TableCell sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>Matchup</TableCell>
-              <TableCell sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>League</TableCell>
-              <TableCell sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>Bet</TableCell>
-              <TableCell align="center" sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>Book Odds</TableCell>
-              <TableCell align="center" sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem' }}>Pinnacle NVP</TableCell>
+            <TableRow sx={{
+              '& .MuiTableCell-root': {
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                py: 2
+              }
+            }}>
+              <TableCell sx={{ 
+                color: '#B0B0B0', 
+                fontWeight: 600, 
+                fontSize: '0.875rem' 
+              }}>
+                Matchup
+              </TableCell>
+              <TableCell sx={{ 
+                color: '#B0B0B0', 
+                fontWeight: 600, 
+                fontSize: '0.875rem' 
+              }}>
+                League
+              </TableCell>
+              <TableCell sx={{ 
+                color: '#B0B0B0', 
+                fontWeight: 600, 
+                fontSize: '0.875rem' 
+              }}>
+                Bet
+              </TableCell>
+              <TableCell align="center" sx={{ 
+                color: '#B0B0B0', 
+                fontWeight: 600, 
+                fontSize: '0.875rem' 
+              }}>
+                Book Odds
+              </TableCell>
+              <TableCell align="center" sx={{ 
+                color: '#B0B0B0', 
+                fontWeight: 600, 
+                fontSize: '0.875rem' 
+              }}>
+                Pinnacle NVP
+              </TableCell>
               <TableCell
                 align="center"
                 onClick={() => {
@@ -381,7 +537,16 @@ const BuckeyeScraper: React.FC = () => {
                     return sorted;
                   });
                 }}
-                sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem', cursor: 'pointer', userSelect: 'none' }}
+                sx={{ 
+                  color: '#B0B0B0', 
+                  fontWeight: 600, 
+                  fontSize: '0.875rem', 
+                  cursor: 'pointer', 
+                  userSelect: 'none',
+                  '&:hover': {
+                    color: '#2E7D32'
+                  }
+                }}
                 title="Sort by EV"
               >
                 EV
@@ -401,7 +566,16 @@ const BuckeyeScraper: React.FC = () => {
                     return sorted;
                   });
                 }}
-                sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem', cursor: 'pointer', userSelect: 'none' }}
+                sx={{ 
+                  color: '#B0B0B0', 
+                  fontWeight: 600, 
+                  fontSize: '0.875rem', 
+                  cursor: 'pointer', 
+                  userSelect: 'none',
+                  '&:hover': {
+                    color: '#2E7D32'
+                  }
+                }}
                 title="Sort by Start Time"
               >
                 Start Time
@@ -420,7 +594,17 @@ const BuckeyeScraper: React.FC = () => {
                     return sorted;
                   });
                 }}
-                sx={{ color: '#b0b3b8', fontWeight: 600, fontSize: '1rem', whiteSpace: 'nowrap', cursor: 'pointer', userSelect: 'none' }}
+                sx={{ 
+                  color: '#B0B0B0', 
+                  fontWeight: 600, 
+                  fontSize: '0.875rem', 
+                  whiteSpace: 'nowrap', 
+                  cursor: 'pointer', 
+                  userSelect: 'none',
+                  '&:hover': {
+                    color: '#2E7D32'
+                  }
+                }}
                 title="Sort by Pin Limit"
               >
                 Pin Limit
@@ -430,39 +614,61 @@ const BuckeyeScraper: React.FC = () => {
           <TableBody>
             {topMarkets.length === 0 && !loading && !error ? (
               <TableRow>
-                <TableCell colSpan={8} align="center" sx={{ color: '#888', fontStyle: 'italic' }}>
+                <TableCell colSpan={8} align="center" sx={{ 
+                  color: '#9E9E9E', 
+                  fontStyle: 'italic',
+                  py: 4,
+                  fontSize: '0.875rem'
+                }}>
                   No valid markets found. Click RUN CALCULATIONS to populate or check backend filters.
                 </TableCell>
               </TableRow>
             ) : (
               topMarkets.map((row, idx) => (
-                <TableRow key={idx}>
-                  <TableCell sx={{ color: '#fff', fontWeight: 500 }}>{row.matchup}</TableCell>
-                  <TableCell sx={{ color: '#fff', fontWeight: 500 }}>{row.league}</TableCell>
-                  <TableCell sx={{ color: '#fff', fontWeight: 500 }}>{row.bet}</TableCell>
-                  <TableCell align="center">
+                <TableRow 
+                  key={idx}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'rgba(46, 125, 50, 0.06)'
+                    },
+                    '& .MuiTableCell-root': {
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+                      py: 1.5
+                    }
+                  }}
+                >
+                  <TableCell sx={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.875rem' }}>
+                    {row.matchup}
+                  </TableCell>
+                  <TableCell sx={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.875rem' }}>
+                    {row.league}
+                  </TableCell>
+                  <TableCell sx={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.875rem' }}>
+                    {row.bet}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
                     {row.betbck_odds || row.ace_odds || 'N/A'}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
                     {row.pinnacle_nvp}
                   </TableCell>
                   <TableCell align="center">
                     {parseFloat(row.ev) > 0 ? (
                       <Box sx={{
                         display: 'inline-block',
-                        px: 1.2,
-                        py: 0.2,
-                        border: '2px solid #43a047',
+                        px: 1.5,
+                        py: 0.5,
+                        border: '2px solid #2E7D32',
                         borderRadius: 1.5,
-                        color: '#43a047',
+                        color: '#2E7D32',
                         fontWeight: 700,
-                        fontSize: '1em',
-                        bgcolor: '#23272f',
+                        fontSize: '0.875rem',
+                        bgcolor: 'rgba(46, 125, 50, 0.1)',
                       }}>
                         {row.ev}
                       </Box>
                     ) : (
-                      <span>{row.ev}</span>
+                      <span style={{ color: '#9E9E9E', fontSize: '0.875rem' }}>{row.ev}</span>
                     )}
                   </TableCell>
                   <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>

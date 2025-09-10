@@ -289,6 +289,7 @@ class PTOScraper:
         """Parse prop card text and extract structured data"""
         lines = [line.strip() for line in card_text.split('\n') if line.strip()]
         logger.debug(f"[PTO DEBUG] Raw card lines: {lines}")
+        logger.info(f"[PTO DEBUG] Raw card lines for debugging: {lines}")
         if not lines or len(lines) < 6:
             return None
         sport = lines[0]
@@ -302,8 +303,13 @@ class PTOScraper:
                 # Skip lines with $ (dollar values), odds, percents, or numbers
                 if ('$' in l or '%' in l or re.match(r'^[+-]?\d+(\.\d+)?$', l) or re.match(r'^[+-]?\d{1,4}$', l)):
                     continue
-                # Skip lines that look like pitcher names (single initial + dot + last name)
-                if re.match(r'^[A-Z]\. [A-Za-z\-]+$', l):
+                # Skip lines that look like pitcher names (single initial + dot + last name OR last name + comma + first initial)
+                if re.match(r'^[A-Z]\. [A-Za-z\-]+$', l) or re.match(r'^[A-Za-z\-]+, [A-Z]$', l):
+                    logger.info(f"[PTO DEBUG] Skipping pitcher name (pattern 1): {l}")
+                    continue
+                # Skip lines that look like pitcher names with more complex patterns
+                if re.match(r'^[A-Za-z\-]+, [A-Z]\.$', l) or re.match(r'^[A-Za-z\-]+, [A-Z][a-z]+$', l):
+                    logger.info(f"[PTO DEBUG] Skipping pitcher name (pattern 2): {l}")
                     continue
                 # Skip lines that look like bet types (Over/Under)
                 if l.lower().startswith('over') or l.lower().startswith('under'):
@@ -311,11 +317,13 @@ class PTOScraper:
                 # Skip lines that are all uppercase (often not team names)
                 if l.isupper():
                     continue
+                logger.info(f"[PTO DEBUG] Adding as team name: {l}")
                 team_lines.append(l)
                 if len(team_lines) == 2:
                     break
             teams = team_lines if len(team_lines) == 2 else [None, None]
             logger.debug(f"[PTO DEBUG] MLB teams extracted: {teams}")
+            logger.info(f"[PTO DEBUG] MLB team extraction - team_lines: {team_lines}, final teams: {teams}")
         else:
             team_lines = []
             for l in lines[1:]:
@@ -525,20 +533,28 @@ class PTOScraper:
         return f"{sport}|{prop_desc}|{bet_type}|{team1}|{team2}"
 
     async def broadcast_prop_update(self):
-        props_list = [
-            {
-                'prop': v['prop'],
-                'created_at': v.get('created_at').isoformat() if isinstance(v.get('created_at'), datetime) else v.get('created_at'),
-                'updated_at': v.get('updated_at').isoformat() if isinstance(v.get('updated_at'), datetime) else v.get('updated_at')
+        try:
+            props_list = [
+                {
+                    'prop': v['prop'],
+                    'created_at': v.get('created_at').isoformat() if isinstance(v.get('created_at'), datetime) else v.get('created_at'),
+                    'updated_at': v.get('updated_at').isoformat() if isinstance(v.get('updated_at'), datetime) else v.get('updated_at')
+                }
+                for v in self.live_props.values()
+            ]
+            message = {
+                'type': 'pto_prop_update',
+                'props': props_list,
+                'total_count': len(props_list),
+                'last_update': datetime.now().isoformat()
             }
-            for v in self.live_props.values()
-        ]
-        await manager.broadcast({
-            'type': 'pto_prop_update',
-            'props': props_list,
-            'total_count': len(props_list),
-            'last_update': datetime.now().isoformat()
-        })
+            logger.info(f"[WebSocket] Broadcasting PTO update: {len(props_list)} props")
+            await manager.broadcast(message)
+            logger.info(f"[WebSocket] Successfully broadcasted PTO update")
+        except Exception as e:
+            logger.error(f"[WebSocket] Error in broadcast_prop_update: {e}")
+            import traceback
+            logger.error(f"[WebSocket] Traceback: {traceback.format_exc()}")
 
     def _scraping_loop(self):
         """Main scraping loop with enhanced error handling and fast updates"""
@@ -676,11 +692,14 @@ class PTOScraper:
                             # Use the main event loop for WebSocket broadcasting
                             from main import main_event_loop
                             if main_event_loop and main_event_loop.is_running():
+                                logger.info(f"[WebSocket] Broadcasting prop update with {len(self.live_props)} props")
                                 asyncio.run_coroutine_threadsafe(self.broadcast_prop_update(), main_event_loop)
                             else:
                                 logger.warning("[WebSocket] Main event loop not available for broadcasting")
                         except Exception as e:
                             logger.error(f"[WebSocket] Error broadcasting prop update: {e}")
+                            import traceback
+                            logger.error(f"[WebSocket] Traceback: {traceback.format_exc()}")
                         time.sleep(self.scraping_interval)
                     except Exception as e:
                         logger.error(f"[ERROR] Error in scraping loop: {e}")

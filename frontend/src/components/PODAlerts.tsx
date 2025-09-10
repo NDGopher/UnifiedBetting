@@ -18,8 +18,14 @@ import {
   Alert,
   Grid,
 } from "@mui/material";
-import { Refresh as RefreshIcon } from "@mui/icons-material";
-import StarIcon from "@mui/icons-material/Star";
+import { 
+  Refresh as RefreshIcon,
+  Star as StarIcon,
+  TrendingUp,
+  Close,
+  CheckCircle,
+  Warning
+} from "@mui/icons-material";
 import { BetbckTabContext } from "../App";
 import { useWebSocket } from '../hooks/useWebSocket';
 import { showEnhancedNotification } from '../utils/notificationUtils';
@@ -49,7 +55,8 @@ interface EventData {
 }
 
 const POLL_INTERVAL = 2000; // 2 seconds for fast POD alert updates
-const AUTO_DISMISS_MS = 5 * 60 * 1000; // 5 minutes
+const NEGATIVE_EV_DISMISS_MS = 60 * 1000; // 1 minute for negative EV alerts
+const POSITIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for positive EV alerts
 const MAX_RETRIES = 3; // Maximum number of retries before showing error
 
 const PODAlerts: React.FC = () => {
@@ -194,15 +201,30 @@ const PODAlerts: React.FC = () => {
     }
   }, []);
 
+  // Auto-dismiss timer - runs every 30 seconds to check for expired alerts
   useEffect(() => {
+    const checkExpiredAlerts = () => {
     const now = Date.now();
     Object.entries(events).forEach(([eventId, event]) => {
       if (dismissed.has(eventId)) return;
       const msSinceAlert = now - (event.alert_arrival_timestamp * 1000);
-      if (msSinceAlert > AUTO_DISMISS_MS) {
+        const hasPositiveEV = getBestEV(event.markets) > 0;
+        const dismissTime = hasPositiveEV ? POSITIVE_EV_DISMISS_MS : NEGATIVE_EV_DISMISS_MS;
+        
+        if (msSinceAlert > dismissTime) {
+          console.log(`[PODAlerts] Auto-dismissing ${hasPositiveEV ? 'positive' : 'negative'} EV alert: ${eventId} (${msSinceAlert}ms old, limit: ${dismissTime}ms)`);
         setDismissed(prev => new Set(prev).add(eventId));
       }
     });
+    };
+
+    // Run immediately
+    checkExpiredAlerts();
+    
+    // Then run every 30 seconds
+    const interval = setInterval(checkExpiredAlerts, 30000);
+    
+    return () => clearInterval(interval);
   }, [events, dismissed]);
 
   const handleDismiss = useCallback((eventId: string) => {
@@ -257,7 +279,7 @@ const PODAlerts: React.FC = () => {
         const positiveEVMarkets = event.markets.filter(m => parseFloat(m.ev) > 0);
         if (positiveEVMarkets.length > 0) {
           console.log(
-            `🎯 NEW POSITIVE EV MARKETS DISCOVERED for ${event.title}:`,
+            `[PODAlerts] NEW POSITIVE EV MARKETS DISCOVERED for ${event.title}:`,
             `\n   Found ${positiveEVMarkets.length} positive EV markets:`,
             ...positiveEVMarkets.map(m => 
               `\n   - ${m.market} ${m.selection} ${m.line}: EV ${m.ev}%, NVP ${m.pinnacle_nvp}, BetBCK ${m.betbck_odds}`
@@ -275,10 +297,10 @@ const PODAlerts: React.FC = () => {
           // Only log changes for positive EV plays
           if (currentEV > 0 && (market.pinnacle_nvp !== prev.pinnacle_nvp || market.ev !== prev.ev)) {
             const evChange = currentEV - prevEV;
-            const evChangeDirection = evChange > 0 ? '📈' : evChange < 0 ? '📉' : '➡️';
+            const evChangeDirection = evChange > 0 ? '↗' : evChange < 0 ? '↘' : '→';
             
             console.log(
-              `[PODAlerts] 🎯 POSITIVE EV CHANGE for ${event.title}`,
+              `[PODAlerts] POSITIVE EV CHANGE for ${event.title}`,
               `\n   Market: ${market.market} ${market.selection} ${market.line}`,
               `\n   NVP: ${prev.pinnacle_nvp} → ${market.pinnacle_nvp}`,
               `\n   EV: ${prev.ev} → ${market.ev} ${evChangeDirection}`,
@@ -289,7 +311,7 @@ const PODAlerts: React.FC = () => {
             // Log significant EV improvements
             if (evChange > 1.0) {
               console.log(
-                `🚀 SIGNIFICANT EV IMPROVEMENT! ${evChange.toFixed(2)}% increase for ${event.title} - ${market.market} ${market.selection}`
+                `[PODAlerts] SIGNIFICANT EV IMPROVEMENT! ${evChange.toFixed(2)}% increase for ${event.title} - ${market.market} ${market.selection}`
               );
             }
           }
@@ -298,7 +320,7 @@ const PODAlerts: React.FC = () => {
       // --- Trigger enhanced notification if any market EV > 2.5% ---
       const hasHighEV = event.markets.some(m => parseFloat(m.ev) > 2.5);
       if (hasHighEV && !notifiedEventsRef.current.has(eventId)) {
-        console.log(`🔔 HIGH EV ALERT! ${event.title} has a market with EV > 2.5%`);
+        console.log(`[PODAlerts] HIGH EV ALERT! ${event.title} has a market with EV > 2.5%`);
         
         // Find the best market for notification
         const bestMarket = event.markets.reduce((best, current) => {
@@ -352,21 +374,42 @@ const PODAlerts: React.FC = () => {
 
   return (
     <Box>
-      <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="caption" color="text.secondary">
+      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CheckCircle sx={{ fontSize: 16 }} />
             Last update: {lastUpdate.toLocaleTimeString()}
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button startIcon={<RefreshIcon />} onClick={handleManualRefresh} disabled={loading} variant="outlined" size="small">
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+          <Button 
+            startIcon={<RefreshIcon />} 
+            onClick={handleManualRefresh} 
+            disabled={loading} 
+            variant="outlined" 
+            size="small"
+            sx={{ minWidth: 'auto' }}
+          >
             Refresh
           </Button>
-          <Button onClick={testConnection} variant="outlined" size="small" color="secondary">
-            Test Connection
+          <Button 
+            onClick={testConnection} 
+            variant="outlined" 
+            size="small" 
+            color="secondary"
+            sx={{ minWidth: 'auto' }}
+          >
+            Test
           </Button>
-          <Button onClick={() => setShowOnlyEV(ev => !ev)} variant={showOnlyEV ? "contained" : "outlined"} size="small" color="success">
-            {showOnlyEV ? "Show All" : "Show +EV Only"}
+          <Button 
+            onClick={() => setShowOnlyEV(ev => !ev)} 
+            variant={showOnlyEV ? "contained" : "outlined"} 
+            size="small" 
+            color="success"
+            startIcon={<TrendingUp />}
+            sx={{ minWidth: 'auto' }}
+          >
+            {showOnlyEV ? "All" : "+EV Only"}
           </Button>
         </Box>
       </Box>
@@ -392,14 +435,42 @@ const PODAlerts: React.FC = () => {
               const bestEV = getBestEV(event.markets);
               return (
                 <Grid item xs={12} sm={12} md={6} key={eventId} sx={{ maxWidth: 900, width: '100%' }}>
-                  <Paper sx={{ p: 2, mb: 3, borderRadius: 3, boxShadow: 4, border: '1.5px solid #2e7d32', background: '#181c24' }} className="event-container">
-                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                      <Box>
-                        <Typography variant="subtitle1" className="event-title">{event.title}</Typography>
-                        <Typography variant="body2" className="event-meta-info">
+                  <Paper sx={{ 
+                    p: 3, 
+                    mb: 3, 
+                    borderRadius: 2, 
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                    border: '1px solid rgba(46, 125, 50, 0.2)',
+                    background: 'rgba(26, 26, 26, 0.8)',
+                    backdropFilter: 'blur(20px)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
+                      transform: 'translateY(-2px)',
+                    }
+                  }} className="event-container">
+                    <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3}>
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography variant="subtitle1" sx={{ 
+                          color: '#FFFFFF', 
+                          fontWeight: 600, 
+                          mb: 1,
+                          lineHeight: 1.3
+                        }}>
+                          {event.title}
+                        </Typography>
+                        <Typography variant="body2" sx={{ 
+                          color: '#B0B0B0', 
+                          fontSize: '0.875rem',
+                          mb: 1
+                        }}>
                           {event.meta_info} {event.start_time && (<span> | {formatStartTime(event.start_time)}</span>)}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{ 
+                          color: '#9E9E9E',
+                          fontSize: '0.75rem',
+                          display: 'block'
+                        }}>
                           Alert: {event.alert_description} {event.alert_meta}
                           {event.old_odds && event.new_odds && (() => {
                             const oldOdds = parseFloat(event.old_odds!);
@@ -413,19 +484,75 @@ const PODAlerts: React.FC = () => {
                           })()}
                         </Typography>
                       </Box>
-                      <Button onClick={() => handleDismiss(eventId)} variant="outlined" color="secondary" size="small">
+                      <Button 
+                        onClick={() => handleDismiss(eventId)} 
+                        variant="outlined" 
+                        color="secondary" 
+                        size="small"
+                        startIcon={<Close />}
+                        sx={{ 
+                          minWidth: 'auto',
+                          px: 2,
+                          py: 0.5
+                        }}
+                      >
                         Dismiss
                       </Button>
                     </Box>
-                    <TableContainer component={Paper} sx={{ background: 'transparent', boxShadow: 'none', width: '100%', maxWidth: 900, overflowX: 'hidden' }}>
+                    <TableContainer sx={{ 
+                      background: 'transparent', 
+                      boxShadow: 'none', 
+                      width: '100%', 
+                      maxWidth: 900, 
+                      overflowX: 'hidden',
+                      borderRadius: 1
+                    }}>
                       <Table size="small" aria-label="Odds Table" sx={{ width: '100%', tableLayout: 'auto' }}>
                         <TableHead>
-                          <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold', textAlign: 'left', pl: 0, whiteSpace: 'normal' }}>Selection</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Line</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Pinnacle NVP</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold' }}>BetBCK Odds</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold' }}>EV %</TableCell>
+                          <TableRow sx={{ 
+                            '& .MuiTableCell-root': { 
+                              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                              py: 1.5
+                            }
+                          }}>
+                            <TableCell sx={{ 
+                              fontWeight: 600, 
+                              textAlign: 'left', 
+                              pl: 0, 
+                              whiteSpace: 'normal',
+                              color: '#B0B0B0',
+                              fontSize: '0.875rem'
+                            }}>
+                              Selection
+                            </TableCell>
+                            <TableCell align="center" sx={{ 
+                              fontWeight: 600,
+                              color: '#B0B0B0',
+                              fontSize: '0.875rem'
+                            }}>
+                              Line
+                            </TableCell>
+                            <TableCell align="center" sx={{ 
+                              fontWeight: 600,
+                              color: '#B0B0B0',
+                              fontSize: '0.875rem'
+                            }}>
+                              Pinnacle NVP
+                            </TableCell>
+                            <TableCell align="center" sx={{ 
+                              fontWeight: 600,
+                              color: '#B0B0B0',
+                              fontSize: '0.875rem'
+                            }}>
+                              BetBCK Odds
+                            </TableCell>
+                            <TableCell align="center" sx={{ 
+                              fontWeight: 600,
+                              color: '#B0B0B0',
+                              fontSize: '0.875rem'
+                            }}>
+                              EV %
+                            </TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -458,12 +585,16 @@ const PODAlerts: React.FC = () => {
                               <TableRow
                                 key={idx}
                                 sx={{
-                                  background: isBestEV ? 'rgba(0, 255, 0, 0.12)' : isPositiveEV ? 'rgba(25, 60, 26, 0.18)' : undefined,
+                                  background: isBestEV ? 'rgba(46, 125, 50, 0.15)' : isPositiveEV ? 'rgba(46, 125, 50, 0.08)' : undefined,
                                   '&:hover': {
-                                    background: isBestEV ? 'rgba(0, 255, 0, 0.18)' : isPositiveEV ? 'rgba(25, 60, 26, 0.28)' : 'rgba(255, 255, 255, 0.05)'
+                                    background: isBestEV ? 'rgba(46, 125, 50, 0.2)' : isPositiveEV ? 'rgba(46, 125, 50, 0.12)' : 'rgba(255, 255, 255, 0.04)'
                                   },
-                                  height: 30,
-                                  '.MuiTableCell-root': { padding: '2px 6px', fontSize: '0.93rem' }
+                                  height: 36,
+                                  '& .MuiTableCell-root': { 
+                                    padding: '4px 12px', 
+                                    fontSize: '0.875rem',
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
+                                  }
                                 }}
                               >
                                 <TableCell sx={{ textAlign: 'left', pl: 0, whiteSpace: 'normal' }}>{selectionDisplay}</TableCell>
@@ -481,19 +612,22 @@ const PODAlerts: React.FC = () => {
                                     color={isPositiveEV ? 'success' : 'inherit'}
                                     onClick={() => handleEVClick(event, market)}
                                     sx={{
-                                      fontWeight: isBestEV ? 'bold' : isPositiveEV ? 'bold' : 'normal',
+                                      fontWeight: isBestEV ? 700 : isPositiveEV ? 600 : 500,
                                       '&:hover': {
-                                        background: isBestEV ? 'rgba(0, 255, 0, 0.12)' : isPositiveEV ? 'rgba(25, 60, 26, 0.12)' : undefined
+                                        background: isBestEV ? 'rgba(46, 125, 50, 0.15)' : isPositiveEV ? 'rgba(46, 125, 50, 0.08)' : 'rgba(255, 255, 255, 0.04)'
                                       },
                                       minWidth: 0,
-                                      padding: '2px 6px',
-                                      fontSize: '0.93rem',
+                                      padding: '4px 8px',
+                                      fontSize: '0.875rem',
                                       display: 'flex',
                                       alignItems: 'center',
-                                      gap: 0.5
+                                      gap: 0.5,
+                                      borderRadius: 1,
+                                      color: isPositiveEV ? '#2E7D32' : '#B0B0B0',
+                                      textTransform: 'none'
                                     }}
                                   >
-                                    {isBestEV && <StarIcon fontSize="small" sx={{ color: 'gold', mr: 0.5 }} />}
+                                    {isBestEV && <StarIcon fontSize="small" sx={{ color: '#FFD700', mr: 0.5 }} />}
                                     {evDisplay}
                                   </Button>
                                 </TableCell>

@@ -842,14 +842,19 @@ BUCKEYE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_
 current_results = None
 last_run_time = None
 
-@app.post("/api/run-pipeline")
-async def run_pipeline():
-    """Run the Buckeye pipeline: scrape BetBCK, match/normalize, fetch Swordfish, calculate EV, output."""
-    logger.info("=== [API] /run-pipeline endpoint called ===")
-    global current_results, last_run_time
+# Global variable to track pipeline status
+pipeline_running = False
+pipeline_task = None
+
+async def run_pipeline_background():
+    """Background task to run the Buckeye pipeline"""
+    global current_results, last_run_time, pipeline_running
     import time
+    pipeline_start_time = time.time()
+    pipeline_running = True
     try:
         # Step 1: Load event IDs from file
+        step1_start = time.time()
         logger.info("[STEP] Step 1: Loading event IDs from file...")
         event_ids_path = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_event_ids.json')
         if not os.path.exists(event_ids_path):
@@ -863,7 +868,24 @@ async def run_pipeline():
             with open(event_ids_path, 'r') as f:
                 events_data = json.load(f)
             event_dicts = events_data.get('event_ids', [])
-            logger.info(f"[PIPELINE] Loaded {len(event_dicts)} event IDs from file.")
+            step1_time = time.time() - step1_start
+            
+            # Data validation for Step 1
+            if not event_dicts:
+                logger.error("[VALIDATION] No event IDs found in file")
+                return {
+                    "status": "error",
+                    "message": "No event IDs found in file",
+                    "data": {}
+                }
+            
+            # Validate event ID structure
+            valid_events = 0
+            for event in event_dicts:
+                if isinstance(event, dict) and 'event_id' in event:
+                    valid_events += 1
+            
+            logger.info(f"[PIPELINE] Step 1 completed in {step1_time:.2f}s: Loaded {len(event_dicts)} event IDs ({valid_events} valid) from file.")
         except Exception as e:
             logger.error(f"[ERROR] Failed to load event IDs from file: {e}")
             return {
@@ -871,14 +893,57 @@ async def run_pipeline():
                 "message": f"Failed to load event IDs: {str(e)}",
                 "data": {}
             }
+        
+        # Yield control to event loop
+        await asyncio.sleep(0)
+        
         # Step 2: Scrape BetBCK fresh
+        step2_start = time.time()
         logger.info("[STEP] Step 2: Scraping BetBCK fresh...")
         try:
             from betbck_async_scraper import _get_all_betbck_games_async
-            scrape_start = time.time()
-            betbck_games = await _get_all_betbck_games_async()
-            scrape_end = time.time()
-            logger.info(f"[PIPELINE] Scraped {len(betbck_games)} BetBCK games in {scrape_end-scrape_start:.2f}s.")
+            # Add timeout to prevent hanging
+            betbck_games = await asyncio.wait_for(_get_all_betbck_games_async(), timeout=300)  # 5 minute timeout
+            step2_time = time.time() - step2_start
+            
+            # Debug logging
+            logger.info(f"[DEBUG] BetBCK scraper returned type: {type(betbck_games)}")
+            if hasattr(betbck_games, '__len__'):
+                logger.info(f"[DEBUG] BetBCK scraper returned length: {len(betbck_games)}")
+            if betbck_games and len(betbck_games) > 0:
+                logger.info(f"[DEBUG] First game type: {type(betbck_games[0])}")
+                if isinstance(betbck_games[0], dict):
+                    logger.info(f"[DEBUG] First game keys: {list(betbck_games[0].keys())}")
+                else:
+                    logger.info(f"[DEBUG] First game is not a dict: {betbck_games[0]}")
+            
+            # Force log to ensure it appears
+            print(f"[FORCE DEBUG] BetBCK games type: {type(betbck_games)}, length: {len(betbck_games) if hasattr(betbck_games, '__len__') else 'N/A'}")
+            print(f"[FORCE DEBUG] First game keys: {list(betbck_games[0].keys()) if betbck_games and isinstance(betbck_games[0], dict) else 'Not a dict'}")
+            
+            # Data validation for Step 2
+            if not betbck_games:
+                logger.error("[VALIDATION] No BetBCK games scraped")
+                return {
+                    "status": "error",
+                    "message": "No BetBCK games scraped",
+                    "data": {}
+                }
+            
+            # Validate BetBCK games structure
+            valid_games = 0
+            logger.info(f"[DEBUG] BetBCK games type: {type(betbck_games)}, length: {len(betbck_games) if hasattr(betbck_games, '__len__') else 'N/A'}")
+            if betbck_games and len(betbck_games) > 0:
+                logger.info(f"[DEBUG] First game type: {type(betbck_games[0])}, keys: {list(betbck_games[0].keys()) if isinstance(betbck_games[0], dict) else 'Not a dict'}")
+            for game in betbck_games:
+                if isinstance(game, dict) and 'betbck_site_home_team' in game and 'betbck_site_away_team' in game:
+                    valid_games += 1
+            
+            logger.info(f"[PIPELINE] Step 2 completed in {step2_time:.2f}s: Scraped {len(betbck_games)} BetBCK games ({valid_games} valid).")
+            
+            # Yield control to event loop
+            await asyncio.sleep(0)
+            
             # Ensure the file was written and is fresh
             betbck_games_path = os.path.join(os.path.dirname(__file__), 'data', 'betbck_games.json')
             if not os.path.exists(betbck_games_path):
@@ -906,18 +971,29 @@ async def run_pipeline():
                 "data": {}
             }
         # Step 3: Match/normalize BetBCK games to event IDs
+        step3_start = time.time()
         logger.info("[STEP] Step 3: Matching BetBCK games to event IDs...")
         try:
             from match_games import match_pinnacle_to_betbck
             matched_games = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
-            logger.info(f"[PIPELINE] Matched {len(matched_games)} games.")
+            step3_time = time.time() - step3_start
+            
+            # Data validation for Step 3
             if not matched_games:
-                logger.error("[ERROR] No games matched successfully")
+                logger.error("[VALIDATION] No games matched successfully")
                 return {
                     "status": "error",
                     "message": "No games matched successfully",
                     "data": {}
                 }
+            
+            # Validate matched games structure
+            valid_matches = 0
+            for game in matched_games:
+                if isinstance(game, dict) and 'pinnacle_event_id' in game and 'betbck_game' in game:
+                    valid_matches += 1
+            
+            logger.info(f"[PIPELINE] Step 3 completed in {step3_time:.2f}s: Matched {len(matched_games)} games ({valid_matches} valid).")
         except Exception as e:
             logger.error(f"[ERROR] Failed to match games: {e}")
             return {
@@ -926,6 +1002,7 @@ async def run_pipeline():
                 "data": {}
             }
         # Step 4: Fetch Swordfish for matched games and calculate EV
+        step4_start = time.time()
         logger.info("[STEP] Step 4: Fetching Swordfish odds and calculating EV for matched games...")
         try:
             from calculate_ev_table import calculate_ev_table, format_ev_table_for_display
@@ -939,8 +1016,19 @@ async def run_pipeline():
                 }
             formatted_events = format_ev_table_for_display(ev_table)
             total_opportunities = sum(event.get("total_ev_opportunities", 0) for event in ev_table)
-            logger.info(f"[PIPELINE] Calculated EV for {len(formatted_events)} events.")
-            logger.info(f"[PIPELINE] Step 4 completed: {len(formatted_events)} events with {total_opportunities} opportunities")
+            step4_time = time.time() - step4_start
+            
+            # Data validation for Step 4
+            if not formatted_events:
+                logger.warning("[VALIDATION] No formatted events returned from EV calculation")
+            else:
+                # Validate EV opportunities structure
+                valid_opportunities = 0
+                for event in formatted_events:
+                    if isinstance(event, dict) and 'event_id' in event:
+                        valid_opportunities += 1
+                
+                logger.info(f"[PIPELINE] Step 4 completed in {step4_time:.2f}s: {len(formatted_events)} events ({valid_opportunities} valid) with {total_opportunities} opportunities")
             # Store results in memory and on disk
             current_results = formatted_events
             last_run_time = datetime.now().isoformat()
@@ -973,20 +1061,29 @@ async def run_pipeline():
                 logger.info(f"[PIPELINE] Results file is fresh (last modified {now-file_mtime:.1f}s ago)")
             except Exception as e:
                 logger.error(f"[PIPELINE] ERROR writing results to {BUCKEYE_RESULTS_FILE}: {e}")
+            total_pipeline_time = time.time() - pipeline_start_time
+            logger.info(f"[PIPELINE] === PIPELINE COMPLETED SUCCESSFULLY ===")
+            logger.info(f"[PIPELINE] Total time: {total_pipeline_time:.2f}s")
+            logger.info(f"[PIPELINE] Step 1 (Event IDs): {step1_time:.2f}s")
+            logger.info(f"[PIPELINE] Step 2 (BetBCK Scrape): {step2_time:.2f}s")
+            logger.info(f"[PIPELINE] Step 3 (Team Matching): {step3_time:.2f}s")
+            logger.info(f"[PIPELINE] Step 4 (EV Calculation): {step4_time:.2f}s")
+            logger.info(f"[PIPELINE] Results: {len(formatted_events)} events, {total_opportunities} opportunities")
+            
             return {
                 "status": "success",
                 "message": f"Pipeline completed successfully: {len(formatted_events)} events, {total_opportunities} opportunities",
                 "data": {
                     "step1": {
                         "status": "success",
-                        "message": f"Loaded {len(event_dicts)} event IDs",
-                        "data": {"event_count": len(event_dicts)}
+                        "message": f"Loaded {len(event_dicts)} event IDs in {step1_time:.2f}s",
+                        "data": {"event_count": len(event_dicts), "time_seconds": step1_time}
                     },
                     "step2": {
                         "status": "success", 
-                        "message": f"Scraped and matched {len(matched_games)} games",
+                        "message": f"Scraped {len(betbck_games)} BetBCK games in {step2_time:.2f}s",
                         "data": {
-                            "total_events": len(formatted_events),
+                            "betbck_games": len(betbck_games),
                             "total_opportunities": total_opportunities,
                             "events": formatted_events
                         }
@@ -1025,6 +1122,240 @@ async def run_pipeline():
             "message": f"Pipeline execution failed: {str(e)}",
             "data": {}
         }
+    finally:
+        pipeline_running = False
+
+async def run_streaming_pipeline_background():
+    """Streaming pipeline that processes matches in real-time and broadcasts results"""
+    global current_results, last_run_time, pipeline_running
+    import time
+    pipeline_start_time = time.time()
+    pipeline_running = True
+    
+    # Initialize streaming results
+    streaming_results = []
+    
+    logger.info("[STREAMING] === STREAMING PIPELINE STARTED ===")
+    
+    try:
+        # Step 1: Load event IDs from file
+        step1_start = time.time()
+        logger.info("[STREAMING] Step 1: Loading event IDs from file...")
+        event_ids_path = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_event_ids.json')
+        if not os.path.exists(event_ids_path):
+            logger.error(f"[ERROR] Event IDs file does not exist: {event_ids_path}")
+            return {"status": "error", "message": f"Event IDs file missing: {event_ids_path}"}
+        
+        with open(event_ids_path, 'r') as f:
+            events_data = json.load(f)
+        event_dicts = events_data.get('event_ids', [])
+        step1_time = time.time() - step1_start
+        logger.info(f"[STREAMING] Step 1 completed in {step1_time:.2f}s: Loaded {len(event_dicts)} event IDs")
+        
+        # Yield control to event loop
+        await asyncio.sleep(0)
+        
+        # Step 2: Scrape BetBCK fresh
+        step2_start = time.time()
+        logger.info("[STREAMING] Step 2: Scraping BetBCK fresh...")
+        from betbck_async_scraper import _get_all_betbck_games_async
+        betbck_games = await asyncio.wait_for(_get_all_betbck_games_async(), timeout=300)
+        step2_time = time.time() - step2_start
+        logger.info(f"[STREAMING] Step 2 completed in {step2_time:.2f}s: Scraped {len(betbck_games)} BetBCK games")
+        
+        # Yield control to event loop
+        await asyncio.sleep(0)
+        
+        # Step 3: Streaming matching and EV calculation
+        step3_start = time.time()
+        logger.info("[STREAMING] Step 3: Starting streaming matching and EV calculation...")
+        
+        from match_games import match_pinnacle_to_betbck
+        from calculate_ev_table import calculate_ev_table, format_ev_table_for_display
+        
+        # Process games in batches for streaming
+        batch_size = 10  # Process 10 games at a time
+        total_processed = 0
+        total_matched = 0
+        
+        for i in range(0, len(betbck_games), batch_size):
+            batch = betbck_games[i:i + batch_size]
+            logger.info(f"[STREAMING] Processing batch {i//batch_size + 1}/{(len(betbck_games) + batch_size - 1)//batch_size} ({len(batch)} games)")
+            
+            # Match this batch
+            batch_matched = match_pinnacle_to_betbck(event_dicts, {"games": batch})
+            
+            if batch_matched:
+                total_matched += len(batch_matched)
+                logger.info(f"[STREAMING] Batch matched {len(batch_matched)} games (total: {total_matched})")
+                
+                # Calculate EV for this batch immediately
+                try:
+                    batch_ev_table = calculate_ev_table(batch_matched)
+                    if batch_ev_table:
+                        batch_formatted = format_ev_table_for_display(batch_ev_table)
+                        streaming_results.extend(batch_formatted)
+                        
+                        # Re-sort the entire results by EV (high to low)
+                        streaming_results.sort(key=lambda x: x.get('ev_val', 0), reverse=True)
+                        
+                        # Update global results
+                        current_results = streaming_results
+                        last_run_time = datetime.now().isoformat()
+                        
+                        # Save to file
+                        try:
+                            os.makedirs(os.path.dirname(BUCKEYE_RESULTS_FILE), exist_ok=True)
+                            with open(BUCKEYE_RESULTS_FILE, 'w', encoding='utf-8') as f:
+                                json.dump({
+                                    "events": streaming_results,
+                                    "total_events": len(streaming_results),
+                                    "last_run": last_run_time
+                                }, f, indent=2)
+                        except Exception as e:
+                            logger.error(f"[STREAMING] Error writing results: {e}")
+                        
+                        # Broadcast update via WebSocket
+                        try:
+                            await manager.broadcast({
+                                "type": "buckeye_update",
+                                "data": {
+                                    "events": streaming_results,
+                                    "total_events": len(streaming_results),
+                                    "last_run": last_run_time,
+                                    "streaming": True,
+                                    "batch_completed": i//batch_size + 1,
+                                    "total_batches": (len(betbck_games) + batch_size - 1)//batch_size
+                                }
+                            })
+                            logger.info(f"[STREAMING] Broadcasted update: {len(streaming_results)} events")
+                        except Exception as e:
+                            logger.error(f"[STREAMING] Error broadcasting update: {e}")
+                        
+                        logger.info(f"[STREAMING] Batch EV calculation completed: {len(batch_formatted)} events added to table")
+                    else:
+                        logger.info(f"[STREAMING] No EV opportunities found in batch")
+                except Exception as e:
+                    logger.error(f"[STREAMING] Error calculating EV for batch: {e}")
+            
+            total_processed += len(batch)
+            
+            # Yield control to event loop between batches
+            await asyncio.sleep(0.1)  # Small delay to prevent blocking
+        
+        step3_time = time.time() - step3_start
+        total_pipeline_time = time.time() - pipeline_start_time
+        
+        logger.info(f"[STREAMING] === STREAMING PIPELINE COMPLETED ===")
+        logger.info(f"[STREAMING] Total time: {total_pipeline_time:.2f}s")
+        logger.info(f"[STREAMING] Processed: {total_processed} games, Matched: {total_matched} games")
+        logger.info(f"[STREAMING] Final results: {len(streaming_results)} events")
+        
+        # Final broadcast
+        try:
+            await manager.broadcast({
+                "type": "buckeye_complete",
+                "data": {
+                    "events": streaming_results,
+                    "total_events": len(streaming_results),
+                    "last_run": last_run_time,
+                    "streaming": False,
+                    "total_processed": total_processed,
+                    "total_matched": total_matched
+                }
+            })
+            logger.info(f"[STREAMING] Final broadcast sent: {len(streaming_results)} events")
+        except Exception as e:
+            logger.error(f"[STREAMING] Error sending final broadcast: {e}")
+        
+        return {
+            "status": "success",
+            "message": f"Streaming pipeline completed: {len(streaming_results)} events from {total_matched} matched games",
+            "data": {
+                "total_events": len(streaming_results),
+                "total_processed": total_processed,
+                "total_matched": total_matched,
+                "events": streaming_results
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"[STREAMING] Pipeline error: {e}")
+        import traceback
+        logger.error(f"[STREAMING] Traceback: {traceback.format_exc()}")
+        
+        # Try to broadcast error to frontend
+        try:
+            await manager.broadcast({
+                "type": "buckeye_error",
+                "data": {
+                    "error": str(e),
+                    "message": "Streaming pipeline failed"
+                }
+            })
+        except Exception as broadcast_error:
+            logger.error(f"[STREAMING] Failed to broadcast error: {broadcast_error}")
+        
+        return {"status": "error", "message": f"Streaming pipeline failed: {str(e)}"}
+    
+    finally:
+        pipeline_running = False
+        logger.info("[STREAMING] Streaming pipeline background task completed")
+
+@app.post("/api/run-pipeline")
+async def run_pipeline():
+    """Start the Buckeye pipeline in the background"""
+    global pipeline_running, pipeline_task
+    
+    if pipeline_running:
+        return {
+            "status": "error",
+            "message": "Pipeline is already running",
+            "data": {}
+        }
+    
+    # Start pipeline in background
+    pipeline_task = asyncio.create_task(run_pipeline_background())
+    
+    return {
+        "status": "success",
+        "message": "Pipeline started in background",
+        "data": {}
+    }
+
+@app.post("/api/run-streaming-pipeline")
+async def run_streaming_pipeline():
+    """Start the streaming Buckeye pipeline in the background"""
+    global pipeline_running, pipeline_task
+    
+    if pipeline_running:
+        return {
+            "status": "error",
+            "message": "Pipeline is already running",
+            "data": {}
+        }
+    
+    # Start streaming pipeline in background
+    pipeline_task = asyncio.create_task(run_streaming_pipeline_background())
+    
+    return {
+        "status": "success",
+        "message": "Streaming pipeline started in background",
+        "data": {}
+    }
+
+@app.get("/api/pipeline-status")
+async def get_pipeline_status():
+    """Get the current pipeline status"""
+    global pipeline_running, pipeline_task
+    
+    return {
+        "status": "success",
+        "data": {
+            "running": pipeline_running,
+            "task_done": pipeline_task.done() if pipeline_task else True
+        }
+    }
 
 @app.get("/api/get-results")
 def get_results():
@@ -1258,8 +1589,49 @@ def build_event_object(event_id, entry):
             "betbck_odds": str(betbck_odds) if betbck_odds != "N/A" else "N/A",
             "ev": ev_display
         })
-    display_home = pinnacle_data.get('home', home_team)
-    display_away = pinnacle_data.get('away', away_team)
+    # Get team names from original alert details (most reliable source)
+    original_alert = entry.get('original_alert_details', {})
+    display_home = original_alert.get('homeTeam', '')
+    display_away = original_alert.get('awayTeam', '')
+    
+    # Clean team names - remove any sport/league suffixes that might have been appended
+    if display_home:
+        # Remove common sport abbreviations and full league names
+        suffixes_to_remove = [
+            'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC',
+            'Nippon Professional Baseball', 'Japanese Professional Baseball',
+            'Major League Baseball', 'National Football League', 'National Basketball Association',
+            'National Hockey League', 'College Football', 'College Basketball',
+            'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1',
+            'Major League Soccer', 'MLS', 'WNBA', 'AFL', 'CFL'
+        ]
+        
+        for suffix in suffixes_to_remove:
+            if display_home.endswith(suffix):
+                display_home = display_home[:-len(suffix)]
+                break
+    
+    if display_away:
+        # Remove common sport abbreviations and full league names
+        suffixes_to_remove = [
+            'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC',
+            'Nippon Professional Baseball', 'Japanese Professional Baseball',
+            'Major League Baseball', 'National Football League', 'National Basketball Association',
+            'National Hockey League', 'College Football', 'College Basketball',
+            'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1',
+            'Major League Soccer', 'MLS', 'WNBA', 'AFL', 'CFL'
+        ]
+        
+        for suffix in suffixes_to_remove:
+            if display_away.endswith(suffix):
+                display_away = display_away[:-len(suffix)]
+                break
+    
+    # Fallback to Pinnacle data if original alert doesn't have team names
+    if not display_home or display_home == 'Unknown':
+        display_home = pinnacle_data.get('home', 'Unknown')
+    if not display_away or display_away == 'Unknown':
+        display_away = pinnacle_data.get('away', 'Unknown')
     return {
         "title": f"{display_home} vs {display_away}",
         "meta_info": f"{league_name} | {formatted_start_time}",
@@ -1469,19 +1841,19 @@ def get_buckeye_results():
         # Map to frontend columns
         all_markets = []
         for event in events:
-            home_team = event.get("event", "").split(" vs ")[0] if " vs " in event.get("event", "") else event.get("event", "")
-            away_team = event.get("event", "").split(" vs ")[1] if " vs " in event.get("event", "") else ""
+            # Use the correct field names that match the EV calculation output
+            matchup = event.get("matchup", "")
             league = event.get("league", "")
             for market in [event]:  # Each event is already a market row
                 all_markets.append({
-                    "matchup": f"{home_team} vs {away_team}",
+                    "matchup": matchup,
                     "league": league,
                     "bet": market.get('bet', ''),
                     "betbck_odds": market.get("betbck_odds", ""),
-                    "pinnacle_nvp": market.get("pin_nvp", ""),
+                    "pinnacle_nvp": market.get("pinnacle_nvp", ""),
                     "ev": market.get("ev", ""),
                     "start_time": market.get("start_time", ""),
-                    "pinnacle_limit": market.get("max_bet")
+                    "pinnacle_limit": market.get("pinnacle_limit")
                 })
         return JSONResponse({
             "status": "success",

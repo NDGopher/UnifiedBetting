@@ -9,6 +9,20 @@ import threading
 from utils import normalize_team_name_for_matching
 from utils.pod_utils import skip_indicators, is_prop_or_corner_alert, fuzzy_team_match
 
+# Selenium imports for dynamic content handling
+try:
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+    from selenium.common.exceptions import TimeoutException, WebDriverException, NoSuchElementException
+    SELENIUM_AVAILABLE = True
+    print("[BetbckScraper] Selenium library loaded for dynamic content handling.")
+except ImportError:
+    print("[BetbckScraper] WARNING: Selenium library not found. Dynamic content (1H data) will not be available.")
+    SELENIUM_AVAILABLE = False
+
 # Attempt to import fuzzywuzzy for robust team matching
 try:
     from fuzzywuzzy import fuzz
@@ -293,6 +307,39 @@ def extract_all_spread_options_from_text(cell_td_element):
             if norm_line is not None: options.append({"line":norm_line, "odds":odds_str})
     set_market_type_context(original_context); return options
 
+def extract_all_total_options_from_text(cell_td_element):
+    """Extract total options from a cell element (for over/under totals)."""
+    options = []
+    original_context = get_market_type_context()
+    set_market_type_context("Total")
+    
+    if not cell_td_element or not hasattr(cell_td_element, 'find_all'):
+        set_market_type_context(original_context)
+        return []
+    
+    select_element = cell_td_element.find('select')
+    if select_element:
+        for option_tag in select_element.find_all('option'):
+            option_text = option_tag.get_text(" ", strip=True).replace('½','.5').replace('\u00a0',' ')
+            # Match over/under patterns like "o26½ -115" or "u26½ -135"
+            match = re.match(r'^\s*([ouO\/])\s*([0-9.,]+)\s*([+-]\d{3,})', option_text, re.IGNORECASE)
+            if match:
+                over_under, line, odds_str = match.group(1), match.group(2), match.group(3)
+                norm_line = normalize_asian_handicap(line)
+                if norm_line is not None:
+                    options.append({"line": norm_line, "odds": odds_str, "type": over_under.lower()})
+    else:
+        text_to_parse = cell_td_element.get_text(" ", strip=True).replace('½','.5').replace('\u00a0',' ').strip()
+        # Match over/under patterns in text
+        for match in re.finditer(r'([ouO\/])\s*([0-9.,]+)\s*([+-]\d{3,})', text_to_parse, re.IGNORECASE):
+            over_under, line, odds_str = match.group(1), match.group(2), match.group(3)
+            norm_line = normalize_asian_handicap(line)
+            if norm_line is not None:
+                options.append({"line": norm_line, "odds": odds_str, "type": over_under.lower()})
+    
+    set_market_type_context(original_context)
+    return options
+
 def get_cleaned_team_name_from_div(team_div): 
     if not team_div: return ""
     name_span = team_div.find('span', {'data-language': True})
@@ -339,10 +386,11 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         raw_bck_l, raw_bck_v = get_cleaned_team_name_from_div(div_t1), get_cleaned_team_name_from_div(div_t2)
         if not raw_bck_l or not raw_bck_v: print(f"[BetbckParser] Wrapper {idx}: Empty raw names. L='{raw_bck_l}', V='{raw_bck_v}' (Event ID: {event_id})"); continue
         
-        skip_indicators = ["1H", "1st Half", "First Half", "1st 5 Innings", "First Five Innings", "1st Period", "2nd Period", "3rd Period", "hits+runs+errors", "h+r+e", "hre", "corners", "series"]
+        # Skip non-game props (H+R+E, 1st inning, corners, series, etc.) but allow 1H data and F5
+        skip_indicators = ["hits+runs+errors", "h+r+e", "hre", "corners", "series", "1st inning", "first inning"]
         if any(ind.lower() in raw_bck_l.lower() for ind in skip_indicators) or \
            any(ind.lower() in raw_bck_v.lower() for ind in skip_indicators):
-            print(f"[BetbckParser] Skipping non-full game/prop: {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})"); continue
+            print(f"[BetbckParser] Skipping non-game prop: {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})"); continue
             
         norm_bck_l, norm_bck_v = normalize_team_name_for_matching(raw_bck_l), normalize_team_name_for_matching(raw_bck_v)
         print(f"[BetbckParser] Comparing POD: H='{norm_pod_h}' A='{norm_pod_a}' WITH BCK {idx}: L='{norm_bck_l}' V='{norm_bck_v}' (Raw: L='{raw_bck_l}', V='{raw_bck_v}') (Event ID: {event_id})")
@@ -490,7 +538,13 @@ def parse_game_data_from_html(search_results_html, search_term):
         return None
     
     # Use the existing parsing function with the extracted team names
-    return parse_specific_game_from_search_html(search_results_html, home_team, away_team)
+    result = parse_specific_game_from_search_html(search_results_html, home_team, away_team)
+    
+    # If we found a game, also try to extract 1H data from the same HTML
+    if result:
+        result['1H_data'] = extract_1h_data_from_html(search_results_html, home_team, away_team)
+    
+    return result
 
 # --- Main Callable Function ---
 def scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck=None, event_id=None):
@@ -538,8 +592,12 @@ def scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck
             'inetSportSelection': inetSportSelection,
             'keyword_search': actual_search_query
         }
-    if parsed_game_data: print(f"[BetbckScraper-CORE] Scraper returned parsed game data.")
-    else: print(f"[BetbckScraper-CORE] Scraper did NOT find or parse specific game from HTML.")
+    # Add 1H data if we found a game
+    if parsed_game_data:
+        print(f"[BetbckScraper-CORE] Scraper returned parsed game data.")
+        parsed_game_data['1H_data'] = extract_1h_data_from_html(search_results_html, pod_home_team, pod_away_team)
+    else: 
+        print(f"[BetbckScraper-CORE] Scraper did NOT find or parse specific game from HTML.")
     return parsed_game_data 
 
 # --- Tennis Last Name Utility ---
@@ -618,3 +676,412 @@ def scrape_all_betbck_games():
                 continue
     print(f"[BetbckScraper] Scraped {len(games)} games from main board.")
     return games 
+
+# --- Selenium-based Dynamic Content Handling ---
+
+def get_selenium_driver():
+    """Create and configure a Selenium Chrome driver for dynamic content scraping."""
+    if not SELENIUM_AVAILABLE:
+        raise ImportError("Selenium is not available. Cannot create WebDriver.")
+    
+    options = Options()
+    options.add_argument("--headless")  # Run in headless mode
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+    
+    # Disable images and CSS for faster loading
+    prefs = {
+        "profile.managed_default_content_settings.images": 2,
+        "profile.managed_default_content_settings.stylesheets": 2
+    }
+    options.add_experimental_option("prefs", prefs)
+    
+    try:
+        driver = webdriver.Chrome(options=options)
+        return driver
+    except Exception as e:
+        print(f"[BetbckScraper] Failed to create Chrome driver: {e}")
+        return None
+
+def login_to_betbck_selenium(driver):
+    """Login to BetBCK using Selenium."""
+    try:
+        print("[BetbckScraper] Logging in to BetBCK with Selenium...")
+        driver.get(LOGIN_PAGE_URL)
+        time.sleep(2)
+        
+        # Fill in login form - BetBCK uses customerID, not username
+        username_field = driver.find_element(By.NAME, "customerID")
+        password_field = driver.find_element(By.NAME, "password")
+        
+        username_field.send_keys(LOGIN_PAYLOAD_TEMPLATE["customerID"])
+        password_field.send_keys(LOGIN_PAYLOAD_TEMPLATE["password"])
+        
+        # Submit login form
+        login_button = driver.find_element(By.XPATH, "//input[@type='submit']")
+        login_button.click()
+        
+        # Wait for redirect to main page
+        WebDriverWait(driver, 10).until(
+            lambda d: "StraightSportSelection.php" in d.current_url or "PlayerGameSelection.php" in d.current_url or "main" in d.current_url.lower()
+        )
+        
+        print("[BetbckScraper] Login successful with Selenium.")
+        return True
+        
+    except Exception as e:
+        print(f"[BetbckScraper] Login failed with Selenium: {e}")
+        return False
+
+def scrape_betbck_with_periods_selenium(pod_home_team, pod_away_team, search_team_name_betbck=None, event_id=None):
+    """Scrape BetBCK data including 1H periods using Selenium for dynamic content."""
+    if not SELENIUM_AVAILABLE:
+        print("[BetbckScraper] Selenium not available, falling back to regular scraping.")
+        return scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck, event_id)
+    
+    driver = get_selenium_driver()
+    if not driver:
+        print("[BetbckScraper] Failed to create driver, falling back to regular scraping.")
+        return scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck, event_id)
+    
+    try:
+        # Login
+        if not login_to_betbck_selenium(driver):
+            return None
+        
+        # Navigate to main page first (like the regular scraper)
+        driver.get(MAIN_PAGE_URL_AFTER_LOGIN)
+        time.sleep(2)
+        
+        # Navigate to search page
+        driver.get(SEARCH_ACTION_URL)
+        time.sleep(2)
+        
+        # Perform search
+        search_term = search_team_name_betbck or f"{pod_home_team} {pod_away_team}"
+        search_field = driver.find_element(By.NAME, "keyword_search")
+        search_field.clear()
+        search_field.send_keys(search_term)
+        
+        search_button = driver.find_element(By.XPATH, "//input[@type='submit' and @value='Search']")
+        search_button.click()
+        
+        # Wait for results
+        time.sleep(3)
+        
+        # Get the page source and parse with BeautifulSoup
+        page_source = driver.page_source
+        soup = BeautifulSoup(page_source, 'html.parser')
+        
+        # Find the game wrapper
+        game_wrappers = []
+        for gw_class in GAME_WRAPPER_PRIMARY_CLASSES:
+            game_wrappers.extend(soup.find_all('table', class_=gw_class))
+        
+        if not game_wrappers:
+            print(f"[BetbckScraper] No game wrappers found for {search_term}")
+            return None
+        
+        # Look for 1st Half button and click it
+        first_half_button = None
+        for wrapper in game_wrappers:
+            button = wrapper.find('input', {'value': '1st Half'})
+            if button:
+                first_half_button = button
+                break
+        
+        if first_half_button:
+            try:
+                # Click the 1st Half button using Selenium
+                driver.execute_script("arguments[0].click();", first_half_button)
+                time.sleep(2)  # Wait for dynamic content to load
+                
+                # Get updated page source
+                page_source = driver.page_source
+                soup = BeautifulSoup(page_source, 'html.parser')
+                
+                print("[BetbckScraper] Successfully clicked 1st Half button and loaded period data.")
+            except Exception as e:
+                print(f"[BetbckScraper] Failed to click 1st Half button: {e}")
+        
+        # Now parse the game data including any loaded period data
+        result = parse_specific_game_from_search_html(page_source, pod_home_team, pod_away_team, event_id)
+        
+        # If we found a game, also try to extract 1H data from the same HTML
+        if result:
+            result['1H_data'] = extract_1h_data_from_html(page_source, pod_home_team, pod_away_team)
+        
+        return result
+        
+    except Exception as e:
+        print(f"[BetbckScraper] Error in Selenium scraping: {e}")
+        return None
+    finally:
+        if driver:
+            driver.quit()
+
+def extract_1h_data_from_html(html_content, home_team, away_team):
+    """Extract 1H data from HTML content that contains period information."""
+    try:
+        soup = BeautifulSoup(html_content, 'html.parser')
+        
+        # Look for 1H data in the HTML
+        # The 1H data might be in a separate table or section
+        game_wrappers = []
+        for gw_class in GAME_WRAPPER_PRIMARY_CLASSES:
+            game_wrappers.extend(soup.find_all('table', class_=gw_class))
+        
+        # Also check fallback classes
+        for gw_class in GAME_WRAPPER_FALLBACK_CLASSES:
+            game_wrappers.extend(soup.find_all('table', class_=gw_class))
+        
+        print(f"[BetbckParser] Checking {len(game_wrappers)} game wrappers for 1H data")
+        
+        for i, wrapper in enumerate(game_wrappers):
+            print(f"[BetbckParser] Checking wrapper {i} for 1H data")
+            
+            # Look for team names that contain "1H", "1st Half", or "1st 5 Innings"
+            team_elements = wrapper.find_all('span', string=lambda text: text and ('1H' in text or '1st Half' in text or '1st 5 Innings' in text))
+            
+            if team_elements:
+                print(f"[BetbckParser] Found 1H data in wrapper {i}")
+                
+                # Extract 1H odds data
+                odds_table = wrapper.find('table', class_='new_tb_cont')
+                if odds_table:
+                    data_rows_source = odds_table.find('tbody') or odds_table
+                    all_tr_in_odds_section = data_rows_source.find_all('tr', recursive=False)
+                    data_rows = [r for r in all_tr_in_odds_section if r.find('td', class_=lambda x: x and 'tbl_betAmount_td' in x) and not r.find('td', colspan=True)]
+                    
+                    if len(data_rows) >= 2:
+                        tds_home_row = data_rows[0].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                        tds_away_row = data_rows[1].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                        
+                        return {
+                            "home_spreads": extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row)>0 else [],
+                            "away_spreads": extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row)>0 else [],
+                            "home_moneyline_american": extract_american_odds_from_text(tds_home_row[1]) if len(tds_home_row)>1 else None,
+                            "away_moneyline_american": extract_american_odds_from_text(tds_away_row[1]) if len(tds_away_row)>1 else None,
+                            "home_totals": extract_all_spread_options_from_text(tds_home_row[2]) if len(tds_home_row)>2 else [],
+                            "away_totals": extract_all_spread_options_from_text(tds_away_row[2]) if len(tds_away_row)>2 else [],
+                        }
+            else:
+                # Also check for any text that might indicate 1H data
+                wrapper_text = wrapper.get_text().lower()
+                if '1h' in wrapper_text or '1st half' in wrapper_text or 'first half' in wrapper_text or '1st 5 innings' in wrapper_text:
+                    print(f"[BetbckParser] Found 1H indicators in wrapper {i} text: {wrapper_text[:100]}...")
+        
+        # NEW: Look for 1H data in separate tables (like NCAA football and baseball 1st 5 innings)
+        # Check for tables that contain team names with "1H" suffix or "1st 5" for baseball
+        print(f"[BetbckParser] Checking for separate 1H/1st 5 tables...")
+        
+        # Look for all tables that might contain 1H data
+        all_tables = soup.find_all('table')
+        print(f"[BetbckParser] Checking {len(all_tables)} total tables for 1H/1st 5 data...")
+        for table_idx, table in enumerate(all_tables):
+            table_text = table.get_text().lower()
+            
+            # COMPLETELY SKIP H+R+E tables - they are separate betting markets
+            if 'h+r+e' in table_text or 'hits+runs+errors' in table_text:
+                print(f"[BetbckParser] Skipping H+R+E table {table_idx} - separate betting market")
+                print(f"[BetbckParser] H+R+E table text preview: {table_text[:200]}...")
+                continue
+                
+            if '1h' in table_text or '1st half' in table_text or 'first half' in table_text or '1st 5 innings' in table_text or '1st 5' in table_text:
+                print(f"[BetbckParser] Found potential 1H/1st 5 table {table_idx}")
+                print(f"[BetbckParser] Table text preview: {table_text[:200]}...")
+                
+                # Look for team name elements that contain "1H", "1st 5", or team names with these suffixes
+                team_spans = table.find_all('span', string=lambda text: text and ('1H' in text or '1st 5' in text))
+                
+                # Also look for div elements that might contain team names with 1H/1st 5 suffixes
+                team_divs = table.find_all('div', string=lambda text: text and ('1H' in text or '1st 5' in text))
+                
+                # Look for any element containing team names with 1H/1st 5 suffixes
+                team_elements = table.find_all(string=lambda text: text and (
+                    ('1H' in text and any(team in text.lower() for team in [home_team.lower(), away_team.lower()])) or
+                    ('1st 5' in text and any(team in text.lower() for team in [home_team.lower(), away_team.lower()]))
+                ))
+                
+                if team_spans or team_divs or team_elements:
+                    print(f"[BetbckParser] Found 1H/1st 5 team elements in table {table_idx}")
+                    if team_spans:
+                        print(f"[BetbckParser] Team spans: {[span.get_text() for span in team_spans]}")
+                    if team_divs:
+                        print(f"[BetbckParser] Team divs: {[div.get_text() for div in team_divs]}")
+                    if team_elements:
+                        print(f"[BetbckParser] Team elements: {[elem.strip() for elem in team_elements[:5]]}")
+                    
+                    # Find the odds table within this table
+                    odds_table = table.find('table', class_='new_tb_cont')
+                    if odds_table:
+                        print(f"[BetbckParser] Found odds table in 1H/1st 5 table {table_idx}")
+                        data_rows_source = odds_table.find('tbody') or odds_table
+                        all_tr_in_odds_section = data_rows_source.find_all('tr', recursive=False)
+                        data_rows = [r for r in all_tr_in_odds_section if r.find('td', class_=lambda x: x and 'tbl_betAmount_td' in x) and not r.find('td', colspan=True)]
+                        
+                        if len(data_rows) >= 2:
+                            tds_home_row = data_rows[0].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                            tds_away_row = data_rows[1].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                            
+                            print(f"[BetbckParser] Data rows found: {len(data_rows)}")
+                            print(f"[BetbckParser] Home row cells: {len(tds_home_row)}")
+                            print(f"[BetbckParser] Away row cells: {len(tds_away_row)}")
+                            
+                            # Debug: Print the content of each cell
+                            for i, cell in enumerate(tds_home_row):
+                                print(f"[BetbckParser] Home cell {i}: {cell.get_text(strip=True)}")
+                                # Also check for select elements in each cell
+                                select_elements = cell.find_all('select')
+                                if select_elements:
+                                    for j, select in enumerate(select_elements):
+                                        options = select.find_all('option')
+                                        print(f"[BetbckParser] Home cell {i} select {j} options: {[opt.get_text(strip=True) for opt in options[:3]]}")
+                            for i, cell in enumerate(tds_away_row):
+                                print(f"[BetbckParser] Away cell {i}: {cell.get_text(strip=True)}")
+                                # Also check for select elements in each cell
+                                select_elements = cell.find_all('select')
+                                if select_elements:
+                                    for j, select in enumerate(select_elements):
+                                        options = select.find_all('option')
+                                        print(f"[BetbckParser] Away cell {i} select {j} options: {[opt.get_text(strip=True) for opt in options[:3]]}")
+                            
+                            print(f"[BetbckParser] Successfully extracted 1H/1st 5 data from separate table {table_idx}")
+                            return {
+                                "home_spreads": extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row)>0 else [],
+                                "away_spreads": extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row)>0 else [],
+                                "home_moneyline_american": extract_american_odds_from_text(tds_home_row[1]) if len(tds_home_row)>1 else None,
+                                "away_moneyline_american": extract_american_odds_from_text(tds_away_row[1]) if len(tds_away_row)>1 else None,
+                                "home_totals": extract_all_spread_options_from_text(tds_home_row[2]) if len(tds_home_row)>2 else [],
+                                "away_totals": extract_all_spread_options_from_text(tds_away_row[2]) if len(tds_away_row)>2 else [],
+                            }
+                    else:
+                        print(f"[BetbckParser] No odds table found in 1H/1st 5 table {table_idx}")
+                else:
+                    print(f"[BetbckParser] No team elements found in table {table_idx} despite 1H/1st 5 indicators")
+        
+        # NEW: Look for additional tables that might contain 1st 5 innings spreads and moneylines
+        print(f"[BetbckParser] Looking for additional 1st 5 innings tables with spreads/moneylines...")
+        
+        # Look for tables that contain both team names and betting data
+        for table_idx, table in enumerate(all_tables):
+            table_text = table.get_text().lower()
+            # Check if this table contains both team names and betting odds
+            has_team_names = any(team in table_text for team in [home_team.lower(), away_team.lower()])
+            has_betting_data = any(indicator in table_text for indicator in ['+', '-', 'o', 'u', 'over', 'under'])
+            has_1st5_indicator = '1st 5' in table_text
+            
+            if has_team_names and has_betting_data and has_1st5_indicator:
+                print(f"[BetbckParser] Found potential 1st 5 betting table {table_idx}")
+                print(f"[BetbckParser] Table text preview: {table_text[:300]}...")
+                
+                # Look for odds tables within this table
+                odds_tables = table.find_all('table', class_='new_tb_cont')
+                if odds_tables:
+                    print(f"[BetbckParser] Found {len(odds_tables)} odds tables in 1st 5 table {table_idx}")
+                    for odds_idx, odds_table in enumerate(odds_tables):
+                        data_rows_source = odds_table.find('tbody') or odds_table
+                        all_tr_in_odds_section = data_rows_source.find_all('tr', recursive=False)
+                        data_rows = [r for r in all_tr_in_odds_section if r.find('td', class_=lambda x: x and 'tbl_betAmount_td' in x) and not r.find('td', colspan=True)]
+                        
+                        if len(data_rows) >= 2:
+                            tds_home_row = data_rows[0].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                            tds_away_row = data_rows[1].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                            
+                            print(f"[BetbckParser] 1st 5 odds table {odds_idx} - Home cells: {len(tds_home_row)}, Away cells: {len(tds_away_row)}")
+                            
+                            # Check if this table has spreads and moneylines (not just totals)
+                            home_has_spreads = len(tds_home_row) > 0 and tds_home_row[0].get_text(strip=True)
+                            home_has_ml = len(tds_home_row) > 1 and tds_home_row[1].get_text(strip=True)
+                            
+                            if home_has_spreads or home_has_ml:
+                                print(f"[BetbckParser] Found 1st 5 table with spreads/moneylines!")
+                                return {
+                                    "home_spreads": extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row)>0 else [],
+                                    "away_spreads": extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row)>0 else [],
+                                    "home_moneyline_american": extract_american_odds_from_text(tds_home_row[1]) if len(tds_home_row)>1 else None,
+                                    "away_moneyline_american": extract_american_odds_from_text(tds_away_row[1]) if len(tds_away_row)>1 else None,
+                                    "home_totals": extract_all_spread_options_from_text(tds_home_row[2]) if len(tds_home_row)>2 else [],
+                                    "away_totals": extract_all_spread_options_from_text(tds_away_row[2]) if len(tds_away_row)>2 else [],
+                                }
+        
+        # NEW: Look for 1st 5 innings data in separate tables (like the White Sox vs Twins example)
+        print(f"[BetbckParser] Looking for 1st 5 innings data in separate tables...")
+        
+        # Look for F5 (First 5 innings) tables - completely ignore H+R+E, 1st inning, and other props
+        for table_idx, table in enumerate(all_tables):
+            table_text = table.get_text().lower()
+            
+            # COMPLETELY SKIP H+R+E tables - they are separate betting markets
+            # Check for H+R+E indicators first - if found, skip regardless of other content
+            if 'h+r+e' in table_text or 'hits+runs+errors' in table_text:
+                print(f"[BetbckParser] Skipping H+R+E table {table_idx} - separate betting market")
+                print(f"[BetbckParser] H+R+E table text preview: {table_text[:200]}...")
+                continue
+                
+            # Skip other non-F5 indicators
+            skip_indicators = ['1st inning', 'first inning', 'corners', 'series']
+            if any(indicator in table_text for indicator in skip_indicators):
+                print(f"[BetbckParser] Skipping non-F5 table {table_idx} (contains: {[ind for ind in skip_indicators if ind in table_text]})")
+                continue
+                
+            # Look for ACTUAL F5 tables that contain "1st 5" but are NOT H+R+E
+            # Only process if we have "1st 5" AND absolutely no H+R+E indicators
+            if ('1st 5' in table_text or '1st 5 innings' in table_text) and 'h+r+e' not in table_text and 'hits+runs+errors' not in table_text:
+                print(f"[BetbckParser] Found potential F5 table {table_idx}")
+                
+                # Look for team name elements that contain "1st 5" but NOT "h+r+e"
+                team_spans = table.find_all('span', string=lambda text: text and '1st 5' in text and 'h+r+e' not in text.lower())
+                if team_spans:
+                    print(f"[BetbckParser] Found F5 team names in table {table_idx}: {[span.get_text() for span in team_spans]}")
+                    
+                    # Double-check that this is not an H+R+E table by looking at team names
+                    team_elements = [span.get_text().strip() for span in team_spans]
+                    if any('h+r+e' in team.lower() or 'hits+runs+errors' in team.lower() for team in team_elements):
+                        print(f"[BetbckParser] Skipping H+R+E table {table_idx} (found in team elements)")
+                        continue
+                    
+                    # Look for the odds table within this table
+                    odds_table = table.find('table', class_='new_tb_cont')
+                    if odds_table:
+                        print(f"[BetbckParser] Found odds table in 1st 5 table {table_idx}")
+                        
+                        # Extract data from the odds table
+                        data_rows = odds_table.find_all('tr')
+                        if len(data_rows) >= 2:
+                            tds_home_row = data_rows[0].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                            tds_away_row = data_rows[1].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                            
+                            # Debug: Print the content of each cell to understand the structure
+                            print(f"[BetbckParser] Home row cells: {len(tds_home_row)}")
+                            print(f"[BetbckParser] Away row cells: {len(tds_away_row)}")
+                            for i, cell in enumerate(tds_home_row):
+                                cell_text = cell.get_text(strip=True)
+                                print(f"[BetbckParser] Home cell {i}: '{cell_text}'")
+                            for i, cell in enumerate(tds_away_row):
+                                cell_text = cell.get_text(strip=True)
+                                print(f"[BetbckParser] Away cell {i}: '{cell_text}'")
+                            
+                            print(f"[BetbckParser] Successfully extracted 1st 5 innings data from separate table {table_idx}")
+                            return {
+                                "home_spreads": extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row)>0 else [],
+                                "away_spreads": extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row)>0 else [],
+                                "home_moneyline_american": extract_american_odds_from_text(tds_home_row[1]) if len(tds_home_row)>1 else None,
+                                "away_moneyline_american": extract_american_odds_from_text(tds_away_row[1]) if len(tds_away_row)>1 else None,
+                                "home_totals": extract_all_total_options_from_text(tds_home_row[2]) if len(tds_home_row)>2 else [],
+                                "away_totals": extract_all_total_options_from_text(tds_away_row[2]) if len(tds_away_row)>2 else []
+                            }
+        
+        # If we get here, we didn't find any F5 data, so return None
+        print(f"[BetbckParser] No F5 data found in any table")
+        return None
+        
+        print(f"[BetbckParser] No 1H data found in any wrapper or separate table")
+        return None
+        
+    except Exception as e:
+        print(f"[BetbckParser] Error extracting 1H data: {e}")
+        return None

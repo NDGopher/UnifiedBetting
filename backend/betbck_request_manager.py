@@ -275,7 +275,7 @@ class BetBCKRequestManager:
 
             # Parse game data using correct POD team names
             if pod_home_team and pod_away_team:
-                from betbck_scraper import parse_specific_game_from_search_html
+                from betbck_scraper import parse_specific_game_from_search_html, extract_1h_data_from_html
                 from utils.pod_utils import clean_pod_team_name_for_search
                 
                 # Clean the team names to remove UEFA and other suffixes
@@ -291,6 +291,11 @@ class BetBCKRequestManager:
                 logger.info(f"[BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names")
                 
                 game_data = parse_specific_game_from_search_html(search_results_html, pod_home_clean, pod_away_clean, event_id)
+                
+                # Add 1H data if we found a game
+                if game_data:
+                    logger.info(f"[BetBCK-Manager] Game data found, extracting 1H data...")
+                    game_data['1H_data'] = extract_1h_data_from_html(search_results_html, pod_home_clean, pod_away_clean)
             else:
                 game_data = parse_game_data_from_html(search_results_html, search_term)
 

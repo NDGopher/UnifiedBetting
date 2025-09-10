@@ -1,10 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800&display=swap");
+
 * {
   box-sizing: border-box;
 }
+
 body {
   margin: 0;
   font-family:
+    "SF Pro Display",
     "Inter",
     -apple-system,
     BlinkMacSystemFont,
@@ -44,6 +48,22 @@ code {
 } /* Smooth animations */
 * {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Pulse animation for live indicators */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 } /* Glass effect utilities */
 .glass-effect {
   background: rgba(20, 25, 35, 0.95);

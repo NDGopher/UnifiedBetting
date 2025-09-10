@@ -12,7 +12,13 @@ import {
   Chip,
   CircularProgress,
 } from '@mui/material';
-import { Warning as WarningIcon, Error as ErrorIcon } from '@mui/icons-material';
+import { 
+  Warning as WarningIcon, 
+  Error as ErrorIcon,
+  CheckCircle,
+  Cancel,
+  Refresh
+} from '@mui/icons-material';
 
 interface BetBCKAlert {
   message: string;
@@ -131,15 +137,27 @@ const BetBCKStatusPopup: React.FC = () => {
           m: 0,
           maxWidth: '400px',
           width: '400px',
+          background: 'rgba(26, 26, 26, 0.95)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: 2,
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
         }
       }}
     >
-      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pb: 1 }}>
+      <DialogTitle sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: 1, 
+        pb: 2,
+        color: '#FFFFFF',
+        fontWeight: 600
+      }}>
         {getIcon()}
         {getTitle()}
       </DialogTitle>
       
-      <DialogContent sx={{ pb: 2 }}>
+      <DialogContent sx={{ pb: 3 }}>
         {betbckStatus.rate_limited && (
           <Alert severity="error" sx={{ mb: 2 }}>
             <AlertTitle>Rate Limited!</AlertTitle>
@@ -175,17 +193,32 @@ const BetBCKStatusPopup: React.FC = () => {
             <Chip 
               label={`Queue: ${betbckStatus.queue_size}`} 
               size="small" 
-              color={betbckStatus.queue_size > 10 ? 'warning' : 'default'} 
+              sx={{
+                backgroundColor: betbckStatus.queue_size > 10 ? 'rgba(255, 152, 0, 0.2)' : 'rgba(46, 125, 50, 0.2)',
+                color: betbckStatus.queue_size > 10 ? '#FF9800' : '#2E7D32',
+                border: betbckStatus.queue_size > 10 ? '1px solid #FF9800' : '1px solid #2E7D32',
+                fontSize: '0.75rem'
+              }}
             />
             <Chip 
               label={`Session: ${betbckStatus.session_age_minutes.toFixed(1)}m`} 
               size="small" 
-              color={betbckStatus.session_age_minutes > 25 ? 'warning' : 'default'} 
+              sx={{
+                backgroundColor: betbckStatus.session_age_minutes > 25 ? 'rgba(255, 152, 0, 0.2)' : 'rgba(46, 125, 50, 0.2)',
+                color: betbckStatus.session_age_minutes > 25 ? '#FF9800' : '#2E7D32',
+                border: betbckStatus.session_age_minutes > 25 ? '1px solid #FF9800' : '1px solid #2E7D32',
+                fontSize: '0.75rem'
+              }}
             />
             <Chip 
               label={betbckStatus.worker_running ? 'Worker: Running' : 'Worker: Offline'} 
               size="small" 
-              color={betbckStatus.worker_running ? 'success' : 'error'} 
+              sx={{
+                backgroundColor: betbckStatus.worker_running ? 'rgba(46, 125, 50, 0.2)' : 'rgba(244, 67, 54, 0.2)',
+                color: betbckStatus.worker_running ? '#2E7D32' : '#F44336',
+                border: betbckStatus.worker_running ? '1px solid #2E7D32' : '1px solid #F44336',
+                fontSize: '0.75rem'
+              }}
             />
           </Box>
           
@@ -197,8 +230,19 @@ const BetBCKStatusPopup: React.FC = () => {
         </Box>
       </DialogContent>
       
-      <DialogActions>
-        <Button onClick={handleDismiss} color="primary">
+      <DialogActions sx={{ px: 3, pb: 3 }}>
+        <Button 
+          onClick={handleDismiss} 
+          variant="outlined"
+          sx={{
+            color: '#B0B0B0',
+            borderColor: 'rgba(255, 255, 255, 0.2)',
+            '&:hover': {
+              borderColor: 'rgba(255, 255, 255, 0.3)',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)'
+            }
+          }}
+        >
           Dismiss
         </Button>
       </DialogActions>

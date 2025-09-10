@@ -90,9 +90,9 @@ const PropBuilder: React.FC = () => {
 
   const API_BASE = "http://localhost:5001";
 
-  const getSportEmoji = (sport: string, size: number = 24): React.ReactElement => {
+  const getSportIcon = (sport: string, size: number = 24): React.ReactElement => {
     const sportLower = sport.toLowerCase();
-    const iconProps = { sx: { fontSize: size } };
+    const iconProps = { sx: { fontSize: size, color: '#2E7D32' } };
     if (sportLower.includes("nba") || sportLower.includes("wnba"))
       return <SportsBasketball {...iconProps} />;
     if (sportLower.includes("mlb")) return <SportsBaseball {...iconProps} />;
@@ -280,6 +280,10 @@ const PropBuilder: React.FC = () => {
     'BR': 'betrivers.png',
     'Pinnacle': 'pinnacle.png',
     'pinnacle': 'pinnacle.png',
+    'F': 'fliff.png',
+    'NV': 'novig.png',
+    'PX': 'prophetx.png',
+    'BM': 'bookmaker.png',
   };
 
   const normalizeBook = (book: string) => {
@@ -409,9 +413,40 @@ const PropBuilder: React.FC = () => {
               console.log('prop.books:', (prop as any).books);
               return (
                 <Grid item xs={12} md={6} lg={4} key={propId}>
-                  <Paper sx={{ p: 2, borderRadius: 3, boxShadow: 4, mb: 2, background: '#181c24', position: 'relative', minHeight: 220 }}>
+                  <Paper sx={{ 
+                    p: 3, 
+                    borderRadius: 2, 
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                    mb: 2, 
+                    background: 'rgba(26, 26, 26, 0.8)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    position: 'relative', 
+                    minHeight: 240,
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
+                      transform: 'translateY(-2px)',
+                    }
+                  }}>
                     {/* Delete icon absolute top right */}
-                    <IconButton size="small" sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2 }} onClick={() => handleHideProp(propId)}><Delete fontSize="small" /></IconButton>
+                    <IconButton 
+                      size="small" 
+                      sx={{ 
+                        position: 'absolute', 
+                        top: 12, 
+                        right: 12, 
+                        zIndex: 2,
+                        color: '#9E9E9E',
+                        '&:hover': {
+                          color: '#F44336',
+                          backgroundColor: 'rgba(244, 67, 54, 0.1)'
+                        }
+                      }} 
+                      onClick={() => handleHideProp(propId)}
+                    >
+                      <Delete fontSize="small" />
+                    </IconButton>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
                       {/* Left: Main Info */}
                       <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -459,25 +494,34 @@ const PropBuilder: React.FC = () => {
                       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 60, ml: 2, flexShrink: 0, justifyContent: 'center', height: '100%' }}>
                         <Typography variant="caption" sx={{ color: 'gray', mb: 0.2, fontWeight: 500, textAlign: 'center', width: '100%' }}>EV</Typography>
                         <Box sx={{
-                          bgcolor: '#23272f',
-                          border: '2px solid #43a047',
+                          bgcolor: 'rgba(46, 125, 50, 0.1)',
+                          border: '2px solid #2E7D32',
                           borderRadius: 1.5,
-                          px: 1.5,
-                          py: 0.2,
-                          minWidth: 40,
+                          px: 2,
+                          py: 0.5,
+                          minWidth: 50,
                           display: 'flex',
                           justifyContent: 'center',
                           alignItems: 'center',
                           mb: 0.5,
                         }}>
-                          <Typography variant="h6" sx={{ color: '#43a047', fontWeight: 700, fontSize: '1.15em', lineHeight: 1, textAlign: 'center', width: '100%' }}>{prop.ev}</Typography>
+                          <Typography variant="h6" sx={{ 
+                            color: '#2E7D32', 
+                            fontWeight: 700, 
+                            fontSize: '1.1em', 
+                            lineHeight: 1, 
+                            textAlign: 'center', 
+                            width: '100%' 
+                          }}>
+                            {prop.ev}
+                          </Typography>
                         </Box>
                         {/* Room for future buttons */}
                       </Box>
                     </Box>
-                    {/* Sport logo in bottom right corner */}
+                    {/* Sport icon in bottom right corner */}
                     <Box sx={{ position: 'absolute', bottom: 10, right: 10, zIndex: 1 }}>
-                      {getSportEmoji(prop.sport, 22)}
+                      {getSportIcon(prop.sport, 22)}
                     </Box>
                   </Paper>
                 </Grid>

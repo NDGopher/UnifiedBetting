@@ -1,13 +1,22 @@
 .nvp-flash {
-  animation: nvpFlash 1.5s;
-  background: #ffe066 !important;
-  transition: background 0.5s;
+  animation: nvpFlash 1.2s;
+  background: rgba(46, 125, 50, 0.2) !important;
+  transition: background 0.3s ease-out;
 }
 
 @keyframes nvpFlash {
-  0% { background: #ffe066; }
-  80% { background: #ffe066; }
-  100% { background: transparent; }
+  0% { 
+    background: rgba(46, 125, 50, 0.2);
+    box-shadow: 0 0 8px rgba(46, 125, 50, 0.3);
+  }
+  50% { 
+    background: rgba(46, 125, 50, 0.15);
+    box-shadow: 0 0 4px rgba(46, 125, 50, 0.2);
+  }
+  100% { 
+    background: transparent;
+    box-shadow: none;
+  }
 }
 
 /* Additional styling for better table appearance */

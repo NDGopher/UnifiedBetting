@@ -1,6 +1,7 @@
 import json
 import logging
 import requests
+import time
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from utils.pod_utils import analyze_markets_for_ev, process_event_odds_for_display, american_to_decimal, decimal_to_american
@@ -24,19 +25,46 @@ if not logger.hasHandlers():
 # Swordfish API configuration
 SWORDFISH_API_BASE_URL = "https://swordfish-production.up.railway.app/events/"
 
-def get_swordfish_odds(event_id: str) -> dict:
-    """Fetch odds for an event from Swordfish API. If fails, log error and return None."""
-    try:
-        url = f"{SWORDFISH_API_BASE_URL}{event_id}"
-        response = requests.get(url, timeout=10)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            logger.warning(f"Failed to get Swordfish odds for event {event_id}: {response.status_code}.")
-            return None
-    except Exception as e:
-        logger.warning(f"Error getting Swordfish odds for event {event_id}: {e}.")
-        return None
+def get_swordfish_odds(event_id: str, max_retries: int = 3) -> dict:
+    """Fetch odds for an event from Swordfish API with retry logic. If fails, log error and return None."""
+    url = f"{SWORDFISH_API_BASE_URL}{event_id}"
+    
+    for attempt in range(max_retries):
+        try:
+            logger.debug(f"[SWORDFISH] Attempt {attempt + 1}/{max_retries} for event {event_id}")
+            response = requests.get(url, timeout=15)  # Increased timeout
+            
+            if response.status_code == 200:
+                logger.debug(f"[SWORDFISH] Successfully fetched odds for event {event_id}")
+                return response.json()
+            elif response.status_code == 404:
+                logger.warning(f"[SWORDFISH] Event {event_id} not found (404)")
+                return None
+            elif response.status_code == 429:
+                logger.warning(f"[SWORDFISH] Rate limited for event {event_id}, waiting before retry")
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)  # Exponential backoff
+                    continue
+            else:
+                logger.warning(f"[SWORDFISH] Failed to get odds for event {event_id}: {response.status_code}")
+                if attempt < max_retries - 1:
+                    time.sleep(1)  # Short delay before retry
+                    continue
+                return None
+                
+        except requests.exceptions.Timeout:
+            logger.warning(f"[SWORDFISH] Timeout for event {event_id} (attempt {attempt + 1})")
+            if attempt < max_retries - 1:
+                time.sleep(1)
+                continue
+        except Exception as e:
+            logger.warning(f"[SWORDFISH] Error getting odds for event {event_id} (attempt {attempt + 1}): {e}")
+            if attempt < max_retries - 1:
+                time.sleep(1)
+                continue
+    
+    logger.warning(f"[SWORDFISH] All {max_retries} attempts failed for event {event_id}")
+    return None
 
 def calculate_ev(betbck_odds: str, pinnacle_odds: str) -> float:
     """Calculate Expected Value"""
@@ -156,7 +184,7 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
             event_id = matched_event.get('pinnacle_event_id')
             home_team = matched_event.get('pinnacle_home_team', matched_event.get('betbck_site_home_team', 'Unknown'))
             away_team = matched_event.get('pinnacle_away_team', matched_event.get('betbck_site_away_team', 'Unknown'))
-            sport = matched_event.get('betbck_sport') or matched_event.get('pinnacle_sport_name') or 'Unknown'
+            sport = matched_event.get('sport', 'Unknown')
             betbck_game = matched_event.get('betbck_game', {})
             betbck_odds = betbck_game.get('betbck_site_odds', {})
             betbck_odds_data = betbck_odds
@@ -199,46 +227,46 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
             if ev_ml_home is not None:
                 all_bets_with_ev.append({
                     'sport': sport,
-                    'event': event_name,
+                    'matchup': event_name,
                     'bet': f"ML - {home_team}",
                     'bet_type': 'Moneyline',
                     'betbck_odds': bck_ml_home_am,
-                    'pin_nvp': decimal_to_american(pin_ml_home_dec),
+                    'pinnacle_nvp': decimal_to_american(pin_ml_home_dec),
                     'ev': f"{ev_ml_home*100:.2f}%",
                     'ev_val': ev_ml_home,
                     'start_time': start_time_fmt,
                     'league': league,
-                    'max_bet': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
+                    'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'event_id': event_id
                 })
             if ev_ml_away is not None:
                 all_bets_with_ev.append({
                     'sport': sport,
-                    'event': event_name,
+                    'matchup': event_name,
                     'bet': f"ML - {away_team}",
                     'bet_type': 'Moneyline',
                     'betbck_odds': bck_ml_away_am,
-                    'pin_nvp': decimal_to_american(pin_ml_away_dec),
+                    'pinnacle_nvp': decimal_to_american(pin_ml_away_dec),
                     'ev': f"{ev_ml_away*100:.2f}%",
                     'ev_val': ev_ml_away,
                     'start_time': start_time_fmt,
                     'league': league,
-                    'max_bet': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
+                    'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'event_id': event_id
                 })
             if ev_ml_draw is not None:
                 all_bets_with_ev.append({
                     'sport': sport,
-                    'event': event_name,
+                    'matchup': event_name,
                     'bet': 'ML - Draw',
                     'bet_type': 'Moneyline',
                     'betbck_odds': bck_ml_draw_am,
-                    'pin_nvp': decimal_to_american(pin_ml_draw_dec),
+                    'pinnacle_nvp': decimal_to_american(pin_ml_draw_dec),
                     'ev': f"{ev_ml_draw*100:.2f}%",
                     'ev_val': ev_ml_draw,
                     'start_time': start_time_fmt,
                     'league': league,
-                    'max_bet': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
+                    'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
                     'event_id': event_id
                 })
             # --- Spreads ---
@@ -282,16 +310,16 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                         if ev is not None:
                             all_bets_with_ev.append({
                                 'sport': sport,
-                                'event': event_name,
+                                'matchup': event_name,
                                 'bet': f"{mapped_team} {bck_line}",
                                 'bet_type': 'Spread',
                                 'betbck_odds': bck_odds_am,
-                                'pin_nvp': decimal_to_american(nvp_pin_spread),
+                                'pinnacle_nvp': decimal_to_american(nvp_pin_spread),
                                 'ev': f"{ev*100:.2f}%",
                                 'ev_val': ev,
                                 'start_time': start_time_fmt,
                                 'league': league,
-                                'max_bet': (pin_spread_market.get('max') if pin_spread_market else None) or meta_limits.get('max_spread'),
+                                'pinnacle_limit': (pin_spread_market.get('max') if pin_spread_market else None) or meta_limits.get('max_spread'),
                                 'event_id': event_id
                             })
                     else:
@@ -331,16 +359,16 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                         if ev is not None:
                             all_bets_with_ev.append({
                                 'sport': sport,
-                                'event': event_name,
+                                'matchup': event_name,
                                 'bet': f"{mapped_team} {bck_line}",
                                 'bet_type': 'Spread',
                                 'betbck_odds': bck_odds_am,
-                                'pin_nvp': decimal_to_american(nvp_pin_spread),
+                                'pinnacle_nvp': decimal_to_american(nvp_pin_spread),
                                 'ev': f"{ev*100:.2f}%",
                                 'ev_val': ev,
                                 'start_time': start_time_fmt,
                                 'league': league,
-                                'max_bet': (pin_spread_market.get('max') if pin_spread_market else None) or meta_limits.get('max_spread'),
+                                'pinnacle_limit': (pin_spread_market.get('max') if pin_spread_market else None) or meta_limits.get('max_spread'),
                                 'event_id': event_id
                             })
                     else:
@@ -375,16 +403,16 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                         if ev_over is not None:
                             all_bets_with_ev.append({
                                 'sport': sport,
-                                'event': event_name,
+                                'matchup': event_name,
                                 'bet': f"Over {pin_total_key}",
                                 'bet_type': 'Total',
                                 'betbck_odds': bck_over_am,
-                                'pin_nvp': decimal_to_american(nvp_pin_over),
+                                'pinnacle_nvp': decimal_to_american(nvp_pin_over),
                                 'ev': f"{ev_over*100:.2f}%",
                                 'ev_val': ev_over,
                                 'start_time': start_time_fmt,
                                 'league': league,
-                                'max_bet': pin_total_market.get('max') or meta_limits.get('max_total'),
+                                'pinnacle_limit': pin_total_market.get('max') or meta_limits.get('max_total'),
                                 'event_id': event_id
                             })
                     if bck_under_am is not None and nvp_pin_under is not None:
@@ -393,16 +421,16 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
                         if ev_under is not None:
                             all_bets_with_ev.append({
                                 'sport': sport,
-                                'event': event_name,
+                                'matchup': event_name,
                                 'bet': f"Under {pin_total_key}",
                                 'bet_type': 'Total',
                                 'betbck_odds': bck_under_am,
-                                'pin_nvp': decimal_to_american(nvp_pin_under),
+                                'pinnacle_nvp': decimal_to_american(nvp_pin_under),
                                 'ev': f"{ev_under*100:.2f}%",
                                 'ev_val': ev_under,
                                 'start_time': start_time_fmt,
                                 'league': league,
-                                'max_bet': pin_total_market.get('max') or meta_limits.get('max_total'),
+                                'pinnacle_limit': pin_total_market.get('max') or meta_limits.get('max_total'),
                                 'event_id': event_id
                             })
         except Exception as e:

@@ -68,9 +68,25 @@ const EVCalculator: React.FC = () => {
   }, [betAmount, betOdds, trueOdds, oddsFormat]);
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 2 }}>
-      <Paper sx={{ p: 4, minWidth: 340, maxWidth: 400, width: '100%', textAlign: 'center', borderRadius: 3, boxShadow: 4 }}>
-        <Typography variant="h6" gutterBottom>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Paper sx={{ 
+        p: 4, 
+        minWidth: 360, 
+        maxWidth: 420, 
+        width: '100%', 
+        textAlign: 'center', 
+        borderRadius: 2, 
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+        background: 'rgba(26, 26, 26, 0.8)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)'
+      }}>
+        <Typography variant="h6" sx={{ 
+          mb: 3, 
+          color: '#FFFFFF', 
+          fontWeight: 500,
+          letterSpacing: '-0.01em'
+        }}>
           EV Calculator
         </Typography>
         <Grid container spacing={2}>
@@ -129,19 +145,54 @@ const EVCalculator: React.FC = () => {
           </Grid>
           {result && (
             <Grid item xs={12}>
-              <Box sx={{ mt: 2, p: 2, bgcolor: "background.paper", borderRadius: 1 }}>
-                <Typography variant="subtitle1" gutterBottom>
-                  Results:
+              <Box sx={{ 
+                mt: 3, 
+                p: 3, 
+                bgcolor: 'rgba(46, 125, 50, 0.1)', 
+                borderRadius: 2,
+                border: '1px solid rgba(46, 125, 50, 0.2)'
+              }}>
+                <Typography variant="subtitle1" sx={{ 
+                  mb: 2, 
+                  color: '#FFFFFF', 
+                  fontWeight: 600 
+                }}>
+                  Results
                 </Typography>
-                <Typography>
-                  EV %: <b>{result.evPercent.toFixed(2)}%</b>
-                </Typography>
-                <Typography>
-                  Expected Return: <b>${result.ev.toFixed(2)}</b>
-                </Typography>
-                <Typography>
-                  Implied Probability: {result.impliedProbability.toFixed(2)}%
-                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
+                      EV %:
+                    </Typography>
+                    <Typography sx={{ 
+                      color: result.evPercent > 0 ? '#2E7D32' : '#F44336', 
+                      fontWeight: 700,
+                      fontSize: '1rem'
+                    }}>
+                      {result.evPercent > 0 ? '+' : ''}{result.evPercent.toFixed(2)}%
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
+                      Expected Return:
+                    </Typography>
+                    <Typography sx={{ 
+                      color: result.ev > 0 ? '#2E7D32' : '#F44336', 
+                      fontWeight: 700,
+                      fontSize: '1rem'
+                    }}>
+                      ${result.ev > 0 ? '+' : ''}{result.ev.toFixed(2)}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
+                      Implied Probability:
+                    </Typography>
+                    <Typography sx={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.875rem' }}>
+                      {result.impliedProbability.toFixed(2)}%
+                    </Typography>
+                  </Box>
+                </Box>
               </Box>
             </Grid>
           )}
