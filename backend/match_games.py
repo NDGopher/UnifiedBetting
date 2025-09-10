@@ -4,6 +4,7 @@ import re
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta, timezone
 from utils.pod_utils import normalize_team_name_for_matching
+from rapidfuzz import fuzz
 
 # Use the specialized matching logger
 logger = logging.getLogger("matching")
@@ -433,9 +434,16 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             if not norm_pin_home or not norm_pin_away:
                 continue
                 
-            # Try both orientations
-            score_direct = token_set_ratio(f"{norm_bck_home} {norm_bck_away}", f"{norm_pin_home} {norm_pin_away}")
-            score_flipped = token_set_ratio(f"{norm_bck_home} {norm_bck_away}", f"{norm_pin_away} {norm_pin_home}")
+            # Try both orientations - require BOTH teams to match, not just token overlap
+            # Direct orientation: BetBCK home vs Pinnacle home, BetBCK away vs Pinnacle away
+            home_match_score = fuzz.ratio(norm_bck_home, norm_pin_home)
+            away_match_score = fuzz.ratio(norm_bck_away, norm_pin_away)
+            score_direct = (home_match_score + away_match_score) / 2 if home_match_score >= 60 and away_match_score >= 60 else 0
+            
+            # Flipped orientation: BetBCK home vs Pinnacle away, BetBCK away vs Pinnacle home
+            home_flipped_score = fuzz.ratio(norm_bck_home, norm_pin_away)
+            away_flipped_score = fuzz.ratio(norm_bck_away, norm_pin_home)
+            score_flipped = (home_flipped_score + away_flipped_score) / 2 if home_flipped_score >= 60 and away_flipped_score >= 60 else 0
             
             logger.debug(f"[MATCH] Comparing: '{norm_bck_home} {norm_bck_away}' vs '{norm_pin_home} {norm_pin_away}' (direct: {score_direct}, flipped: {score_flipped})")
             
