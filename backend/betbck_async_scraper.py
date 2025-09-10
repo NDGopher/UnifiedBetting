@@ -33,11 +33,38 @@ class BetBCKAsyncScraper:
             re.compile(r"SOCCER_.*?_Game_"),
             re.compile(r"BASKETBALL_NBA_Game_"),
             re.compile(r"BASKETBALL_NCAAB_Game_"),
+            re.compile(r"BASKETBALL_WNBA_Game_"),
+            re.compile(r"FOOTBALL_NFL_Game_"),
+            re.compile(r"FOOTBALL_NCAAF_Game_"),
+            re.compile(r"FOOTBALL_COLLEGE_Game_"),
+            re.compile(r"FOOTBALL_CANADIAN_Game_"),
             re.compile(r"HOCKEY_NHL_Game_"),
             re.compile(r"BASEBALL_MLB_Game_"),
+            re.compile(r"BASEBALL_WBC_Game_"),
+            re.compile(r"BASEBALL_MEXICAN@20;BASE_Game_"),
             re.compile(r"BASEBALL_(JAPAN|KOREA|TAIWAN)_.*?_Game_"),
             re.compile(r"BASEBALL_OTHER@20;LEAGUE_Game_"),
-            re.compile(r"MARTIAL@20;ARTS_.*?_Game_")
+            re.compile(r"MARTIAL@20;ARTS_.*?_Game_"),
+            re.compile(r"BOXING_.*?_Game_"),
+            re.compile(r"GOLF_.*?_Game_"),
+            re.compile(r"TENNIS_.*?_Game_"),
+            re.compile(r"AUTO@20;RACING_.*?_Game_"),
+            re.compile(r"CRICKET_.*?_Game_"),
+            re.compile(r"RUGBY_.*?_Game_"),
+            re.compile(r"LIVE_MLB@20;LIVE_Game_"),
+            re.compile(r"LIVE_FOOTBALL_NFL@20;LIVE_Game_"),
+            re.compile(r"LIVE_FOOTBALL_COLLEGE@20;LIVE_Game_"),
+            re.compile(r"LIVE_BASKETBALL_NBA@20;LIVE_Game_"),
+            re.compile(r"LIVE_BASKETBALL_WNBA@20;LIVE_Game_"),
+            re.compile(r"LIVE_HOCKEY_NHL@20;LIVE_Game_"),
+            re.compile(r"LIVE_SOCCER_.*?@20;LIVE_Game_"),
+            re.compile(r"LIVE_TENNIS_.*?@20;LIVE_Game_"),
+            re.compile(r"LIVE_GOLF_.*?@20;LIVE_Game_"),
+            re.compile(r"LIVE_MARTIAL@20;ARTS_.*?@20;LIVE_Game_"),
+            re.compile(r"LIVE_BOXING_.*?@20;LIVE_Game_"),
+            re.compile(r"LIVE_AUTO@20;RACING_.*?@20;LIVE_Game_"),
+            re.compile(r"LIVE_CRICKET_.*?@20;LIVE_Game_"),
+            re.compile(r"LIVE_RUGBY_.*?@20;LIVE_Game_")
         ]
         self.output_file = "data/betbck_games.json"
 
@@ -219,6 +246,14 @@ class BetBCKAsyncScraper:
             all_checkboxes = selection_soup.find_all('input', {'type': 'checkbox'})
             checkbox_names = [cb.get('name') for cb in all_checkboxes if cb.get('name') and any(p.fullmatch(cb.get('name')) for p in self.checkbox_patterns)]
             print(f"[LOG] Found {len(checkbox_names)} sport/league checkboxes for async POST.")
+            
+            # Log all checkbox names for debugging
+            all_checkbox_names = [cb.get('name') for cb in all_checkboxes if cb.get('name')]
+            print(f"[LOG] All available checkboxes ({len(all_checkbox_names)}):")
+            for i, name in enumerate(all_checkbox_names[:20]):  # Show first 20
+                print(f"   {i+1}. {name}")
+            if len(all_checkbox_names) > 20:
+                print(f"   ... and {len(all_checkbox_names) - 20} more")
             tasks = []
             for name in checkbox_names:
                 post_payload = {

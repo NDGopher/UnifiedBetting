@@ -220,7 +220,14 @@ def determine_sport_from_teams(home_team: str, away_team: str) -> str:
                    'madrid', 'atletico', 'sevilla', 'valencia', 'betis', 'sociedad', 'athletic',
                    'bayern', 'dortmund', 'leipzig', 'leverkusen', 'frankfurt', 'stuttgart',
                    'juventus', 'milan', 'inter', 'napoli', 'roma', 'lazio', 'fiorentina',
-                   'psg', 'monaco', 'lyon', 'marseille', 'lille', 'rennes', 'nice']
+                   'psg', 'monaco', 'lyon', 'marseille', 'lille', 'rennes', 'nice',
+                   'huddersfield', 'bradford', 'blackpool', 'cheltenham', 'colchester', 'bolton',
+                   'wycombe', 'reading', 'lincoln', 'plymouth', 'port vale', 'doncaster',
+                   'stevenage', 'mansfield', 'cardiff', 'rotherham', 'wimbledon', 'notts',
+                   'gillingham', 'barnet', 'crewe', 'milton', 'keynes', 'chesterfield',
+                   'walsall', 'fleetwood', 'bromley', 'oldham', 'salford', 'shrewsbury',
+                   'harrogate', 'swindon', 'cambridge', 'grimsby', 'newport', 'tranmere',
+                   'barrow', 'bristol', 'rovers']
     
     # Basketball teams (expanded)
     basketball_teams = ['lakers', 'warriors', 'celtics', 'heat', 'bulls', 'knicks', 'nets', 'suns', 'mavs',
@@ -234,9 +241,16 @@ def determine_sport_from_teams(home_team: str, away_team: str) -> str:
                      'cowboys', 'giants', 'eagles', 'commanders', 'bears', 'lions', 'packers', 'vikings',
                      'falcons', 'panthers', 'saints', 'buccaneers', 'cardinals', 'rams', 'seahawks', '49ers']
     
-    # UFC/Boxing fighters (individual names)
-    if any(word in teams_combined for word in ['amanda', 'tatiana', 'keith', 'devin', 'fernando', 'anthony', 'stephen']):
-        return 'ufc_boxing'
+    # UFC/Boxing fighters (individual names) - expanded list
+    ufc_names = ['amanda', 'tatiana', 'keith', 'devin', 'fernando', 'anthony', 'stephen',
+                 'diego', 'david', 'rafa', 'dustin', 'santiago', 'jose', 'joaquim', 'jesus',
+                 'sedriques', 'montserrat', 'alice', 'rodrigo', 'daniil', 'alden', 'alessandro']
+    
+    # Check if this looks like individual fighter names (not team names)
+    if any(name in teams_combined for name in ufc_names):
+        # Additional check: UFC events typically have individual names, not team names
+        if not any(team_word in teams_combined for team_word in ['united', 'city', 'club', 'fc', 'sc', 'athletic', 'rovers', 'town']):
+            return 'ufc_boxing'
     
     # Check for partial matches (BetBCK format includes pitcher names)
     if any(team in teams_combined for team in mlb_teams):
