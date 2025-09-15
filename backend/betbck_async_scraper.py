@@ -159,10 +159,39 @@ class BetBCKAsyncScraper:
                     month = int(m.group(2))
                     day = int(m.group(3))
                     time = m.group(4)
-                    year = datetime.now().year
-                    dt = dateutil.parser.parse(f"{year}-{month:02d}-{day:02d} {time}")
-                    norm_date = dt.strftime('%Y-%m-%dT%H:%M')
-            sport = gw.get('data-sport', '').strip().lower() if gw.has_attr('data-sport') else 'soccer'
+                    # Use current year, but check if the date has already passed
+                    current_year = datetime.now().year
+                    try:
+                        dt = dateutil.parser.parse(f"{current_year}-{month:02d}-{day:02d} {time}")
+                        # If the date is in the past, assume it's next year
+                        if dt < datetime.now():
+                            dt = dateutil.parser.parse(f"{current_year + 1}-{month:02d}-{day:02d} {time}")
+                        norm_date = dt.strftime('%Y-%m-%dT%H:%M')
+                    except Exception as e:
+                        logger.warning(f"[BetBCK] Error parsing date '{date_str}': {e}")
+                        norm_date = f"{current_year}-{month:02d}-{day:02d}T{time}"
+            # Check for data-sport attribute
+            if gw.has_attr('data-sport'):
+                sport = gw.get('data-sport', '').strip().lower()
+                logger.debug(f"[BetBCK] Found data-sport attribute: '{sport}' for {home} vs {away}")
+            else:
+                sport = 'soccer'
+                logger.debug(f"[BetBCK] No data-sport attribute, defaulting to soccer for {home} vs {away}")
+            
+            # Also check for other sport indicators in the class names
+            class_names = ' '.join(gw.get('class', []))
+            if 'basketball' in class_names.lower():
+                sport = 'basketball'
+                logger.debug(f"[BetBCK] Detected basketball from class names for {home} vs {away}")
+            elif 'football' in class_names.lower():
+                sport = 'football'
+                logger.debug(f"[BetBCK] Detected football from class names for {home} vs {away}")
+            elif 'baseball' in class_names.lower():
+                sport = 'baseball'
+                logger.debug(f"[BetBCK] Detected baseball from class names for {home} vs {away}")
+            elif 'hockey' in class_names.lower():
+                sport = 'hockey'
+                logger.debug(f"[BetBCK] Detected hockey from class names for {home} vs {away}")
             teams = sorted([norm_home, norm_away])
             game_id = hashlib.md5(f"{teams[0]}_{teams[1]}_{sport}_{norm_date}".encode()).hexdigest()[:8]
             found_games_data.append({
@@ -171,7 +200,8 @@ class BetBCKAsyncScraper:
                 "betbck_site_away_team": away,
                 "betbck_site_odds": odds,
                 "timestamp": datetime.now().isoformat(),
-                "event_datetime": norm_date
+                "event_datetime": norm_date,
+                "sport": sport
             })
         return found_games_data
 

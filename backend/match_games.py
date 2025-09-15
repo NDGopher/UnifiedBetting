@@ -375,6 +375,10 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             betbck_time = betbck_game.get("event_datetime", "")
             pinnacle_time = pinnacle_event.get("event_datetime", "")
             
+            # Log the teams and times for debugging
+            logger.debug(f"[TIME-CHECK] BetBCK: {betbck_game.get('betbck_site_home_team', '?')} vs {betbck_game.get('betbck_site_away_team', '?')} at {betbck_time}")
+            logger.debug(f"[TIME-CHECK] Pinnacle: {pin_home_raw} vs {pin_away_raw} at {pinnacle_time}")
+            
             if betbck_time and pinnacle_time:
                 try:
                     from datetime import datetime
@@ -384,12 +388,18 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                     
                     # Only match games within 24 hours of each other
                     if time_diff > 86400:  # 24 hours in seconds
-                        logger.debug(f"[TIME-SKIP] Time difference too large: {time_diff/3600:.1f} hours between {betbck_time} and {pinnacle_time}")
+                        logger.info(f"[TIME-SKIP] Time difference too large: {time_diff/3600:.1f} hours between BetBCK {betbck_time} and Pinnacle {pinnacle_time}")
                         continue
+                    else:
+                        logger.debug(f"[TIME-MATCH] Time difference acceptable: {time_diff/3600:.1f} hours between {betbck_time} and {pinnacle_time}")
                 except Exception as e:
-                    logger.warning(f"[TIME-CHECK] Error parsing times: {e}")
+                    logger.warning(f"[TIME-CHECK] Error parsing times: {e} - BetBCK: {betbck_time}, Pinnacle: {pinnacle_time}")
                     # Continue if we can't parse times, but log the issue
                     pass
+            else:
+                logger.warning(f"[TIME-CHECK] Missing datetime - BetBCK: {betbck_time}, Pinnacle: {pinnacle_time}")
+                # If either time is missing, skip the date check but log it
+                pass
             
             # Check for league/competition context compatibility
             if not is_league_compatible(betbck_game, pinnacle_event):
@@ -511,8 +521,11 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 betbck_home_odds = None
                 betbck_away_odds = None
             logger.info(f"[MAPPING] Event: {best_match['home_team']} vs {best_match['away_team']} | BetBCK home odds: {betbck_home_odds}, away odds: {betbck_away_odds}")
-            # Determine sport for this match
-            sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
+            # Determine sport for this match - use BetBCK sport if available, otherwise fall back to team name detection
+            sport = betbck_game.get('sport', '').lower()
+            if not sport or sport == 'soccer':  # If no sport or default soccer, try team name detection
+                sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
+            logger.debug(f"[MAPPING] Using sport '{sport}' for {norm_bck_home} vs {norm_bck_away}")
             
             matched_events.append({
                 "pinnacle_event_id": best_match["event_id"],

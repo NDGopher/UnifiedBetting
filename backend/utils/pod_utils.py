@@ -249,11 +249,75 @@ def normalize_team_name_for_matching(name):
     norm_name = re.sub(r'\s*\((?:games|sets|match|hits\+runs\+errors|h\+r\+e|hre|corners)\)$', '', norm_name).strip()
     norm_name = re.sub(r'\s*\([^)]*\)', '', norm_name).strip()
     league_country_suffixes = [
-        'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba',
-        'poland', 'bulgaria', 'uruguay', 'colombia', 'peru', 'argentina', 
-        'sweden', 'romania', 'finland', 'england', 'japan', 'austria',
-        'liga 1', 'serie a', 'bundesliga', 'la liga', 'ligue 1', 'premier league',
-        'epl', 'mls', 'tipico bundesliga'
+        # Sports abbreviations
+        'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'afl', 'cfl', 'mls', 'soccer', 'tennis', 'ufc',
+        
+        # Full league names
+        'nippon professional baseball', 'japanese professional baseball',
+        'major league baseball', 'national football league', 'national basketball association',
+        'national hockey league', 'college football', 'college basketball',
+        'premier league', 'la liga', 'serie a', 'bundesliga', 'ligue 1', 'major league soccer',
+        'championship', 'league one', 'league two', 'national league', 'conference',
+        'eredivisie', 'primeira liga', 'liga mx', 'a-league', 'j-league', 'k-league',
+        'liga profesional', 'brasileirão', 'ligue 2', 'serie b', '2. bundesliga',
+        'scottish premiership', 'scottish championship', 'scottish league one',
+        'welsh premier league', 'northern ireland football league',
+        'belgian pro league', 'swiss super league', 'austrian bundesliga',
+        'danish superliga', 'norwegian eliteserien', 'swedish allsvenskan',
+        'finnish veikkausliiga', 'icelandic úrvalsdeild', 'russian premier league',
+        'ukrainian premier league', 'turkish süper lig', 'greek super league',
+        'croatian first football league', 'serbian superliga', 'bulgarian first league',
+        'romanian liga i', 'czech first league', 'hungarian nemzeti bajnokság',
+        'slovak super liga', 'slovenian prvaliga', 'polish ekstraklasa',
+        'portuguese primeira liga', 'spanish la liga', 'italian serie a',
+        'german bundesliga', 'french ligue 1', 'english premier league',
+        'dutch eredivisie', 'belgian first division a', 'tipico bundesliga',
+        
+        # Countries (full names)
+        'denmark', 'iceland', 'finland', 'russia', 'germany', 'france', 'italy', 'spain',
+        'england', 'scotland', 'wales', 'northern ireland', 'ireland', 'netherlands',
+        'belgium', 'switzerland', 'austria', 'norway', 'sweden', 'poland', 'czech republic',
+        'slovakia', 'slovenia', 'croatia', 'serbia', 'bulgaria', 'romania', 'hungary',
+        'ukraine', 'turkey', 'greece', 'portugal', 'brazil', 'argentina', 'mexico',
+        'united states', 'canada', 'australia', 'japan', 'south korea', 'china',
+        'india', 'south africa', 'new zealand', 'egypt', 'morocco', 'algeria', 'tunisia',
+        'nigeria', 'kenya', 'ethiopia', 'ghana', 'senegal', 'ivory coast', 'cameroon',
+        'zambia', 'zimbabwe', 'uganda', 'tanzania', 'angola', 'mozambique', 'sudan',
+        'south sudan', 'democratic republic of the congo', 'republic of the congo',
+        'madagascar', 'botswana', 'namibia', 'lesotho', 'eswatini', 'malawi', 'rwanda',
+        'burundi', 'somalia', 'eritrea', 'djibouti', 'seychelles', 'mauritius', 'comoros',
+        'cape verde', 'sao tome and principe', 'gambia', 'guinea', 'guinea-bissau',
+        'sierra leone', 'liberia', 'mali', 'niger', 'chad', 'central african republic',
+        'gabon', 'equatorial guinea', 'benin', 'togo', 'burkina faso', 'mauritania',
+        'uruguay', 'colombia', 'peru', 'poland', 'austria',
+        
+        # Country abbreviations (3-letter codes)
+        'den', 'isl', 'fin', 'rus', 'ger', 'fra', 'ita', 'esp', 'eng', 'sco', 'wal',
+        'nir', 'irl', 'ned', 'bel', 'sui', 'aut', 'nor', 'swe', 'pol', 'cze', 'svk',
+        'slo', 'cro', 'srb', 'bul', 'rou', 'hun', 'ukr', 'tur', 'gre', 'por', 'bra',
+        'arg', 'mex', 'usa', 'can', 'aus', 'jpn', 'kor', 'chn', 'ind', 'zaf', 'nzl',
+        'egy', 'mar', 'dza', 'tun', 'nga', 'ken', 'eth', 'gha', 'sen', 'civ', 'cmr',
+        'zmb', 'zwe', 'uga', 'tza', 'ago', 'moz', 'sdn', 'ssd', 'cod', 'cog', 'mdg',
+        'bwa', 'nam', 'lso', 'swz', 'mwi', 'rwa', 'bdi', 'som', 'eri', 'dji', 'syc',
+        'mus', 'com', 'cpv', 'stp', 'gmb', 'gin', 'gnb', 'sle', 'lbr', 'mli', 'ner',
+        'tcd', 'caf', 'gab', 'gnq', 'ben', 'tgo', 'bfa', 'mrt',
+        
+        # Regional/League indicators
+        'uefa', 'conmebol', 'concacaf', 'caf', 'afc', 'ofc', 'fifa',
+        'uefa champions league', 'uefa europa league', 'uefa conference league',
+        'copa libertadores', 'copa sudamericana', 'concacaf champions league',
+        'afc champions league', 'caf champions league', 'ofc champions league',
+        'fifa club world cup', 'uefa nations league', 'copa américa', 'gold cup',
+        'african cup of nations', 'asian cup', 'oceania nations cup', 'european championship',
+        'world cup', 'olympics', 'olympic games', 'summer olympics', 'winter olympics',
+        'paralympics', 'youth olympics', 'commonwealth games', 'pan american games',
+        'asian games', 'african games', 'mediterranean games', 'baltic games',
+        'nordic games', 'balkan games', 'caribbean games', 'central american games',
+        'south american games', 'pacific games', 'indian ocean games', 'arctic games',
+        'island games', 'microstate games', 'small states games',
+        
+        # Legacy entries
+        'liga 1', 'epl'
     ]
     for suffix in league_country_suffixes:
         pattern = r'(\s+' + re.escape(suffix) + r'|' + re.escape(suffix) + r')$'

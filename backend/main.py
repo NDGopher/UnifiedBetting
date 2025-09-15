@@ -270,11 +270,16 @@ async def event_alert_worker(event_id):
                         if not betbck_data or not realistic_bets:
                             logger.warning(f"[PerEventQueue] No valid betting data for event {event_id}, skipping broadcast")
                             continue
+                        # Create cleaned payload with cleaned team names
+                        cleaned_payload = payload.copy()
+                        cleaned_payload["homeTeam"] = payload.get("homeTeam", "")
+                        cleaned_payload["awayTeam"] = payload.get("awayTeam", "")
+                        
                         event_data = {
                             "alert_arrival_timestamp": now,
                             "last_pinnacle_data_update_timestamp": now,
                             "pinnacle_data_processed": live_pinnacle_odds_processed,
-                            "original_alert_details": payload,
+                            "original_alert_details": cleaned_payload,
                             "betbck_data": betbck_result,
                             "league_name": league_name,
                             "start_time": start_time,
@@ -399,8 +404,88 @@ async def handle_pod_alert(request: Request):
             return JSONResponse({"status": "error", "message": "Missing eventId"}, status_code=400)
 
         # CRITICAL: Check for prop bets FIRST - reject immediately without any processing
-        home_team = payload.get("homeTeam", "")
-        away_team = payload.get("awayTeam", "")
+        home_team_raw = payload.get("homeTeam", "")
+        away_team_raw = payload.get("awayTeam", "")
+        
+        # Clean team names immediately to remove sport/league suffixes
+        def clean_team_name_immediate(name):
+            if not name:
+                return name
+            suffixes_to_remove = [
+                # Sports abbreviations
+                'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC', 'WNBA', 'AFL', 'CFL', 'MLS',
+                
+                # Full league names
+                'Nippon Professional Baseball', 'Japanese Professional Baseball',
+                'Major League Baseball', 'National Football League', 'National Basketball Association',
+                'National Hockey League', 'College Football', 'College Basketball',
+                'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'Major League Soccer',
+                'Championship', 'League One', 'League Two', 'National League', 'Conference',
+                'Eredivisie', 'Primeira Liga', 'Liga MX', 'A-League', 'J-League', 'K-League',
+                'Liga Profesional', 'Brasileirão', 'Ligue 2', 'Serie B', '2. Bundesliga',
+                'Scottish Premiership', 'Scottish Championship', 'Scottish League One',
+                'Welsh Premier League', 'Northern Ireland Football League',
+                'Belgian Pro League', 'Swiss Super League', 'Austrian Bundesliga',
+                'Danish Superliga', 'Norwegian Eliteserien', 'Swedish Allsvenskan',
+                'Finnish Veikkausliiga', 'Icelandic Úrvalsdeild', 'Russian Premier League',
+                'Ukrainian Premier League', 'Turkish Süper Lig', 'Greek Super League',
+                'Croatian First Football League', 'Serbian SuperLiga', 'Bulgarian First League',
+                'Romanian Liga I', 'Czech First League', 'Hungarian Nemzeti Bajnokság',
+                'Slovak Super Liga', 'Slovenian PrvaLiga', 'Polish Ekstraklasa',
+                'Portuguese Primeira Liga', 'Spanish La Liga', 'Italian Serie A',
+                'German Bundesliga', 'French Ligue 1', 'English Premier League',
+                'Dutch Eredivisie', 'Belgian First Division A', 'Tipico Bundesliga',
+                
+                # Countries (full names)
+                'Denmark', 'Iceland', 'Finland', 'Russia', 'Germany', 'France', 'Italy', 'Spain',
+                'England', 'Scotland', 'Wales', 'Northern Ireland', 'Ireland', 'Netherlands',
+                'Belgium', 'Switzerland', 'Austria', 'Norway', 'Sweden', 'Poland', 'Czech Republic',
+                'Slovakia', 'Slovenia', 'Croatia', 'Serbia', 'Bulgaria', 'Romania', 'Hungary',
+                'Ukraine', 'Turkey', 'Greece', 'Portugal', 'Brazil', 'Argentina', 'Mexico',
+                'United States', 'Canada', 'Australia', 'Japan', 'South Korea', 'China',
+                'India', 'South Africa', 'New Zealand', 'Egypt', 'Morocco', 'Algeria', 'Tunisia',
+                'Nigeria', 'Kenya', 'Ethiopia', 'Ghana', 'Senegal', 'Ivory Coast', 'Cameroon',
+                'Zambia', 'Zimbabwe', 'Uganda', 'Tanzania', 'Angola', 'Mozambique', 'Sudan',
+                'South Sudan', 'Democratic Republic of the Congo', 'Republic of the Congo',
+                'Madagascar', 'Botswana', 'Namibia', 'Lesotho', 'Eswatini', 'Malawi', 'Rwanda',
+                'Burundi', 'Somalia', 'Eritrea', 'Djibouti', 'Seychelles', 'Mauritius', 'Comoros',
+                'Cape Verde', 'Sao Tome and Principe', 'Gambia', 'Guinea', 'Guinea-Bissau',
+                'Sierra Leone', 'Liberia', 'Mali', 'Niger', 'Chad', 'Central African Republic',
+                'Gabon', 'Equatorial Guinea', 'Benin', 'Togo', 'Burkina Faso', 'Mauritania',
+                
+                # Country abbreviations (3-letter codes)
+                'DEN', 'ISL', 'FIN', 'RUS', 'GER', 'FRA', 'ITA', 'ESP', 'ENG', 'SCO', 'WAL',
+                'NIR', 'IRL', 'NED', 'BEL', 'SUI', 'AUT', 'NOR', 'SWE', 'POL', 'CZE', 'SVK',
+                'SLO', 'CRO', 'SRB', 'BUL', 'ROU', 'HUN', 'UKR', 'TUR', 'GRE', 'POR', 'BRA',
+                'ARG', 'MEX', 'USA', 'CAN', 'AUS', 'JPN', 'KOR', 'CHN', 'IND', 'ZAF', 'NZL',
+                'EGY', 'MAR', 'DZA', 'TUN', 'NGA', 'KEN', 'ETH', 'GHA', 'SEN', 'CIV', 'CMR',
+                'ZMB', 'ZWE', 'UGA', 'TZA', 'AGO', 'MOZ', 'SDN', 'SSD', 'COD', 'COG', 'MDG',
+                'BWA', 'NAM', 'LSO', 'SWZ', 'MWI', 'RWA', 'BDI', 'SOM', 'ERI', 'DJI', 'SYC',
+                'MUS', 'COM', 'CPV', 'STP', 'GMB', 'GIN', 'GNB', 'SLE', 'LBR', 'MLI', 'NER',
+                'TCD', 'CAF', 'GAB', 'GNQ', 'BEN', 'TGO', 'BFA', 'MRT',
+                
+                # Regional/League indicators
+                'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC', 'FIFA',
+                'UEFA Champions League', 'UEFA Europa League', 'UEFA Conference League',
+                'Copa Libertadores', 'Copa Sudamericana', 'CONCACAF Champions League',
+                'AFC Champions League', 'CAF Champions League', 'OFC Champions League',
+                'FIFA Club World Cup', 'UEFA Nations League', 'Copa América', 'Gold Cup',
+                'African Cup of Nations', 'Asian Cup', 'Oceania Nations Cup', 'European Championship',
+                'World Cup', 'Olympics', 'Olympic Games', 'Summer Olympics', 'Winter Olympics',
+                'Paralympics', 'Youth Olympics', 'Commonwealth Games', 'Pan American Games',
+                'Asian Games', 'African Games', 'Mediterranean Games', 'Baltic Games',
+                'Nordic Games', 'Balkan Games', 'Caribbean Games', 'Central American Games',
+                'South American Games', 'Pacific Games', 'Indian Ocean Games', 'Arctic Games',
+                'Island Games', 'Microstate Games', 'Small States Games'
+            ]
+            for suffix in suffixes_to_remove:
+                if name.endswith(suffix):
+                    return name[:-len(suffix)].strip()
+            return name
+        
+        home_team = clean_team_name_immediate(home_team_raw)
+        away_team = clean_team_name_immediate(away_team_raw)
+        
         prop_keywords = ['(Corners)', '(Bookings)', '(Hits+Runs+Errors)', '(Cards)', '(Fouls)', '(Shots)', '(Assists)', '(Rebounds)', '(Points)', '(Goals)']
         
         if any(keyword.lower() in home_team.lower() for keyword in prop_keywords) or \
@@ -458,8 +543,8 @@ async def handle_pod_alert(request: Request):
                             alert = HighEVAlert(
                                 event_id=event_id_str,
                                 sport=payload.get("sport", "Unknown"),
-                                away_team=payload.get("awayTeam", "Unknown"),
-                                home_team=payload.get("homeTeam", "Unknown"),
+                                away_team=away_team,  # Use cleaned team name
+                                home_team=home_team,  # Use cleaned team name
                                 ev_percentage=ev_value,
                                 bet_type=payload.get("bet", "N/A"),
                                 odds=payload.get("odds", "N/A"),
@@ -1149,6 +1234,32 @@ async def run_streaming_pipeline_background():
         with open(event_ids_path, 'r') as f:
             events_data = json.load(f)
         event_dicts = events_data.get('event_ids', [])
+        
+        # Add event_datetime to Pinnacle events for date matching
+        for event in event_dicts:
+            if 'starts' in event and not event.get('event_datetime'):
+                try:
+                    # Convert Pinnacle timestamp to ISO format for date matching
+                    start_time = event.get('starts')
+                    if isinstance(start_time, (int, float)):
+                        # Convert from milliseconds to seconds if needed
+                        if start_time > 1e10:  # Likely milliseconds
+                            start_time = start_time / 1000
+                        from datetime import datetime
+                        dt = datetime.fromtimestamp(start_time)
+                        event['event_datetime'] = dt.strftime('%Y-%m-%dT%H:%M')
+                    elif isinstance(start_time, str):
+                        # Try to parse the string timestamp
+                        try:
+                            from datetime import datetime
+                            dt = datetime.fromisoformat(start_time.replace('Z', '+00:00'))
+                            event['event_datetime'] = dt.strftime('%Y-%m-%dT%H:%M')
+                        except:
+                            # If parsing fails, use the original string
+                            event['event_datetime'] = start_time
+                except Exception as e:
+                    logger.warning(f"[STREAMING] Could not set event_datetime for event {event.get('event_id', 'unknown')}: {e}")
+        
         step1_time = time.time() - step1_start
         logger.info(f"[STREAMING] Step 1 completed in {step1_time:.2f}s: Loaded {len(event_dicts)} event IDs")
         
@@ -1556,15 +1667,20 @@ def build_event_object(event_id, entry):
         except Exception:
             bet_data["potential_bets_analyzed"] = []
     
-    # For background refresher updates, use the markets from pinnacle_data_processed
-    # (which have been re-analyzed with fresh Pinnacle odds)
-    if betbck_data_available:
-        # For initial alerts, use the original potential_bets_analyzed
-        potential_bets = bet_data.get("potential_bets_analyzed", [])
-    else:
-        # For background refreshes, use the re-analyzed markets from pinnacle_data_processed
-        # These have been updated with fresh Pinnacle odds and existing BetBCK data
-        potential_bets = entry["pinnacle_data_processed"].get("markets", [])
+    # Always use the properly calculated potential_bets_analyzed if available
+    # This ensures we have the correct NVPs and EV calculations
+    potential_bets = bet_data.get("potential_bets_analyzed", [])
+    
+    # If no potential_bets_analyzed available, try to re-analyze with current data
+    if not potential_bets and bet_data and pinnacle_data:
+        try:
+            wrapped_pinnacle_data = {"data": pinnacle_data}
+            potential_bets = analyze_markets_for_ev(bet_data, wrapped_pinnacle_data)
+            # Store the re-analyzed data for future use
+            bet_data["potential_bets_analyzed"] = potential_bets
+        except Exception as e:
+            logger.error(f"[BuildEventObject] Failed to re-analyze markets for event {event_id}: {e}")
+            potential_bets = []
     markets = []
     for bet in potential_bets:
         market_type = bet.get("market")
@@ -1573,6 +1689,10 @@ def build_event_object(event_id, entry):
         betbck_odds = bet.get("betbck_odds", "N/A")
         latest_nvp = bet.get("pinnacle_nvp", "N/A")
         ev_display = bet.get("ev", "N/A")
+        
+        # Debug logging for spread bets with potentially incorrect NVPs
+        if market_type == "Spread" and latest_nvp != "N/A":
+            logger.debug(f"[BuildEventObject] Spread bet: {selection} {line}, NVP: {latest_nvp}, BetBCK: {betbck_odds}")
         if betbck_odds != "N/A" and latest_nvp != "N/A" and betbck_odds is not None and latest_nvp is not None:
             try:
                 bet_decimal = american_to_decimal(betbck_odds)
@@ -1598,12 +1718,71 @@ def build_event_object(event_id, entry):
     if display_home:
         # Remove common sport abbreviations and full league names
         suffixes_to_remove = [
-            'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC',
+            # Sports abbreviations
+            'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC', 'WNBA', 'AFL', 'CFL', 'MLS',
+            
+            # Full league names
             'Nippon Professional Baseball', 'Japanese Professional Baseball',
             'Major League Baseball', 'National Football League', 'National Basketball Association',
             'National Hockey League', 'College Football', 'College Basketball',
-            'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1',
-            'Major League Soccer', 'MLS', 'WNBA', 'AFL', 'CFL'
+            'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'Major League Soccer',
+            'Championship', 'League One', 'League Two', 'National League', 'Conference',
+            'Eredivisie', 'Primeira Liga', 'Liga MX', 'A-League', 'J-League', 'K-League',
+            'Liga Profesional', 'Brasileirão', 'Ligue 2', 'Serie B', '2. Bundesliga',
+            'Scottish Premiership', 'Scottish Championship', 'Scottish League One',
+            'Welsh Premier League', 'Northern Ireland Football League',
+            'Belgian Pro League', 'Swiss Super League', 'Austrian Bundesliga',
+            'Danish Superliga', 'Norwegian Eliteserien', 'Swedish Allsvenskan',
+            'Finnish Veikkausliiga', 'Icelandic Úrvalsdeild', 'Russian Premier League',
+            'Ukrainian Premier League', 'Turkish Süper Lig', 'Greek Super League',
+            'Croatian First Football League', 'Serbian SuperLiga', 'Bulgarian First League',
+            'Romanian Liga I', 'Czech First League', 'Hungarian Nemzeti Bajnokság',
+            'Slovak Super Liga', 'Slovenian PrvaLiga', 'Polish Ekstraklasa',
+            'Portuguese Primeira Liga', 'Spanish La Liga', 'Italian Serie A',
+            'German Bundesliga', 'French Ligue 1', 'English Premier League',
+            'Dutch Eredivisie', 'Belgian First Division A', 'Tipico Bundesliga',
+            
+            # Countries (full names)
+            'Denmark', 'Iceland', 'Finland', 'Russia', 'Germany', 'France', 'Italy', 'Spain',
+            'England', 'Scotland', 'Wales', 'Northern Ireland', 'Ireland', 'Netherlands',
+            'Belgium', 'Switzerland', 'Austria', 'Norway', 'Sweden', 'Poland', 'Czech Republic',
+            'Slovakia', 'Slovenia', 'Croatia', 'Serbia', 'Bulgaria', 'Romania', 'Hungary',
+            'Ukraine', 'Turkey', 'Greece', 'Portugal', 'Brazil', 'Argentina', 'Mexico',
+            'United States', 'Canada', 'Australia', 'Japan', 'South Korea', 'China',
+            'India', 'South Africa', 'New Zealand', 'Egypt', 'Morocco', 'Algeria', 'Tunisia',
+            'Nigeria', 'Kenya', 'Ethiopia', 'Ghana', 'Senegal', 'Ivory Coast', 'Cameroon',
+            'Zambia', 'Zimbabwe', 'Uganda', 'Tanzania', 'Angola', 'Mozambique', 'Sudan',
+            'South Sudan', 'Democratic Republic of the Congo', 'Republic of the Congo',
+            'Madagascar', 'Botswana', 'Namibia', 'Lesotho', 'Eswatini', 'Malawi', 'Rwanda',
+            'Burundi', 'Somalia', 'Eritrea', 'Djibouti', 'Seychelles', 'Mauritius', 'Comoros',
+            'Cape Verde', 'Sao Tome and Principe', 'Gambia', 'Guinea', 'Guinea-Bissau',
+            'Sierra Leone', 'Liberia', 'Mali', 'Niger', 'Chad', 'Central African Republic',
+            'Gabon', 'Equatorial Guinea', 'Benin', 'Togo', 'Burkina Faso', 'Mauritania',
+            
+            # Country abbreviations (3-letter codes)
+            'DEN', 'ISL', 'FIN', 'RUS', 'GER', 'FRA', 'ITA', 'ESP', 'ENG', 'SCO', 'WAL',
+            'NIR', 'IRL', 'NED', 'BEL', 'SUI', 'AUT', 'NOR', 'SWE', 'POL', 'CZE', 'SVK',
+            'SLO', 'CRO', 'SRB', 'BUL', 'ROU', 'HUN', 'UKR', 'TUR', 'GRE', 'POR', 'BRA',
+            'ARG', 'MEX', 'USA', 'CAN', 'AUS', 'JPN', 'KOR', 'CHN', 'IND', 'ZAF', 'NZL',
+            'EGY', 'MAR', 'DZA', 'TUN', 'NGA', 'KEN', 'ETH', 'GHA', 'SEN', 'CIV', 'CMR',
+            'ZMB', 'ZWE', 'UGA', 'TZA', 'AGO', 'MOZ', 'SDN', 'SSD', 'COD', 'COG', 'MDG',
+            'BWA', 'NAM', 'LSO', 'SWZ', 'MWI', 'RWA', 'BDI', 'SOM', 'ERI', 'DJI', 'SYC',
+            'MUS', 'COM', 'CPV', 'STP', 'GMB', 'GIN', 'GNB', 'SLE', 'LBR', 'MLI', 'NER',
+            'TCD', 'CAF', 'GAB', 'GNQ', 'BEN', 'TGO', 'BFA', 'MRT',
+            
+            # Regional/League indicators
+            'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC', 'FIFA',
+            'UEFA Champions League', 'UEFA Europa League', 'UEFA Conference League',
+            'Copa Libertadores', 'Copa Sudamericana', 'CONCACAF Champions League',
+            'AFC Champions League', 'CAF Champions League', 'OFC Champions League',
+            'FIFA Club World Cup', 'UEFA Nations League', 'Copa América', 'Gold Cup',
+            'African Cup of Nations', 'Asian Cup', 'Oceania Nations Cup', 'European Championship',
+            'World Cup', 'Olympics', 'Olympic Games', 'Summer Olympics', 'Winter Olympics',
+            'Paralympics', 'Youth Olympics', 'Commonwealth Games', 'Pan American Games',
+            'Asian Games', 'African Games', 'Mediterranean Games', 'Baltic Games',
+            'Nordic Games', 'Balkan Games', 'Caribbean Games', 'Central American Games',
+            'South American Games', 'Pacific Games', 'Indian Ocean Games', 'Arctic Games',
+            'Island Games', 'Microstate Games', 'Small States Games'
         ]
         
         for suffix in suffixes_to_remove:
@@ -1614,12 +1793,71 @@ def build_event_object(event_id, entry):
     if display_away:
         # Remove common sport abbreviations and full league names
         suffixes_to_remove = [
-            'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC',
+            # Sports abbreviations
+            'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC', 'WNBA', 'AFL', 'CFL', 'MLS',
+            
+            # Full league names
             'Nippon Professional Baseball', 'Japanese Professional Baseball',
             'Major League Baseball', 'National Football League', 'National Basketball Association',
             'National Hockey League', 'College Football', 'College Basketball',
-            'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1',
-            'Major League Soccer', 'MLS', 'WNBA', 'AFL', 'CFL'
+            'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'Major League Soccer',
+            'Championship', 'League One', 'League Two', 'National League', 'Conference',
+            'Eredivisie', 'Primeira Liga', 'Liga MX', 'A-League', 'J-League', 'K-League',
+            'Liga Profesional', 'Brasileirão', 'Ligue 2', 'Serie B', '2. Bundesliga',
+            'Scottish Premiership', 'Scottish Championship', 'Scottish League One',
+            'Welsh Premier League', 'Northern Ireland Football League',
+            'Belgian Pro League', 'Swiss Super League', 'Austrian Bundesliga',
+            'Danish Superliga', 'Norwegian Eliteserien', 'Swedish Allsvenskan',
+            'Finnish Veikkausliiga', 'Icelandic Úrvalsdeild', 'Russian Premier League',
+            'Ukrainian Premier League', 'Turkish Süper Lig', 'Greek Super League',
+            'Croatian First Football League', 'Serbian SuperLiga', 'Bulgarian First League',
+            'Romanian Liga I', 'Czech First League', 'Hungarian Nemzeti Bajnokság',
+            'Slovak Super Liga', 'Slovenian PrvaLiga', 'Polish Ekstraklasa',
+            'Portuguese Primeira Liga', 'Spanish La Liga', 'Italian Serie A',
+            'German Bundesliga', 'French Ligue 1', 'English Premier League',
+            'Dutch Eredivisie', 'Belgian First Division A', 'Tipico Bundesliga',
+            
+            # Countries (full names)
+            'Denmark', 'Iceland', 'Finland', 'Russia', 'Germany', 'France', 'Italy', 'Spain',
+            'England', 'Scotland', 'Wales', 'Northern Ireland', 'Ireland', 'Netherlands',
+            'Belgium', 'Switzerland', 'Austria', 'Norway', 'Sweden', 'Poland', 'Czech Republic',
+            'Slovakia', 'Slovenia', 'Croatia', 'Serbia', 'Bulgaria', 'Romania', 'Hungary',
+            'Ukraine', 'Turkey', 'Greece', 'Portugal', 'Brazil', 'Argentina', 'Mexico',
+            'United States', 'Canada', 'Australia', 'Japan', 'South Korea', 'China',
+            'India', 'South Africa', 'New Zealand', 'Egypt', 'Morocco', 'Algeria', 'Tunisia',
+            'Nigeria', 'Kenya', 'Ethiopia', 'Ghana', 'Senegal', 'Ivory Coast', 'Cameroon',
+            'Zambia', 'Zimbabwe', 'Uganda', 'Tanzania', 'Angola', 'Mozambique', 'Sudan',
+            'South Sudan', 'Democratic Republic of the Congo', 'Republic of the Congo',
+            'Madagascar', 'Botswana', 'Namibia', 'Lesotho', 'Eswatini', 'Malawi', 'Rwanda',
+            'Burundi', 'Somalia', 'Eritrea', 'Djibouti', 'Seychelles', 'Mauritius', 'Comoros',
+            'Cape Verde', 'Sao Tome and Principe', 'Gambia', 'Guinea', 'Guinea-Bissau',
+            'Sierra Leone', 'Liberia', 'Mali', 'Niger', 'Chad', 'Central African Republic',
+            'Gabon', 'Equatorial Guinea', 'Benin', 'Togo', 'Burkina Faso', 'Mauritania',
+            
+            # Country abbreviations (3-letter codes)
+            'DEN', 'ISL', 'FIN', 'RUS', 'GER', 'FRA', 'ITA', 'ESP', 'ENG', 'SCO', 'WAL',
+            'NIR', 'IRL', 'NED', 'BEL', 'SUI', 'AUT', 'NOR', 'SWE', 'POL', 'CZE', 'SVK',
+            'SLO', 'CRO', 'SRB', 'BUL', 'ROU', 'HUN', 'UKR', 'TUR', 'GRE', 'POR', 'BRA',
+            'ARG', 'MEX', 'USA', 'CAN', 'AUS', 'JPN', 'KOR', 'CHN', 'IND', 'ZAF', 'NZL',
+            'EGY', 'MAR', 'DZA', 'TUN', 'NGA', 'KEN', 'ETH', 'GHA', 'SEN', 'CIV', 'CMR',
+            'ZMB', 'ZWE', 'UGA', 'TZA', 'AGO', 'MOZ', 'SDN', 'SSD', 'COD', 'COG', 'MDG',
+            'BWA', 'NAM', 'LSO', 'SWZ', 'MWI', 'RWA', 'BDI', 'SOM', 'ERI', 'DJI', 'SYC',
+            'MUS', 'COM', 'CPV', 'STP', 'GMB', 'GIN', 'GNB', 'SLE', 'LBR', 'MLI', 'NER',
+            'TCD', 'CAF', 'GAB', 'GNQ', 'BEN', 'TGO', 'BFA', 'MRT',
+            
+            # Regional/League indicators
+            'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC', 'FIFA',
+            'UEFA Champions League', 'UEFA Europa League', 'UEFA Conference League',
+            'Copa Libertadores', 'Copa Sudamericana', 'CONCACAF Champions League',
+            'AFC Champions League', 'CAF Champions League', 'OFC Champions League',
+            'FIFA Club World Cup', 'UEFA Nations League', 'Copa América', 'Gold Cup',
+            'African Cup of Nations', 'Asian Cup', 'Oceania Nations Cup', 'European Championship',
+            'World Cup', 'Olympics', 'Olympic Games', 'Summer Olympics', 'Winter Olympics',
+            'Paralympics', 'Youth Olympics', 'Commonwealth Games', 'Pan American Games',
+            'Asian Games', 'African Games', 'Mediterranean Games', 'Baltic Games',
+            'Nordic Games', 'Balkan Games', 'Caribbean Games', 'Central American Games',
+            'South American Games', 'Pacific Games', 'Indian Ocean Games', 'Arctic Games',
+            'Island Games', 'Microstate Games', 'Small States Games'
         ]
         
         for suffix in suffixes_to_remove:
