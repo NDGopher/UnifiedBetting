@@ -1,0 +1,296 @@
+{
+  "games": [
+    {
+      "id": "019a4c97-a96f-7c36-88e5-5b877f35af68",
+      "awayTeam": {
+        "name": "Rockets",
+        "abbreviations": [
+          "HOU"
+        ]
+      },
+      "homeTeam": {
+        "name": "Clippers",
+        "abbreviations": [
+          "LAC"
+        ]
+      },
+      "startDateTime": 1766548800
+    },
+    {
+      "id": "019a4c97-a95f-7c00-9d04-e9523014fafc",
+      "awayTeam": {
+        "name": "Pistons",
+        "abbreviations": [
+          "DET"
+        ]
+      },
+      "homeTeam": {
+        "name": "Kings",
+        "abbreviations": [
+          "SAC"
+        ]
+      },
+      "startDateTime": 1766545200
+    },
+    {
+      "id": "019a4c97-a950-7c7f-8cb1-82233236099d",
+      "awayTeam": {
+        "name": "Magic",
+        "abbreviations": [
+          "ORL"
+        ]
+      },
+      "homeTeam": {
+        "name": "Trail Blazers",
+        "abbreviations": [
+          "POR"
+        ]
+      },
+      "startDateTime": 1766545200
+    },
+    {
+      "id": "019a4c97-a940-780d-99f4-68a48c9e6c27",
+      "awayTeam": {
+        "name": "Grizzlies",
+        "abbreviations": [
+          "MEM"
+        ]
+      },
+      "homeTeam": {
+        "name": "Jazz",
+        "abbreviations": [
+          "UTAH",
+          "UTA"
+        ]
+      },
+      "startDateTime": 1766541600
+    },
+    {
+      "id": "019a4c97-a930-7977-abe3-25437c435b36",
+      "awayTeam": {
+        "name": "Lakers",
+        "abbreviations": [
+          "LAL",
+          "LAK"
+        ]
+      },
+      "homeTeam": {
+        "name": "Suns",
+        "abbreviations": [
+          "PHX",
+          "PHO"
+        ]
+      },
+      "startDateTime": 1766541600
+    }
+  ],
+  "categories": [
+    "TEAM_SCORE_FIRST",
+    "PLAYER_PROP_POINTS",
+    "PLAYER_PROP_POINTS_FIRST_QUARTER",
+    "TOTAL_GAME_BLOCKS_TEAM",
+    "TOTAL_GAME_STEALS_TEAM",
+    "TOTAL_GAME_ASSISTS_TEAM",
+    "PLAYER_PROP_POINTS_ASSISTS",
+    "PLAYER_PROP_POINTS_ASSISTS_REBOUNDS",
+    "TOTAL_GAME_THREES_TEAM",
+    "TEAM_SCORE_FIRST_SECOND_QUARTER",
+    "PLAYER_PROP_POINTS_REBOUNDS",
+    "PLAYER_PROP_POINTS_BLOCKS",
+    "TEAM_SCORE_FIRST_THIRD_QUARTER",
+    "PLAYER_PROP_POINTS_REBOUNDS_BLOCKS",
+    "PLAYER_PROP_ASSISTS",
+    "TEAM_SCORE_FIRST_FOURTH_QUARTER",
+    "PLAYER_PROP_ASSISTS_FIRST_QUARTER",
+    "TEAM_SCORE_FIRST_3_WAY",
+    "TEAM_SCORE_LAST",
+    "PLAYER_PROP_REBOUNDS",
+    "PLAYER_PROP_REBOUNDS_FIRST_QUARTER",
+    "TEAM_SCORE_LAST_FIRST_QUARTER",
+    "PLAYER_PROP_REBOUNDS_ASSISTS",
+    "PLAYER_PROP_TWO_POINTER_MADE",
+    "TEAM_SCORE_LAST_SECOND_QUARTER",
+    "PLAYER_PROP_TWO_POINTER_ATTEMPTED",
+    "PLAYER_PROP_THREE_POINTER",
+    "TEAM_SCORE_LAST_THIRD_QUARTER",
+    "PLAYER_PROP_THREE_POINTER_ATTEMPTED",
+    "PLAYER_PROP_FREE_THROW_MADE",
+    "PLAYER_PROP_FREE_THROW_ATTEMPTED",
+    "PLAYER_PROP_FIELD_GOAL_MADE",
+    "PLAYER_PROP_FIELD_GOAL_ATTEMPTED",
+    "PLAYER_PROP_BLOCKS",
+    "PLAYER_PROP_STEALS",
+    "TOTAL_GAME_LARGEST_LEAD",
+    "PLAYER_PROP_STEALS_BLOCKS",
+    "TOTAL_GAME_MAXIMUM_CONSECUTIVE_POINTS_TEAM",
+    "PLAYER_PROP_TURNOVERS",
+    "TOTAL_GAME_LEAD_BY_POINTS_TEAM",
+    "PLAYER_PROP_DOUBLE_DOUBLE",
+    "PLAYER_PROP_TRIPLE_DOUBLE",
+    "RACE_TO_POINTS",
+    "TEAM_FIRST_FIELD_GOAL",
+    "RACE_TO_POINTS_3_WAY",
+    "RACE_TO_POINTS_FIRST_HALF_3_WAY",
+    "RACE_TO_POINTS_SECOND_HALF_3_WAY",
+    "TEAM_WIN_EVERY_QUARTER",
+    "RACE_TO_POINTS_FIRST_QUARTER_3_WAY",
+    "TEAM_POINTS_END_ODD",
+    "TEAM_POINTS_END_ODD_FIRST_HALF",
+    "RACE_TO_POINTS_SECOND_QUARTER_3_WAY",
+    "TEAM_POINTS_END_ODD_SECOND_HALF",
+    "TEAM_POINTS_END_ODD_FIRST_QUARTER",
+    "RACE_TO_POINTS_THIRD_QUARTER_3_WAY",
+    "TEAM_POINTS_END_ODD_SECOND_QUARTER",
+    "RACE_TO_POINTS_FOURTH_QUARTER_3_WAY",
+    "RACE_TO_POINTS_BOTH_HALVES",
+    "TEAM_FIRST_POSSESSION_SCORE",
+    "TEAM_FIRST_FREE_THROW_MADE",
+    "TEAM_MOST_THREE_POINTERS_MADE_3_WAY",
+    "TEAM_WIN_EVERY_QUARTER_3_WAY",
+    "TEAM_HIGHEST_SCORING_QUARTER_3_WAY",
+    "TOTAL_GAME_POINTS",
+    "TOTAL_GAME_POINTS_FIRST_HALF",
+    "TOTAL_GAME_POINTS_SECOND_HALF",
+    "TOTAL_GAME_POINTS_SECOND_HALF_NO_OT",
+    "TOTAL_GAME_POINTS_FIRST_QUARTER",
+    "TOTAL_GAME_POINTS_SECOND_QUARTER",
+    "TOTAL_GAME_POINTS_THIRD_QUARTER",
+    "TOTAL_GAME_POINTS_FOURTH_QUARTER",
+    "TOTAL_GAME_POINTS_FOURTH_QUARTER_NO_OT",
+    "PLAYER_PROP_FIELD_GOALS_MADE",
+    "TOTAL_GAME_TURNOVERS",
+    "PLAYER_PROP_FIRST_GOAL_SCORED",
+    "PLAYER_PROP_FIRST_POINT",
+    "PLAYER_PROP_FIRST_POINT_TEAM",
+    "PLAYER_PROP_FIRST_FIELD_GOAL",
+    "PLAYER_PROP_FIRST_FIELD_GOAL_TEAM",
+    "PLAYER_PROP_FIRST_TWO_POINTER",
+    "PLAYER_PROP_FIRST_REBOUND",
+    "PLAYER_PROP_FIRST_ASSIST",
+    "PLAYER_PROP_FIRST_FREE_THROW",
+    "PLAYER_PROP_FIRST_THREE_POINTER",
+    "PLAYER_PROP_FIRST_THREE_POINTER_TEAM",
+    "PLAYER_PROP_MOST_POINTS",
+    "PLAYER_PROP_MOST_REBOUNDS",
+    "PLAYER_PROP_MOST_ASSISTS",
+    "PLAYER_PROP_MOST_FREE_THROW",
+    "PLAYER_PROP_MOST_TWO_POINTERS",
+    "PLAYER_PROP_MOST_THREE_POINTERS",
+    "PLAYER_PROP_MOST_TURNOVERS",
+    "PLAYER_PROP_MOST_STEALS",
+    "PLAYER_PROP_MOST_BLOCKS",
+    "MONEY_LINE",
+    "PLAYER_PROP_FOULS",
+    "MONEY_LINE_NO_OT_3_WAY",
+    "MONEY_LINE_FIRST_HALF",
+    "MONEY_LINE_FIRST_HALF_3_WAY",
+    "MONEY_LINE_SECOND_HALF",
+    "MONEY_LINE_SECOND_HALF_NO_OT",
+    "MONEY_LINE_SECOND_HALF_NO_OT_3_WAY",
+    "MONEY_LINE_SECOND_HALF_3_WAY",
+    "MONEY_LINE_FIRST_QUARTER",
+    "MONEY_LINE_FIRST_QUARTER_3_WAY",
+    "MONEY_LINE_SECOND_QUARTER",
+    "MONEY_LINE_SECOND_QUARTER_3_WAY",
+    "GAME_OVERTIME",
+    "MONEY_LINE_THIRD_QUARTER",
+    "MONEY_LINE_THIRD_QUARTER_3_WAY",
+    "MONEY_LINE_FOURTH_QUARTER",
+    "MONEY_LINE_FOURTH_QUARTER_NO_OT",
+    "MONEY_LINE_FOURTH_QUARTER_3_WAY",
+    "MONEY_LINE_FOURTH_QUARTER_NO_OT_3_WAY",
+    "TOTAL_GAME_POINTS_TEAM",
+    "TOTAL_GAME_POINTS_TEAM_FIRST_HALF",
+    "TOTAL_GAME_POINTS_TEAM_SECOND_HALF",
+    "TOTAL_GAME_POINTS_TEAM_FIRST_QUARTER",
+    "TOTAL_GAME_POINTS_TEAM_SECOND_QUARTER",
+    "TOTAL_GAME_POINTS_TEAM_THIRD_QUARTER",
+    "TOTAL_GAME_POINTS_TEAM_FOURTH_QUARTER",
+    "TOTAL_GAME_POINTS_TEAM_FOURTH_QUARTER_NO_OT",
+    "SPREAD",
+    "SPREAD_FIRST_HALF",
+    "TOTAL_GAME_THREE_POINTERS",
+    "TOTAL_GAME_MAXIMUM_CONSECUTIVE_POINTS",
+    "SPREAD_SECOND_HALF",
+    "TOTAL_GAME_LEAD_BY_POINTS",
+    "SPREAD_SECOND_HALF_NO_OT",
+    "GAME_WINNING_BUZZER_BEATER",
+    "SPREAD_FIRST_QUARTER",
+    "SPREAD_SECOND_QUARTER",
+    "PLAYER_PROP_ASSISTS_FIRST_HALF",
+    "SPREAD_THIRD_QUARTER",
+    "SPREAD_FOURTH_QUARTER",
+    "SPREAD_FOURTH_QUARTER_NO_OT",
+    "GAME_POINTS_END_ODD",
+    "GAME_POINTS_END_ODD_NO_OT",
+    "GAME_POINTS_END_ODD_FIRST_HALF",
+    "GAME_POINTS_END_ODD_SECOND_HALF",
+    "GAME_POINTS_END_ODD_SECOND_HALF_NO_OT",
+    "GAME_POINTS_END_ODD_FIRST_QUARTER",
+    "GAME_POINTS_END_ODD_SECOND_QUARTER",
+    "GAME_POINTS_END_ODD_THIRD_QUARTER",
+    "GAME_POINTS_END_ODD_FOURTH_QUARTER",
+    "GAME_POINTS_END_ODD_FOURTH_QUARTER_NO_OT",
+    "TEAM_WIN_BOTH_HALVES",
+    "TEAM_WIN_BOTH_HALVES_3_WAY"
+  ],
+  "test_games": [
+    {
+      "game": {
+        "id": "019a4c97-a96f-7c36-88e5-5b877f35af68",
+        "awayTeam": {
+          "name": "Rockets",
+          "abbreviations": [
+            "HOU"
+          ]
+        },
+        "homeTeam": {
+          "name": "Clippers",
+          "abbreviations": [
+            "LAC"
+          ]
+        },
+        "startDateTime": 1766548800
+      },
+      "categories": []
+    },
+    {
+      "game": {
+        "id": "019a4c97-a95f-7c00-9d04-e9523014fafc",
+        "awayTeam": {
+          "name": "Pistons",
+          "abbreviations": [
+            "DET"
+          ]
+        },
+        "homeTeam": {
+          "name": "Kings",
+          "abbreviations": [
+            "SAC"
+          ]
+        },
+        "startDateTime": 1766545200
+      },
+      "categories": []
+    },
+    {
+      "game": {
+        "id": "019a4c97-a950-7c7f-8cb1-82233236099d",
+        "awayTeam": {
+          "name": "Magic",
+          "abbreviations": [
+            "ORL"
+          ]
+        },
+        "homeTeam": {
+          "name": "Trail Blazers",
+          "abbreviations": [
+            "POR"
+          ]
+        },
+        "startDateTime": 1766545200
+      },
+      "categories": []
+    }
+  ]
+}

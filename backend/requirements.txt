@@ -17,9 +17,11 @@ watchfiles
 websockets
 python-dateutil
 fuzzywuzzy
-python-Levenshtein  # Optional but recommended for better performance
+rapidfuzz  # Required for team name matching (python-Levenshtein removed due to compilation issues on Python 3.14)
 selenium
 psutil  # For process management and cleanup
 pywin32  # For Windows signal handling and process management
 numpy  # For numerical operations
-sqlalchemy  # For database operations 
+sqlalchemy  # For database operations
+python-socketio  # For Socket.IO client connections (pandora.ganchrow.com)
+websocket-client  # Required for python-socketio WebSocket transport 

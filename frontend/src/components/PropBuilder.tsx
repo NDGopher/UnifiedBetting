@@ -68,6 +68,8 @@ interface ScraperStatus {
   total_props: number;
   last_refresh: number;
   refresh_interval: number;
+  telegram_enabled?: boolean;
+  pto_enabled?: boolean;
 }
 
 const PropBuilder: React.FC = () => {
@@ -158,6 +160,42 @@ const PropBuilder: React.FC = () => {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to toggle scraper");
+    }
+  };
+
+  const toggleTelegramAlerts = async (enabled: boolean) => {
+    try {
+      const response = await fetch(`${API_BASE}/pto/telegram/toggle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled }),
+      });
+      if (response.ok) {
+        await fetchScraperStatus();
+      } else {
+        const data = await response.json();
+        setError(data.message || "Failed to toggle Telegram alerts");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to toggle Telegram alerts");
+    }
+  };
+
+  const togglePtoScraping = async (enabled: boolean) => {
+    try {
+      const response = await fetch(`${API_BASE}/pto/scraper/toggle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled }),
+      });
+      if (response.ok) {
+        await fetchScraperStatus();
+      } else {
+        const data = await response.json();
+        setError(data.message || "Failed to toggle PTO scraping");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to toggle PTO scraping");
     }
   };
 
@@ -355,8 +393,46 @@ const PropBuilder: React.FC = () => {
             label="Show Hidden"
             sx={{ ml: 2 }}
           />
+        </Box>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+          {/* Telegram Alerts Toggle */}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={scraperStatus?.telegram_enabled ?? false}
+                onChange={e => toggleTelegramAlerts(e.target.checked)}
+                size="small"
+                color="primary"
+              />
+            }
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Typography variant="body2" sx={{ fontSize: '0.75rem' }}>
+                  Telegram Alerts
+                </Typography>
+              </Box>
+            }
+          />
+          {/* PTO Scraping Toggle */}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={scraperStatus?.pto_enabled ?? false}
+                onChange={e => togglePtoScraping(e.target.checked)}
+                size="small"
+                color="primary"
+              />
+            }
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Typography variant="body2" sx={{ fontSize: '0.75rem' }}>
+                  PTO Scraping
+                </Typography>
+              </Box>
+            }
+          />
           {/* Status dot and info, compact */}
-          <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, gap: 1, bgcolor: 'transparent' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, bgcolor: 'transparent' }}>
             <span
               style={{
                 display: 'inline-block',

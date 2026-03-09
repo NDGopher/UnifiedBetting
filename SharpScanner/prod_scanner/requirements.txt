@@ -1,0 +1,11 @@
+streamlit
+streamlit-autorefresh
+pandas
+watchdog
+aiohttp
+python-dotenv
+cryptography
+websockets
+altair
+predmarket
+httpx

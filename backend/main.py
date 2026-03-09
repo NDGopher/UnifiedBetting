@@ -706,11 +706,45 @@ async def get_pto_scraper_status():
             "is_running": pto_scraper.is_running,
             "total_props": len(pto_scraper.live_props),
             "last_refresh": pto_scraper.last_refresh,
-            "refresh_interval": pto_scraper.refresh_interval
+            "refresh_interval": pto_scraper.refresh_interval,
+            "telegram_enabled": pto_scraper.telegram_enabled,
+            "pto_enabled": pto_scraper.pto_enabled
         }
         return JSONResponse({"status": "success", "data": status})
     except Exception as e:
         logger.error(f"[ERROR] Error getting PTO scraper status: {e}")
+        return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
+
+@app.post("/pto/telegram/toggle")
+async def toggle_telegram_alerts(request: Request):
+    """Toggle Telegram alerts on/off"""
+    try:
+        payload = await request.json()
+        enabled = payload.get("enabled", True)
+        pto_scraper.set_telegram_enabled(enabled)
+        return JSONResponse({
+            "status": "success",
+            "message": f"Telegram alerts {'enabled' if enabled else 'disabled'}",
+            "data": {"telegram_enabled": enabled}
+        })
+    except Exception as e:
+        logger.error(f"[ERROR] Error toggling Telegram alerts: {e}")
+        return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
+
+@app.post("/pto/scraper/toggle")
+async def toggle_pto_scraper(request: Request):
+    """Toggle PTO scraping on/off"""
+    try:
+        payload = await request.json()
+        enabled = payload.get("enabled", True)
+        pto_scraper.set_pto_enabled(enabled)
+        return JSONResponse({
+            "status": "success",
+            "message": f"PTO scraping {'enabled' if enabled else 'disabled'}",
+            "data": {"pto_enabled": enabled}
+        })
+    except Exception as e:
+        logger.error(f"[ERROR] Error toggling PTO scraper: {e}")
         return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
 
 # BuckeyeScraper endpoints
@@ -1210,17 +1244,30 @@ async def run_pipeline_background():
     finally:
         pipeline_running = False
 
-async def run_streaming_pipeline_background():
+async def run_streaming_pipeline_background(sport_filters=None):
     """Streaming pipeline that processes matches in real-time and broadcasts results"""
     global current_results, last_run_time, pipeline_running
     import time
     pipeline_start_time = time.time()
     pipeline_running = True
     
-    # Initialize streaming results
+    # Clear old results when starting a new run
+    current_results = []
     streaming_results = []
+    last_run_time = None
     
-    logger.info("[STREAMING] === STREAMING PIPELINE STARTED ===")
+    # Delete old results file to prevent stale data
+    try:
+        if os.path.exists(BUCKEYE_RESULTS_FILE):
+            os.remove(BUCKEYE_RESULTS_FILE)
+            logger.info(f"[STREAMING] Cleared old results file: {BUCKEYE_RESULTS_FILE}")
+            print(f"[STREAMING] Cleared old results file")
+    except Exception as e:
+        logger.warning(f"[STREAMING] Could not delete old results file: {e}")
+        print(f"[STREAMING] WARNING: Could not delete old results file: {e}")
+    
+    logger.info(f"[STREAMING] === STREAMING PIPELINE STARTED ===" + (f" (sports: {', '.join(sport_filters)})" if sport_filters else " (all sports)"))
+    print(f"[STREAMING] === PIPELINE STARTED ===" + (f" (sports: {', '.join(sport_filters)})" if sport_filters else " (all sports)"))
     
     try:
         # Step 1: Load event IDs from file
@@ -1245,13 +1292,13 @@ async def run_streaming_pipeline_background():
                         # Convert from milliseconds to seconds if needed
                         if start_time > 1e10:  # Likely milliseconds
                             start_time = start_time / 1000
-                        from datetime import datetime
+                        # datetime is already imported at the top of the file
                         dt = datetime.fromtimestamp(start_time)
                         event['event_datetime'] = dt.strftime('%Y-%m-%dT%H:%M')
                     elif isinstance(start_time, str):
                         # Try to parse the string timestamp
                         try:
-                            from datetime import datetime
+                            # datetime is already imported at the top of the file
                             dt = datetime.fromisoformat(start_time.replace('Z', '+00:00'))
                             event['event_datetime'] = dt.strftime('%Y-%m-%dT%H:%M')
                         except:
@@ -1268,11 +1315,24 @@ async def run_streaming_pipeline_background():
         
         # Step 2: Scrape BetBCK fresh
         step2_start = time.time()
-        logger.info("[STREAMING] Step 2: Scraping BetBCK fresh...")
+        logger.info(f"[STREAMING] Step 2: Scraping BetBCK fresh..." + (f" (sports: {', '.join(sport_filters)})" if sport_filters else " (all sports)"))
+        print(f"[STREAMING] Step 2: Scraping BetBCK fresh..." + (f" (sports: {', '.join(sport_filters)})" if sport_filters else " (all sports)"))
         from betbck_async_scraper import _get_all_betbck_games_async
-        betbck_games = await asyncio.wait_for(_get_all_betbck_games_async(), timeout=300)
-        step2_time = time.time() - step2_start
-        logger.info(f"[STREAMING] Step 2 completed in {step2_time:.2f}s: Scraped {len(betbck_games)} BetBCK games")
+        try:
+            betbck_games = await asyncio.wait_for(_get_all_betbck_games_async(sport_filters=sport_filters), timeout=300)
+            step2_time = time.time() - step2_start
+            logger.info(f"[STREAMING] Step 2 completed in {step2_time:.2f}s: Scraped {len(betbck_games)} BetBCK games")
+            print(f"[STREAMING] Step 2 completed: {len(betbck_games)} BetBCK games scraped")
+            if len(betbck_games) == 0:
+                logger.warning(f"[STREAMING] WARNING: No BetBCK games scraped! Check logs for errors.")
+                print(f"[STREAMING] WARNING: No BetBCK games scraped!")
+        except Exception as e:
+            logger.error(f"[STREAMING] Error in Step 2: {e}")
+            print(f"[STREAMING] ERROR in Step 2: {e}")
+            import traceback
+            logger.error(f"[STREAMING] Traceback: {traceback.format_exc()}")
+            print(f"[STREAMING] Traceback: {traceback.format_exc()}")
+            betbck_games = []
         
         # Yield control to event loop
         await asyncio.sleep(0)
@@ -1284,31 +1344,43 @@ async def run_streaming_pipeline_background():
         from match_games import match_pinnacle_to_betbck
         from calculate_ev_table import calculate_ev_table, format_ev_table_for_display
         
-        # Process games in batches for streaming
-        batch_size = 10  # Process 10 games at a time
+        # For small selections (<=20 games), process everything at once for speed
+        # For larger selections, use batching for streaming updates
+        is_small_selection = len(betbck_games) <= 20
+        batch_size = 20  # Increased from 10 to 20 for better throughput (optimized EV fetching handles this)
         total_processed = 0
         total_matched = 0
         
-        for i in range(0, len(betbck_games), batch_size):
-            batch = betbck_games[i:i + batch_size]
-            logger.info(f"[STREAMING] Processing batch {i//batch_size + 1}/{(len(betbck_games) + batch_size - 1)//batch_size} ({len(batch)} games)")
+        if is_small_selection:
+            # Fast path: process all games at once
+            logger.info(f"[STREAMING] Small selection detected ({len(betbck_games)} games) - processing all at once")
+            print(f"[STREAMING] Small selection: {len(betbck_games)} BetBCK games, {len(event_dicts)} Pinnacle events")
+            all_matched = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
+            print(f"[STREAMING] Matching result: {len(all_matched) if all_matched else 0} matched games")
+            logger.info(f"[STREAMING] Matching result: {len(all_matched) if all_matched else 0} matched games")
             
-            # Match this batch
-            batch_matched = match_pinnacle_to_betbck(event_dicts, {"games": batch})
-            
-            if batch_matched:
-                total_matched += len(batch_matched)
-                logger.info(f"[STREAMING] Batch matched {len(batch_matched)} games (total: {total_matched})")
+            if all_matched and len(all_matched) > 0:
+                total_matched = len(all_matched)
+                logger.info(f"[STREAMING] Matched {total_matched} games")
+                print(f"[STREAMING] Matched {total_matched} games")
                 
-                # Calculate EV for this batch immediately
+                # Calculate EV for all matched games at once
                 try:
-                    batch_ev_table = calculate_ev_table(batch_matched)
-                    if batch_ev_table:
-                        batch_formatted = format_ev_table_for_display(batch_ev_table)
-                        streaming_results.extend(batch_formatted)
-                        
-                        # Re-sort the entire results by EV (high to low)
-                        streaming_results.sort(key=lambda x: x.get('ev_val', 0), reverse=True)
+                    from calculate_ev_table import calculate_ev_table_async
+                    print(f"[STREAMING] Starting EV calculation for {len(all_matched)} matched games...")
+                    logger.info(f"[STREAMING] Starting EV calculation for {len(all_matched)} matched games...")
+                    all_ev_table = await calculate_ev_table_async(all_matched)
+                    print(f"[STREAMING] EV calculation returned: {type(all_ev_table)}, length: {len(all_ev_table) if all_ev_table else 0}")
+                    logger.info(f"[STREAMING] EV calculation returned: {type(all_ev_table)}, length: {len(all_ev_table) if all_ev_table else 0}")
+                    if all_ev_table:
+                        print(f"[STREAMING] EV table type: {type(all_ev_table)}, is list: {isinstance(all_ev_table, list)}")
+                        if isinstance(all_ev_table, list) and len(all_ev_table) > 0:
+                            print(f"[STREAMING] First EV opportunity sample: {all_ev_table[0] if len(all_ev_table) > 0 else 'N/A'}")
+                    if all_ev_table and len(all_ev_table) > 0:
+                        all_formatted = format_ev_table_for_display(all_ev_table)
+                        print(f"[STREAMING] Formatted {len(all_formatted)} events for display")
+                        logger.info(f"[STREAMING] Formatted {len(all_formatted)} events for display")
+                        streaming_results = all_formatted
                         
                         # Update global results
                         current_results = streaming_results
@@ -1323,8 +1395,11 @@ async def run_streaming_pipeline_background():
                                     "total_events": len(streaming_results),
                                     "last_run": last_run_time
                                 }, f, indent=2)
+                            print(f"[STREAMING] Saved {len(streaming_results)} events to file")
+                            logger.info(f"[STREAMING] Saved {len(streaming_results)} events to file")
                         except Exception as e:
                             logger.error(f"[STREAMING] Error writing results: {e}")
+                            print(f"[STREAMING] ERROR writing results: {e}")
                         
                         # Broadcast update via WebSocket
                         try:
@@ -1334,25 +1409,109 @@ async def run_streaming_pipeline_background():
                                     "events": streaming_results,
                                     "total_events": len(streaming_results),
                                     "last_run": last_run_time,
-                                    "streaming": True,
-                                    "batch_completed": i//batch_size + 1,
-                                    "total_batches": (len(betbck_games) + batch_size - 1)//batch_size
+                                    "streaming": False,
+                                    "batch_completed": 1,
+                                    "total_batches": 1
                                 }
                             })
                             logger.info(f"[STREAMING] Broadcasted update: {len(streaming_results)} events")
+                            print(f"[STREAMING] Broadcasted update: {len(streaming_results)} events")
                         except Exception as e:
                             logger.error(f"[STREAMING] Error broadcasting update: {e}")
+                            print(f"[STREAMING] ERROR broadcasting: {e}")
                         
-                        logger.info(f"[STREAMING] Batch EV calculation completed: {len(batch_formatted)} events added to table")
+                        logger.info(f"[STREAMING] EV calculation completed: {len(all_formatted)} events")
                     else:
-                        logger.info(f"[STREAMING] No EV opportunities found in batch")
+                        logger.warning(f"[STREAMING] No EV opportunities found (EV table was empty or None)")
+                        print(f"[STREAMING] WARNING: No EV opportunities found")
                 except Exception as e:
-                    logger.error(f"[STREAMING] Error calculating EV for batch: {e}")
+                    logger.error(f"[STREAMING] Error calculating EV: {e}")
+                    print(f"[STREAMING] ERROR calculating EV: {e}")
+                    import traceback
+                    logger.error(f"[STREAMING] Traceback: {traceback.format_exc()}")
+                    print(f"[STREAMING] Traceback: {traceback.format_exc()}")
+            else:
+                logger.warning(f"[STREAMING] No games matched! BetBCK games: {len(betbck_games)}, Pinnacle events: {len(event_dicts)}")
+                print(f"[STREAMING] WARNING: No games matched! BetBCK: {len(betbck_games)}, Pinnacle: {len(event_dicts)}")
+                if betbck_games:
+                    print(f"[STREAMING] Sample BetBCK games (first 3):")
+                    for i, game in enumerate(betbck_games[:3]):
+                        print(f"[STREAMING]   {i+1}. {game.get('home_team')} vs {game.get('away_team')} ({game.get('league')})")
+                if event_dicts:
+                    print(f"[STREAMING] Sample Pinnacle events (first 3):")
+                    for i, event in enumerate(event_dicts[:3]):
+                        print(f"[STREAMING]   {i+1}. {event.get('home_team')} vs {event.get('away_team')} ({event.get('league')})")
             
-            total_processed += len(batch)
-            
-            # Yield control to event loop between batches
-            await asyncio.sleep(0.1)  # Small delay to prevent blocking
+            total_processed = len(betbck_games)
+        else:
+            # Normal path: process in batches for streaming
+            # Use smaller batches for large selections to show results faster
+            streaming_batch_size = min(batch_size, 10) if len(betbck_games) > 50 else batch_size
+            for i in range(0, len(betbck_games), streaming_batch_size):
+                batch = betbck_games[i:i + streaming_batch_size]
+                logger.info(f"[STREAMING] Processing batch {i//streaming_batch_size + 1}/{(len(betbck_games) + streaming_batch_size - 1)//streaming_batch_size} ({len(batch)} games)")
+                
+                # Match this batch
+                batch_matched = match_pinnacle_to_betbck(event_dicts, {"games": batch})
+                
+                if batch_matched:
+                    total_matched += len(batch_matched)
+                    logger.info(f"[STREAMING] Batch matched {len(batch_matched)} games (total: {total_matched})")
+                    
+                    # Calculate EV for this batch immediately (using async version for speed)
+                    try:
+                        from calculate_ev_table import calculate_ev_table_async
+                        batch_ev_table = await calculate_ev_table_async(batch_matched)
+                        if batch_ev_table:
+                            batch_formatted = format_ev_table_for_display(batch_ev_table)
+                            streaming_results.extend(batch_formatted)
+                            
+                            # Re-sort the entire results by EV (high to low)
+                            streaming_results.sort(key=lambda x: x.get('ev_val', 0), reverse=True)
+                            
+                            # Update global results
+                            current_results = streaming_results
+                            last_run_time = datetime.now().isoformat()
+                            
+                            # Save to file
+                            try:
+                                os.makedirs(os.path.dirname(BUCKEYE_RESULTS_FILE), exist_ok=True)
+                                with open(BUCKEYE_RESULTS_FILE, 'w', encoding='utf-8') as f:
+                                    json.dump({
+                                        "events": streaming_results,
+                                        "total_events": len(streaming_results),
+                                        "last_run": last_run_time
+                                    }, f, indent=2)
+                            except Exception as e:
+                                logger.error(f"[STREAMING] Error writing results: {e}")
+                            
+                            # Broadcast update via WebSocket
+                            try:
+                                await manager.broadcast({
+                                    "type": "buckeye_update",
+                                    "data": {
+                                        "events": streaming_results,
+                                        "total_events": len(streaming_results),
+                                        "last_run": last_run_time,
+                                        "streaming": True,
+                                        "batch_completed": i//batch_size + 1,
+                                        "total_batches": (len(betbck_games) + batch_size - 1)//batch_size
+                                    }
+                                })
+                                logger.info(f"[STREAMING] Broadcasted update: {len(streaming_results)} events")
+                            except Exception as e:
+                                logger.error(f"[STREAMING] Error broadcasting update: {e}")
+                            
+                            logger.info(f"[STREAMING] Batch EV calculation completed: {len(batch_formatted)} events added to table")
+                        else:
+                            logger.info(f"[STREAMING] No EV opportunities found in batch")
+                    except Exception as e:
+                        logger.error(f"[STREAMING] Error calculating EV for batch: {e}")
+                
+                total_processed += len(batch)
+                
+                # Yield control to event loop between batches (reduced delay for faster processing)
+                await asyncio.sleep(0.05)  # Reduced from 0.1s to 0.05s for faster streaming
         
         step3_time = time.time() - step3_start
         total_pipeline_time = time.time() - pipeline_start_time
@@ -1361,8 +1520,16 @@ async def run_streaming_pipeline_background():
         logger.info(f"[STREAMING] Total time: {total_pipeline_time:.2f}s")
         logger.info(f"[STREAMING] Processed: {total_processed} games, Matched: {total_matched} games")
         logger.info(f"[STREAMING] Final results: {len(streaming_results)} events")
+        print(f"[STREAMING] === PIPELINE COMPLETED ===")
+        print(f"[STREAMING] Total time: {total_pipeline_time:.2f}s")
+        print(f"[STREAMING] Processed: {total_processed} games, Matched: {total_matched} games")
+        print(f"[STREAMING] Final results: {len(streaming_results)} events")
         
-        # Final broadcast
+        # Update last_run_time if not set
+        if not last_run_time:
+            last_run_time = datetime.now().isoformat()
+        
+        # Final broadcast - always send, even if no events
         try:
             await manager.broadcast({
                 "type": "buckeye_complete",
@@ -1376,8 +1543,10 @@ async def run_streaming_pipeline_background():
                 }
             })
             logger.info(f"[STREAMING] Final broadcast sent: {len(streaming_results)} events")
+            print(f"[STREAMING] Final broadcast sent: {len(streaming_results)} events, {total_processed} processed, {total_matched} matched")
         except Exception as e:
             logger.error(f"[STREAMING] Error sending final broadcast: {e}")
+            print(f"[STREAMING] ERROR sending final broadcast: {e}")
         
         return {
             "status": "success",
@@ -1392,8 +1561,11 @@ async def run_streaming_pipeline_background():
         
     except Exception as e:
         logger.error(f"[STREAMING] Pipeline error: {e}")
+        print(f"[STREAMING] ERROR: {e}")
         import traceback
-        logger.error(f"[STREAMING] Traceback: {traceback.format_exc()}")
+        tb = traceback.format_exc()
+        logger.error(f"[STREAMING] Traceback: {tb}")
+        print(f"[STREAMING] Traceback: {tb}")
         
         # Try to broadcast error to frontend
         try:
@@ -1401,17 +1573,21 @@ async def run_streaming_pipeline_background():
                 "type": "buckeye_error",
                 "data": {
                     "error": str(e),
-                    "message": "Streaming pipeline failed"
+                    "message": "Streaming pipeline failed",
+                    "traceback": tb
                 }
             })
+            print(f"[STREAMING] Error broadcasted to frontend")
         except Exception as broadcast_error:
             logger.error(f"[STREAMING] Failed to broadcast error: {broadcast_error}")
+            print(f"[STREAMING] Failed to broadcast error: {broadcast_error}")
         
         return {"status": "error", "message": f"Streaming pipeline failed: {str(e)}"}
     
     finally:
         pipeline_running = False
         logger.info("[STREAMING] Streaming pipeline background task completed")
+        print(f"[STREAMING] Pipeline completed, pipeline_running set to False")
 
 @app.post("/api/run-pipeline")
 async def run_pipeline():
@@ -1435,23 +1611,57 @@ async def run_pipeline():
     }
 
 @app.post("/api/run-streaming-pipeline")
-async def run_streaming_pipeline():
+async def run_streaming_pipeline(request: Request):
     """Start the streaming Buckeye pipeline in the background"""
     global pipeline_running, pipeline_task
     
+    # Check if previous task is still running or stuck
+    if pipeline_task and not pipeline_task.done():
+        logger.warning(f"[PIPELINE] Previous pipeline task still running, cancelling it")
+        print(f"[PIPELINE] Previous pipeline task still running, cancelling it")
+        try:
+            pipeline_task.cancel()
+            await asyncio.sleep(0.1)  # Give it a moment to cancel
+        except Exception as e:
+            logger.warning(f"[PIPELINE] Error cancelling previous task: {e}")
+            print(f"[PIPELINE] Error cancelling previous task: {e}")
+    
+    # Reset pipeline_running flag if it's stuck
     if pipeline_running:
-        return {
-            "status": "error",
-            "message": "Pipeline is already running",
-            "data": {}
-        }
+        logger.warning(f"[PIPELINE] pipeline_running flag was True but task is done, resetting")
+        print(f"[PIPELINE] pipeline_running flag was True but task is done, resetting")
+        pipeline_running = False
+    
+    # Get sport filters from request body (optional)
+    sport_filters = []
+    try:
+        body = await request.json()
+        sport_filters = body.get('sport_filters', [])
+    except:
+        pass  # No body or invalid JSON, use empty list (all sports)
     
     # Start streaming pipeline in background
-    pipeline_task = asyncio.create_task(run_streaming_pipeline_background())
+    pipeline_task = asyncio.create_task(run_streaming_pipeline_background(sport_filters=sport_filters))
+    
+    # Add error callback to ensure flag is reset even if task crashes
+    def reset_on_error(task):
+        global pipeline_running
+        try:
+            if task.exception():
+                logger.error(f"[PIPELINE] Pipeline task crashed: {task.exception()}")
+                print(f"[PIPELINE] Pipeline task crashed: {task.exception()}")
+        except:
+            pass
+        finally:
+            pipeline_running = False
+            logger.info(f"[PIPELINE] Reset pipeline_running flag after task completion")
+            print(f"[PIPELINE] Reset pipeline_running flag after task completion")
+    
+    pipeline_task.add_done_callback(reset_on_error)
     
     return {
         "status": "success",
-        "message": "Streaming pipeline started in background",
+        "message": f"Streaming pipeline started in background" + (f" (sports: {', '.join(sport_filters)})" if sport_filters else " (all sports)"),
         "data": {}
     }
 
@@ -2065,17 +2275,59 @@ async def debug_matching():
 def get_buckeye_results():
     """Serve the latest BuckeyeScraper EV results from buckeye_results.json for frontend table population."""
     try:
+        # First check if we have fresh results in memory
+        global current_results, last_run_time
+        if current_results and len(current_results) > 0:
+            logger.info(f"[RESULTS] Serving {len(current_results)} events from memory")
+            all_markets = []
+            for event in current_results:
+                matchup = event.get("matchup", "")
+                league = event.get("league", "")
+                all_markets.append({
+                    "matchup": matchup,
+                    "league": league,
+                    "bet": event.get('bet', ''),
+                    "betbck_odds": event.get("betbck_odds", ""),
+                    "pinnacle_nvp": event.get("pinnacle_nvp", ""),
+                    "ev": event.get("ev", ""),
+                    "start_time": event.get("start_time", ""),
+                    "pinnacle_limit": event.get("pinnacle_limit")
+                })
+            return JSONResponse({
+                "status": "success",
+                "data": {
+                    "markets": all_markets,
+                    "last_update": last_run_time
+                }
+            })
+        
+        # Fallback to file if no memory results
         results_path = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_results.json')
         if not os.path.exists(results_path):
             return JSONResponse({
-                "status": "error",
-                "message": "No results file found. Run calculations first.",
-                "data": {"events": [], "total_events": 0}
-            }, status_code=404)
+                "status": "success",
+                "data": {"markets": [], "total_events": 0, "last_update": None}
+            })
+        
         with open(results_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
         events = data.get("events", [])
         last_update = data.get("last_run")
+        
+        # Check if results are too old (more than 24 hours)
+        if last_update:
+            try:
+                # datetime is already imported at the top of the file
+                last_update_dt = datetime.fromisoformat(last_update.replace('Z', '+00:00'))
+                age_hours = (datetime.now().replace(tzinfo=last_update_dt.tzinfo) - last_update_dt).total_seconds() / 3600
+                if age_hours > 24:
+                    logger.warning(f"[RESULTS] Results are {age_hours:.1f} hours old - returning empty")
+                    return JSONResponse({
+                        "status": "success",
+                        "data": {"markets": [], "total_events": 0, "last_update": last_update}
+                    })
+            except Exception as e:
+                logger.warning(f"[RESULTS] Could not check result age: {e}")
         # Map to frontend columns
         all_markets = []
         for event in events:

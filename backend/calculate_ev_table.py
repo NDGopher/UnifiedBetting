@@ -2,6 +2,8 @@ import json
 import logging
 import requests
 import time
+import asyncio
+import aiohttp
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from utils.pod_utils import analyze_markets_for_ev, process_event_odds_for_display, american_to_decimal, decimal_to_american
@@ -24,6 +26,8 @@ if not logger.hasHandlers():
 
 # Swordfish API configuration
 SWORDFISH_API_BASE_URL = "https://swordfish-production.up.railway.app/events/"
+# Rate limiting: allow up to 15 concurrent requests to Swordfish API
+MAX_CONCURRENT_SWORDFISH_REQUESTS = 15
 
 def get_swordfish_odds(event_id: str, max_retries: int = 3) -> dict:
     """Fetch odds for an event from Swordfish API with retry logic. If fails, log error and return None."""
@@ -170,39 +174,152 @@ def calculate_ev_for_event(matched_event: Dict[str, Any]) -> List[Dict[str, Any]
         logger.error(f"Error calculating EV for event {matched_event.get('pinnacle_event_id')}: {e}")
         return []
 
+async def _fetch_swordfish_odds_async(session: aiohttp.ClientSession, sem: asyncio.Semaphore, event_id: str, event_data: Dict) -> Optional[Dict]:
+    """Async fetch single Swordfish odds with rate limiting"""
+    url = f"{SWORDFISH_API_BASE_URL}{event_id}"
+    try:
+        async with sem:
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=15)) as response:
+                if response.status == 200:
+                    odds_data = await response.json()
+                    return {"event_id": event_id, "odds": odds_data, "event_data": event_data}
+                elif response.status == 404:
+                    logger.debug(f"[SWORDFISH-ASYNC] Event {event_id} not found (404)")
+                    return None
+                elif response.status == 429:
+                    logger.warning(f"[SWORDFISH-ASYNC] Rate limited for event {event_id}")
+                    await asyncio.sleep(1)  # Brief backoff on rate limit
+                    return None
+                else:
+                    logger.warning(f"[SWORDFISH-ASYNC] HTTP {response.status} for event {event_id}")
+                    return None
+    except asyncio.TimeoutError:
+        logger.debug(f"[SWORDFISH-ASYNC] Timeout for event {event_id}")
+        return None
+    except Exception as e:
+        logger.debug(f"[SWORDFISH-ASYNC] Error fetching event {event_id}: {e}")
+        return None
+
+async def fetch_all_swordfish_odds_parallel(matched_games: List[Dict[str, Any]]) -> Dict[str, Dict]:
+    """Fetch all Swordfish odds in parallel with rate limiting"""
+    logger.info(f"[EV-PIPELINE] Fetching Swordfish odds in parallel for {len(matched_games)} events...")
+    
+    sem = asyncio.Semaphore(MAX_CONCURRENT_SWORDFISH_REQUESTS)
+    conn = aiohttp.TCPConnector(limit=MAX_CONCURRENT_SWORDFISH_REQUESTS, limit_per_host=MAX_CONCURRENT_SWORDFISH_REQUESTS)
+    
+    async with aiohttp.ClientSession(connector=conn) as session:
+        tasks = []
+        for matched_event in matched_games:
+            event_id = matched_event.get('pinnacle_event_id')
+            if event_id:
+                task = _fetch_swordfish_odds_async(session, sem, str(event_id), matched_event)
+                tasks.append(task)
+        
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+    
+    # Build a dict of event_id -> odds_data for fast lookup
+    odds_cache = {}
+    successful_fetches = 0
+    for result in results:
+        if isinstance(result, Exception):
+            continue
+        if result and result.get('odds'):
+            event_id = result['event_id']
+            odds_cache[str(event_id)] = result['odds']
+            successful_fetches += 1
+    
+    logger.info(f"[EV-PIPELINE] Successfully fetched {successful_fetches}/{len(tasks)} Swordfish odds responses")
+    return odds_cache
+
 def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Synchronous wrapper that uses async parallel fetching for speed optimization.
+    For backwards compatibility - uses asyncio.run internally.
+    """
+    return asyncio.run(calculate_ev_table_async(matched_games))
+
+async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Calculate EV table with parallel Swordfish odds fetching for better performance.
+    This is the optimized async version that fetches all odds in parallel first.
+    """
     import math
     from utils.pod_utils import american_to_decimal, decimal_to_american
-    from datetime import datetime
-    logger.info(f"[EV-PIPELINE] Starting EV calculation for {len(matched_games)} matched games.")
+    # datetime is already imported at the top of the file
+    
+    logger.info(f"[EV-PIPELINE] Starting async EV calculation for {len(matched_games)} matched games.")
     if not matched_games:
         logger.warning("[EV-PIPELINE] No matched games provided for EV calculation.")
         return []
+    
+    # STEP 1: Fetch all Swordfish odds in parallel (BIG PERFORMANCE BOOST)
+    fetch_start = time.time()
+    odds_cache = await fetch_all_swordfish_odds_parallel(matched_games)
+    fetch_time = time.time() - fetch_start
+    logger.info(f"[EV-PIPELINE] Fetched all Swordfish odds in {fetch_time:.2f}s (parallel)")
+    
+    # STEP 2: Process EV calculations with cached odds
     all_bets_with_ev = []
     for idx, matched_event in enumerate(matched_games):
         try:
-            event_id = matched_event.get('pinnacle_event_id')
+            event_id = str(matched_event.get('pinnacle_event_id'))
+            if not event_id or event_id not in odds_cache:
+                continue  # Skip if we couldn't fetch odds
+            
             home_team = matched_event.get('pinnacle_home_team', matched_event.get('betbck_site_home_team', 'Unknown'))
             away_team = matched_event.get('pinnacle_away_team', matched_event.get('betbck_site_away_team', 'Unknown'))
             sport = matched_event.get('sport', 'Unknown')
             betbck_game = matched_event.get('betbck_game', {})
             betbck_odds = betbck_game.get('betbck_site_odds', {})
             betbck_odds_data = betbck_odds
-            swordfish_odds = get_swordfish_odds(event_id)
-            if not swordfish_odds or not swordfish_odds.get('data'):
-                continue
-            swordfish_odds = process_event_odds_for_display(swordfish_odds)
+            
+            # Get odds from cache
+            swordfish_odds_raw = odds_cache[event_id]
+            swordfish_odds = process_event_odds_for_display(swordfish_odds_raw)
             swordfish_data = swordfish_odds.get('data', {})
             periods = swordfish_data.get('periods', {})
             period_0_data = periods.get('num_0') or periods.get('0')
             if not period_0_data or not isinstance(period_0_data, dict):
                 continue
-            # Start time extraction
+            # Start time extraction - convert from UTC to Central Time
             start_time = matched_event.get('start_time') or swordfish_data.get('starts') or '-'
-            if isinstance(start_time, (int, float)) or (isinstance(start_time, str) and str(start_time).isdigit()):
-                start_time_fmt = datetime.utcfromtimestamp(int(start_time) / 1000).strftime('%Y-%m-%d %I:%M %p')
-            else:
-                start_time_fmt = str(start_time)
+            try:
+                if isinstance(start_time, (int, float)) or (isinstance(start_time, str) and str(start_time).isdigit()):
+                    # Convert from UTC timestamp to Central Time
+                    from datetime import timezone, timedelta
+                    try:
+                        import pytz
+                        utc_time = datetime.fromtimestamp(int(start_time) / 1000, tz=timezone.utc)
+                        # Use pytz for proper timezone handling (handles DST automatically)
+                        central_tz = pytz.timezone('America/Chicago')
+                        central_time = utc_time.astimezone(central_tz)
+                        start_time_fmt = central_time.strftime('%Y-%m-%d %I:%M %p')
+                    except (ImportError, Exception):
+                        # Fallback if pytz not available or any other error - use fixed offset
+                        # Note: This doesn't handle DST perfectly, but is better than nothing
+                        utc_time = datetime.fromtimestamp(int(start_time) / 1000, tz=timezone.utc)
+                        # Try to detect if DST is in effect (rough approximation)
+                        # March to November is typically DST (UTC-5), otherwise UTC-6
+                        month = utc_time.month
+                        is_dst = 3 <= month <= 11  # Rough DST detection
+                        offset_hours = -5 if is_dst else -6
+                        central_tz = timezone(timedelta(hours=offset_hours))
+                        central_time = utc_time.astimezone(central_tz)
+                        start_time_fmt = central_time.strftime('%Y-%m-%d %I:%M %p')
+                else:
+                    start_time_fmt = str(start_time)
+            except Exception as time_error:
+                # If timezone conversion fails completely, just use a simple format
+                logger.warning(f"[EV-PIPELINE] Timezone conversion failed for event {event_id}: {time_error}, using simple format")
+                if isinstance(start_time, (int, float)) or (isinstance(start_time, str) and str(start_time).isdigit()):
+                    try:
+                        from datetime import timezone
+                        utc_time = datetime.fromtimestamp(int(start_time) / 1000, tz=timezone.utc)
+                        start_time_fmt = utc_time.strftime('%Y-%m-%d %I:%M %p')
+                    except:
+                        start_time_fmt = str(start_time)
+                else:
+                    start_time_fmt = str(start_time)
             # League extraction
             league = swordfish_data.get('league_name') or swordfish_data.get('league') or swordfish_data.get('sport_name') or sport
             event_name = f"{home_team} vs {away_team}" if home_team and away_team else home_team or away_team or "-"
@@ -442,6 +559,9 @@ def calculate_ev_table(matched_games: List[Dict[str, Any]]) -> List[Dict[str, An
     all_bets_with_ev = [bet for bet in all_bets_with_ev if abs(bet.get('ev_val', 0)) <= 0.15]
     # Sort by EV descending
     all_bets_with_ev.sort(key=lambda x: x.get('ev_val', 0), reverse=True)
+    
+    calc_time = time.time() - fetch_start
+    logger.info(f"[EV-PIPELINE] Completed EV calculation in {calc_time:.2f}s total: {len(all_bets_with_ev)} opportunities found")
     return all_bets_with_ev
 
 def save_ev_table(ev_table: List[Dict[str, Any]], filename: str = None) -> bool:

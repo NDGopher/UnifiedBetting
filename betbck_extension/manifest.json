@@ -8,10 +8,12 @@
     "tabs",
     "storage",
     "clipboardWrite",
-    "clipboardRead"
+    "clipboardRead",
+    "debugger"
   ],
   "host_permissions": [
     "https://betbck.com/*",
+    "https://plive.becoms.co/*",
     "http://localhost:5001/*"
   ],
   "background": {
@@ -19,8 +21,20 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://betbck.com/*"],
-      "js": ["content.js"]
+      "matches": ["https://betbck.com/*", "https://plive.becoms.co/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["api_interceptor.js"],
+      "matches": [
+        "https://betbck.com/*",
+        "http://betbck.com/*",
+        "https://plive.becoms.co/*"
+      ]
     }
   ],
   "action": {
@@ -28,14 +42,12 @@
     "default_icon": {
       "16": "icon16.png",
       "32": "icon32.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
+      "48": "icon48.png"
     }
   },
   "icons": {
     "16": "icon16.png",
     "32": "icon32.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "48": "icon48.png"
   }
 } 

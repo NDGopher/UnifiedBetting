@@ -92,9 +92,21 @@ class ColoredFormatter(logging.Formatter):
         formatted = super().format(record)
         return f"{color}{formatted}{Colors.RESET}"
 
-# Configure logging with Selenium spam suppression
-from backend.config import setup_logging
-setup_logging()
+# Configure logging - import from backend (should work if running from venv Python)
+# Add backend to path if not already there
+backend_path = os.path.join(os.path.dirname(__file__), 'backend')
+if backend_path not in sys.path:
+    sys.path.insert(0, backend_path)
+
+try:
+    from config import setup_logging
+    setup_logging()
+except ImportError:
+    # Fallback to basic logging if config module isn't available
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -113,9 +125,8 @@ cleanup_done = False
 def handle_chrome_restore_dialog():
     """Automatically handle Chrome restore dialog if it appears"""
     try:
-        import win32gui
-        import win32con
-        import win32api
+        if not (win32gui and win32con and win32api):
+            return False  # Can't handle dialog without win32 modules
         import time
         
         # Wait a moment for the dialog to appear

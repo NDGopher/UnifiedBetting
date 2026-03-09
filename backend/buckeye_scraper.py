@@ -562,7 +562,7 @@ class BuckeyeScraper:
                     processed_count += 1
                     if processed_count % 10 == 0:
                         logger.info(f"[MAIN-CALC] Progress: {processed_count}/{len(event_ids)} events processed, {successful_matches} matched, {successful_ev_calcs} with EV")
-                    time.sleep(0.5)
+                    # Removed sleep - if needed for rate limiting, should be handled in the API calls themselves
                 except Exception as e:
                     logger.error(f"[MAIN-CALC] Error processing event {event_id}: {e}")
                     continue

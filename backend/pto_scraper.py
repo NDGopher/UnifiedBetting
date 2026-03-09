@@ -33,6 +33,7 @@ class PTOScraper:
         self.scraping_interval = config.get("scraping_interval_seconds", 2)  # 2-3 seconds like original
         self.min_ev_threshold = config.get("min_ev_threshold", 3.0)  # Show only 3%+ EV by default
         self.telegram_enabled = config.get("telegram_enabled", True)
+        self.pto_enabled = config.get("enable_auto_scraping", True)
         self.dry_run = False  # Enable Telegram alerts now that parsing is fixed
         
         # Initialize Telegram alerts if enabled
@@ -47,6 +48,22 @@ class PTOScraper:
                 self.telegram = None
         else:
             self.telegram = None
+    
+    def set_telegram_enabled(self, enabled: bool):
+        """Enable or disable Telegram alerts at runtime"""
+        self.telegram_enabled = enabled
+        logger.info(f"Telegram alerts {'enabled' if enabled else 'disabled'}")
+    
+    def set_pto_enabled(self, enabled: bool):
+        """Enable or disable PTO scraping at runtime"""
+        self.pto_enabled = enabled
+        if not enabled and self.is_running:
+            self.stop_scraping()
+            logger.info("PTO scraping disabled and scraper stopped")
+        elif enabled and not self.is_running:
+            logger.info("PTO scraping enabled (use start_scraping() to begin)")
+        else:
+            logger.info(f"PTO scraping {'enabled' if enabled else 'disabled'}")
         
     def get_driver_fallback(self):
         """Fallback driver creation without profile directory"""
@@ -500,6 +517,9 @@ class PTOScraper:
 
     def start_scraping(self):
         """Start the PTO scraping process in a background thread"""
+        if not self.pto_enabled:
+            logger.warning("PTO scraping is disabled. Enable it first with set_pto_enabled(True)")
+            return
         if self.is_running:
             logger.warning("PTO scraper is already running")
             return
@@ -586,7 +606,7 @@ class PTOScraper:
                 logger.info("[SCRAPING] PTO setup complete, starting prop monitoring...")
                 retry_count = 0  # Reset retry count on success
                 initial_login_complete = True
-                while self.is_running:
+                while self.is_running and self.pto_enabled:
                     try:
                         # Only refresh every 2-2.5 hours
                         if time.time() - last_refresh_time > self.refresh_interval:
@@ -603,8 +623,11 @@ class PTOScraper:
                         current_url = self.driver.current_url
                         if initial_login_complete and ("user-control-panel" in current_url or "account" in current_url):
                             logger.critical(f"[CRITICAL] Redirected to account page after initial login: {current_url}. Pausing scraper. Manual intervention required.")
-                            while self.is_running:
+                            while self.is_running and self.pto_enabled:
                                 time.sleep(30)
+                            if not self.pto_enabled:
+                                logger.info("PTO scraping disabled, stopping scraper")
+                                break
                             return
                         # Scrape props
                         elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.css-ndwsoy')

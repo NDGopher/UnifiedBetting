@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Button, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Alert } from '@mui/material';
+import { Box, Button, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Alert, FormControlLabel, Checkbox, Collapse } from '@mui/material';
 import MatchingStats from './MatchingStats';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Analytics } from '@mui/icons-material';
+import { Analytics, ExpandMore, ExpandLess } from '@mui/icons-material';
 dayjs.extend(relativeTime);
 
 interface Market {
@@ -40,6 +40,8 @@ const BuckeyeScraper: React.FC = () => {
   const [sortBy, setSortBy] = useState<'ev' | 'start_time' | 'pinnacle_limit'>('ev');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [pipelineRunning, setPipelineRunning] = useState(false);
+  const [selectedSports, setSelectedSports] = useState<string[]>([]);
+  const [showSportSelection, setShowSportSelection] = useState(false);
 
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const isPolling = useRef(false);
@@ -253,7 +255,12 @@ const BuckeyeScraper: React.FC = () => {
     setLastUpdate(null); // Clear last update timestamp
     try {
       console.log('[BuckeyeScraper] Starting streaming Buckeye pipeline...');
-      const res = await fetch(`${API_BASE}/api/run-streaming-pipeline`, { method: 'POST' });
+      const body = selectedSports.length > 0 ? { sport_filters: selectedSports } : {};
+      const res = await fetch(`${API_BASE}/api/run-streaming-pipeline`, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
       const data = await res.json();
       console.log('[BuckeyeScraper] Streaming pipeline start response:', data);
       
@@ -387,9 +394,28 @@ const BuckeyeScraper: React.FC = () => {
     }
   };
 
+  const sports = [
+    { key: 'nfl', label: 'NFL' },
+    { key: 'ncaa_football', label: 'NCAA Football' },
+    { key: 'nba', label: 'NBA' },
+    { key: 'ncaa_basketball', label: 'NCAA Basketball' },
+    { key: 'nhl', label: 'NHL' },
+    { key: 'mlb', label: 'MLB' },
+    { key: 'soccer', label: 'Soccer (All)' },
+    { key: 'soccer_major', label: 'Soccer (Major Leagues)' }
+  ];
+
+  const toggleSport = (sportKey: string) => {
+    setSelectedSports(prev => 
+      prev.includes(sportKey) 
+        ? prev.filter(s => s !== sportKey)
+        : [...prev, sportKey]
+    );
+  };
+
   return (
     <>
-      <Box sx={{ display: 'flex', gap: 2, mb: 3, justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 2, justifyContent: 'flex-start', flexWrap: 'wrap', alignItems: 'center' }}>
         <Button
           variant="outlined"
           size="small"
@@ -417,10 +443,10 @@ const BuckeyeScraper: React.FC = () => {
         <Button
           variant="outlined"
           size="small"
-          disabled={pipelineRunning}
+          onClick={() => setShowSportSelection(!showSportSelection)}
           sx={{
-            color: pipelineRunning ? '#2E7D32' : '#B0B0B0',
-            borderColor: pipelineRunning ? '#2E7D32' : 'rgba(255, 255, 255, 0.2)',
+            color: showSportSelection ? '#2E7D32' : '#B0B0B0',
+            borderColor: showSportSelection ? '#2E7D32' : 'rgba(255, 255, 255, 0.2)',
             borderRadius: 2,
             fontWeight: 500,
             px: 2,
@@ -431,13 +457,37 @@ const BuckeyeScraper: React.FC = () => {
             textTransform: 'none',
             lineHeight: 1.2,
             '&:hover': {
-              bgcolor: pipelineRunning ? 'rgba(46, 125, 50, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-              borderColor: pipelineRunning ? '#2E7D32' : 'rgba(255, 255, 255, 0.3)',
+              bgcolor: 'rgba(46, 125, 50, 0.1)',
+              borderColor: '#2E7D32',
+            },
+          }}
+        >
+          {showSportSelection ? <ExpandLess /> : <ExpandMore />} Select Sports
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={pipelineRunning}
+          sx={{
+            color: pipelineRunning ? '#2E7D32' : (selectedSports.length > 0 ? '#2E7D32' : '#B0B0B0'),
+            borderColor: pipelineRunning ? '#2E7D32' : (selectedSports.length > 0 ? '#2E7D32' : 'rgba(255, 255, 255, 0.2)'),
+            borderRadius: 2,
+            fontWeight: 500,
+            px: 2,
+            py: 0.5,
+            fontSize: '0.875rem',
+            minWidth: 'auto',
+            height: 36,
+            textTransform: 'none',
+            lineHeight: 1.2,
+            '&:hover': {
+              bgcolor: pipelineRunning ? 'rgba(46, 125, 50, 0.1)' : (selectedSports.length > 0 ? 'rgba(46, 125, 50, 0.1)' : 'rgba(255, 255, 255, 0.05)'),
+              borderColor: pipelineRunning ? '#2E7D32' : (selectedSports.length > 0 ? '#2E7D32' : 'rgba(255, 255, 255, 0.3)'),
             },
           }}
           onClick={handleRunCalculations}
         >
-          {pipelineRunning ? 'Running...' : 'Buckeye'}
+          {pipelineRunning ? 'Running...' : `Buckeye${selectedSports.length > 0 ? ` (${selectedSports.length})` : ''}`}
         </Button>
         <Button
           variant="outlined"
@@ -464,6 +514,56 @@ const BuckeyeScraper: React.FC = () => {
           Ace
         </Button>
       </Box>
+      <Collapse in={showSportSelection}>
+        <Box sx={{ mb: 2, p: 2, bgcolor: 'rgba(26, 26, 26, 0.5)', borderRadius: 2, border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          <Typography variant="body2" sx={{ color: '#B0B0B0', mb: 1.5, fontWeight: 500 }}>
+            Select sports to scrape (leave empty for all sports):
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+            {sports.map(sport => (
+              <FormControlLabel
+                key={sport.key}
+                control={
+                  <Checkbox
+                    checked={selectedSports.includes(sport.key)}
+                    onChange={() => toggleSport(sport.key)}
+                    sx={{
+                      color: '#2E7D32',
+                      '&.Mui-checked': {
+                        color: '#2E7D32',
+                      },
+                    }}
+                  />
+                }
+                label={sport.label}
+                sx={{
+                  color: selectedSports.includes(sport.key) ? '#FFFFFF' : '#B0B0B0',
+                  '& .MuiFormControlLabel-label': {
+                    fontSize: '0.875rem',
+                  },
+                }}
+              />
+            ))}
+          </Box>
+          {selectedSports.length > 0 && (
+            <Button
+              size="small"
+              onClick={() => setSelectedSports([])}
+              sx={{
+                mt: 1,
+                color: '#B0B0B0',
+                textTransform: 'none',
+                fontSize: '0.75rem',
+                '&:hover': {
+                  color: '#FFFFFF',
+                },
+              }}
+            >
+              Clear Selection
+            </Button>
+          )}
+        </Box>
+      </Collapse>
       {lastUpdate && (
         <Typography variant="body2" sx={{ color: '#aaa', mb: 1, ml: 1 }}>
           Last Updated: {dayjs(lastUpdate).format('YYYY-MM-DD HH:mm:ss')} ({dayjs(lastUpdate).fromNow()})

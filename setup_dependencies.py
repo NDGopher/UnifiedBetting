@@ -15,13 +15,13 @@ def print_status(message, status="INFO"):
     """Print a formatted status message"""
     timestamp = time.strftime("%H:%M:%S")
     status_icons = {
-        "INFO": "ℹ️",
-        "SUCCESS": "✅", 
-        "WARNING": "⚠️",
-        "ERROR": "❌",
-        "PROGRESS": "🔄"
+        "INFO": "[INFO]",
+        "SUCCESS": "[OK]", 
+        "WARNING": "[WARN]",
+        "ERROR": "[ERROR]",
+        "PROGRESS": "[...]"
     }
-    icon = status_icons.get(status, "ℹ️")
+    icon = status_icons.get(status, "[INFO]")
     print(f"[{timestamp}] {icon} {message}")
 
 def run_command(command, cwd=None, check=True):
@@ -163,17 +163,123 @@ def setup_frontend():
         except Exception as e:
             print_status(f"Warning: Could not remove bun.lock: {e}", "WARNING")
     
-    # Always run npm install
-    print_status("Installing frontend dependencies (npm install)...", "INFO")
-    if not run_command("powershell -ExecutionPolicy Bypass -Command \"npm install\"", cwd=frontend_dir):
-        print_status("Failed to install frontend dependencies", "ERROR")
+    # Check if npm is available - try multiple methods for Windows (especially after fresh install)
+    npm_found = False
+    npm_version = None
+    npm_cmd = "npm"
+    
+    # First try standard check with shell=True for Windows PATH resolution
+    try:
+        npm_check = subprocess.run(["npm", "--version"], capture_output=True, text=True, timeout=10, shell=True)
+        if npm_check.returncode == 0:
+            npm_found = True
+            npm_version = npm_check.stdout.strip()
+    except FileNotFoundError:
+        pass
+    
+    # If not found, try common Node.js install paths on Windows (for fresh installs)
+    if not npm_found and platform.system() == "Windows":
+        common_paths = [
+            r"C:\Program Files\nodejs\npm.cmd",
+            r"C:\Program Files (x86)\nodejs\npm.cmd",
+            os.path.expanduser(r"~\AppData\Roaming\npm\npm.cmd"),
+        ]
+        for npm_path in common_paths:
+            if os.path.exists(npm_path):
+                try:
+                    npm_check = subprocess.run([npm_path, "--version"], capture_output=True, text=True, timeout=10)
+                    if npm_check.returncode == 0:
+                        npm_found = True
+                        npm_version = npm_check.stdout.strip()
+                        npm_cmd = npm_path
+                        print_status(f"Found npm at: {npm_path}", "INFO")
+                        break
+                except Exception:
+                    continue
+    
+    if not npm_found:
+        print_status("npm not found! Please install Node.js from https://nodejs.org", "ERROR")
+        print_status("After installing Node.js, close ALL terminal windows and open a new one, then run this script again", "INFO")
+        print_status("You can manually install frontend deps later by running: cd frontend && npm install", "INFO")
         return False
+    
+    print_status(f"Found npm version: {npm_version}", "INFO")
+    
+    # Always run npm install using the found npm command
+    # If we found npm via full path, ensure Node.js directory is in PATH for postinstall scripts
+    env = None
+    if os.path.exists(npm_cmd):
+        nodejs_dir = os.path.dirname(npm_cmd)
+        current_path = os.environ.get('PATH', '')
+        if nodejs_dir not in current_path:
+            env = os.environ.copy()
+            env['PATH'] = f"{nodejs_dir};{current_path}"
+            print_status(f"Adding Node.js directory to PATH: {nodejs_dir}", "INFO")
+    
+    print_status("Installing frontend dependencies (npm install)...", "INFO")
+    npm_install_cmd = f'"{npm_cmd}" install' if '"' in npm_cmd or os.path.exists(npm_cmd) else f"{npm_cmd} install"
+    
+    # Override run_command to pass env if needed
+    if env:
+        try:
+            result = subprocess.run(
+                npm_install_cmd,
+                shell=True,
+                cwd=frontend_dir,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=600
+            )
+            if result.returncode != 0:
+                print_status(f"Command failed: {npm_install_cmd}", "ERROR")
+                if result.stderr:
+                    print(result.stderr[-1000:])  # Last 1000 chars of error
+                install_success = False
+            else:
+                install_success = True
+        except Exception as e:
+            print_status(f"Command error: {e}", "ERROR")
+            install_success = False
+    else:
+        install_success = run_command(npm_install_cmd, cwd=frontend_dir)
+    
+    if not install_success:
+        print_status("Failed to install frontend dependencies with standard install", "WARNING")
+        print_status("Trying with --legacy-peer-deps flag...", "INFO")
+        npm_install_cmd_legacy = f'"{npm_cmd}" install --legacy-peer-deps' if '"' in npm_cmd or os.path.exists(npm_cmd) else f"{npm_cmd} install --legacy-peer-deps"
+        
+        # Try legacy install with env if needed
+        if env:
+            try:
+                result = subprocess.run(
+                    npm_install_cmd_legacy,
+                    shell=True,
+                    cwd=frontend_dir,
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    timeout=600
+                )
+                legacy_success = result.returncode == 0
+                if not legacy_success and result.stderr:
+                    print(result.stderr[-1000:])
+            except Exception as e:
+                print_status(f"Legacy install error: {e}", "ERROR")
+                legacy_success = False
+        else:
+            legacy_success = run_command(npm_install_cmd_legacy, cwd=frontend_dir)
+        
+        if not legacy_success:
+            print_status("Failed to install frontend dependencies", "ERROR")
+            print_status("Try running manually: cd frontend && npm install --legacy-peer-deps", "INFO")
+            return False
     print_status("Frontend dependencies installed successfully", "SUCCESS")
     return True
 
 def main():
     """Main setup function"""
-    print("🚀 Unified Betting App - Dependency Setup")
+    print("Unified Betting App - Dependency Setup")
     print("=" * 50)
     
     # Get the project directory
@@ -190,10 +296,10 @@ def main():
     # Summary
     print("\n" + "=" * 50)
     if backend_success and frontend_success:
-        print_status("🎉 Setup completed successfully!", "SUCCESS")
+        print_status("Setup completed successfully!", "SUCCESS")
         print_status("You can now run 'python launch.py' to start the application", "INFO")
     else:
-        print_status("⚠️ Setup completed with warnings", "WARNING")
+        print_status("Setup completed with warnings", "WARNING")
         if not backend_success:
             print_status("Backend setup failed - check the errors above", "ERROR")
         if not frontend_success:

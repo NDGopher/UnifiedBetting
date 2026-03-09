@@ -1,4 +1,33 @@
 // content.js
+// Inject API interceptor FIRST (before anything else, to catch early requests)
+(function() {
+  // Inject API interceptor using src (CSP-compliant way)
+  const script = document.createElement('script');
+  script.src = chrome.runtime.getURL('api_interceptor.js');
+  script.onload = function() {
+    console.log('[BetBCK Helper] API interceptor injected successfully');
+    this.remove();
+  };
+  script.onerror = function() {
+    console.error('[BetBCK Helper] Failed to load API interceptor');
+    this.remove();
+  };
+  // Inject into documentElement if head doesn't exist yet (for early injection)
+  const injectTarget = document.head || document.documentElement || document;
+  if (injectTarget) {
+    injectTarget.appendChild(script);
+  } else {
+    // Wait for DOM to be ready
+    const checkAndInject = setInterval(() => {
+      const target = document.head || document.documentElement || document;
+      if (target) {
+        target.appendChild(script);
+        clearInterval(checkAndInject);
+      }
+    }, 10);
+  }
+})();
+
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
 // --- Auto re-login logic ---
@@ -86,6 +115,12 @@ window.lastBetInfo = null;
 window.lastKeyword = null;
 
 function showBetPopup(betInfo, keyword) {
+  // Only show if body exists
+  if (!document.body) {
+    setTimeout(() => showBetPopup(betInfo, keyword), 100);
+    return;
+  }
+  
   console.log('[BetBCK Helper][Content] Injecting popup for bet:', betInfo, keyword);
   window.lastBetInfo = betInfo;
   window.lastKeyword = keyword;
@@ -159,13 +194,27 @@ function showBetPopup(betInfo, keyword) {
   }
 }
 
-// MutationObserver to re-inject popup if removed
-const observer = new MutationObserver(() => {
-  if (window.lastBetInfo && !document.body.contains(betPopup)) {
-    showBetPopup(window.lastBetInfo, window.lastKeyword);
+// MutationObserver to re-inject popup if removed (wait for body to exist)
+function setupMutationObserver() {
+  if (document.body) {
+    const observer = new MutationObserver(() => {
+      if (window.lastBetInfo && betPopup && !document.body.contains(betPopup)) {
+        showBetPopup(window.lastBetInfo, window.lastKeyword);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  } else {
+    // Wait for body to be created
+    setTimeout(setupMutationObserver, 100);
   }
-});
-observer.observe(document.body, { childList: true, subtree: true });
+}
+
+// Wait for DOM to be ready before setting up MutationObserver
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupMutationObserver);
+} else {
+  setupMutationObserver();
+}
 
 // Add logging for debugging message flow
 console.log('BetBCK Auto-Search content script loaded.');
@@ -173,14 +222,40 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   console.log('[BetBCK Helper][Content] Received message:', message);
   if (message.type === 'SEARCH_BETBCK' || message.type === 'FOCUS_BETBCK_TAB') {
     handleBetbckAction(message);
+  } else if (message.type === 'DBG_EVENT') {
+    // Forward debugger network events into page context for the interceptor to record
+    try {
+      console.log('[BetBCK Helper][Content] Forwarding DBG_EVENT:', message.method);
+      window.postMessage({ type: 'DBG_EVENT', payload: { method: message.method, params: message.params } }, '*');
+    } catch (e) {
+      console.warn('[BetBCK Helper][Content] Failed to post DBG_EVENT:', e);
+    }
   }
 });
+
+// Expose a helper to start capture via console: window.startNetworkCapture()
+window.startNetworkCapture = function() {
+  chrome.runtime.sendMessage({ type: 'START_CAPTURE' }, (res) => {
+    console.log('[BetBCK Helper] START_CAPTURE result:', res);
+  });
+};
 
 // Listen for window.postMessage from the web app
 window.addEventListener('message', function(event) {
   // Only accept messages from the same window
   if (event.source !== window) return;
   const message = event.data;
+  // Allow page to request START_CAPTURE safely
+  if (message && message.type === 'START_CAPTURE') {
+    try {
+      chrome.runtime.sendMessage({ type: 'START_CAPTURE' }, (res) => {
+        console.log('[BetBCK Helper] START_CAPTURE via postMessage:', res);
+      });
+    } catch (e) {
+      console.warn('[BetBCK Helper] Failed to relay START_CAPTURE:', e);
+    }
+    return;
+  }
   if (message && message.type === 'FOCUS_BETBCK_TAB') {
     console.log('[BetBCK Helper][Content] Relaying FOCUS_BETBCK_TAB from window to background:', message);
     chrome.runtime.sendMessage({
@@ -189,4 +264,4 @@ window.addEventListener('message', function(event) {
       betInfo: message.betInfo || {}
     });
   }
-}); 
+});
