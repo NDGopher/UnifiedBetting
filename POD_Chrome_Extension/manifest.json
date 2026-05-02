@@ -13,7 +13,8 @@
   "host_permissions": [
     "https://www.pinnacleoddsdropper.com/*",
     "http://localhost:8000/*",
-    "https://swordfish-production.up.railway.app/*"
+    "https://swordfish-production.up.railway.app/*",
+    "https://3a14a61c-b8aa-4dab-93bc-09346a68d1f5-00-1xtj8e9x0sp06.spock.replit.dev/*"
   ],
   "content_scripts": [
     {
