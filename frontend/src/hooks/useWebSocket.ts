@@ -6,55 +6,50 @@ interface WebSocketHook {
   isConnected: boolean;
 }
 
-export const useWebSocket = (url: string): WebSocketHook => {
+const SSE_URL = '/api/events/stream';
+
+export const useWebSocket = (_url: string): WebSocketHook => {
   const [lastMessage, setLastMessage] = useState<MessageEvent | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const ws = useRef<WebSocket | null>(null);
+  const esRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
-    const connect = () => {
-      ws.current = new WebSocket(url);
+    let closed = false;
 
-      ws.current.onopen = () => {
-        console.log('WebSocket connected');
+    const connect = () => {
+      if (closed) return;
+      const es = new EventSource(SSE_URL);
+      esRef.current = es;
+
+      es.onopen = () => {
+        console.log('[SSE] Connected');
         setIsConnected(true);
       };
 
-      ws.current.onclose = () => {
-        console.log('WebSocket disconnected');
-        setIsConnected(false);
-        // Enhanced reconnection with exponential backoff
-        setTimeout(() => {
-          console.log('Attempting WebSocket reconnection...');
-          connect();
-        }, 5000);
-      };
-
-      ws.current.onerror = (error) => {
-        console.error('WebSocket error:', error);
-      };
-
-      ws.current.onmessage = (event) => {
+      es.onmessage = (event) => {
         setLastMessage(event);
+      };
+
+      es.onerror = () => {
+        setIsConnected(false);
+        es.close();
+        if (!closed) {
+          setTimeout(connect, 3000);
+        }
       };
     };
 
     connect();
 
     return () => {
-      if (ws.current) {
-        ws.current.close();
-      }
+      closed = true;
+      esRef.current?.close();
     };
-  }, [url]);
+  }, []);
 
-  const sendMessage = useCallback((message: string) => {
-    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      ws.current.send(message);
-    } else {
-      console.warn('WebSocket is not connected');
-    }
+  const sendMessage = useCallback((_message: string) => {
+    // SSE is server→client only; no-op kept for interface compatibility
   }, []);
 
   return { lastMessage, sendMessage, isConnected };
-}; 
+};

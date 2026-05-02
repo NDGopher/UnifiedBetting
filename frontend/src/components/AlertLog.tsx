@@ -22,7 +22,7 @@ import {
   Timeline,
   History,
 } from "@mui/icons-material";
-import { WS_BASE, API_BASE } from "../utils/apiConfig";
+import { API_BASE } from "../utils/apiConfig";
 
 interface AlertStep {
   tag: string;
@@ -194,33 +194,26 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
   }, []);
 
   useEffect(() => {
-    let ws: WebSocket | null = null;
-    let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+    let es: EventSource | null = null;
 
     function connect() {
-      try {
-        ws = new WebSocket(`${WS_BASE}/api/ws`);
-        ws.onmessage = (event) => {
-          try {
-            const msg = JSON.parse(event.data);
-            if (msg.type === "alert_log" && msg.data) {
-              addRecord(msg.data);
-            }
-          } catch {}
-        };
-        ws.onclose = () => {
-          reconnectTimer = setTimeout(connect, 3000);
-        };
-        ws.onerror = () => {
-          ws?.close();
-        };
-      } catch {}
+      es = new EventSource('/api/events/stream');
+      es.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === "alert_log" && msg.data) {
+            addRecord(msg.data);
+          }
+        } catch {}
+      };
+      es.onerror = () => {
+        // EventSource auto-reconnects
+      };
     }
 
     connect();
     return () => {
-      if (reconnectTimer) clearTimeout(reconnectTimer);
-      ws?.close();
+      es?.close();
     };
   }, [addRecord]);
 

@@ -25,14 +25,22 @@ class ConnectionManager:
 
     async def broadcast(self, message: dict):
         data = json.dumps(message)
-        logger.info(f"[WebSocket] Broadcasting message type '{message.get('type', 'unknown')}' to {len(self.active_connections)} clients")
-        async with self.lock:
-            for connection in self.active_connections[:]:
-                try:
-                    await connection.send_text(data)
-                    logger.debug(f"[WebSocket] Successfully sent message to client")
-                except Exception as e:
-                    logger.warning(f"[WebSocket] Error sending to client: {e}")
-                    self.active_connections.remove(connection)
+        msg_type = message.get('type', 'unknown')
+        # Broadcast via SSE (works through all proxies including webpack dev server)
+        try:
+            from sse_manager import sse_manager
+            await sse_manager.broadcast(message)
+        except Exception as e:
+            logger.warning(f"[SSE] Broadcast error: {e}")
+        # Also broadcast via WebSocket for direct connections (production)
+        if self.active_connections:
+            logger.info(f"[WebSocket] Broadcasting '{msg_type}' to {len(self.active_connections)} WS clients")
+            async with self.lock:
+                for connection in self.active_connections[:]:
+                    try:
+                        await connection.send_text(data)
+                    except Exception as e:
+                        logger.warning(f"[WebSocket] Error sending to client: {e}")
+                        self.active_connections.remove(connection)
 
 manager = ConnectionManager() 

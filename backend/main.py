@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
+from sse_manager import sse_manager
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, RootModel
 import json
@@ -1769,6 +1770,48 @@ async def open_bet(request: Request):
             return JSONResponse({"status": "error", "message": "Failed to open bet page"}, status_code=500)
     except Exception as e:
         return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
+
+@app.get("/api/events/stream")
+async def sse_events_stream(request: Request):
+    """Server-Sent Events endpoint — works through all HTTP proxies including webpack dev server."""
+    queue: asyncio.Queue = asyncio.Queue(maxsize=50)
+    await sse_manager.add_client(queue)
+
+    # Send current active events immediately on connect
+    try:
+        active_events = pod_event_manager.get_active_events()
+        if active_events:
+            events_payload = {}
+            for event_id, event_data in active_events.items():
+                events_payload[event_id] = build_event_object(event_id, event_data)
+            await queue.put(json.dumps({"type": "pod_alerts_full", "events": events_payload}))
+    except Exception as e:
+        logger.warning(f"[SSE] Error queuing initial events: {e}")
+
+    async def generate():
+        try:
+            while True:
+                if await request.is_disconnected():
+                    break
+                try:
+                    data = await asyncio.wait_for(queue.get(), timeout=25)
+                    yield f"data: {data}\n\n"
+                except asyncio.TimeoutError:
+                    # Heartbeat to keep connection alive through proxies
+                    yield ": heartbeat\n\n"
+        finally:
+            await sse_manager.remove_client(queue)
+
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
+        },
+    )
+
 
 @app.websocket("/api/ws")
 async def websocket_endpoint(websocket: WebSocket):

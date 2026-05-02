@@ -4,7 +4,7 @@ import MatchingStats from './MatchingStats';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Analytics, ExpandMore, ExpandLess } from '@mui/icons-material';
-import { API_BASE, WS_BASE } from '../utils/apiConfig';
+import { API_BASE } from '../utils/apiConfig';
 dayjs.extend(relativeTime);
 
 interface Market {
@@ -98,75 +98,59 @@ const BuckeyeScraper: React.FC = () => {
   };
 
   const connectWebSocket = () => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) return;
-    
-    const ws = new WebSocket(`${WS_BASE}/api/ws`);
-    wsRef.current = ws;
-    
-    ws.onopen = () => {
-      console.log('[BuckeyeScraper] WebSocket connected');
+    if (wsRef.current) return;
+
+    const es = new EventSource('/api/events/stream');
+    (wsRef as any).current = es;
+
+    es.onopen = () => {
+      console.log('[BuckeyeScraper] SSE connected');
     };
-    
-    ws.onmessage = (event) => {
+
+    es.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        console.log('[BuckeyeScraper] WebSocket message:', data);
-        
+
         if (data.type === 'buckeye_update') {
-          // Real-time update from streaming pipeline
-          const { events, total_events, last_run, streaming, batch_completed, total_batches } = data.data;
-          
+          const { events, total_events, last_run, batch_completed, total_batches } = data.data;
           if (events && events.length > 0) {
-            // Sort by EV (high to low) before setting
             const sortedEvents = [...events].sort((a: any, b: any) => {
               const evA = parseFloat(a.ev?.replace('%', '') || '0');
               const evB = parseFloat(b.ev?.replace('%', '') || '0');
               return evB - evA;
             });
-            
             setTopMarkets(sortedEvents);
             setLastUpdate(last_run);
             setMessage(`Streaming: ${batch_completed}/${total_batches} batches completed (${total_events} events)`);
-            console.log(`[BuckeyeScraper] Real-time update: ${events.length} events added to table (sorted by EV)`);
           }
         } else if (data.type === 'buckeye_complete') {
-          // Pipeline completed
-          const { events, total_events, last_run, total_processed, total_matched } = data.data;
-          
+          const { events, total_events, last_run, total_matched } = data.data;
           if (events && events.length > 0) {
-            // Sort by EV (high to low) before setting
             const sortedEvents = [...events].sort((a: any, b: any) => {
               const evA = parseFloat(a.ev?.replace('%', '') || '0');
               const evB = parseFloat(b.ev?.replace('%', '') || '0');
               return evB - evA;
             });
-            
             setTopMarkets(sortedEvents);
             setLastUpdate(last_run);
             setMessage(`Pipeline completed: ${total_matched} games matched, ${total_events} events found`);
-            console.log(`[BuckeyeScraper] Pipeline completed: ${total_events} events total (sorted by EV)`);
           }
-          
           setPipelineRunning(false);
           stopPolling();
         }
       } catch (err) {
-        console.error('[BuckeyeScraper] Error parsing WebSocket message:', err);
+        console.error('[BuckeyeScraper] Error parsing SSE message:', err);
       }
     };
     
-    ws.onclose = () => {
-      console.log('[BuckeyeScraper] WebSocket disconnected');
-    };
-    
-    ws.onerror = (error) => {
-      console.error('[BuckeyeScraper] WebSocket error:', error);
+    es.onerror = () => {
+      console.warn('[BuckeyeScraper] SSE error - will auto-reconnect');
     };
   };
 
   const disconnectWebSocket = () => {
     if (wsRef.current) {
-      wsRef.current.close();
+      (wsRef.current as any).close();
       wsRef.current = null;
     }
   };
