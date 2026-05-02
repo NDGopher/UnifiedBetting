@@ -4,6 +4,7 @@ import MatchingStats from './MatchingStats';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Analytics, ExpandMore, ExpandLess } from '@mui/icons-material';
+import { API_BASE, WS_BASE } from '../utils/apiConfig';
 dayjs.extend(relativeTime);
 
 interface Market {
@@ -26,8 +27,6 @@ interface BuckeyeEvent {
   best_ev: number;
   last_updated: string;
 }
-
-const API_BASE = 'http://localhost:5001';
 
 const BuckeyeScraper: React.FC = () => {
   const [events, setEvents] = useState<BuckeyeEvent[]>([]);
@@ -101,7 +100,7 @@ const BuckeyeScraper: React.FC = () => {
   const connectWebSocket = () => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
     
-    const ws = new WebSocket('ws://localhost:5001/ws');
+    const ws = new WebSocket(`${WS_BASE}/ws`);
     wsRef.current = ws;
     
     ws.onopen = () => {

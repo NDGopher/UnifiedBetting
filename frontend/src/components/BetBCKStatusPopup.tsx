@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { API_BASE } from '../utils/apiConfig';
 import {
   Dialog,
   DialogTitle,
@@ -44,7 +45,7 @@ const BetBCKStatusPopup: React.FC = () => {
   // Fetch BetBCK status
   const fetchBetbckStatus = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/betbck/status');
+      const res = await fetch(`${API_BASE}/api/betbck/status`);
       if (res.ok) {
         const statusData = await res.json();
         if (statusData.status === 'success') {

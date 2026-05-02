@@ -29,6 +29,7 @@ import {
 import { BetbckTabContext } from "../App";
 import { useWebSocket } from '../hooks/useWebSocket';
 import { showEnhancedNotification } from '../utils/notificationUtils';
+import { API_BASE, WS_BASE } from '../utils/apiConfig';
 import './PODAlerts.css';
 
 interface Market {
@@ -70,7 +71,7 @@ const PODAlerts: React.FC = () => {
   const [showOnlyEV, setShowOnlyEV] = useState(false);
   const prevMarketsRef = useRef<{ [eventId: string]: Market[] }>({});
   const notifiedEventsRef = useRef<Set<string>>(new Set());
-  const { lastMessage, isConnected } = useWebSocket('ws://localhost:5001/ws');
+  const { lastMessage, isConnected } = useWebSocket(`${WS_BASE}/ws`);
   const [nvpFlash, setNvpFlash] = useState<{ [key: string]: boolean }>({});
 
   // Helper to safely convert any value to string
@@ -140,7 +141,7 @@ const PODAlerts: React.FC = () => {
   const fetchEvents = useCallback(async () => {
     try {
       setError(null);
-      const res = await fetch('http://localhost:5001/get_active_events_data');
+      const res = await fetch(`${API_BASE}/get_active_events_data`);
       if (res.ok) {
         const data = await res.json() as { [eventId: string]: EventData };
         setEvents(data);
@@ -193,7 +194,7 @@ const PODAlerts: React.FC = () => {
 
   const testConnection = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5001/test');
+      const res = await fetch(`${API_BASE}/test`);
       const data = await res.json();
       alert(`Backend connection test: ${data.message}`);
     } catch (e) {
@@ -714,7 +715,7 @@ const LiveEVModal: React.FC<{ event: EventData; market: Market }> = ({ event, ma
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
-        const res = await fetch('http://localhost:5001/get_active_events_data');
+        const res = await fetch(`${API_BASE}/get_active_events_data`);
         if (res.ok) {
           const data = await res.json();
           const updatedEvent = data[event.title];
