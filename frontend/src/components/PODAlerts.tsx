@@ -17,6 +17,7 @@ import {
   CircularProgress,
   Alert,
   Grid,
+  Slider,
 } from "@mui/material";
 import { 
   Refresh as RefreshIcon,
@@ -69,6 +70,7 @@ const PODAlerts: React.FC = () => {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [retryCount, setRetryCount] = useState(0);
   const [showOnlyEV, setShowOnlyEV] = useState(false);
+  const [minEV, setMinEV] = useState<number>(0);
   const prevMarketsRef = useRef<{ [eventId: string]: Market[] }>({});
   const notifiedEventsRef = useRef<Set<string>>(new Set());
   const { lastMessage, isConnected } = useWebSocket(`${WS_BASE}/api/ws`);
@@ -413,6 +415,24 @@ const PODAlerts: React.FC = () => {
             {showOnlyEV ? "All" : "+EV Only"}
           </Button>
         </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 200 }}>
+          <Typography variant="caption" sx={{ color: '#B0B0B0', whiteSpace: 'nowrap' }}>
+            Min EV: {minEV === 0 ? 'All' : `+${minEV}%`}
+          </Typography>
+          <Slider
+            value={minEV}
+            onChange={(_, val) => setMinEV(val as number)}
+            min={0}
+            max={10}
+            step={0.5}
+            size="small"
+            sx={{
+              color: '#4caf50',
+              width: 130,
+              '& .MuiSlider-thumb': { width: 14, height: 14 },
+            }}
+          />
+        </Box>
       </Box>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -431,7 +451,12 @@ const PODAlerts: React.FC = () => {
       {activeEvents.length === 0 && Object.keys(events).length !== 0 ? null : (
         <Grid container spacing={2} wrap="wrap">
           {activeEvents
-            .filter(([, event]) => !showOnlyEV || getBestEV(event.markets) > 0)
+            .filter(([, event]) => {
+              const best = getBestEV(event.markets);
+              if (showOnlyEV && best <= 0) return false;
+              if (minEV > 0 && best < minEV) return false;
+              return true;
+            })
             .map(([eventId, event]) => {
               const bestEV = getBestEV(event.markets);
               return (

@@ -208,7 +208,7 @@ def normalize_team_name_for_matching(name):
 
     # Additional comprehensive league cleanup for edge cases
     # Handle cases like "teamnamemls" -> "teamname"
-    league_names = ['mls', 'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'liga', 'serie', 'bundesliga', 'premier', 'epl', 'la liga', 'ligue']
+    league_names = ['mls', 'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'pfl', 'ufc', 'bellator', 'bkfc', 'lfa', 'rizin', 'liga', 'serie', 'bundesliga', 'premier', 'epl', 'la liga', 'ligue']
     for league in league_names:
         if league in normalized.lower():
             print(f"[LEAGUE_DEBUG] Found {league} in: '{normalized}'")

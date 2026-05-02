@@ -414,7 +414,7 @@ def normalize_team_name_for_matching(name):
     norm_name = re.sub(r'\s*\([^)]*\)', '', norm_name).strip()
     league_country_suffixes = [
         # Sports abbreviations
-        'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'afl', 'cfl', 'mls', 'soccer', 'tennis', 'ufc',
+        'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'afl', 'cfl', 'mls', 'soccer', 'tennis', 'ufc', 'pfl', 'bellator', 'bkfc', 'lfa', 'rizin', 'one fc', 'one championship',
         
         # Full league names
         'nippon professional baseball', 'japanese professional baseball',

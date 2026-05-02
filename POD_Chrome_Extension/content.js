@@ -69,7 +69,7 @@
             let league = "Unknown";
             let awayTeam = awayTeamAndLeague;
 
-            const knownLeagues = ["NCAA", "NBA", "NHL", "MLB", "Copa Do Nordeste", "Brazil - Cup", "Qatar - Emir Cup", "Kenya - Premier League"]; // Added from your logs
+            const knownLeagues = ["NCAA", "NBA", "NHL", "MLB", "NFL", "UFC", "PFL", "ONE", "Bellator", "BKFC", "LFA", "RIZIN", "Copa Do Nordeste", "Brazil - Cup", "Qatar - Emir Cup", "Kenya - Premier League"];
             for (const knownLeague of knownLeagues) {
                 // More robust check: ensure knownLeague is a whole word or at the end
                 const regex = new RegExp(`\\b${knownLeague.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`, 'i'); // Case insensitive, whole word
