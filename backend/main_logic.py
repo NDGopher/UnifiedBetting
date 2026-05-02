@@ -159,8 +159,9 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
                             f"{bet.get('selection', '?')} {bet.get('line', '')}".strip(),
                             bck_dec, pin_nvp_dec, ev_pct,
                         )
-                except Exception:
-                    pass
+                except Exception as _ev_log_exc:
+                    if alog:
+                        alog.log_error(_ev_log_exc, f"EV log for market {bet.get('market', '?')}")
 
         if alog:
             alog.set_result("ev_found" if any(

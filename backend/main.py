@@ -274,6 +274,9 @@ async def event_alert_worker(event_id):
                         # Only store and broadcast if we have valid data
                         if not betbck_data or not realistic_bets:
                             logger.warning(f"[PerEventQueue] No valid betting data for event {event_id}, skipping broadcast")
+                            _alog_rec = finalize_alert_log(event_id)
+                            if _alog_rec:
+                                await manager.broadcast({"type": "alert_log", "data": _alog_rec})
                             continue
                         # Create cleaned payload with cleaned team names
                         cleaned_payload = payload.copy()

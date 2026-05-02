@@ -112,13 +112,21 @@ def get_search_prerequisites(session, page_url_with_search_form):
     except requests.exceptions.Timeout: print(f"[BetbckScraper] Timeout getting search prerequisites."); return None, 'sport'
     except Exception as e: print(f"[BetbckScraper] Failed to get search prerequisites: {e}"); return None, 'sport'
 
-def search_team_and_get_results_html(session, team_name_query, inet_wager_val, inet_sport_select_val):
+def search_team_and_get_results_html(session, team_name_query, inet_wager_val, inet_sport_select_val, event_id=None):
     if not all([session, team_name_query, inet_wager_val, inet_sport_select_val]): print("[BetbckScraper] Search prerequisites missing."); return None
     search_payload = {"action": "Search", "keyword_search": team_name_query, "inetWagerNumber": inet_wager_val, "inetSportSelection": inet_sport_select_val}
     print(f"[BetbckScraper] Searching BetBCK for '{team_name_query}'...")
     try:
         response = session.post(SEARCH_ACTION_URL, data=search_payload, headers=BASE_HEADERS, timeout=15); response.raise_for_status()
-        print(f"[BetbckScraper] Search POST successful (Status: {response.status_code}). Response size: {len(response.text)} bytes."); return response.text
+        print(f"[BetbckScraper] Search POST successful (Status: {response.status_code}). Response size: {len(response.text)} bytes.")
+        try:
+            from alert_logger import get_logger_for_event as _get_alog
+            _alog = _get_alog(event_id) if event_id else None
+            if _alog:
+                _alog.log_search(team_name_query, response.status_code, len(response.text))
+        except Exception:
+            pass
+        return response.text
     except requests.exceptions.Timeout: print(f"[BetbckScraper] Team search POST timed out for '{team_name_query}'."); return None
     except Exception as e: print(f"[BetbckScraper] Team search POST failed for '{team_name_query}': {e}"); return None
 
@@ -361,6 +369,11 @@ def get_cleaned_team_name_from_div(team_div):
 
 def parse_specific_game_from_search_html(html_content, target_home_team_pod, target_away_team_pod, event_id=None):
     if not html_content: print(f"[BetbckParser] No HTML content. (Event ID: {event_id})"); return None
+    try:
+        from alert_logger import get_logger_for_event as _get_alog
+        _alog = _get_alog(event_id) if event_id else None
+    except Exception:
+        _alog = None
     soup = BeautifulSoup(html_content, 'html.parser'); search_context = soup.find('form', {'name': 'GameSelectionForm', 'id': 'GameSelectionForm'}) or soup
     game_wrappers = []
     for gw_class in GAME_WRAPPER_PRIMARY_CLASSES: game_wrappers.extend(f for f in search_context.find_all('table', class_=gw_class) if f not in game_wrappers)
@@ -395,9 +408,10 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         norm_bck_l, norm_bck_v = normalize_team_name_for_matching(raw_bck_l), normalize_team_name_for_matching(raw_bck_v)
         print(f"[BetbckParser] Comparing POD: H='{norm_pod_h}' A='{norm_pod_a}' WITH BCK {idx}: L='{norm_bck_l}' V='{norm_bck_v}' (Raw: L='{raw_bck_l}', V='{raw_bck_v}') (Event ID: {event_id})")
         matched, bck_local_is_pod_home = False, False
+        _cand_scores = {}
 
-        if norm_pod_h == norm_bck_l and norm_pod_a == norm_bck_v: matched, bck_local_is_pod_home = True, True; print(f"[BetbckParser] Exact Match (Order 1) for {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})")
-        elif norm_pod_h == norm_bck_v and norm_pod_a == norm_bck_l: matched, bck_local_is_pod_home = True, False; print(f"[BetbckParser] Exact Match (Order 2 - Flipped) for {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})")
+        if norm_pod_h == norm_bck_l and norm_pod_a == norm_bck_v: matched, bck_local_is_pod_home = True, True; _cand_scores = {"exact_order1": 100}; print(f"[BetbckParser] Exact Match (Order 1) for {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})")
+        elif norm_pod_h == norm_bck_v and norm_pod_a == norm_bck_l: matched, bck_local_is_pod_home = True, False; _cand_scores = {"exact_order2": 100}; print(f"[BetbckParser] Exact Match (Order 2 - Flipped) for {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})")
         elif fuzz:
             # Try all alias combinations for both orders
             pod_h_aliases = [norm_pod_h] + TEAM_ALIASES.get(norm_pod_h, [])
@@ -414,13 +428,17 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                             s_hv = fuzz.token_set_ratio(ph, bv)
                             s_al = fuzz.token_set_ratio(pa, bh)
                             print(f"[DEBUG] Comparing normalized: POD H='{ph}', A='{pa}' with BCK H='{bh}', A='{bv}' | Scores: (H-L {s_hl} A-V {s_av}) OR (H-V {s_hv} A-L {s_al}) (Event ID: {event_id})")
+                            if s_hl + s_av > _cand_scores.get("_sum_fwd", 0):
+                                _cand_scores.update({"token_sort_h": s_hl, "token_sort_a": s_av, "threshold": FUZZY_MATCH_THRESHOLD, "_sum_fwd": s_hl + s_av})
                             if s_hl >= FUZZY_MATCH_THRESHOLD and s_av >= FUZZY_MATCH_THRESHOLD:
                                 matched, bck_local_is_pod_home = True, True
+                                _cand_scores = {"token_sort_h": s_hl, "token_sort_a": s_av, "threshold": FUZZY_MATCH_THRESHOLD}
                                 print(f"[BetbckParser] Fuzzy Alias Match (Order 1) (Event ID: {event_id})")
                                 found_fuzzy = True
                                 break
                             elif s_hv >= FUZZY_MATCH_THRESHOLD and s_al >= FUZZY_MATCH_THRESHOLD:
                                 matched, bck_local_is_pod_home = True, False
+                                _cand_scores = {"token_sort_h": s_hv, "token_sort_a": s_al, "threshold": FUZZY_MATCH_THRESHOLD}
                                 print(f"[BetbckParser] Fuzzy Alias Match (Order 2 - Flipped) (Event ID: {event_id})")
                                 found_fuzzy = True
                                 break
@@ -445,8 +463,16 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                 if not matched:
                     continue
         
-        if not matched: continue
-        
+        if not matched:
+            if _alog:
+                _cand_scores.pop("_sum_fwd", None)
+                _alog.log_match_candidate(raw_bck_l, raw_bck_v, target_home_team_pod, target_away_team_pod, _cand_scores or {"result": "no_match"}, False)
+            continue
+
+        if _alog:
+            _cand_scores.pop("_sum_fwd", None)
+            _alog.log_match_candidate(raw_bck_l, raw_bck_v, target_home_team_pod, target_away_team_pod, _cand_scores or {"result": "matched"}, True)
+            _alog.log_found(raw_bck_l, raw_bck_v)
         print(f"[BetbckParser] Game Matched! BetBCK Local is POD Home: {bck_local_is_pod_home}. Parsing odds... (Event ID: {event_id})")
         odds_table = game_wrapper_table.find('table', class_='new_tb_cont')
         if not odds_table: print(f"[BetbckParser] No 'new_tb_cont' odds table for game {idx}. (Event ID: {event_id})"); continue
@@ -493,6 +519,8 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         
         if matched:
             return output_data
+    if _alog:
+        _alog.log_not_found(target_home_team_pod, target_away_team_pod, "")
     print(f"[BetbckParser] No game matching POD teams found after all wrappers. (Event ID: {event_id})"); return None
 
 def parse_game_data_from_html(search_results_html, search_term):

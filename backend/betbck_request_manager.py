@@ -259,7 +259,7 @@ class BetBCKRequestManager:
 
             # Perform search from clean main page state
             search_results_html = search_team_and_get_results_html(
-                session, search_term, self.inet_wager, self.inet_sport_select
+                session, search_term, self.inet_wager, self.inet_sport_select, event_id
             )
 
             # Check for rate limiting in response
