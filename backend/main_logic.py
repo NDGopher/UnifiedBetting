@@ -301,8 +301,11 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
                     if bck_dec and pin_nvp_dec:
                         alog.log_ev(
                             bet.get("market", "?"),
-                            f"{bet.get('selection', '?')} {bet.get('line', '')}".strip(),
+                            bet.get("selection", "?"),
                             bck_dec, pin_nvp_dec, ev_pct,
+                            line=str(bet.get("line", "") or ""),
+                            betbck_american=str(bet.get("betbck_odds", "") or ""),
+                            pin_nvp_american=str(bet.get("pinnacle_nvp", "") or ""),
                         )
                 except Exception as _ev_log_exc:
                     if alog:

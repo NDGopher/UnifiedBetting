@@ -1,0 +1,107 @@
+[
+  {
+    "logged_at": "2026-05-02T23:54:15.495234Z",
+    "event_id": "1629495972",
+    "timestamp": "2026-05-02T23:54:12.529449Z",
+    "teams": {
+      "home": "Emiliano Sordi",
+      "away": "Simeon PowellPFL",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Simeon PowellPFL @ Emiliano Sordi | ? | market=Moneyline | +431 -> +381",
+        "detail": {
+          "home": "Emiliano Sordi",
+          "away": "Simeon PowellPFL",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+431",
+          "new_odds": "+381"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'sordi' (from 'Emiliano Sordi' / 'Simeon PowellPFL'): last word of home team 'emiliano sordi'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='sordi' -> HTTP 200 (48208 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "sordi",
+          "status": 200,
+          "response_bytes": 48208
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Emiliano Sordi' vs 'Simeon Powell'  <->  POD 'emiliano sordi' vs 'simeon powell'  [exact_order1=100]",
+        "detail": {
+          "bck_home": "Emiliano Sordi",
+          "bck_away": "Simeon Powell",
+          "pod_home": "emiliano sordi",
+          "pod_away": "simeon powell",
+          "scores": {
+            "exact_order1": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Emiliano Sordi' vs 'Simeon Powell'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "No odds extracted",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 1.5: BCK 2.6000 / PIN_NVP 2.6200 - 1 = -0.57%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over 1.5",
+          "bck_decimal": 2.6,
+          "pin_nvp_decimal": 2.62,
+          "ev_pct": -0.57
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 1.5: BCK 1.5000 / PIN_NVP 1.6173 - 1 = -7.35%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under 1.5",
+          "bck_decimal": 1.5,
+          "pin_nvp_decimal": 1.6173,
+          "ev_pct": -7.35
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Total",
+        "selection": "Over 1.5",
+        "ev_pct": -0.57
+      },
+      {
+        "market": "Total",
+        "selection": "Under 1.5",
+        "ev_pct": -7.35
+      }
+    ]
+  }
+]

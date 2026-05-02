@@ -183,20 +183,42 @@ class AlertLogger:
                 parts.append(f"{k}={v}")
         self._step("ODDS", " | ".join(parts) if parts else "No odds extracted", odds_dict)
 
-    def log_ev(self, market: str, selection: str, bck_dec: float, pin_nvp_dec: float, ev_pct: float):
+    def log_ev(
+        self,
+        market: str,
+        selection: str,
+        bck_dec: float,
+        pin_nvp_dec: float,
+        ev_pct: float,
+        line: str = "",
+        betbck_american: str = "",
+        pin_nvp_american: str = "",
+    ):
         sign = "+" if ev_pct >= 0 else ""
+        display_sel = f"{selection} {line}".strip() if line else selection
         msg = (
-            f"{market} {selection}: "
-            f"BCK {bck_dec:.4f} / PIN_NVP {pin_nvp_dec:.4f} - 1 = {sign}{ev_pct * 100:.2f}%"
+            f"{market} {display_sel}: "
+            f"BCK {bck_dec:.4f} ({betbck_american}) / PIN_NVP {pin_nvp_dec:.4f} ({pin_nvp_american}) "
+            f"=> {sign}{ev_pct * 100:.2f}%"
         )
         self._step("EV", msg, {
-            "market": market, "selection": selection,
+            "market": market,
+            "selection": selection,
+            "line": line,
+            "betbck_american": betbck_american,
+            "pin_nvp_american": pin_nvp_american,
             "bck_decimal": round(bck_dec, 4),
             "pin_nvp_decimal": round(pin_nvp_dec, 4),
             "ev_pct": round(ev_pct * 100, 2),
         })
         self.ev_summary.append({
-            "market": market, "selection": selection,
+            "market": market,
+            "selection": selection,
+            "line": line,
+            "betbck_odds": betbck_american,
+            "pinnacle_nvp": pin_nvp_american,
+            "betbck_decimal": round(bck_dec, 4),
+            "pin_nvp_decimal": round(pin_nvp_dec, 4),
             "ev_pct": round(ev_pct * 100, 2),
         })
 

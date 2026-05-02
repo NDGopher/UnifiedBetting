@@ -69,7 +69,55 @@
             let league = "Unknown";
             let awayTeam = awayTeamAndLeague;
 
-            const knownLeagues = ["NCAA", "NBA", "NHL", "MLB", "NFL", "UFC", "PFL", "ONE", "Bellator", "BKFC", "LFA", "RIZIN", "Copa Do Nordeste", "Brazil - Cup", "Qatar - Emir Cup", "Kenya - Premier League"];
+            const knownLeagues = [
+                // North American sports
+                "NCAA", "NBA", "NHL", "MLB", "NFL", "MLS", "WNBA", "CFL",
+                // Combat sports
+                "UFC", "PFL", "ONE", "Bellator", "BKFC", "LFA", "RIZIN", "ONE FC",
+                // Soccer — top leagues (short tags, no dash separator in POD)
+                "EPL", "Premier League", "English Premier League",
+                "La Liga", "Spanish La Liga",
+                "Serie A", "Italian Serie A",
+                "Bundesliga", "German Bundesliga", "2. Bundesliga",
+                "Ligue 1", "French Ligue 1", "Ligue 2",
+                "Eredivisie", "Dutch Eredivisie",
+                "Liga MX", "Mexican Liga MX",
+                "Championship", "League One", "League Two",
+                "Scottish Premiership", "Scottish Championship",
+                "Primeira Liga", "Portuguese Primeira Liga",
+                "Super Lig", "Turkish Super Lig",
+                "Super League", "Greek Super League",
+                "Belgian Pro League",
+                "Swiss Super League",
+                "Austrian Bundesliga",
+                "Danish Superliga",
+                "Norwegian Eliteserien",
+                "Swedish Allsvenskan",
+                "Russian Premier League",
+                "Ukrainian Premier League",
+                "Polish Ekstraklasa", "Ekstraklasa",
+                "Romanian Liga I",
+                "Czech First League",
+                "Serie B", "Italian Serie B", "Brazil Serie B",
+                "Brazil Serie A", "Brasileirao",
+                "Argentina Primera", "Liga Profesional",
+                "Colombian Liga", "Chilean Primera",
+                // European cups
+                "Champions League", "UEFA Champions League",
+                "Europa League", "UEFA Europa League",
+                "Conference League", "UEFA Conference League",
+                "Nations League",
+                // South American cups
+                "Copa Libertadores", "Copa Sudamericana",
+                // Asian / Oceania
+                "J1 League", "J-League", "J League",
+                "K League", "K1",
+                "A-League",
+                "Chinese Super League",
+                // Specific entries from POD logs
+                "Copa Do Nordeste", "Brazil - Cup", "Qatar - Emir Cup", "Kenya - Premier League",
+                "African Cup of Nations", "Gold Cup", "World Cup",
+            ];
             for (const knownLeague of knownLeagues) {
                 // More robust check: ensure knownLeague is a whole word or at the end
                 const regex = new RegExp(`\\b${knownLeague.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`, 'i'); // Case insensitive, whole word
