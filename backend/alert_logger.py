@@ -19,6 +19,7 @@ import traceback
 from collections import deque
 from datetime import datetime
 from typing import Optional, Dict, Any, List
+from database_models import save_alert_log_record
 
 # ── Ring buffer (last 50 alerts) ──────────────────────────────────────────────
 _RING_BUFFER_SIZE = 50
@@ -55,6 +56,9 @@ def finalize_alert_log(event_id: str) -> Optional[Dict]:
     record = logger.finalize()
     with _buffer_lock:
         _ring_buffer.appendleft(record)
+    # Fire-and-forget: persist to DB in background thread
+    t = threading.Thread(target=save_alert_log_record, args=(record,), daemon=True)
+    t.start()
     return record
 
 

@@ -8,6 +8,8 @@ import {
   Paper,
   Badge,
   Divider,
+  Button,
+  CircularProgress,
 } from "@mui/material";
 import {
   ExpandMore,
@@ -18,6 +20,7 @@ import {
   NotInterested,
   HelpOutline,
   Timeline,
+  History,
 } from "@mui/icons-material";
 import { WS_BASE, API_BASE } from "../utils/apiConfig";
 
@@ -66,7 +69,9 @@ const TAG_COLORS: Record<string, string> = {
   "INFO":        "#9E9E9E",
 };
 
-function AlertEntry({ record }: { record: AlertRecord }) {
+const PAGE_SIZE = 20;
+
+function AlertEntry({ record, historical }: { record: AlertRecord; historical?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const cfg = RESULT_CONFIG[record.result] || RESULT_CONFIG["pending"];
   const ts = new Date(record.timestamp).toLocaleTimeString();
@@ -82,6 +87,7 @@ function AlertEntry({ record }: { record: AlertRecord }) {
         pl: 1.5,
         mb: 1,
         cursor: "pointer",
+        opacity: historical ? 0.75 : 1,
       }}
       onClick={() => setExpanded(v => !v)}
     >
@@ -159,20 +165,31 @@ interface AlertLogProps {
 }
 
 export default function AlertLog({ wsRef }: AlertLogProps) {
-  const [records, setRecords] = useState<AlertRecord[]>([]);
+  const [allRecords, setAllRecords] = useState<AlertRecord[]>([]);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [panelOpen, setPanelOpen] = useState(true);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [totalFetched, setTotalFetched] = useState(0);
 
   const addRecord = useCallback((rec: AlertRecord) => {
-    setRecords(prev => [rec, ...prev].slice(0, 20));
+    setAllRecords(prev => {
+      const deduped = prev.filter(r => !(r.event_id === rec.event_id && r.timestamp === rec.timestamp));
+      return [rec, ...deduped];
+    });
   }, []);
 
   useEffect(() => {
+    setLoadingHistory(true);
     fetch(`${API_BASE}/api/alert-log`)
       .then(r => r.json())
       .then((data: AlertRecord[]) => {
-        if (Array.isArray(data)) setRecords(data.slice(0, 20));
+        if (Array.isArray(data)) {
+          setAllRecords(data);
+          setTotalFetched(data.length);
+        }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoadingHistory(false));
   }, []);
 
   useEffect(() => {
@@ -206,7 +223,13 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
     };
   }, [addRecord]);
 
-  const positiveCount = records.filter(r => r.result === "ev_found").length;
+  const visibleRecords = allRecords.slice(0, visibleCount);
+  const hasMore = visibleCount < allRecords.length;
+  const positiveCount = allRecords.filter(r => r.result === "ev_found").length;
+
+  const handleLoadMore = () => {
+    setVisibleCount(prev => prev + PAGE_SIZE);
+  };
 
   return (
     <Paper
@@ -225,8 +248,8 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
         <Typography variant="body2" sx={{ color: "#E0E0E0", fontWeight: 600, flexGrow: 1, fontSize: "0.85rem" }}>
           Alert Log
         </Typography>
-        {records.length > 0 && (
-          <Badge badgeContent={records.length} color="primary" sx={{ mr: 1 }}>
+        {allRecords.length > 0 && (
+          <Badge badgeContent={allRecords.length} color="primary" sx={{ mr: 1 }}>
             <Box />
           </Badge>
         )}
@@ -245,7 +268,7 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
           />
         )}
         <Typography variant="caption" sx={{ color: "#555", fontSize: "0.7rem", mr: 0.5 }}>
-          {records.length === 0 ? "waiting for alerts..." : `${records.length} alerts`}
+          {allRecords.length === 0 ? "waiting for alerts..." : `${allRecords.length} alerts`}
         </Typography>
         <IconButton size="small" sx={{ p: 0, color: "#555" }}>
           {panelOpen ? <ExpandLess sx={{ fontSize: 16 }} /> : <ExpandMore sx={{ fontSize: 16 }} />}
@@ -254,15 +277,43 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
 
       <Collapse in={panelOpen}>
         <Divider sx={{ mb: 1.5, borderColor: "rgba(255,255,255,0.06)" }} />
-        {records.length === 0 ? (
+        {loadingHistory && allRecords.length === 0 ? (
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <CircularProgress size={12} sx={{ color: "#555" }} />
+            <Typography variant="caption" sx={{ color: "#555", fontSize: "0.75rem" }}>
+              Loading alert history...
+            </Typography>
+          </Box>
+        ) : allRecords.length === 0 ? (
           <Typography variant="caption" sx={{ color: "#555", fontSize: "0.75rem" }}>
             No alerts processed yet. Load the POD Chrome Extension and open pinnacleoddsdropper.com to start.
           </Typography>
         ) : (
           <Box sx={{ maxHeight: 320, overflowY: "auto" }}>
-            {records.map((rec, i) => (
-              <AlertEntry key={`${rec.event_id}-${rec.timestamp}-${i}`} record={rec} />
+            {visibleRecords.map((rec, i) => (
+              <AlertEntry
+                key={`${rec.event_id}-${rec.timestamp}-${i}`}
+                record={rec}
+                historical={i >= PAGE_SIZE}
+              />
             ))}
+            {hasMore && (
+              <Box sx={{ textAlign: "center", pt: 1 }}>
+                <Button
+                  size="small"
+                  startIcon={<History sx={{ fontSize: 14 }} />}
+                  onClick={e => { e.stopPropagation(); handleLoadMore(); }}
+                  sx={{
+                    fontSize: "0.7rem",
+                    color: "#666",
+                    textTransform: "none",
+                    "&:hover": { color: "#999" },
+                  }}
+                >
+                  Load more ({allRecords.length - visibleCount} remaining)
+                </Button>
+              </Box>
+            )}
           </Box>
         )}
       </Collapse>

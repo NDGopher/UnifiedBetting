@@ -28,7 +28,7 @@ import collections
 # from betbck_async_scraper import get_all_betbck_games  # Removed - use async version instead
 from betbck_request_manager import betbck_manager
 from ace_scraper import AceScraper
-from database_models import get_session, HighEVAlert
+from database_models import get_session, HighEVAlert, get_alert_log_from_db
 from config import setup_logging
 from alert_logger import start_alert_log, finalize_alert_log, get_alert_log_ring_buffer, get_logger_for_event
 
@@ -1617,8 +1617,15 @@ async def run_streaming_pipeline_background(sport_filters=None):
 
 @app.get("/api/alert-log")
 async def get_alert_log():
-    """Return the last 50 per-alert processing records from the ring buffer."""
-    return get_alert_log_ring_buffer()
+    """Return up to 200 per-alert processing records: memory ring buffer first, then DB for older ones."""
+    memory_records = get_alert_log_ring_buffer()
+    total_limit = 200
+    if len(memory_records) >= total_limit:
+        return memory_records[:total_limit]
+    # Fetch older records from DB, excluding event_ids already in memory
+    memory_event_ids = {r["event_id"] for r in memory_records}
+    db_records = get_alert_log_from_db(limit=total_limit - len(memory_records), exclude_event_ids=memory_event_ids)
+    return memory_records + db_records
 
 @app.post("/api/run-pipeline")
 async def run_pipeline():
