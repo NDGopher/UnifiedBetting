@@ -91,8 +91,8 @@ class BetBCKRequestManager:
                     self._handle_rate_limited_request(request_data)
                     continue
                 
-                # Skip delay for initial alerts to improve speed
-                # self._enforce_random_delay()
+                # Enforce inter-request delay — protects against BetBCK rate limiting
+                self._enforce_random_delay()
                 
                 # Process the request
                 self._process_request(request_data)
@@ -251,6 +251,7 @@ class BetBCKRequestManager:
         event_id = request_data['event_id']
         pod_home_team = request_data.get('pod_home_team')
         pod_away_team = request_data.get('pod_away_team')
+        event_date = request_data.get('event_date')
         future = request_data['future']
 
         try:
@@ -296,7 +297,7 @@ class BetBCKRequestManager:
                 self.consecutive_rate_limit_failures = 0
                 logger.info(f"[BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names")
                 
-                game_data = parse_specific_game_from_search_html(search_results_html, pod_home_clean, pod_away_clean, event_id)
+                game_data = parse_specific_game_from_search_html(search_results_html, pod_home_clean, pod_away_clean, event_id, event_date)
                 
                 # Add 1H data if we found a game
                 if game_data:
@@ -382,7 +383,7 @@ class BetBCKRequestManager:
             "rate_limited": True
         })
     
-    def queue_request(self, search_term: str, event_id: str, pod_home_team: str = None, pod_away_team: str = None) -> 'RequestFuture':
+    def queue_request(self, search_term: str, event_id: str, pod_home_team: str = None, pod_away_team: str = None, event_date=None) -> 'RequestFuture':
         """Queue a BetBCK request and return a future. Deduplicate by event_id. Reject if rate limited."""
         future = RequestFuture()
 
@@ -414,6 +415,7 @@ class BetBCKRequestManager:
             'event_id': event_id,
             'pod_home_team': pod_home_team,
             'pod_away_team': pod_away_team,
+            'event_date': event_date,
             'future': future,
             'timestamp': time.time()
         }
@@ -480,28 +482,29 @@ class RequestFuture:
 betbck_manager = BetBCKRequestManager()
 
 
-def scrape_betbck_for_game_queued(pod_home_team, pod_away_team, search_team_name_betbck=None, event_id=None):
+def scrape_betbck_for_game_queued(pod_home_team, pod_away_team, search_team_name_betbck=None, event_id=None, event_date=None):
     """
-    Queue-based replacement for scrape_betbck_for_game
-    Uses persistent session with proper main page navigation and random delays
+    Queue-based replacement for scrape_betbck_for_game.
+    Uses a persistent session with a single-worker queue to serialize requests
+    and avoid rate limiting. Passes event_date for date-aware game matching.
     """
-    # Determine search term
     if search_team_name_betbck:
         search_term = search_team_name_betbck
     else:
-        # Use the same logic as the original function
         from utils.pod_utils import clean_pod_team_name_for_search
         pod_home_clean = clean_pod_team_name_for_search(pod_home_team)
         search_term = pod_home_clean if pod_home_clean else pod_home_team
-    
-    # Queue the request with POD team names
-    future = betbck_manager.queue_request(search_term, str(event_id), pod_home_team, pod_away_team)
-    
-    # Wait for result
-    result = future.get_result(timeout=15)  # Reduced to 15 seconds for faster alerts
-    
+
+    future = betbck_manager.queue_request(search_term, str(event_id), pod_home_team, pod_away_team, event_date=event_date)
+
+    # 45-second window — deep queues (10+ simultaneous alerts) can take 40s to drain at 0.5-1s/request
+    result = future.get_result(timeout=45)
+
     if result["status"] == "success":
         return result["data"]
     else:
-        logger.error(f"[BetBCK-Manager] Request failed: {result['message']}")
-        return None 
+        logger.error(f"[BetBCK-Manager] Request failed for event {event_id}: {result['message']}")
+        _alog = _get_alert_logger_rm(str(event_id)) if event_id else None
+        if _alog:
+            _alog.log_error(RuntimeError(result["message"]), "scrape_betbck_for_game_queued")
+        return None

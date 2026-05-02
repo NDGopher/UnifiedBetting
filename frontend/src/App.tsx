@@ -1,4 +1,4 @@
-import React, { createContext, useRef, useContext } from "react";
+import React, { createContext, useRef } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { AppBar, Toolbar, IconButton } from "@mui/material";
+import { AppBar, Toolbar } from "@mui/material";
 import { 
   Analytics, 
   Calculate, 

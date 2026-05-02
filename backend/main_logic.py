@@ -1,6 +1,7 @@
 import traceback
 import re
 import math
+import datetime as _dt
 from hashlib import sha256
 try:
     from betbck_scraper import scrape_betbck_for_game
@@ -115,7 +116,20 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
         if not scrape_betbck:
             return {"status": "success", "data": {}}
 
-        betbck_result = scrape_betbck_for_game_queued(pod_home_team_raw, pod_away_team_raw, search_term, event_id)
+        # Parse the Pinnacle event start time so betbck_scraper can do date-aware matching
+        event_date = None
+        _start_raw = original_alert_details.get("startTime") or original_alert_details.get("start_time")
+        if _start_raw:
+            try:
+                if isinstance(_start_raw, (int, float)):
+                    _ts = _start_raw / 1000 if _start_raw > 1e10 else _start_raw
+                    event_date = _dt.datetime.utcfromtimestamp(_ts)
+                elif isinstance(_start_raw, str):
+                    event_date = _dt.datetime.fromisoformat(_start_raw.replace("Z", ""))
+            except Exception:
+                pass
+
+        betbck_result = scrape_betbck_for_game_queued(pod_home_team_raw, pod_away_team_raw, search_term, event_id, event_date=event_date)
         if not betbck_result:
             if alog:
                 alog.log_not_found(pod_home_clean, pod_away_clean, league)

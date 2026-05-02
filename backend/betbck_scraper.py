@@ -379,7 +379,7 @@ def get_cleaned_team_name_from_div(team_div):
     raw_name = re.sub(r'\s*\((hits\+runs\+errors|h\+r\+e|hre)\)$', '', raw_name, flags=re.IGNORECASE).strip()
     return " ".join(raw_name.split()) if raw_name else ""
 
-def parse_specific_game_from_search_html(html_content, target_home_team_pod, target_away_team_pod, event_id=None):
+def parse_specific_game_from_search_html(html_content, target_home_team_pod, target_away_team_pod, event_id=None, event_date=None):
     if not html_content: print(f"[BetbckParser] No HTML content. (Event ID: {event_id})"); return None
     _alog = _get_alert_logger(event_id) if event_id else None
     soup = BeautifulSoup(html_content, 'html.parser'); search_context = soup.find('form', {'name': 'GameSelectionForm', 'id': 'GameSelectionForm'}) or soup
@@ -398,6 +398,7 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
     norm_pod_h = normalize_team_name_for_matching(target_home_team_pod)
     norm_pod_a = normalize_team_name_for_matching(target_away_team_pod)
     print(f"[BetbckParser] Normalized POD Targets: Home='{norm_pod_h}', Away='{norm_pod_a}' (Event ID: {event_id})")
+    matches = []  # collect every team-name match; pick best by date after the loop
 
     for idx, game_wrapper_table in enumerate(game_wrappers):
         team_name_td = game_wrapper_table.find('td', class_=lambda x: x and x.startswith('tbl_betAmount_team1_main_name'))
@@ -529,11 +530,53 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
             tds_draw = data_rows[2].find_all('td',class_=lambda x:x and 'tbl_betAmount_td' in x)
             if len(tds_draw)>1: output_data["draw_moneyline_american"]=extract_american_odds_from_text(tds_draw[1])
         
-        if matched:
-            return output_data
-    if _alog:
-        _alog.log_not_found(target_home_team_pod, target_away_team_pod, "")
-    print(f"[BetbckParser] No game matching POD teams found after all wrappers. (Event ID: {event_id})"); return None
+        # Extract BetBCK game date for date-based tiebreaking
+        bck_game_date = None
+        _date_div = game_wrapper_table.find_previous('div', class_='dateLinebetting')
+        if _date_div and _date_div.text:
+            _dm = re.search(r'(\d{1,2})/(\d{1,2})\s+(\d{1,2}:\d{2}[AP]M)', _date_div.text.strip(), re.IGNORECASE)
+            if _dm:
+                try:
+                    _cy = datetime.datetime.now().year
+                    bck_game_date = datetime.datetime.strptime(
+                        f"{_cy}-{int(_dm.group(1)):02d}-{int(_dm.group(2)):02d} {_dm.group(3)}", "%Y-%m-%d %I:%M%p"
+                    )
+                    if bck_game_date < datetime.datetime.now() - datetime.timedelta(hours=2):
+                        bck_game_date = bck_game_date.replace(year=_cy + 1)
+                except Exception:
+                    pass
+        _date_log = bck_game_date.strftime('%Y-%m-%d %H:%M') if bck_game_date else "unknown"
+        print(f"[BetbckParser] Match accepted: {raw_bck_l} vs {raw_bck_v} (BCK date: {_date_log}) (Event ID: {event_id})")
+        matches.append({"data": output_data, "bck_date": bck_game_date, "bck_home": raw_bck_l, "bck_away": raw_bck_v})
+
+    # --- Pick best match after scanning all wrappers ---
+    if not matches:
+        if _alog:
+            _alog.log_not_found(target_home_team_pod, target_away_team_pod, "")
+        print(f"[BetbckParser] No game matching POD teams found after all wrappers. (Event ID: {event_id})")
+        return None
+
+    if len(matches) == 1:
+        m = matches[0]
+        print(f"[BetbckParser] Single match: {m['bck_home']} vs {m['bck_away']} (Event ID: {event_id})")
+        return m["data"]
+
+    # Multiple wrappers matched by team name — use event_date to pick the right one
+    print(f"[BetbckParser] {len(matches)} wrappers matched by team name (Event ID: {event_id}) — applying date tiebreaker")
+    if event_date is not None:
+        dated = []
+        for m in matches:
+            diff = abs((m["bck_date"] - event_date).total_seconds()) if m["bck_date"] else float("inf")
+            dated.append((m, diff))
+        dated.sort(key=lambda x: x[1])
+        best, best_diff = dated[0]
+        print(f"[BetbckParser] Date tiebreaker: chose {best['bck_home']} vs {best['bck_away']} (Δ={best_diff/3600:.1f}h) (Event ID: {event_id})")
+        if best_diff > 43200:
+            print(f"[BetbckParser] WARNING: closest date match is {best_diff/3600:.1f}h from Pinnacle start — may be wrong game (Event ID: {event_id})")
+        return best["data"]
+
+    print(f"[BetbckParser] No event_date supplied — returning first of {len(matches)} matches (Event ID: {event_id})")
+    return matches[0]["data"]
 
 def parse_game_data_from_html(search_results_html, search_term):
     """
