@@ -1,0 +1,100 @@
+ackground Service Worker v5 (Auto-Search Enabled) Loaded.
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:18.607Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:19.273Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:19.918Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:20.565Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:21.211Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:21.863Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:22.525Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:23.166Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:23.808Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:24.519Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:25.164Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:25.850Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:26.571Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:27.213Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:27.862Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:28.506Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:29.154Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:29.809Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:30.454Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:31.116Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:31.800Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:32.499Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:33.149Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:33.807Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:34.462Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:35.125Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:35.766Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:36.422Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:37.082Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:37.776Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:38.436Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:39.105Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:39.800Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:40.440Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:41.086Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:41.737Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:42.409Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:43.077Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:43.744Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500287 from URL: https://swordfish-production.up.railway.app/events/1629500287 at 2026-05-02T23:18:44.383Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:45.968Z
+background.js:35 [Background] Message received: getLatestSniffedEventDetails
+background.js:38 [Background] Responding to 'getLatestSniffedEventDetails'. Current: ID=1629500791, TS=1777763985968.616
+background.js:35 [Background] Message received: forwardToPython
+background.js:71 [Background] Forwarding to Python for eventId: 1629500791. URL: https://3a14a61c-b8aa-4dab-93bc-09346a68d1f5-00-1xtj8e9x0sp06.spock.replit.dev/pod_alert
+background.js:87 [Background] Error POSTing to Python server: HTTP error! status: 502
+(anonymous) @ background.js:87
+Promise.catch
+(anonymous) @ background.js:86
+(anonymous) @ background.js:54Understand this error
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:53.233Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:53.935Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:54.785Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:56.360Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:57.326Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:58.042Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:59.031Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:19:59.826Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:00.569Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:01.331Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:02.347Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:03.188Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:04.006Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:04.730Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:05.387Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:06.122Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:06.777Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:07.439Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:08.084Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:08.724Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629500791 from URL: https://swordfish-production.up.railway.app/events/1629500791 at 2026-05-02T23:20:09.364Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:09.841Z
+background.js:35 [Background] Message received: getLatestSniffedEventDetails
+background.js:38 [Background] Responding to 'getLatestSniffedEventDetails'. Current: ID=1629423185, TS=1777764009841.543
+background.js:35 [Background] Message received: forwardToPython
+background.js:71 [Background] Forwarding to Python for eventId: 1629423185. URL: https://3a14a61c-b8aa-4dab-93bc-09346a68d1f5-00-1xtj8e9x0sp06.spock.replit.dev/pod_alert
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:10.533Z
+background.js:87 [Background] Error POSTing to Python server: HTTP error! status: 502
+(anonymous) @ background.js:87
+Promise.catch
+(anonymous) @ background.js:86
+(anonymous) @ background.js:54Understand this error
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:11.172Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:11.856Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:12.512Z
+background.js:35 [Background] Message received: getLatestSniffedEventDetails
+background.js:38 [Background] Responding to 'getLatestSniffedEventDetails'. Current: ID=1629423185, TS=1777764012512.208
+background.js:35 [Background] Message received: forwardToPython
+background.js:71 [Background] Forwarding to Python for eventId: 1629423185. URL: https://3a14a61c-b8aa-4dab-93bc-09346a68d1f5-00-1xtj8e9x0sp06.spock.replit.dev/pod_alert
+background.js:87 [Background] Error POSTing to Python server: HTTP error! status: 502
+(anonymous) @ background.js:87
+Promise.catch
+(anonymous) @ background.js:86
+(anonymous) @ background.js:54Understand this error
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:13.156Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:13.914Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:14.577Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:15.254Z
+background.js:24 [BG_WebRequest] CAPTURED/UPDATED Swordfish eventId: 1629423185 from URL: https://swordfish-production.up.railway.app/events/1629423185 at 2026-05-02T23:20:15.905Z
