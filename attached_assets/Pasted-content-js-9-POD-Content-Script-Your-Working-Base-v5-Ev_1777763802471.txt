@@ -1,0 +1,44 @@
+content.js:9 POD Content Script (Your Working Base - v5 EventId Focus) Loaded: 2026-05-02T23:13:50.011Z
+content.js:436 🚨🚨🚨 POD EXTENSION RELOADED - NEW VERSION ACTIVE 🚨🚨🚨
+content.js:437 🚨🚨🚨 If you see this, the extension reloaded successfully 🚨🚨🚨
+content.js:438 🚨🚨🚨 Current URL: https://www.pinnacleoddsdropper.com/terminal 🚨🚨🚨
+content.js:453 🚨🚨🚨 Chrome extension APIs available - starting monitoring 🚨🚨🚨
+content.js:468 🚨🚨🚨 On terminal page - starting immediately 🚨🚨🚨
+content.js:340 POD Terminal: Starting dynamic container detection...
+content.js:382 POD Terminal: Waiting for container ".ag-center-cols-container" (max 30 attempts, 1000ms intervals)
+content.js:393 POD Terminal: Attempt 1/30 - Container not found, waiting 1000ms...
+content.js:26 [Auto-Refresh] Next refresh scheduled in 22 minutes
+content.js:478 POD Content Script: Initialization complete, monitorRows and auto-refresh scheduled.
+lockdown-install.js:1 SES Removing unpermitted intrinsics
+layout-234857ec031731fc.js:1 firebase Notification permission: null
+layout-234857ec031731fc.js:1 firebase Notification permission: default
+clerk.browser.js:19 Clerk: The prop "afterSignInUrl" is deprecated and should be replaced with the new "fallbackRedirectUrl" or "forceRedirectUrl" props instead. Learn more: https://clerk.com/docs/guides/custom-redirects#redirect-url-props
+warnOnce @ clerk.browser.js:19Understand this warning
+layout-234857ec031731fc.js:1 🟢 Firebase APIs are supported. Initializing Firebase App...
+layout-234857ec031731fc.js:1 🟢 Firebase App initialized true
+content.js:393 POD Terminal: Attempt 2/30 - Container not found, waiting 1000ms...
+2page-39f2ecb07bcbb8f8.js:1 selectedRow changed undefined
+2page-39f2ecb07bcbb8f8.js:1 unmounting events table modal
+2page-39f2ecb07bcbb8f8.js:1 selectedRow changed undefined
+frame-modern.2062f251.js:1 [Intercom] Launcher is disabled in settings or current page does not match display conditions
+content.js:388 POD Terminal: Container found on attempt 3!
+content.js:346 POD Terminal: SUCCESS - Found container (".ag-center-cols-container"). Initializing.
+content.js:349 POD Terminal: Found 52 existing rows.
+content.js:373 POD Terminal: MutationObserver is now active.
+ SES Removing unpermitted intrinsics
+2ec9d688-3563caa2bdc478e1.js:1 AG Grid: error #26 Grid API function removeEventListener() cannot be called as the grid has been destroyed.
+ Either clear local references to the grid api, when it is destroyed, or check gridApi.isDestroyed() to avoid calling methods against a destroyed grid.
+ To run logic when the grid is about to be destroyed use the gridPreDestroy event. See: https://www.ag-grid.com/react-data-grid/grid-lifecycle/#grid-pre-destroyed 
+See https://www.ag-grid.com/react-data-grid/errors/26?_version_=34.0.0&fnName=removeEventListener&preDestroyLink=https%3A%2F%2Fwww.ag-grid.com%2Freact-data-grid%2Fgrid-lifecycle%2F%23grid-pre-destroyed
+(anonymous) @ 2ec9d688-3563caa2bdc478e1.js:1Understand this warning
+2page-39f2ecb07bcbb8f8.js:1 unmounting events table modal
+lockdown-install.js:1 SES Removing unpermitted intrinsics
+2page-39f2ecb07bcbb8f8.js:1 selectedRow changed undefined
+inpage.js:1 Uncaught (in promise) i: Failed to connect to MetaMask
+    at Object.connect (inpage.js:1:63525)
+    at async s (inpage.js:1:61028)Caused by: Error: MetaMask extension not found
+    at inpage.js:1:57978
+connect @ inpage.js:1Understand this error
+lockdown-install.js:1 SES Removing unpermitted intrinsics
+layout-234857ec031731fc.js:1 🟢 rewardful ƒ (){t._execute(arguments)}
+terminal:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
