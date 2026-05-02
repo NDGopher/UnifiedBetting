@@ -30,7 +30,7 @@ from betbck_request_manager import betbck_manager
 from ace_scraper import AceScraper
 from database_models import get_session, HighEVAlert
 from config import setup_logging
-from alert_logger import start_alert_log, finalize_alert_log, get_alert_log_ring_buffer
+from alert_logger import start_alert_log, finalize_alert_log, get_alert_log_ring_buffer, get_logger_for_event
 
 # Setup proper logging configuration (suppresses Selenium spam)
 setup_logging()
@@ -239,92 +239,106 @@ async def event_alert_worker(event_id):
                         logger.info(f"[PerEventQueue] POD Teams: Home='{payload.get('homeTeam', '?')}', Away='{payload.get('awayTeam', '?')}'")
                         logger.info(f"[PerEventQueue] Cleaned Teams: Home='{pod_home_clean}', Away='{pod_away_clean}'")
                         start_alert_log(event_id)
-                        betbck_result = process_alert_and_scrape_betbck(event_id, payload, live_pinnacle_odds_processed)
+                        try:
+                            betbck_result = process_alert_and_scrape_betbck(event_id, payload, live_pinnacle_odds_processed)
 
-                        if not (betbck_result and betbck_result.get("status") == "success"):
-                            fail_reason = betbck_result.get("message", "Scraper returned None")
-                            logger.error(f"[PerEventQueue] Scrape failed. Dropping alert. Reason: {fail_reason}")
-                            logger.error(f"[PerEventQueue] Failed teams: Home='{pod_home_clean}', Away='{pod_away_clean}' (raw: Home='{payload.get('homeTeam', '?')}', Away='{payload.get('awayTeam', '?')}')")
-                            _alog_rec = finalize_alert_log(event_id)
-                            if _alog_rec:
-                                await manager.broadcast({"type": "alert_log", "data": _alog_rec})
-                            continue
+                            if not (betbck_result and betbck_result.get("status") == "success"):
+                                fail_reason = betbck_result.get("message", "Scraper returned None") if betbck_result else "Scraper returned None"
+                                logger.error(f"[PerEventQueue] Scrape failed. Dropping alert. Reason: {fail_reason}")
+                                logger.error(f"[PerEventQueue] Failed teams: Home='{pod_home_clean}', Away='{pod_away_clean}' (raw: Home='{payload.get('homeTeam', '?')}', Away='{payload.get('awayTeam', '?')}')")
+                            else:
+                                logger.info(f"[PerEventQueue] Scrape successful. Storing event {event_id} for display.")
+                                betbck_last_update = now
+                                betbck_data = betbck_result.get("data", {})
+                                potential_bets = betbck_data.get("potential_bets_analyzed", [])
 
-                        logger.info(f"[PerEventQueue] Scrape successful. Storing event {event_id} for display.")
-                        betbck_last_update = now
-                        betbck_data = betbck_result.get("data", {})
-                        potential_bets = betbck_data.get("potential_bets_analyzed", [])
-                        
-                        # Filter out unrealistic EVs (outside ±30% range)
-                        realistic_bets = []
-                        for bet in potential_bets:
-                            try:
-                                ev_str = bet.get("ev", "0")
-                                ev_value = float(ev_str.replace('%', ''))
-                                if -30 <= ev_value <= 30:
-                                    realistic_bets.append(bet)
+                                # Filter out unrealistic EVs (outside ±30% range)
+                                realistic_bets = []
+                                for bet in potential_bets:
+                                    try:
+                                        ev_str = bet.get("ev", "0")
+                                        ev_value = float(ev_str.replace('%', ''))
+                                        if -30 <= ev_value <= 30:
+                                            realistic_bets.append(bet)
+                                        else:
+                                            logger.warning(f"[PerEventQueue] Filtering out unrealistic EV: {ev_str} for {bet.get('market', 'N/A')} {bet.get('selection', 'N/A')}")
+                                    except:
+                                        realistic_bets.append(bet)
+
+                                has_positive_ev = any(float(b.get("ev", "0").replace('%','')) > 0 for b in realistic_bets)
+                                betbck_data["potential_bets_analyzed"] = realistic_bets
+
+                                if not betbck_data or not realistic_bets:
+                                    logger.warning(f"[PerEventQueue] No valid betting data for event {event_id}, skipping broadcast")
                                 else:
-                                    logger.warning(f"[PerEventQueue] Filtering out unrealistic EV: {ev_str} for {bet.get('market', 'N/A')} {bet.get('selection', 'N/A')}")
-                            except:
-                                realistic_bets.append(bet)  # Keep if we can't parse EV
-                        
-                        has_positive_ev = any(float(b.get("ev", "0").replace('%','')) > 0 for b in realistic_bets)
-                        betbck_data["potential_bets_analyzed"] = realistic_bets
-                        
-                        # Only store and broadcast if we have valid data
-                        if not betbck_data or not realistic_bets:
-                            logger.warning(f"[PerEventQueue] No valid betting data for event {event_id}, skipping broadcast")
+                                    cleaned_payload = payload.copy()
+                                    cleaned_payload["homeTeam"] = payload.get("homeTeam", "")
+                                    cleaned_payload["awayTeam"] = payload.get("awayTeam", "")
+
+                                    event_data = {
+                                        "alert_arrival_timestamp": now,
+                                        "last_pinnacle_data_update_timestamp": now,
+                                        "pinnacle_data_processed": live_pinnacle_odds_processed,
+                                        "original_alert_details": cleaned_payload,
+                                        "betbck_data": betbck_result,
+                                        "league_name": league_name,
+                                        "start_time": start_time,
+                                        "old_odds": payload.get("oldOdds", "N/A"),
+                                        "new_odds": payload.get("newOdds", "N/A"),
+                                        "no_vig": payload.get("noVigPriceFromAlert", "N/A"),
+                                        "cleaned_home_team": pod_home_clean,
+                                        "cleaned_away_team": pod_away_clean,
+                                        "betbck_last_update": betbck_last_update,
+                                        "has_positive_ev": has_positive_ev,
+                                        "ev_rescrape_done": False
+                                    }
+                                    pod_event_manager.add_active_event(event_id, event_data)
+                                    updated_event = pod_event_manager.get_active_events().get(event_id)
+                                    if updated_event:
+                                        broadcast_pod_alert_safe(event_id, updated_event)
+
+                        except Exception as _new_evt_exc:
+                            logger.error(f"[PerEventQueue] Exception during new event processing for {event_id}: {_new_evt_exc}")
+                            traceback.print_exc()
+                            _alog = get_logger_for_event(event_id)
+                            if _alog:
+                                _alog.log_error(_new_evt_exc, "event_alert_worker new event")
+                        finally:
                             _alog_rec = finalize_alert_log(event_id)
                             if _alog_rec:
                                 await manager.broadcast({"type": "alert_log", "data": _alog_rec})
-                            continue
-                        # Create cleaned payload with cleaned team names
-                        cleaned_payload = payload.copy()
-                        cleaned_payload["homeTeam"] = payload.get("homeTeam", "")
-                        cleaned_payload["awayTeam"] = payload.get("awayTeam", "")
-                        
-                        event_data = {
-                            "alert_arrival_timestamp": now,
-                            "last_pinnacle_data_update_timestamp": now,
-                            "pinnacle_data_processed": live_pinnacle_odds_processed,
-                            "original_alert_details": cleaned_payload,
-                            "betbck_data": betbck_result,
-                            "league_name": league_name,
-                            "start_time": start_time,
-                            "old_odds": payload.get("oldOdds", "N/A"),
-                            "new_odds": payload.get("newOdds", "N/A"),
-                            "no_vig": payload.get("noVigPriceFromAlert", "N/A"),
-                            "cleaned_home_team": pod_home_clean,
-                            "cleaned_away_team": pod_away_clean,
-                            "betbck_last_update": betbck_last_update,
-                            "has_positive_ev": has_positive_ev,
-                            "ev_rescrape_done": False
-                        }
-                        pod_event_manager.add_active_event(event_id, event_data)
-                        updated_event = pod_event_manager.get_active_events().get(event_id)
-                        if updated_event:
-                            broadcast_pod_alert_safe(event_id, updated_event)
-                        _alog_rec = finalize_alert_log(event_id)
-                        if _alog_rec:
-                            await manager.broadcast({"type": "alert_log", "data": _alog_rec})
                     else:
                         logger.info(f"[PerEventQueue] Updating existing event {event_id} with fresh Pinnacle data.")
-                        event = active_events[event_id]
-                        betbck_data = event.get("betbck_data", {}).get("data", {})
-                        potential_bets = betbck_data.get("potential_bets_analyzed", [])
-                        has_positive_ev = event.get("has_positive_ev", False) or any(float(b.get("ev", "0").replace('%','')) > 0 for b in potential_bets)
-                        pod_event_manager.update_event_data(event_id, {
-                            "last_pinnacle_data_update_timestamp": now,
-                            "pinnacle_data_processed": live_pinnacle_odds_processed,
-                            "has_positive_ev": has_positive_ev
-                        })
-                        updated_event = pod_event_manager.get_active_events().get(event_id)
-                        if updated_event:
-                            broadcast_pod_alert_safe(event_id, updated_event)
+                        start_alert_log(event_id)
+                        try:
+                            _upd_alog = get_logger_for_event(event_id)
+                            if _upd_alog:
+                                _upd_alog.log_raw_alert(payload)
+                                _upd_alog.log_info("Existing event — Pinnacle odds refresh only")
+                                _upd_alog.set_result("completed")
+                            event = active_events[event_id]
+                            betbck_data = event.get("betbck_data", {}).get("data", {})
+                            potential_bets = betbck_data.get("potential_bets_analyzed", [])
+                            has_positive_ev = event.get("has_positive_ev", False) or any(float(b.get("ev", "0").replace('%','')) > 0 for b in potential_bets)
+                            pod_event_manager.update_event_data(event_id, {
+                                "last_pinnacle_data_update_timestamp": now,
+                                "pinnacle_data_processed": live_pinnacle_odds_processed,
+                                "has_positive_ev": has_positive_ev
+                            })
+                            updated_event = pod_event_manager.get_active_events().get(event_id)
+                            if updated_event:
+                                broadcast_pod_alert_safe(event_id, updated_event)
+                        finally:
+                            _alog_rec = finalize_alert_log(event_id)
+                            if _alog_rec:
+                                await manager.broadcast({"type": "alert_log", "data": _alog_rec})
                 logger.info(f"[PerEventQueue] Lock released for Event ID: {event_id}")
             except Exception as e:
                 logger.error(f"[PerEventQueue] Error processing alert for {event_id}: {e}")
                 traceback.print_exc()
+                _alog_rec = finalize_alert_log(event_id)
+                if _alog_rec:
+                    await manager.broadcast({"type": "alert_log", "data": _alog_rec})
         except Exception as outer_e:
             logger.error(f"[PerEventQueue] OUTER error in worker for {event_id}: {outer_e}")
             traceback.print_exc()

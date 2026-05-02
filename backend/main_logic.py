@@ -73,15 +73,17 @@ def determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw):
 def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_pinnacle_data, scrape_betbck=True):
     alog = get_logger_for_event(event_id)
     try:
+        if alog and original_alert_details:
+            alog.log_raw_alert(original_alert_details)
+
         if not original_alert_details or not processed_pinnacle_data:
+            if alog:
+                alog.log_error(ValueError("Missing required data: original_alert_details or processed_pinnacle_data is None"), "process_alert_and_scrape_betbck")
             return {"status": "error", "message": "Missing required data"}
 
         pod_home_team_raw = original_alert_details.get("homeTeam", "")
         pod_away_team_raw = original_alert_details.get("awayTeam", "")
         league = original_alert_details.get("leagueName", "?")
-
-        if alog:
-            alog.log_raw_alert(original_alert_details)
 
         prop_keywords = ['(Corners)', '(Bookings)', '(Hits+Runs+Errors)']
         if any(keyword.lower() in pod_home_team_raw.lower() for keyword in prop_keywords) or \

@@ -9,6 +9,12 @@ import threading
 from utils import normalize_team_name_for_matching
 from utils.pod_utils import skip_indicators, is_prop_or_corner_alert, fuzzy_team_match
 
+try:
+    from alert_logger import get_logger_for_event as _get_alert_logger
+except ImportError:
+    def _get_alert_logger(event_id):
+        return None
+
 # Selenium imports for dynamic content handling
 try:
     from selenium import webdriver
@@ -119,13 +125,9 @@ def search_team_and_get_results_html(session, team_name_query, inet_wager_val, i
     try:
         response = session.post(SEARCH_ACTION_URL, data=search_payload, headers=BASE_HEADERS, timeout=15); response.raise_for_status()
         print(f"[BetbckScraper] Search POST successful (Status: {response.status_code}). Response size: {len(response.text)} bytes.")
-        try:
-            from alert_logger import get_logger_for_event as _get_alog
-            _alog = _get_alog(event_id) if event_id else None
-            if _alog:
-                _alog.log_search(team_name_query, response.status_code, len(response.text))
-        except Exception:
-            pass
+        _alog = _get_alert_logger(event_id) if event_id else None
+        if _alog:
+            _alog.log_search(team_name_query, response.status_code, len(response.text))
         return response.text
     except requests.exceptions.Timeout: print(f"[BetbckScraper] Team search POST timed out for '{team_name_query}'."); return None
     except Exception as e: print(f"[BetbckScraper] Team search POST failed for '{team_name_query}': {e}"); return None
@@ -369,11 +371,7 @@ def get_cleaned_team_name_from_div(team_div):
 
 def parse_specific_game_from_search_html(html_content, target_home_team_pod, target_away_team_pod, event_id=None):
     if not html_content: print(f"[BetbckParser] No HTML content. (Event ID: {event_id})"); return None
-    try:
-        from alert_logger import get_logger_for_event as _get_alog
-        _alog = _get_alog(event_id) if event_id else None
-    except Exception:
-        _alog = None
+    _alog = _get_alert_logger(event_id) if event_id else None
     soup = BeautifulSoup(html_content, 'html.parser'); search_context = soup.find('form', {'name': 'GameSelectionForm', 'id': 'GameSelectionForm'}) or soup
     game_wrappers = []
     for gw_class in GAME_WRAPPER_PRIMARY_CLASSES: game_wrappers.extend(f for f in search_context.find_all('table', class_=gw_class) if f not in game_wrappers)
@@ -427,18 +425,22 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                             s_av = fuzz.token_set_ratio(pa, bv)
                             s_hv = fuzz.token_set_ratio(ph, bv)
                             s_al = fuzz.token_set_ratio(pa, bh)
-                            print(f"[DEBUG] Comparing normalized: POD H='{ph}', A='{pa}' with BCK H='{bh}', A='{bv}' | Scores: (H-L {s_hl} A-V {s_av}) OR (H-V {s_hv} A-L {s_al}) (Event ID: {event_id})")
+                            p_hl = fuzz.partial_ratio(ph, bh)
+                            p_av = fuzz.partial_ratio(pa, bv)
+                            print(f"[DEBUG] Comparing normalized: POD H='{ph}', A='{pa}' with BCK H='{bh}', A='{bv}' | token_set: (H-L {s_hl} A-V {s_av}) | partial: (H-L {p_hl} A-V {p_av}) (Event ID: {event_id})")
                             if s_hl + s_av > _cand_scores.get("_sum_fwd", 0):
-                                _cand_scores.update({"token_sort_h": s_hl, "token_sort_a": s_av, "threshold": FUZZY_MATCH_THRESHOLD, "_sum_fwd": s_hl + s_av})
+                                _cand_scores.update({"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD, "_sum_fwd": s_hl + s_av})
                             if s_hl >= FUZZY_MATCH_THRESHOLD and s_av >= FUZZY_MATCH_THRESHOLD:
                                 matched, bck_local_is_pod_home = True, True
-                                _cand_scores = {"token_sort_h": s_hl, "token_sort_a": s_av, "threshold": FUZZY_MATCH_THRESHOLD}
+                                _cand_scores = {"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD}
                                 print(f"[BetbckParser] Fuzzy Alias Match (Order 1) (Event ID: {event_id})")
                                 found_fuzzy = True
                                 break
                             elif s_hv >= FUZZY_MATCH_THRESHOLD and s_al >= FUZZY_MATCH_THRESHOLD:
+                                p_hv = fuzz.partial_ratio(ph, bv)
+                                p_al = fuzz.partial_ratio(pa, bh)
                                 matched, bck_local_is_pod_home = True, False
-                                _cand_scores = {"token_sort_h": s_hv, "token_sort_a": s_al, "threshold": FUZZY_MATCH_THRESHOLD}
+                                _cand_scores = {"token_set_h": s_hv, "token_set_a": s_al, "partial_h": p_hv, "partial_a": p_al, "threshold": FUZZY_MATCH_THRESHOLD}
                                 print(f"[BetbckParser] Fuzzy Alias Match (Order 2 - Flipped) (Event ID: {event_id})")
                                 found_fuzzy = True
                                 break
