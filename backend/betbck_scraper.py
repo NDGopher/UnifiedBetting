@@ -144,20 +144,49 @@ def search_team_and_get_results_html(session, team_name_query, inet_wager_val, i
 
 # --- Normalization and Parsing Utilities ---
 TEAM_ALIASES = {
-    'north korea': ['korea dpr', 'dpr korea', 'democratic people\'s republic of korea'],
+    # International soccer — nations
+    'north korea': ['korea dpr', 'dpr korea', "democratic people's republic of korea"],
     'south korea': ['korea republic', 'republic of korea'],
-    'ivory coast': ['cote d\'ivoire'],
+    'ivory coast': ["cote d'ivoire", 'cote divoire'],
     'czech republic': ['czechia'],
     'united states': ['usa', 'us', 'united states of america'],
-    'iran': ['iran', 'iran isl', 'islamic republic of iran'],
+    'iran': ['iran isl', 'islamic republic of iran'],
     'russia': ['russian federation'],
-    'inter': ['inter milan', 'internazionale'],
+    # European clubs
+    'inter': ['inter milan', 'internazionale', 'fc internazionale'],
     'tottenham': ['tottenham hotspur', 'spurs'],
-    'psg': ['paris saint germain', 'paris sg'],
+    'psg': ['paris saint germain', 'paris sg', 'paris saint-germain'],
     'altach': ['rheindorf altach', 'scr altach'],
-    'ny': ['new york'],
-    'la': ['los angeles'],
-    'st. louis': ['st louis'],
+    'man city': ['manchester city'],
+    'man united': ['manchester united', 'manchester utd'],
+    'athletic club': ['athletic bilbao'],
+    'wolves': ['wolverhampton', 'wolverhampton wanderers'],
+    'newcastle': ['newcastle united'],
+    'west ham': ['west ham united'],
+    'leicester': ['leicester city'],
+    'norwich': ['norwich city'],
+    'brighton': ['brighton hove albion', 'brighton & hove albion'],
+    'bournemouth': ['afc bournemouth'],
+    'bayer leverkusen': ['leverkusen'],
+    'rb leipzig': ['rasenballsport leipzig', 'red bull leipzig'],
+    'sporting': ['sporting cp', 'sporting clube de portugal'],
+    'benfica': ['sl benfica'],
+    'porto': ['fc porto'],
+    'ajax': ['afc ajax'],
+    'psv': ['psv eindhoven'],
+    'feyenoord': ['feyenoord rotterdam'],
+    'napoli': ['ssc napoli'],
+    'juventus': ['juve'],
+    'roma': ['as roma'],
+    'lazio': ['ss lazio'],
+    'sevilla': ['sevilla fc'],
+    'real sociedad': ['sociedad'],
+    'real betis': ['betis'],
+    'villarreal': ['villarreal cf'],
+    'galatasaray': ['galatasaray sk'],
+    'fenerbahce': ['fenerbahce sk'],
+    'besiktas': ['besiktas jk'],
+    # South American clubs
     'orense': ['orenseecuador', 'orense ecuador', 'cd orense', 'club deportivo orense'],
     'manta': ['manta fc', 'manta futbol club', 'club deportivo manta'],
     'barcelona': ['barcelona sc', 'barcelona sporting club', 'barcelona ecuador'],
@@ -168,7 +197,155 @@ TEAM_ALIASES = {
     'el nacional': ['nacional', 'club deportivo el nacional'],
     'liga de quito': ['ldu', 'liga de quito quito'],
     'aucas': ['aucas quito', 'sociedad deportiva aucas'],
-    # Add more as needed
+    'flamengo': ['cr flamengo', 'clube de regatas do flamengo'],
+    'fluminense': ['fluminense fc'],
+    'palmeiras': ['se palmeiras'],
+    'corinthians': ['sport club corinthians paulista', 'sc corinthians'],
+    'sao paulo': ['sao paulo fc'],
+    'santos': ['santos fc'],
+    'atletico mineiro': ['atletico mg', 'atletico-mg'],
+    'boca juniors': ['boca'],
+    'river plate': ['river'],
+    'racing': ['racing club'],
+    'independiente argentina': ['club atletico independiente'],
+    'estudiantes': ['estudiantes de la plata'],
+    'nacional uruguay': ['club nacional de football'],
+    'penarol': ['club atletico penarol'],
+    # North American geographic shorthands
+    'ny': ['new york'],
+    'la': ['los angeles'],
+    'st. louis': ['st louis', 'saint louis'],
+    'sf': ['san francisco'],
+    'kc': ['kansas city'],
+    'tb': ['tampa bay'],
+    # MLB
+    'brewers': ['milwaukee brewers'],
+    'phillies': ['philadelphia phillies'],
+    'dodgers': ['los angeles dodgers'],
+    'angels': ['los angeles angels', 'anaheim angels', 'california angels'],
+    'yankees': ['new york yankees', 'ny yankees'],
+    'mets': ['new york mets', 'ny mets'],
+    'cubs': ['chicago cubs'],
+    'white sox': ['chicago white sox'],
+    'red sox': ['boston red sox'],
+    'giants sf': ['san francisco giants'],
+    'braves': ['atlanta braves'],
+    'astros': ['houston astros'],
+    'cardinals': ['st. louis cardinals', 'st louis cardinals'],
+    'rockies': ['colorado rockies'],
+    'mariners': ['seattle mariners'],
+    'rays': ['tampa bay rays'],
+    'blue jays': ['toronto blue jays'],
+    'twins': ['minnesota twins'],
+    'tigers': ['detroit tigers'],
+    'guardians': ['cleveland guardians'],
+    'orioles': ['baltimore orioles'],
+    'royals': ['kansas city royals'],
+    'rangers': ['texas rangers'],
+    'athletics': ['oakland athletics', "oakland a's", 'as oakland'],
+    'diamondbacks': ['arizona diamondbacks'],
+    'padres': ['san diego padres'],
+    'marlins': ['miami marlins'],
+    'pirates': ['pittsburgh pirates'],
+    'reds': ['cincinnati reds'],
+    'nationals': ['washington nationals'],
+    # NBA
+    'lakers': ['los angeles lakers', 'la lakers'],
+    'clippers': ['los angeles clippers', 'la clippers'],
+    'knicks': ['new york knicks', 'ny knicks'],
+    'warriors': ['golden state warriors'],
+    'bulls': ['chicago bulls'],
+    'celtics': ['boston celtics'],
+    'heat': ['miami heat'],
+    'mavericks': ['dallas mavericks'],
+    'nets': ['brooklyn nets'],
+    '76ers': ['philadelphia 76ers', 'sixers', 'philadelphia sixers'],
+    'bucks': ['milwaukee bucks'],
+    'suns': ['phoenix suns'],
+    'nuggets': ['denver nuggets'],
+    'jazz': ['utah jazz'],
+    'blazers': ['portland trail blazers', 'trail blazers'],
+    'thunder': ['oklahoma city thunder'],
+    'spurs': ['san antonio spurs'],
+    'hawks': ['atlanta hawks'],
+    'hornets': ['charlotte hornets'],
+    'cavaliers': ['cleveland cavaliers'],
+    'pistons': ['detroit pistons'],
+    'pacers': ['indiana pacers'],
+    'grizzlies': ['memphis grizzlies'],
+    'timberwolves': ['minnesota timberwolves'],
+    'pelicans': ['new orleans pelicans'],
+    'magic': ['orlando magic'],
+    'kings': ['sacramento kings'],
+    'raptors': ['toronto raptors'],
+    'wizards': ['washington wizards'],
+    'rockets': ['houston rockets'],
+    # NFL
+    'patriots': ['new england patriots'],
+    'chiefs': ['kansas city chiefs'],
+    'packers': ['green bay packers'],
+    'cowboys': ['dallas cowboys'],
+    '49ers': ['san francisco 49ers'],
+    'bears': ['chicago bears'],
+    'giants nfl': ['new york giants', 'ny giants'],
+    'jets': ['new york jets', 'ny jets'],
+    'eagles': ['philadelphia eagles'],
+    'steelers': ['pittsburgh steelers'],
+    'seahawks': ['seattle seahawks'],
+    'raiders': ['las vegas raiders', 'oakland raiders'],
+    'rams': ['los angeles rams', 'la rams'],
+    'chargers': ['los angeles chargers', 'la chargers'],
+    'dolphins': ['miami dolphins'],
+    'bills': ['buffalo bills'],
+    'ravens': ['baltimore ravens'],
+    'browns': ['cleveland browns'],
+    'bengals': ['cincinnati bengals'],
+    'titans': ['tennessee titans'],
+    'jaguars': ['jacksonville jaguars'],
+    'texans': ['houston texans'],
+    'colts': ['indianapolis colts'],
+    'broncos': ['denver broncos'],
+    'vikings': ['minnesota vikings'],
+    'lions': ['detroit lions'],
+    'panthers': ['carolina panthers'],
+    'falcons': ['atlanta falcons'],
+    'saints': ['new orleans saints'],
+    'buccaneers': ['tampa bay buccaneers'],
+    'cardinals nfl': ['arizona cardinals'],
+    'commanders': ['washington commanders', 'washington football team', 'washington redskins'],
+    # NHL
+    'maple leafs': ['toronto maple leafs'],
+    'canadiens': ['montreal canadiens'],
+    'bruins': ['boston bruins'],
+    'rangers nhl': ['new york rangers', 'ny rangers'],
+    'islanders': ['new york islanders', 'ny islanders'],
+    'blackhawks': ['chicago blackhawks'],
+    'red wings': ['detroit red wings'],
+    'penguins': ['pittsburgh penguins'],
+    'flyers': ['philadelphia flyers'],
+    'capitals': ['washington capitals'],
+    'avalanche': ['colorado avalanche'],
+    'oilers': ['edmonton oilers'],
+    'flames': ['calgary flames'],
+    'canucks': ['vancouver canucks'],
+    'senators': ['ottawa senators'],
+    'winnipeg jets': ['jets winnipeg'],
+    'wild': ['minnesota wild'],
+    'blues': ['st. louis blues', 'st louis blues'],
+    'predators': ['nashville predators'],
+    'stars': ['dallas stars'],
+    'lightning': ['tampa bay lightning'],
+    'florida panthers': ['panthers florida'],
+    'hurricanes': ['carolina hurricanes'],
+    'devils': ['new jersey devils'],
+    'sabres': ['buffalo sabres'],
+    'coyotes': ['arizona coyotes', 'utah hockey club'],
+    'kraken': ['seattle kraken'],
+    'golden knights': ['vegas golden knights', 'las vegas golden knights'],
+    'ducks': ['anaheim ducks'],
+    'la kings': ['los angeles kings'],
+    'sharks': ['san jose sharks'],
+    'blue jackets': ['columbus blue jackets'],
 }
 
 def alias_normalize(name):
@@ -399,6 +576,7 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
     norm_pod_a = normalize_team_name_for_matching(target_away_team_pod)
     print(f"[BetbckParser] Normalized POD Targets: Home='{norm_pod_h}', Away='{norm_pod_a}' (Event ID: {event_id})")
     matches = []  # collect every team-name match; pick best by date after the loop
+    _global_best = {"bck_home": None, "bck_away": None, "score": 0, "scores": {}}
 
     for idx, game_wrapper_table in enumerate(game_wrappers):
         team_name_td = game_wrapper_table.find('td', class_=lambda x: x and x.startswith('tbl_betAmount_team1_main_name'))
@@ -439,8 +617,12 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                             p_hl = fuzz.partial_ratio(ph, bh)
                             p_av = fuzz.partial_ratio(pa, bv)
                             print(f"[DEBUG] Comparing normalized: POD H='{ph}', A='{pa}' with BCK H='{bh}', A='{bv}' | token_set: (H-L {s_hl} A-V {s_av}) | partial: (H-L {p_hl} A-V {p_av}) (Event ID: {event_id})")
-                            if s_hl + s_av > _cand_scores.get("_sum_fwd", 0):
-                                _cand_scores.update({"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD, "_sum_fwd": s_hl + s_av})
+                            fwd_sum = s_hl + s_av
+                            rev_sum = s_hv + s_al
+                            if fwd_sum > _cand_scores.get("_sum_best", 0):
+                                _cand_scores.update({"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD, "_sum_best": fwd_sum, "_sum_fwd": fwd_sum})
+                            if rev_sum > _cand_scores.get("_sum_best", 0):
+                                _cand_scores.update({"token_set_h": s_hv, "token_set_a": s_al, "partial_h": fuzz.partial_ratio(ph, bv), "partial_a": fuzz.partial_ratio(pa, bh), "threshold": FUZZY_MATCH_THRESHOLD, "_sum_best": rev_sum})
                             if s_hl >= FUZZY_MATCH_THRESHOLD and s_av >= FUZZY_MATCH_THRESHOLD:
                                 matched, bck_local_is_pod_home = True, True
                                 _cand_scores = {"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD}
@@ -474,16 +656,38 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                         matched, bck_local_is_pod_home = True, False
                         print(f"[TENNIS-LASTNAME] Last name match (Order 2 - Flipped) for {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})")
                 if not matched:
+                    # Log the failure and track this as a global-best candidate before continuing.
+                    _log_scores = {k: v for k, v in _cand_scores.items() if k not in ("_sum_fwd", "_sum_best")}
+                    if _alog:
+                        _alog.log_match_candidate(raw_bck_l, raw_bck_v, target_home_team_pod, target_away_team_pod, _log_scores or {"result": "no_match"}, False)
+                    cand_best = _cand_scores.get("_sum_best", 0)
+                    if cand_best > _global_best["score"]:
+                        _global_best.update({
+                            "bck_home": raw_bck_l,
+                            "bck_away": raw_bck_v,
+                            "score": cand_best,
+                            "scores": _log_scores,
+                        })
                     continue
         
         if not matched:
+            # Reached only when fuzz is not loaded (exact-match-only mode).
+            _log_scores = {k: v for k, v in _cand_scores.items() if k not in ("_sum_fwd", "_sum_best")}
             if _alog:
-                _cand_scores.pop("_sum_fwd", None)
-                _alog.log_match_candidate(raw_bck_l, raw_bck_v, target_home_team_pod, target_away_team_pod, _cand_scores or {"result": "no_match"}, False)
+                _alog.log_match_candidate(raw_bck_l, raw_bck_v, target_home_team_pod, target_away_team_pod, _log_scores or {"result": "no_match"}, False)
+            cand_sum = _cand_scores.get("token_set_h", 0) + _cand_scores.get("token_set_a", 0)
+            if cand_sum > _global_best["score"]:
+                _global_best.update({
+                    "bck_home": raw_bck_l,
+                    "bck_away": raw_bck_v,
+                    "score": cand_sum,
+                    "scores": _log_scores,
+                })
             continue
 
         if _alog:
             _cand_scores.pop("_sum_fwd", None)
+            _cand_scores.pop("_sum_best", None)
             _alog.log_match_candidate(raw_bck_l, raw_bck_v, target_home_team_pod, target_away_team_pod, _cand_scores or {"result": "matched"}, True)
             _alog.log_found(raw_bck_l, raw_bck_v)
         print(f"[BetbckParser] Game Matched! BetBCK Local is POD Home: {bck_local_is_pod_home}. Parsing odds... (Event ID: {event_id})")
@@ -552,6 +756,14 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
     # --- Pick best match after scanning all wrappers ---
     if not matches:
         if _alog:
+            if _global_best["bck_home"]:
+                _alog.log_closest_candidate(
+                    _global_best["bck_home"],
+                    _global_best["bck_away"],
+                    _global_best["score"],
+                    FUZZY_MATCH_THRESHOLD * 2,
+                    _global_best["scores"],
+                )
             _alog.log_not_found(target_home_team_pod, target_away_team_pod, "")
         print(f"[BetbckParser] No game matching POD teams found after all wrappers. (Event ID: {event_id})")
         return None

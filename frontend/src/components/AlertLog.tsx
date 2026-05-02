@@ -62,6 +62,7 @@ const TAG_COLORS: Record<string, string> = {
   "MATCH":       "#FF9800",
   "FOUND":       "#2E7D32",
   "NOT FOUND":   "#F44336",
+  "CLOSEST":     "#FF6F00",
   "ODDS":        "#9E9E9E",
   "EV":          "#4CAF50",
   "ERROR":       "#F44336",

@@ -139,6 +139,31 @@ class AlertLogger:
              "scores": scores, "passed": passed},
         )
 
+    def log_closest_candidate(
+        self,
+        bck_home: str, bck_away: str,
+        best_score: int, threshold_needed: int,
+        scores: Dict = None,
+    ):
+        thr = (scores or {}).get("threshold", threshold_needed // 2)
+        h_score = (scores or {}).get("token_set_h", "?")
+        a_score = (scores or {}).get("token_set_a", "?")
+        score_parts = (
+            f"home={h_score}/{thr}, away={a_score}/{thr} "
+            f"(combined={best_score}, needed ≥{threshold_needed})"
+        )
+        self._step(
+            "CLOSEST",
+            f"Closest candidate: BCK '{bck_home}' vs '{bck_away}' | {score_parts}",
+            {
+                "bck_home": bck_home, "bck_away": bck_away,
+                "best_score": best_score, "threshold_needed": threshold_needed,
+                "threshold_per_team": thr,
+                "token_set_h": h_score, "token_set_a": a_score,
+                "scores": scores or {},
+            },
+        )
+
     def log_not_found(self, pod_home: str, pod_away: str, league: str):
         self.result = "not_found"
         msg = f"FAILED TO FIND MATCHING GAME on BetBCK for {pod_away} @ {pod_home} ({league})"
