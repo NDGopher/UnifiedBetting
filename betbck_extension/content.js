@@ -178,7 +178,7 @@ function showBetPopup(betInfo, keyword) {
     if (pollInterval) clearInterval(pollInterval);
     pollInterval = setInterval(async () => {
       try {
-        const res = await fetch('http://localhost:5001/get_active_events_data');
+        const res = await fetch('http://localhost:8000/get_active_events_data');
         const data = await res.json();
         for (let eid in data) {
           if (eid === betInfo.eventId) {

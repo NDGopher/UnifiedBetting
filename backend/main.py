@@ -30,6 +30,7 @@ from betbck_request_manager import betbck_manager
 from ace_scraper import AceScraper
 from database_models import get_session, HighEVAlert
 from config import setup_logging
+from alert_logger import start_alert_log, finalize_alert_log, get_alert_log_ring_buffer
 
 # Setup proper logging configuration (suppresses Selenium spam)
 setup_logging()
@@ -237,12 +238,16 @@ async def event_alert_worker(event_id):
                         logger.info(f"[PerEventQueue] New event {event_id}. Initiating scrape.")
                         logger.info(f"[PerEventQueue] POD Teams: Home='{payload.get('homeTeam', '?')}', Away='{payload.get('awayTeam', '?')}'")
                         logger.info(f"[PerEventQueue] Cleaned Teams: Home='{pod_home_clean}', Away='{pod_away_clean}'")
+                        start_alert_log(event_id)
                         betbck_result = process_alert_and_scrape_betbck(event_id, payload, live_pinnacle_odds_processed)
 
                         if not (betbck_result and betbck_result.get("status") == "success"):
                             fail_reason = betbck_result.get("message", "Scraper returned None")
                             logger.error(f"[PerEventQueue] Scrape failed. Dropping alert. Reason: {fail_reason}")
                             logger.error(f"[PerEventQueue] Failed teams: Home='{pod_home_clean}', Away='{pod_away_clean}' (raw: Home='{payload.get('homeTeam', '?')}', Away='{payload.get('awayTeam', '?')}')")
+                            _alog_rec = finalize_alert_log(event_id)
+                            if _alog_rec:
+                                await manager.broadcast({"type": "alert_log", "data": _alog_rec})
                             continue
 
                         logger.info(f"[PerEventQueue] Scrape successful. Storing event {event_id} for display.")
@@ -296,6 +301,9 @@ async def event_alert_worker(event_id):
                         updated_event = pod_event_manager.get_active_events().get(event_id)
                         if updated_event:
                             broadcast_pod_alert_safe(event_id, updated_event)
+                        _alog_rec = finalize_alert_log(event_id)
+                        if _alog_rec:
+                            await manager.broadcast({"type": "alert_log", "data": _alog_rec})
                     else:
                         logger.info(f"[PerEventQueue] Updating existing event {event_id} with fresh Pinnacle data.")
                         event = active_events[event_id]
@@ -1588,6 +1596,11 @@ async def run_streaming_pipeline_background(sport_filters=None):
         pipeline_running = False
         logger.info("[STREAMING] Streaming pipeline background task completed")
         print(f"[STREAMING] Pipeline completed, pipeline_running set to False")
+
+@app.get("/api/alert-log")
+async def get_alert_log():
+    """Return the last 50 per-alert processing records from the ring buffer."""
+    return get_alert_log_ring_buffer()
 
 @app.post("/api/run-pipeline")
 async def run_pipeline():

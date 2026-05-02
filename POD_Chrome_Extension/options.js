@@ -11,7 +11,7 @@ function saveOptions(e) {
 
 // Restores the port setting from chrome.storage
 function restoreOptions() {
-  chrome.storage.sync.get({ backendPort: '5001' }, function(items) {
+  chrome.storage.sync.get({ backendPort: '8000' }, function(items) {
     document.getElementById('backend-port').value = items.backendPort;
   });
 }

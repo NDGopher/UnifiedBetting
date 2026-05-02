@@ -21,6 +21,7 @@ import EVCalculator from "./components/EVCalculator";
 import PropBuilder from "./components/PropBuilder";
 import BuckeyeScraper from './components/BuckeyeScraper';
 import BetBCKStatusPopup from './components/BetBCKStatusPopup';
+import AlertLog from './components/AlertLog';
 // import HighEVHistory from './components/HighEVHistory'; // Removed - replaced with Auto Bet Placement
 
 // Premium minimalist theme inspired by Swiss design principles
@@ -254,6 +255,11 @@ function App() {
           
           <Container maxWidth="xl" sx={{ py: 6, px: { xs: 2, sm: 3 } }}>
             <Grid container spacing={4}>
+              {/* Alert Log Section */}
+              <Grid item xs={12}>
+                <AlertLog />
+              </Grid>
+
               {/* POD Alerts Section */}
               <Grid item xs={12}>
                 <Paper

@@ -12,6 +12,11 @@ except ImportError as e:
 from utils import normalize_team_name_for_matching, process_event_odds_for_display
 from utils.pod_utils import analyze_markets_for_ev, clean_pod_team_name_for_search
 from pinnacle_fetcher import fetch_live_pinnacle_event_odds
+try:
+    from alert_logger import get_logger_for_event
+except ImportError:
+    def get_logger_for_event(event_id):
+        return None
 
 def american_to_decimal(american_odds):
     if american_odds is None or american_odds == "N/A": return None
@@ -27,7 +32,6 @@ def calculate_ev(bet_decimal_odds, true_decimal_odds):
     return ev if -0.5 < ev < 0.20 else None
 
 def determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw):
-    # Clean team names FIRST before determining search term
     pod_home_clean = clean_pod_team_name_for_search(pod_home_team_raw)
     pod_away_clean = clean_pod_team_name_for_search(pod_away_team_raw)
     
@@ -44,43 +48,49 @@ def determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw):
     if pod_home_clean.lower() in known_terms:
         search_term = known_terms[pod_home_clean.lower()]
         print(f"[DEBUG] Using known term for home team: '{search_term}'")
-        return search_term
+        return search_term, f"known_term map for '{pod_home_clean}'"
     if pod_away_clean.lower() in known_terms:
         search_term = known_terms[pod_away_clean.lower()]
         print(f"[DEBUG] Using known term for away team: '{search_term}'")
-        return search_term
+        return search_term, f"known_term map for away '{pod_away_clean}'"
 
     parts = pod_home_clean.split()
     if parts:
         if len(parts) > 1 and len(parts[-1]) > 3 and parts[-1].lower() not in ['fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif', 'kc', 'sr', 'mg', 'us', 'br']:
             search_term = parts[-1]
             print(f"[DEBUG] Using last part of home team: '{search_term}'")
-            return search_term
+            return search_term, f"last word of home team '{pod_home_clean}'"
         elif len(parts[0]) > 2 and parts[0].lower() not in ['fc', 'sc', 'ac', 'if', 'bk', 'de', 'do', 'aif', 'kc', 'sr', 'mg', 'us', 'br']:
             search_term = parts[0]
             print(f"[DEBUG] Using first part of home team: '{search_term}'")
-            return search_term
+            return search_term, f"first word of home team '{pod_home_clean}'"
         else:
             print(f"[DEBUG] Using full cleaned home team: '{pod_home_clean}'")
-            return pod_home_clean
+            return pod_home_clean, f"full cleaned home team"
     print(f"[DEBUG] Using full cleaned home team (fallback): '{pod_home_clean}'")
-    return pod_home_clean if pod_home_clean else ""
+    return (pod_home_clean if pod_home_clean else ""), "fallback to full cleaned home team"
 
 def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_pinnacle_data, scrape_betbck=True):
+    alog = get_logger_for_event(event_id)
     try:
         if not original_alert_details or not processed_pinnacle_data:
             return {"status": "error", "message": "Missing required data"}
 
         pod_home_team_raw = original_alert_details.get("homeTeam", "")
         pod_away_team_raw = original_alert_details.get("awayTeam", "")
+        league = original_alert_details.get("leagueName", "?")
 
-        # --- PROP SKIPPING LOGIC (ported from old server) ---
+        if alog:
+            alog.log_raw_alert(original_alert_details)
+
         prop_keywords = ['(Corners)', '(Bookings)', '(Hits+Runs+Errors)']
         if any(keyword.lower() in pod_home_team_raw.lower() for keyword in prop_keywords) or \
            any(keyword.lower() in pod_away_team_raw.lower() for keyword in prop_keywords):
+            reason = next((kw for kw in prop_keywords if kw.lower() in pod_home_team_raw.lower() or kw.lower() in pod_away_team_raw.lower()), "prop keyword")
             print(f"[MainLogic] Alert is for a prop bet. Skipping event {event_id}.")
+            if alog:
+                alog.log_prop_skip(pod_home_team_raw, pod_away_team_raw, reason)
             return {"status": "error_prop_bet", "message": "Alert was for a prop bet, which is not supported."}
-        # --- END PROP SKIPPING LOGIC ---
 
         pod_home_clean = clean_pod_team_name_for_search(pod_home_team_raw)
         pod_away_clean = clean_pod_team_name_for_search(pod_away_team_raw)
@@ -88,34 +98,82 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
         if not pod_home_clean or not pod_away_clean:
             return {"status": "error", "message": "Failed to clean team names"}
 
-        search_term = determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw)
+        search_result = determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw)
+        if isinstance(search_result, tuple):
+            search_term, search_reason = search_result
+        else:
+            search_term, search_reason = search_result, "legacy"
+
         if not search_term:
             return {"status": "error", "message": "Failed to determine search term"}
+
+        if alog:
+            alog.log_search_term(search_term, pod_home_team_raw, pod_away_team_raw, search_reason)
 
         if not scrape_betbck:
             return {"status": "success", "data": {}}
 
-        # Pass event_id to scraper to prevent race conditions
         betbck_result = scrape_betbck_for_game_queued(pod_home_team_raw, pod_away_team_raw, search_term, event_id)
         if not betbck_result:
+            if alog:
+                alog.log_not_found(pod_home_clean, pod_away_clean, league)
             return {"status": "error", "message": "Failed to scrape BetBCK"}
 
-        # Check if betbck_result is a dict with status, or just the data
         if isinstance(betbck_result, dict) and betbck_result.get("status") == "error":
+            if alog:
+                alog.log_not_found(pod_home_clean, pod_away_clean, league)
             return {"status": "error", "message": betbck_result.get("message", "Failed to scrape BetBCK")}
 
         betbck_data = betbck_result if isinstance(betbck_result, dict) else {}
         if not betbck_data:
+            if alog:
+                alog.log_not_found(pod_home_clean, pod_away_clean, league)
             return {"status": "error", "message": "No BetBCK data found"}
+
+        if alog:
+            odds_summary = {
+                "home_moneyline": betbck_data.get("home_moneyline_american"),
+                "away_moneyline": betbck_data.get("away_moneyline_american"),
+                "home_spreads": betbck_data.get("home_spreads", []),
+                "away_spreads": betbck_data.get("away_spreads", []),
+                "home_totals": betbck_data.get("home_totals", []),
+                "away_totals": betbck_data.get("away_totals", []),
+            }
+            alog.log_odds(odds_summary)
 
         potential_bets = analyze_markets_for_ev(betbck_data, processed_pinnacle_data)
         betbck_data["potential_bets_analyzed"] = potential_bets
+
+        if alog:
+            for bet in potential_bets:
+                try:
+                    from utils.pod_utils import american_to_decimal as a2d
+                    bck_dec = a2d(bet.get("betbck_odds"))
+                    pin_nvp_str = bet.get("pinnacle_nvp", "")
+                    pin_nvp_dec = a2d(pin_nvp_str) if pin_nvp_str and pin_nvp_str != "N/A" else None
+                    ev_str = bet.get("ev", "0%").replace("%", "")
+                    ev_pct = float(ev_str) / 100.0
+                    if bck_dec and pin_nvp_dec:
+                        alog.log_ev(
+                            bet.get("market", "?"),
+                            f"{bet.get('selection', '?')} {bet.get('line', '')}".strip(),
+                            bck_dec, pin_nvp_dec, ev_pct,
+                        )
+                except Exception:
+                    pass
+
+        if alog:
+            alog.set_result("ev_found" if any(
+                float(b.get("ev", "0%").replace("%", "")) > 0 for b in potential_bets
+            ) else "found_no_ev")
 
         return {"status": "success", "data": betbck_data}
 
     except Exception as e:
         print(f"[ProcessAlert] Error: {e}")
         traceback.print_exc()
+        if alog:
+            alog.log_error(e, "process_alert_and_scrape_betbck")
         return {"status": "error", "message": str(e)}
 
 def process_pod_alert(alert_data):
@@ -133,4 +191,4 @@ def process_pod_alert(alert_data):
     except Exception as e:
         print(f"[ProcessPodAlert] Error: {e}")
         traceback.print_exc()
-        return {"status": "error", "message": str(e)} 
+        return {"status": "error", "message": str(e)}

@@ -2,8 +2,8 @@
 console.log("BetBCK Auto-Search script loaded.");
 
 // Configurable backend port for posting alerts
-let BACKEND_PORT = 5001;
-chrome.storage.sync.get({ backendPort: '5001' }, function(items) {
+let BACKEND_PORT = 8000;
+chrome.storage.sync.get({ backendPort: '8000' }, function(items) {
   BACKEND_PORT = parseInt(items.backendPort, 10);
 });
 let BACKEND_URL = `http://localhost:${BACKEND_PORT}/pod_alert`;
