@@ -1,6 +1,14 @@
 // pod_alert_extension/background.js
 console.log("Background Service Worker v5 (Auto-Search Enabled) Loaded.");
 
+// Auto-migrate stale port setting — if a previous install saved 5001, reset to 8000
+chrome.storage.local.get(['backendPort'], (result) => {
+  if (result.backendPort === 5001 || result.backendPort === '5001') {
+    chrome.storage.local.set({ backendPort: 8000 });
+    console.log('[POD Extension] Auto-migrated stale backendPort from 5001 -> 8000');
+  }
+});
+
 let lastSniffedSwordfishEvent = {
     eventId: null,
     timestamp: 0,

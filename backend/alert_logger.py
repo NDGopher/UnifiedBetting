@@ -104,12 +104,20 @@ class AlertLogger:
             f"Using '{search_term}' (from '{raw_home}' / '{raw_away}'): {reason}",
         )
 
-    def log_search(self, term: str, status_code: int, response_size: int):
+    def log_search(self, term: str, status_code: int, response_size: int, url: str = ""):
+        display_url = url or "PlayerGameSelection.php"
         self._step(
             "SEARCH",
-            f"POST PlayerGameSelection.php?keyword='{term}' -> HTTP {status_code} ({response_size} bytes)",
-            {"search_term": term, "status": status_code, "response_bytes": response_size},
+            f"POST {display_url}?keyword='{term}' -> HTTP {status_code} ({response_size} bytes)",
+            {"url": url, "search_term": term, "status": status_code, "response_bytes": response_size},
         )
+
+    def log_search_error(self, term: str, exc: Exception, context: str = ""):
+        self.result = "error"
+        msg = f"BetBCK search POST failed for '{term}': {context or exc}"
+        import traceback as _tb
+        self.steps.append({"tag": "ERROR", "message": msg, "detail": {"traceback": _tb.format_exc()}})
+        print(f"[ERROR][{self.event_id}] {msg}")
 
     def log_match_candidate(
         self,

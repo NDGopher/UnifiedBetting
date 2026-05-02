@@ -10,6 +10,12 @@ from betbck_scraper import login_to_betbck, search_team_and_get_results_html, ge
 from betbck_scraper import MAIN_PAGE_URL_AFTER_LOGIN, BASE_HEADERS
 import config
 
+try:
+    from alert_logger import get_logger_for_event as _get_alert_logger_rm
+except ImportError:
+    def _get_alert_logger_rm(event_id):
+        return None
+
 logger = logging.getLogger(__name__)
 
 class BetBCKRequestManager:
@@ -318,6 +324,9 @@ class BetBCKRequestManager:
             
         except Exception as e:
             logger.error(f"[BetBCK-Manager] Error processing request for {search_term}: {e}")
+            _alog = _get_alert_logger_rm(event_id)
+            if _alog:
+                _alog.log_error(e, f"BetBCK request manager scrape: {search_term}")
             # Only set rate limited if the error message clearly indicates rate limiting
             error_str = str(e).lower()
             if any(indicator in error_str for indicator in ["rate limit", "429", "403", "503", "too many requests", "blocked", "suspended"]):

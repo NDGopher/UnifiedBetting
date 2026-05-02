@@ -127,10 +127,20 @@ def search_team_and_get_results_html(session, team_name_query, inet_wager_val, i
         print(f"[BetbckScraper] Search POST successful (Status: {response.status_code}). Response size: {len(response.text)} bytes.")
         _alog = _get_alert_logger(event_id) if event_id else None
         if _alog:
-            _alog.log_search(team_name_query, response.status_code, len(response.text))
+            _alog.log_search(team_name_query, response.status_code, len(response.text), SEARCH_ACTION_URL)
         return response.text
-    except requests.exceptions.Timeout: print(f"[BetbckScraper] Team search POST timed out for '{team_name_query}'."); return None
-    except Exception as e: print(f"[BetbckScraper] Team search POST failed for '{team_name_query}': {e}"); return None
+    except requests.exceptions.Timeout as e:
+        print(f"[BetbckScraper] Team search POST timed out for '{team_name_query}'.")
+        _alog = _get_alert_logger(event_id) if event_id else None
+        if _alog:
+            _alog.log_search_error(team_name_query, e, "timeout")
+        return None
+    except Exception as e:
+        print(f"[BetbckScraper] Team search POST failed for '{team_name_query}': {e}")
+        _alog = _get_alert_logger(event_id) if event_id else None
+        if _alog:
+            _alog.log_search_error(team_name_query, e, str(e))
+        return None
 
 # --- Normalization and Parsing Utilities ---
 TEAM_ALIASES = {
