@@ -1,0 +1,24 @@
+Take over this Unified Betting Python project from NDGopher/UnifiedBetting. It uses the included Chrome extension (POD_Chrome_Extension and betbck_extension folders) to catch live POD alerts from pinnacleoddsdropper.com. The extension sends alerts to the FastAPI backend. The system then processes the alert, logs into betbck.com, searches for the matching game, compares odds, and calculates/displays EV. Focus only on main game lines for now.
+
+Key requirements for robust, collaborative, safe operation (no proxies ever — everything must look exactly like it’s coming from me):
+1. Real-time monitoring loop: Listen for incoming POD alerts via the existing extension → backend flow. Run continuously.
+2. Extremely detailed logging for EVERY alert so we can analyze together in real time:
+   - Full raw incoming alert data (teams, league, line type, timestamp, etc.)
+   - Every step of the BetBCK search process
+   - Fuzzy matching scores and all attempts
+   - Whether the game was found or not
+   - Clear distinction between full game vs first half lines
+   - All matched (or mismatched) lines with source odds vs BetBCK odds
+   - Final EV calculations for every play
+   - Save screenshots of key browser states on every alert
+3. On failure to find a matching game: Output clearly "FAILED TO FIND MATCHING GAME on BetBCK for [exact teams/league]" with full details so we can instantly see if it’s a true missing event or a team-name / line-type issue.
+4. On successful match: Output all matched lines clearly (full game vs half time), odds comparison, and every EV value with details.
+5. Robust matching: Use strong fuzzy matching (rapidfuzz library with token_sort_ratio + partial ratios, multiple fallback strategies). Intelligently detect and handle full game vs first half lines.
+6. Stealth + speed without getting caught, banned, or rate-limited: Use Playwright with the strongest stealth techniques available (human-like mouse movements/typing patterns, natural random delays only where needed for realism, consistent realistic user-agent and headers that mimic a normal browser session). Prioritize maximum safe speed while looking completely human — no proxies, no obvious bot behavior.
+7. Collaborative troubleshooting mode: On any error, mismatch, EV discrepancy, or unexpected behavior, pause the loop immediately, output the full detailed logs + screenshots, and wait for my input in the chat before fixing or continuing. We will analyze and improve together live.
+8. Auto-betting: Keep the EV display rock-solid. Only add actual auto-betting later once we have both confirmed stability over many alerts together.
+9. Environment: Automatically set up Playwright + all needed dependencies. Make the system reliable for long-running sessions. Focus on main lines only.
+
+First actions: Set up the full environment, confirm the Chrome extension alert flow works with the Python backend, start the real-time monitoring loop, and process the next incoming POD alert. We will troubleshoot and refine together in real time as alerts come in.
+
+Start now.
