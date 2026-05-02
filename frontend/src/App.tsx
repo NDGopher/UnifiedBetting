@@ -8,17 +8,16 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { AppBar, Toolbar, IconButton } from "@mui/material";
 import { 
-  TrendingUp, 
   Analytics, 
   Calculate, 
   NotificationsActive,
-  Build,
+  // Build,  // PropBuilder icon — disabled for now
   SportsEsports,
   AutoMode
 } from "@mui/icons-material";
 import PODAlerts from "./components/PODAlerts";
 import EVCalculator from "./components/EVCalculator";
-import PropBuilder from "./components/PropBuilder";
+// import PropBuilder from "./components/PropBuilder"; // Props disabled for now
 import BuckeyeScraper from './components/BuckeyeScraper';
 import BetBCKStatusPopup from './components/BetBCKStatusPopup';
 import AlertLog from './components/AlertLog';
@@ -329,46 +328,19 @@ function App() {
                   <PODAlerts />
                 </Paper>
               </Grid>
-              {/* PropBuilder Section */}
+              {/* PropBuilder Section — disabled until prop support is re-enabled
               <Grid item xs={12}>
-                <Paper
-                  sx={{
-                    p: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    overflow: "hidden",
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
-                      transform: 'translateY(-2px)',
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      mb: 3,
-                    }}
-                  >
+                <Paper sx={{ p: 4, display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                     <Build sx={{ fontSize: 24, color: "#2E7D32" }} />
-                    <Typography
-                      component="h2"
-                      variant="h6"
-                      sx={{ 
-                        color: '#FFFFFF', 
-                        fontWeight: 500,
-                        letterSpacing: "-0.01em"
-                      }}
-                    >
+                    <Typography component="h2" variant="h6" sx={{ color: '#FFFFFF', fontWeight: 500 }}>
                       PropBuilder EV
                     </Typography>
                   </Box>
                   <PropBuilder />
                 </Paper>
               </Grid>
+              */}
               {/* BuckeyeScraper Section */}
               <Grid item xs={12}>
                 <Paper

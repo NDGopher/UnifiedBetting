@@ -17,7 +17,7 @@ from utils import process_event_odds_for_display
 import copy
 from team_utils import match_betbck_to_pinnacle_markets
 from utils.pod_utils import clean_pod_team_name_for_search, american_to_decimal, calculate_ev, decimal_to_american, normalize_team_name_for_matching, is_prop_or_corner_alert, determine_betbck_search_term
-from pto_scraper import PTOScraper
+# from pto_scraper import PTOScraper  # PTO disabled for now
 from thread_safe_manager import event_manager
 import gc
 import psutil
@@ -86,10 +86,11 @@ with open(config_path, 'r') as f:
     config = json.load(f)
 
 pod_event_manager = PodEventManager()
-pto_scraper = PTOScraper(config.get("pto", {}))
+# pto_scraper = PTOScraper(config.get("pto", {}))  # PTO disabled for now
+pto_scraper = None  # placeholder — re-enable import and instantiation above when needed
 ace_scraper = AceScraper(config.get("ace", {}))
 
-# Throttle logging for PTO props endpoints
+# Throttle logging for PTO props endpoints (kept for when PTO is re-enabled)
 _last_pto_props_log_time = 0
 _last_pto_props_ev_log_time = 0
 _pto_props_log_lock = threading.Lock()
@@ -394,13 +395,13 @@ async def startup_event():
 
     logger.info("Server ready to receive alerts on port 5001")
     
-    # Auto-start PTO scraper on backend startup
-    logger.info("Auto-starting PTO scraper...")
-    try:
-        pto_scraper.start_scraping()
-        logger.info("PTO scraper auto-started successfully")
-    except Exception as e:
-        logger.error(f"Failed to auto-start PTO scraper: {e}")
+    # PTO scraper auto-start disabled — re-enable when prop support is needed
+    # logger.info("Auto-starting PTO scraper...")
+    # try:
+    #     pto_scraper.start_scraping()
+    #     logger.info("PTO scraper auto-started successfully")
+    # except Exception as e:
+    #     logger.error(f"Failed to auto-start PTO scraper: {e}")
     
     logger.info("=====================================")
     # Mark app as ready for launcher health check
@@ -412,8 +413,8 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     logger.info("Shutting down Unified Betting App...")
-    pto_scraper.stop_scraping()
-    logger.info("PTO scraper stopped")
+    # pto_scraper.stop_scraping()  # PTO disabled for now
+    logger.info("Shutdown complete")
 
 
 
