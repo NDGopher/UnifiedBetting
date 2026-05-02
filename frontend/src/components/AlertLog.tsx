@@ -169,7 +169,7 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [panelOpen, setPanelOpen] = useState(true);
   const [loadingHistory, setLoadingHistory] = useState(false);
-  const [totalFetched, setTotalFetched] = useState(0);
+  const [totalFetched, setTotalFetched] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   const addRecord = useCallback((rec: AlertRecord) => {
     setAllRecords(prev => {
