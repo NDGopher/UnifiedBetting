@@ -31,33 +31,28 @@ outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd backend && python -m uvicorn main:app --host localhost --port 8000 --log-level info"
+args = "cd backend && python -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info"
 waitForPort = 8000
 
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd frontend && PORT=5000 BROWSER=none HOST=0.0.0.0 npm start"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
 
-[[ports]]
-localPort = 5000
-externalPort = 5000
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && PORT=5000 BROWSER=none HOST=0.0.0.0 WDS_SOCKET_PATH=/wds npm start"
+waitForPort = 5000
 
 [[ports]]
-localPort = 5001
-externalPort = 3000
+localPort = 5000
+externalPort = 80
 
 [[ports]]
 localPort = 8000
 externalPort = 8000
-exposeLocalhost = true
 
 [deployment]
 deploymentTarget = "vm"

@@ -5,21 +5,32 @@
   <title>Extension Options</title>
   <style>
     body { font-family: Arial, sans-serif; background: #181c24; color: #f9fafb; margin: 0; padding: 2em; }
-    label { display: block; margin-bottom: 0.5em; }
-    input[type="number"] { width: 80px; padding: 0.3em; }
-    button { margin-top: 1em; padding: 0.5em 1em; background: #3b82f6; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    label { display: block; margin-bottom: 0.4em; font-size: 0.9em; color: #9ca3af; }
+    input[type="text"], input[type="number"] { width: 320px; padding: 0.4em 0.6em; background: #23293a; border: 1px solid #374151; border-radius: 4px; color: #f9fafb; font-size: 0.95em; }
+    input[type="number"] { width: 80px; }
+    .field { margin-bottom: 1.2em; }
+    button { margin-top: 0.5em; padding: 0.5em 1.2em; background: #3b82f6; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 0.95em; }
     button:active { background: #2563eb; }
-    .status { margin-top: 1em; color: #22c55e; }
+    .status { margin-top: 1em; color: #22c55e; font-size: 0.9em; }
+    .hint { font-size: 0.78em; color: #6b7280; margin-top: 0.3em; }
   </style>
 </head>
 <body>
-  <h2>BetBCK Extension Settings</h2>
+  <h2>POD Extension Settings</h2>
   <form id="options-form">
-    <label for="backend-port">Backend Port:</label>
-    <input type="number" id="backend-port" min="1" max="65535" value="5001" />
+    <div class="field">
+      <label for="backend-url">Backend URL:</label>
+      <input type="text" id="backend-url" placeholder="https://your-replit-domain.replit.dev" />
+      <div class="hint">Full URL of your Replit backend, e.g. https://abc123.replit.dev<br>Leave blank to use localhost (for local testing only).</div>
+    </div>
+    <div class="field">
+      <label for="backend-port">Port (localhost only):</label>
+      <input type="number" id="backend-port" min="1" max="65535" value="8000" />
+      <div class="hint">Only used when Backend URL is blank.</div>
+    </div>
     <button type="submit">Save</button>
     <div class="status" id="status"></div>
   </form>
   <script src="options.js"></script>
 </body>
-</html> 
+</html>

@@ -53,9 +53,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     } else if (message.type === "forwardToPython") {
         function getPythonServerUrl(callback) {
-          chrome.storage.sync.get({ backendPort: '8000' }, function(items) {
-            const port = items.backendPort || '8000';
-            callback(`http://localhost:${port}/pod_alert`);
+          chrome.storage.sync.get({ backendPort: '8000', backendUrl: '' }, function(items) {
+            const customUrl = (items.backendUrl || '').trim().replace(/\/$/, '');
+            if (customUrl) {
+              callback(`${customUrl}/pod_alert`);
+            } else {
+              const port = items.backendPort || '8000';
+              callback(`http://localhost:${port}/pod_alert`);
+            }
           });
         }
         

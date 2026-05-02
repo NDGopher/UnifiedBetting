@@ -100,7 +100,7 @@ class BetBCKAsyncScraper:
 
     async def login(self, session, fast_mode=False):
         if not fast_mode:
-            await asyncio.sleep(random.uniform(1.2, 2.5))
+            await asyncio.sleep(random.uniform(0.4, 0.8))
         async with session.get(self.login_page_url, headers=self.headers) as _:
             pass
         payload = self.config['betbck']['credentials']
@@ -112,7 +112,7 @@ class BetBCKAsyncScraper:
 
     async def fetch_selection_page(self, session, fast_mode=False):
         if not fast_mode:
-            await asyncio.sleep(random.uniform(0.8, 1.5))
+            await asyncio.sleep(random.uniform(0.3, 0.6))
         async with session.get(self.selection_url, headers=self.headers) as resp:
             html = await resp.text()
             return html
@@ -393,9 +393,10 @@ class BetBCKAsyncScraper:
                 print(f"   {i+1}. {name}")
             if len(all_checkbox_names) > 20:
                 print(f"   ... and {len(all_checkbox_names) - 20} more")
-            # For small sport selections (1-3 checkboxes), process quickly without delays
-            # For larger selections, use batching with delays to avoid rate limiting
-            is_small_selection = len(checkbox_names) <= 3
+            # Send all checkboxes in a single POST request — BetBCK accepts any number
+            # of checked sport/league boxes in one submission, just as the UI does.
+            # Batching was historically used for caution but costs ~25s per extra batch.
+            is_small_selection = True  # always use the single-request fast path
             MAX_CONCURRENT_BETBCK_REQUESTS = 5  # Reduced from unlimited to 5 concurrent requests
             games_htmls = []
             

@@ -100,7 +100,7 @@ const BuckeyeScraper: React.FC = () => {
   const connectWebSocket = () => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
     
-    const ws = new WebSocket(`${WS_BASE}/ws`);
+    const ws = new WebSocket(`${WS_BASE}/api/ws`);
     wsRef.current = ws;
     
     ws.onopen = () => {

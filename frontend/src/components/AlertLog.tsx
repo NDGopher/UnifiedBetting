@@ -199,7 +199,7 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
 
     function connect() {
       try {
-        ws = new WebSocket(`${WS_BASE}/ws`);
+        ws = new WebSocket(`${WS_BASE}/api/ws`);
         ws.onmessage = (event) => {
           try {
             const msg = JSON.parse(event.data);

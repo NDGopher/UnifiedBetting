@@ -1,24 +1,13 @@
-const BACKEND_PORT = 8000;
+// All HTTP API requests use relative paths — they go through the React dev-server
+// proxy (setupProxy.js) which forwards them to http://localhost:8000.
+// WebSocket needs a full wss:// URL, so we derive it from window.location.
 
-const getBackendUrl = (): string => {
-  if (process.env.REACT_APP_BACKEND_URL) {
-    return process.env.REACT_APP_BACKEND_URL;
-  }
-  if (typeof window !== 'undefined') {
-    const host = window.location.hostname;
-    if (host.includes('.replit.dev') || host.includes('.repl.co') || host.includes('.replit.app')) {
-      const replId = host.split('.')[0];
-      const domain = host.split('.').slice(1).join('.');
-      return `https://${replId}-${BACKEND_PORT}.${domain}`;
-    }
-  }
-  return `http://localhost:${BACKEND_PORT}`;
+export const API_BASE = '';
+
+const getWsBase = (): string => {
+  if (typeof window === 'undefined') return 'ws://localhost:8000';
+  const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  return `${proto}//${window.location.host}`;
 };
 
-const getBackendWsUrl = (): string => {
-  const httpUrl = getBackendUrl();
-  return httpUrl.replace(/^https:\/\//, 'wss://').replace(/^http:\/\//, 'ws://');
-};
-
-export const API_BASE = getBackendUrl();
-export const WS_BASE = getBackendWsUrl();
+export const WS_BASE = getWsBase();

@@ -87,7 +87,7 @@ const PropBuilder: React.FC = () => {
   const [initialLoad, setInitialLoad] = useState(true);
   const [manualRefresh, setManualRefresh] = useState(false);
   const prevPropsRef = useRef<any[]>([]);
-  const { lastMessage, isConnected } = useWebSocket(`${WS_BASE}/ws`);
+  const { lastMessage, isConnected } = useWebSocket(`${WS_BASE}/api/ws`);
   const [hiddenProps, setHiddenProps] = useState<Set<string>>(new Set());
   const [showHidden, setShowHidden] = useState(false);
 

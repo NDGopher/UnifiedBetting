@@ -1770,7 +1770,7 @@ async def open_bet(request: Request):
     except Exception as e:
         return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
 
-@app.websocket("/ws")
+@app.websocket("/api/ws")
 async def websocket_endpoint(websocket: WebSocket):
     logger.info("[WebSocket] New client attempting to connect")
     await manager.connect(websocket)

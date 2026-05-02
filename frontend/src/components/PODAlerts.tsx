@@ -71,7 +71,7 @@ const PODAlerts: React.FC = () => {
   const [showOnlyEV, setShowOnlyEV] = useState(false);
   const prevMarketsRef = useRef<{ [eventId: string]: Market[] }>({});
   const notifiedEventsRef = useRef<Set<string>>(new Set());
-  const { lastMessage, isConnected } = useWebSocket(`${WS_BASE}/ws`);
+  const { lastMessage, isConnected } = useWebSocket(`${WS_BASE}/api/ws`);
   const [nvpFlash, setNvpFlash] = useState<{ [key: string]: boolean }>({});
 
   // Helper to safely convert any value to string
