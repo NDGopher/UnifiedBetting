@@ -58,14 +58,11 @@ const NEGATIVE_EV_DISMISS_MS = 60 * 1000; // 1 minute for negative EV alerts
 const POSITIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for positive EV alerts
 const MAX_RETRIES = 3; // Maximum number of retries before showing error
 
-interface PODAlertsProps {
-  minEv: number;
-  maxEv: number;
-  onMinEvChange: (v: number) => void;
-  onMaxEvChange: (v: number) => void;
-}
+interface PODAlertsProps {}
 
-const PODAlerts: React.FC<PODAlertsProps> = ({ minEv, maxEv, onMinEvChange, onMaxEvChange }) => {
+const PODAlerts: React.FC<PODAlertsProps> = () => {
+  const [minEv, setMinEv] = useState<number>(0);
+  const [maxEv, setMaxEv] = useState<number>(20);
   const [events, setEvents] = useState<{ [eventId: string]: EventData }>({});
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const [modalMarket, setModalMarket] = useState<null | { event: EventData; market: Market }>(null);
@@ -423,7 +420,7 @@ const PODAlerts: React.FC<PODAlertsProps> = ({ minEv, maxEv, onMinEvChange, onMa
             <Typography sx={{ fontSize: '0.72rem', color: '#888', width: 26, flexShrink: 0 }}>Min</Typography>
             <Slider
               value={minEv}
-              onChange={(_, val) => onMinEvChange(val as number)}
+              onChange={(_, val) => setMinEv(val as number)}
               min={0} max={20} step={0.5} size="small"
               valueLabelDisplay="auto"
               valueLabelFormat={v => `${v}%`}
@@ -443,7 +440,7 @@ const PODAlerts: React.FC<PODAlertsProps> = ({ minEv, maxEv, onMinEvChange, onMa
             <Typography sx={{ fontSize: '0.72rem', color: '#888', width: 26, flexShrink: 0 }}>Max</Typography>
             <Slider
               value={maxEv}
-              onChange={(_, val) => onMaxEvChange(val as number)}
+              onChange={(_, val) => setMaxEv(val as number)}
               min={0} max={20} step={0.5} size="small"
               valueLabelDisplay="auto"
               valueLabelFormat={v => v >= 20 ? '∞' : `${v}%`}
