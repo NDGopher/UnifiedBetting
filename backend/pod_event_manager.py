@@ -25,6 +25,9 @@ class PodEventManager:
         # Per-event backoff state to avoid blocking and reduce API pressure
         # Structure: { event_id: { 'attempts': int, 'next_ts': float } }
         self._event_backoff_state: Dict[str, Dict[str, float]] = {}
+        self.BETBCK_REFRESH_INTERVAL_SECONDS = 90
+        self._betbck_last_refresh: Dict[str, float] = {}
+        self._betbck_refresh_in_progress: Set[str] = set()
 
     def get_event_lock(self, event_id: str):
         return self._event_locks[event_id]
@@ -73,6 +76,73 @@ class PodEventManager:
             if event_id in self._active_events:
                 self._active_events[event_id].update(update_data)
         broadcast_all_active_events()
+
+    async def _async_refresh_betbck(self, event_id: str, cleaned_home: str, cleaned_away: str,
+                                       pinnacle_snapshot: dict, broadcast_function):
+        """Non-blocking BetBCK re-scrape every BETBCK_REFRESH_INTERVAL_SECONDS seconds per event."""
+        try:
+            from betbck_request_manager import scrape_betbck_for_game_queued
+            from utils.pod_utils import analyze_markets_for_ev
+            from main_logic import determine_betbck_search_term
+
+            search_result = determine_betbck_search_term(cleaned_home, cleaned_away)
+            search_term = search_result[0] if isinstance(search_result, tuple) else search_result
+            if not search_term:
+                print(f"[BetBCKRefresh] Could not determine search term for event {event_id}, skipping")
+                return
+
+            print(f"[BetBCKRefresh] Re-scraping BetBCK for {event_id}: '{cleaned_home}' vs '{cleaned_away}' (term: '{search_term}')")
+
+            loop = asyncio.get_event_loop()
+            fresh_game_data = await loop.run_in_executor(
+                None,
+                lambda: scrape_betbck_for_game_queued(cleaned_home, cleaned_away, search_term, event_id)
+            )
+
+            if not fresh_game_data or (isinstance(fresh_game_data, dict) and fresh_game_data.get("status") == "error"):
+                print(f"[BetBCKRefresh] No data returned for event {event_id}, keeping existing BetBCK data")
+                return
+
+            fresh_bets = analyze_markets_for_ev(fresh_game_data, pinnacle_snapshot)
+            realistic_bets = []
+            for bet in fresh_bets:
+                try:
+                    ev_val = float(bet.get("ev", "0").replace('%', ''))
+                    if -30 <= ev_val <= 30:
+                        realistic_bets.append(bet)
+                    else:
+                        print(f"[BetBCKRefresh] Filtering unrealistic EV: {bet.get('ev')} for {bet.get('market')} {bet.get('selection')}")
+                except Exception:
+                    realistic_bets.append(bet)
+
+            if not realistic_bets:
+                print(f"[BetBCKRefresh] No realistic bets after BetBCK refresh for event {event_id}")
+                return
+
+            fresh_game_data["potential_bets_analyzed"] = realistic_bets
+            fresh_betbck_result = {"status": "success", "data": fresh_game_data}
+
+            updated_pinnacle = dict(pinnacle_snapshot) if pinnacle_snapshot else {}
+            updated_pinnacle["markets"] = realistic_bets
+
+            print(f"[BetBCKRefresh] Updating event {event_id} with fresh BetBCK data ({len(realistic_bets)} markets)")
+            self.update_event_data(event_id, {
+                "betbck_data": fresh_betbck_result,
+                "betbck_last_update": time.time(),
+                "pinnacle_data_processed": updated_pinnacle,
+            })
+
+            if broadcast_function:
+                current_event = self.get_active_events().get(event_id)
+                if current_event:
+                    broadcast_function(event_id, current_event)
+                    print(f"[BetBCKRefresh] Broadcast sent for event {event_id}")
+
+        except Exception as e:
+            print(f"[BetBCKRefresh] Error for event {event_id}: {e}")
+            logger.error(f"[BetBCKRefresh] Error for event {event_id}: {e}")
+        finally:
+            self._betbck_refresh_in_progress.discard(event_id)
 
     async def background_event_refresher(self, broadcast_function=None):
         print("[BackgroundRefresher] Background event refresher started (ASYNC)")
@@ -387,7 +457,26 @@ class PodEventManager:
                     except Exception as e:
                         print(f"[BackgroundRefresher] Error in event loop for {event_id}: {e}")
                         logger.error(f"[BackgroundRefresher] Error in event loop for {event_id}: {e}")
-                        
+
+                    # ── BetBCK periodic refresh (non-blocking, every 90 s) ──────────
+                    last_bck = self._betbck_last_refresh.get(event_id, 0)
+                    if (current_time - last_bck >= self.BETBCK_REFRESH_INTERVAL_SECONDS
+                            and event_id not in self._betbck_refresh_in_progress):
+                        current_snap = self.get_active_events().get(event_id)
+                        if current_snap:
+                            snap_home = current_snap.get("cleaned_home_team", "")
+                            snap_away = current_snap.get("cleaned_away_team", "")
+                            snap_pinnacle = copy.deepcopy(current_snap.get("pinnacle_data_processed", {}))
+                            if snap_home and snap_away:
+                                self._betbck_last_refresh[event_id] = current_time
+                                self._betbck_refresh_in_progress.add(event_id)
+                                elapsed = current_time - last_bck
+                                print(f"[BetBCKRefresh] Triggering refresh for {event_id} "
+                                      f"({snap_home} vs {snap_away}, {elapsed:.0f}s since last refresh)")
+                                asyncio.create_task(self._async_refresh_betbck(
+                                    event_id, snap_home, snap_away, snap_pinnacle, broadcast_function
+                                ))
+
             except Exception as e:
                 print(f"[BackgroundRefresher] Critical error in main loop: {e}")
                 logger.error(f"[BackgroundRefresher] Critical error in main loop: {e}")

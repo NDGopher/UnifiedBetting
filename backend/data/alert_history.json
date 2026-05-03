@@ -2565,5 +2565,164 @@
     ],
     "result": "not_found",
     "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T02:00:21.144087Z",
+    "event_id": "1629442766",
+    "timestamp": "2026-05-03T02:00:20.470524Z",
+    "teams": {
+      "home": "Las Vegas Lights",
+      "away": "Lexington SCUSA - USL Championship",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Lexington SCUSA - USL Championship @ Las Vegas Lights | ? | market=Spread | +310 -> +260",
+        "detail": {
+          "home": "Las Vegas Lights",
+          "away": "Lexington SCUSA - USL Championship",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+310",
+          "new_odds": "+260"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lights' (from 'Las Vegas Lights' / 'Lexington SCUSA - USL Championship'): last word of home team 'las vegas lights'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lights' -> HTTP 200 (42948 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lights",
+          "status": 200,
+          "response_bytes": 42948
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for lexington scusa - usl @ las vegas lights (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T02:00:27.034403Z",
+    "event_id": "1777773615805",
+    "timestamp": "2026-05-03T02:00:26.608449Z",
+    "teams": {
+      "home": "Las Vegas Lights",
+      "away": "Lexington SCUSA - USL Championship",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Lexington SCUSA - USL Championship @ Las Vegas Lights | ? | market=Moneyline | +148 -> +128",
+        "detail": {
+          "home": "Las Vegas Lights",
+          "away": "Lexington SCUSA - USL Championship",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+148",
+          "new_odds": "+128"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lights' (from 'Las Vegas Lights' / 'Lexington SCUSA - USL Championship'): last word of home team 'las vegas lights'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lights' -> HTTP 200 (42948 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lights",
+          "status": 200,
+          "response_bytes": 42948
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for lexington scusa - usl @ las vegas lights (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T02:02:30.658070Z",
+    "event_id": "1629599799",
+    "timestamp": "2026-05-03T02:02:28.406512Z",
+    "teams": {
+      "home": "Sandringham Sabres",
+      "away": "Mount Gambier PioneersAustralia",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Mount Gambier PioneersAustralia @ Sandringham Sabres | ? | market=Total | -105 -> -123",
+        "detail": {
+          "home": "Sandringham Sabres",
+          "away": "Mount Gambier PioneersAustralia",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "-105",
+          "new_odds": "-123"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'sabres' (from 'Sandringham Sabres' / 'Mount Gambier PioneersAustralia'): last word of home team 'sandringham sabres'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='sabres' -> HTTP 200 (42949 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "sabres",
+          "status": 200,
+          "response_bytes": 42949
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for mount gambier pioneers @ sandringham sabres (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]
