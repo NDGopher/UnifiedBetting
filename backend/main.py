@@ -1387,7 +1387,12 @@ async def run_streaming_pipeline_background(sport_filters=None):
             # Fast path: process all games at once
             logger.info(f"[STREAMING] Small selection detected ({len(betbck_games)} games) - processing all at once")
             print(f"[STREAMING] Small selection: {len(betbck_games)} BetBCK games, {len(event_dicts)} Pinnacle events")
-            all_matched = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
+            loop = asyncio.get_event_loop()
+            import functools
+            all_matched = await loop.run_in_executor(
+                None,
+                functools.partial(match_pinnacle_to_betbck, event_dicts, {"games": betbck_games})
+            )
             print(f"[STREAMING] Matching result: {len(all_matched) if all_matched else 0} matched games")
             logger.info(f"[STREAMING] Matching result: {len(all_matched) if all_matched else 0} matched games")
             
@@ -1482,7 +1487,12 @@ async def run_streaming_pipeline_background(sport_filters=None):
             # Matching was previously done per-batch which wasted ~25s × N_batches on repeated fuzzy matching
             logger.info(f"[STREAMING] Matching all {len(betbck_games)} BetBCK games against {len(event_dicts)} Pinnacle events (once)...")
             match_start = time.time()
-            all_matched = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
+            loop = asyncio.get_event_loop()
+            import functools
+            all_matched = await loop.run_in_executor(
+                None,
+                functools.partial(match_pinnacle_to_betbck, event_dicts, {"games": betbck_games})
+            )
             match_time = time.time() - match_start
             total_matched = len(all_matched) if all_matched else 0
             total_processed = len(betbck_games)

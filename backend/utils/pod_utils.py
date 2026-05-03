@@ -1026,7 +1026,38 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
         elif not isinstance(ml, dict):
             logger.info(f"[AnalyzeMarkets] money_line is not a dict: {type(ml)}")
             ml = {}
-        
+
+        # Detect home/away NVP mismatch: POD extension sometimes sends teams in
+        # reversed order vs Pinnacle. BetBCK scraper already corrects its own side
+        # via bck_local_is_pod_home, but Pinnacle NVP sides must also be flipped.
+        _nvp_swapped = False
+        _pod_home_norm = normalize_team_name_for_matching(bet_data_copy.get('pod_home_team', ''))
+        _pin_home_norm = normalize_team_name_for_matching(pin_data.get('home', ''))
+        _pin_away_norm = normalize_team_name_for_matching(pin_data.get('away', ''))
+        if _pod_home_norm and _pin_home_norm and _pin_away_norm:
+            if fuzz:
+                _h_score = fuzz.ratio(_pod_home_norm, _pin_home_norm)
+                _a_score = fuzz.ratio(_pod_home_norm, _pin_away_norm)
+            else:
+                _h_score = 100 if _pod_home_norm == _pin_home_norm else 0
+                _a_score = 100 if _pod_home_norm == _pin_away_norm else 0
+            # Only swap when we are very confident teams are genuinely reversed:
+            # 1. POD home clearly matches Pinnacle away (score >= 80)
+            # 2. POD home clearly does NOT match Pinnacle home (score < 50)
+            # 3. Away score leads home score by a large margin (>= 30 pts)
+            # This prevents accidental flips for teams with similar names.
+            if _a_score >= 80 and _h_score < 50 and (_a_score - _h_score) >= 30:
+                _nvp_swapped = True
+                logger.warning(
+                    f"[AnalyzeMarkets] NVP home/away swap (high confidence): "
+                    f"POD home '{bet_data_copy.get('pod_home_team')}' "
+                    f"matches Pinnacle away '{pin_data.get('away')}' (score {_a_score}) "
+                    f"vs Pinnacle home '{pin_data.get('home')}' (score {_h_score}) "
+                    f"— swapping NVP sides"
+                )
+                ml['nvp_home'], ml['nvp_away'] = ml.get('nvp_away'), ml.get('nvp_home')
+                ml['nvp_american_home'], ml['nvp_american_away'] = ml.get('nvp_american_away'), ml.get('nvp_american_home')
+
         if bet_data_copy.get('home_moneyline_american') and ml.get('nvp_american_home'):
             bet_odds = american_to_decimal(bet_data_copy['home_moneyline_american'])
             true_odds = ml.get('nvp_home')
@@ -1094,7 +1125,14 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
         pin_spreads = full_game.get('spreads')
         if not isinstance(pin_spreads, dict):
             pin_spreads = {}
-        
+
+        # Apply the same home/away NVP swap to each spread entry if teams are reversed
+        if _nvp_swapped:
+            for _sk, _sp in pin_spreads.items():
+                if isinstance(_sp, dict):
+                    _sp['nvp_home'], _sp['nvp_away'] = _sp.get('nvp_away'), _sp.get('nvp_home')
+                    _sp['nvp_american_home'], _sp['nvp_american_away'] = _sp.get('nvp_american_away'), _sp.get('nvp_american_home')
+
         for spread_key, pin_spread in pin_spreads.items():
             line = pin_spread.get('hdp')
             
@@ -1234,6 +1272,17 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
             
             if first_half and isinstance(first_half, dict):
                 logger.info("[AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data")
+                # Apply the same home/away NVP swap to 1H period if teams are reversed
+                if _nvp_swapped:
+                    first_half = copy.deepcopy(first_half)
+                    _1h_ml = first_half.get('money_line')
+                    if isinstance(_1h_ml, dict):
+                        _1h_ml['nvp_home'], _1h_ml['nvp_away'] = _1h_ml.get('nvp_away'), _1h_ml.get('nvp_home')
+                        _1h_ml['nvp_american_home'], _1h_ml['nvp_american_away'] = _1h_ml.get('nvp_american_away'), _1h_ml.get('nvp_american_home')
+                    for _sk, _sp in (first_half.get('spreads') or {}).items():
+                        if isinstance(_sp, dict):
+                            _sp['nvp_home'], _sp['nvp_away'] = _sp.get('nvp_away'), _sp.get('nvp_home')
+                            _sp['nvp_american_home'], _sp['nvp_american_away'] = _sp.get('nvp_american_away'), _sp.get('nvp_american_home')
                 potential_bets.extend(_analyze_1h_markets_for_ev(bet_data_copy['1H_data'], first_half, pin_data))
             else:
                 logger.warning("[AnalyzeMarkets] No 1H Pinnacle data found, skipping 1H BetBCK data")

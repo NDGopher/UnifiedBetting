@@ -14883,5 +14883,2531 @@
         "ev_pct": -7.36
       }
     ]
+  },
+  {
+    "logged_at": "2026-05-03T06:17:16.121652Z",
+    "event_id": "1628810297",
+    "timestamp": "2026-05-03T06:17:14.232821Z",
+    "teams": {
+      "home": "Espanyol",
+      "away": "Real Madrid",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Real Madrid @ Espanyol | ? | market=Total | +313 -> +287",
+        "detail": {
+          "home": "Espanyol",
+          "away": "Real Madrid",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+313",
+          "new_odds": "+287"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'espanyol' (from 'Espanyol' / 'Real Madrid'): first word of home team 'espanyol'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='espanyol' -> HTTP 200 (58056 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "espanyol",
+          "status": 200,
+          "response_bytes": 58056
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Real Madrid' vs 'Espanyol'  <->  POD 'espanyol' vs 'real madrid'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "Real Madrid",
+          "bck_away": "Espanyol",
+          "pod_home": "espanyol",
+          "pod_away": "real madrid",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Real Madrid' vs 'Espanyol'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Real Madrid 1H' vs 'Espanyol 1H'  <->  POD 'espanyol' vs 'real madrid'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Real Madrid 1H",
+          "bck_away": "Espanyol 1H",
+          "pod_home": "espanyol",
+          "pod_away": "real madrid",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Real Madrid 1H' vs 'Espanyol 1H'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+365 | away_moneyline=-135 | home_spreads=[{'line': '+0.75', 'odds': '-110'}] | away_spreads=[{'line': '-0.75', 'odds': '-120'}]",
+        "detail": {
+          "home_moneyline": "+365",
+          "away_moneyline": "-135",
+          "home_spreads": [
+            {
+              "line": "+0.75",
+              "odds": "-110"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "-0.75",
+              "odds": "-120"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 4.6500 (+365) / PIN_NVP 4.9700 (+397) => -6.51%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+365",
+          "pin_nvp_american": "+397",
+          "bck_decimal": 4.65,
+          "pin_nvp_decimal": 4.97,
+          "ev_pct": -6.51
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 1.7407 (-135) / PIN_NVP 1.7874 (-127) => -2.59%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "-135",
+          "pin_nvp_american": "-127",
+          "bck_decimal": 1.7407,
+          "pin_nvp_decimal": 1.7874,
+          "ev_pct": -2.59
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home 0.75: BCK 1.9091 (-110) / PIN_NVP 1.9901 (-101) => -4.07%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "0.75",
+          "betbck_american": "-110",
+          "pin_nvp_american": "-101",
+          "bck_decimal": 1.9091,
+          "pin_nvp_decimal": 1.9901,
+          "ev_pct": -4.07
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away -0.75: BCK 1.8333 (-120) / PIN_NVP 2.0100 (+101) => -8.79%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "-0.75",
+          "betbck_american": "-120",
+          "pin_nvp_american": "+101",
+          "bck_decimal": 1.8333,
+          "pin_nvp_decimal": 2.01,
+          "ev_pct": -8.79
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 3.0: BCK 1.8000 (-125) / PIN_NVP 2.0800 (+108) => -13.67%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "3.0",
+          "betbck_american": "-125",
+          "pin_nvp_american": "+108",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 2.08,
+          "ev_pct": -13.67
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 3.0: BCK 1.8696 (-115) / PIN_NVP 1.9259 (-108) => -2.73%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "3.0",
+          "betbck_american": "-115",
+          "pin_nvp_american": "-108",
+          "bck_decimal": 1.8696,
+          "pin_nvp_decimal": 1.9259,
+          "ev_pct": -2.73
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Home: BCK 4.4000 (+340) / PIN_NVP 4.8600 (+386) => -9.41%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+340",
+          "pin_nvp_american": "+386",
+          "bck_decimal": 4.4,
+          "pin_nvp_decimal": 4.86,
+          "ev_pct": -9.41
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Away: BCK 2.3000 (+130) / PIN_NVP 2.4300 (+143) => -5.19%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+130",
+          "pin_nvp_american": "+143",
+          "bck_decimal": 2.3,
+          "pin_nvp_decimal": 2.43,
+          "ev_pct": -5.19
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Home 0.25: BCK 1.9091 (-110) / PIN_NVP 2.0400 (+104) => -6.37%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Home",
+          "line": "0.25",
+          "betbck_american": "-110",
+          "pin_nvp_american": "+104",
+          "bck_decimal": 1.9091,
+          "pin_nvp_decimal": 2.04,
+          "ev_pct": -6.37
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Away -0.25: BCK 1.8333 (-120) / PIN_NVP 1.9615 (-104) => -6.61%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Away",
+          "line": "-0.25",
+          "betbck_american": "-120",
+          "pin_nvp_american": "-104",
+          "bck_decimal": 1.8333,
+          "pin_nvp_decimal": 1.9615,
+          "ev_pct": -6.61
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Over 1.25: BCK 1.8696 (-115) / PIN_NVP 2.1000 (+110) => -11.10%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Over",
+          "line": "1.25",
+          "betbck_american": "-115",
+          "pin_nvp_american": "+110",
+          "bck_decimal": 1.8696,
+          "pin_nvp_decimal": 2.1,
+          "ev_pct": -11.1
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Under 1.25: BCK 1.8000 (-125) / PIN_NVP 1.9091 (-110) => -5.61%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Under",
+          "line": "1.25",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-110",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.9091,
+          "ev_pct": -5.61
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+365",
+        "pinnacle_nvp": "+397",
+        "betbck_decimal": 4.65,
+        "pin_nvp_decimal": 4.97,
+        "ev_pct": -6.51
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "-135",
+        "pinnacle_nvp": "-127",
+        "betbck_decimal": 1.7407,
+        "pin_nvp_decimal": 1.7874,
+        "ev_pct": -2.59
+      },
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "0.75",
+        "betbck_odds": "-110",
+        "pinnacle_nvp": "-101",
+        "betbck_decimal": 1.9091,
+        "pin_nvp_decimal": 1.9901,
+        "ev_pct": -4.07
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "-0.75",
+        "betbck_odds": "-120",
+        "pinnacle_nvp": "+101",
+        "betbck_decimal": 1.8333,
+        "pin_nvp_decimal": 2.01,
+        "ev_pct": -8.79
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "3.0",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "+108",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 2.08,
+        "ev_pct": -13.67
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "3.0",
+        "betbck_odds": "-115",
+        "pinnacle_nvp": "-108",
+        "betbck_decimal": 1.8696,
+        "pin_nvp_decimal": 1.9259,
+        "ev_pct": -2.73
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+340",
+        "pinnacle_nvp": "+386",
+        "betbck_decimal": 4.4,
+        "pin_nvp_decimal": 4.86,
+        "ev_pct": -9.41
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+130",
+        "pinnacle_nvp": "+143",
+        "betbck_decimal": 2.3,
+        "pin_nvp_decimal": 2.43,
+        "ev_pct": -5.19
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Home",
+        "line": "0.25",
+        "betbck_odds": "-110",
+        "pinnacle_nvp": "+104",
+        "betbck_decimal": 1.9091,
+        "pin_nvp_decimal": 2.04,
+        "ev_pct": -6.37
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Away",
+        "line": "-0.25",
+        "betbck_odds": "-120",
+        "pinnacle_nvp": "-104",
+        "betbck_decimal": 1.8333,
+        "pin_nvp_decimal": 1.9615,
+        "ev_pct": -6.61
+      },
+      {
+        "market": "1H Total",
+        "selection": "Over",
+        "line": "1.25",
+        "betbck_odds": "-115",
+        "pinnacle_nvp": "+110",
+        "betbck_decimal": 1.8696,
+        "pin_nvp_decimal": 2.1,
+        "ev_pct": -11.1
+      },
+      {
+        "market": "1H Total",
+        "selection": "Under",
+        "line": "1.25",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-110",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.9091,
+        "ev_pct": -5.61
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T06:25:07.679836Z",
+    "event_id": "1629410050",
+    "timestamp": "2026-05-03T06:25:03.508065Z",
+    "teams": {
+      "home": "Valere",
+      "away": "KFUM O",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "KFUM O @ Valere | ? | market=Spread | +189 -> +170",
+        "detail": {
+          "home": "Valere",
+          "away": "KFUM O",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+189",
+          "new_odds": "+170"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'valere' (from 'Valere' / 'KFUM O'): first word of home team 'valere'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='valere' -> HTTP 200 (56401 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "valere",
+          "status": 200,
+          "response_bytes": 56401
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'KFUM' vs 'Valerenga'  <->  POD 'valere' vs 'kfum o'  [token_set_h=80 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "KFUM",
+          "bck_away": "Valerenga",
+          "pod_home": "valere",
+          "pod_away": "kfum o",
+          "scores": {
+            "token_set_h": 80,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'KFUM' vs 'Valerenga'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'KFUM 1H' vs 'Valerenga 1H'  <->  POD 'valere' vs 'kfum o'  [token_set_h=67 | token_set_a=80 | partial_h=100 | partial_a=83 | threshold=60]",
+        "detail": {
+          "bck_home": "KFUM 1H",
+          "bck_away": "Valerenga 1H",
+          "pod_home": "valere",
+          "pod_away": "kfum o",
+          "scores": {
+            "token_set_h": 67,
+            "token_set_a": 80,
+            "partial_h": 100,
+            "partial_a": 83,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'KFUM 1H' vs 'Valerenga 1H'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=-110 | away_moneyline=+260 | home_spreads=[{'line': '-0.5', 'odds': '-120'}] | away_spreads=[{'line': '+0.5', 'odds': '-110'}]",
+        "detail": {
+          "home_moneyline": "-110",
+          "away_moneyline": "+260",
+          "home_spreads": [
+            {
+              "line": "-0.5",
+              "odds": "-120"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+0.5",
+              "odds": "-110"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 1.9091 (-110) / PIN_NVP 2.0600 (+106) => -7.28%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "-110",
+          "pin_nvp_american": "+106",
+          "bck_decimal": 1.9091,
+          "pin_nvp_decimal": 2.06,
+          "ev_pct": -7.28
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 3.6000 (+260) / PIN_NVP 3.7000 (+270) => -2.60%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+260",
+          "pin_nvp_american": "+270",
+          "bck_decimal": 3.6,
+          "pin_nvp_decimal": 3.7,
+          "ev_pct": -2.6
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home -0.5: BCK 1.8333 (-120) / PIN_NVP 2.0700 (+107) => -11.43%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "-0.5",
+          "betbck_american": "-120",
+          "pin_nvp_american": "+107",
+          "bck_decimal": 1.8333,
+          "pin_nvp_decimal": 2.07,
+          "ev_pct": -11.43
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away 0.5: BCK 1.9091 (-110) / PIN_NVP 1.9346 (-107) => -1.29%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "0.5",
+          "betbck_american": "-110",
+          "pin_nvp_american": "-107",
+          "bck_decimal": 1.9091,
+          "pin_nvp_decimal": 1.9346,
+          "ev_pct": -1.29
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 3.0: BCK 1.8696 (-115) / PIN_NVP 2.0700 (+107) => -9.68%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "3.0",
+          "betbck_american": "-115",
+          "pin_nvp_american": "+107",
+          "bck_decimal": 1.8696,
+          "pin_nvp_decimal": 2.07,
+          "ev_pct": -9.68
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 3.0: BCK 1.8000 (-125) / PIN_NVP 1.9346 (-107) => -6.93%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "3.0",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-107",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.9346,
+          "ev_pct": -6.93
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Home: BCK 2.4000 (+140) / PIN_NVP 2.6800 (+168) => -10.41%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+140",
+          "pin_nvp_american": "+168",
+          "bck_decimal": 2.4,
+          "pin_nvp_decimal": 2.68,
+          "ev_pct": -10.41
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Away: BCK 3.9500 (+295) / PIN_NVP 4.1400 (+314) => -4.70%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+295",
+          "pin_nvp_american": "+314",
+          "bck_decimal": 3.95,
+          "pin_nvp_decimal": 4.14,
+          "ev_pct": -4.7
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Home -0.25: BCK 2.0000 (+100) / PIN_NVP 2.1800 (+118) => -8.09%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Home",
+          "line": "-0.25",
+          "betbck_american": "+100",
+          "pin_nvp_american": "+118",
+          "bck_decimal": 2.0,
+          "pin_nvp_decimal": 2.18,
+          "ev_pct": -8.09
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Away 0.25: BCK 1.7692 (-130) / PIN_NVP 1.8475 (-118) => -4.37%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Away",
+          "line": "0.25",
+          "betbck_american": "-130",
+          "pin_nvp_american": "-118",
+          "bck_decimal": 1.7692,
+          "pin_nvp_decimal": 1.8475,
+          "ev_pct": -4.37
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Over 1.5: BCK 2.4000 (+140) / PIN_NVP 2.5600 (+156) => -6.32%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Over",
+          "line": "1.5",
+          "betbck_american": "+140",
+          "pin_nvp_american": "+156",
+          "bck_decimal": 2.4,
+          "pin_nvp_decimal": 2.56,
+          "ev_pct": -6.32
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Under 1.5: BCK 1.5556 (-180) / PIN_NVP 1.6410 (-156) => -5.15%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Under",
+          "line": "1.5",
+          "betbck_american": "-180",
+          "pin_nvp_american": "-156",
+          "bck_decimal": 1.5556,
+          "pin_nvp_decimal": 1.641,
+          "ev_pct": -5.15
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "-110",
+        "pinnacle_nvp": "+106",
+        "betbck_decimal": 1.9091,
+        "pin_nvp_decimal": 2.06,
+        "ev_pct": -7.28
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+260",
+        "pinnacle_nvp": "+270",
+        "betbck_decimal": 3.6,
+        "pin_nvp_decimal": 3.7,
+        "ev_pct": -2.6
+      },
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "-0.5",
+        "betbck_odds": "-120",
+        "pinnacle_nvp": "+107",
+        "betbck_decimal": 1.8333,
+        "pin_nvp_decimal": 2.07,
+        "ev_pct": -11.43
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "0.5",
+        "betbck_odds": "-110",
+        "pinnacle_nvp": "-107",
+        "betbck_decimal": 1.9091,
+        "pin_nvp_decimal": 1.9346,
+        "ev_pct": -1.29
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "3.0",
+        "betbck_odds": "-115",
+        "pinnacle_nvp": "+107",
+        "betbck_decimal": 1.8696,
+        "pin_nvp_decimal": 2.07,
+        "ev_pct": -9.68
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "3.0",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-107",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.9346,
+        "ev_pct": -6.93
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+140",
+        "pinnacle_nvp": "+168",
+        "betbck_decimal": 2.4,
+        "pin_nvp_decimal": 2.68,
+        "ev_pct": -10.41
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+295",
+        "pinnacle_nvp": "+314",
+        "betbck_decimal": 3.95,
+        "pin_nvp_decimal": 4.14,
+        "ev_pct": -4.7
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Home",
+        "line": "-0.25",
+        "betbck_odds": "+100",
+        "pinnacle_nvp": "+118",
+        "betbck_decimal": 2.0,
+        "pin_nvp_decimal": 2.18,
+        "ev_pct": -8.09
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Away",
+        "line": "0.25",
+        "betbck_odds": "-130",
+        "pinnacle_nvp": "-118",
+        "betbck_decimal": 1.7692,
+        "pin_nvp_decimal": 1.8475,
+        "ev_pct": -4.37
+      },
+      {
+        "market": "1H Total",
+        "selection": "Over",
+        "line": "1.5",
+        "betbck_odds": "+140",
+        "pinnacle_nvp": "+156",
+        "betbck_decimal": 2.4,
+        "pin_nvp_decimal": 2.56,
+        "ev_pct": -6.32
+      },
+      {
+        "market": "1H Total",
+        "selection": "Under",
+        "line": "1.5",
+        "betbck_odds": "-180",
+        "pinnacle_nvp": "-156",
+        "betbck_decimal": 1.5556,
+        "pin_nvp_decimal": 1.641,
+        "ev_pct": -5.15
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T06:40:57.036378Z",
+    "event_id": "1629410071",
+    "timestamp": "2026-05-03T06:40:55.425148Z",
+    "teams": {
+      "home": "Panathinaikos",
+      "away": "AEK Athens",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "AEK Athens @ Panathinaikos | ? | market=Spread | +275 -> +252",
+        "detail": {
+          "home": "Panathinaikos",
+          "away": "AEK Athens",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+275",
+          "new_odds": "+252"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'panathinaikos' (from 'Panathinaikos' / 'AEK Athens'): first word of home team 'panathinaikos'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='panathinaikos' -> HTTP 200 (56579 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "panathinaikos",
+          "status": 200,
+          "response_bytes": 56579
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'AEK Athens' vs 'Panathinaikos'  <->  POD 'panathinaikos' vs 'aek athens'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "AEK Athens",
+          "bck_away": "Panathinaikos",
+          "pod_home": "panathinaikos",
+          "pod_away": "aek athens",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'AEK Athens' vs 'Panathinaikos'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'AEK Athens 1H' vs 'Panathinaikos 1H'  <->  POD 'panathinaikos' vs 'aek athens'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "AEK Athens 1H",
+          "bck_away": "Panathinaikos 1H",
+          "pod_home": "panathinaikos",
+          "pod_away": "aek athens",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'AEK Athens 1H' vs 'Panathinaikos 1H'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+252 | away_moneyline=+105 | home_spreads=[{'line': '+0.25', 'odds': '+100'}] | away_spreads=[{'line': '-0.25', 'odds': '-130'}]",
+        "detail": {
+          "home_moneyline": "+252",
+          "away_moneyline": "+105",
+          "home_spreads": [
+            {
+              "line": "+0.25",
+              "odds": "+100"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "-0.25",
+              "odds": "-130"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 3.5200 (+252) / PIN_NVP 4.1100 (+311) => -14.31%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+252",
+          "pin_nvp_american": "+311",
+          "bck_decimal": 3.52,
+          "pin_nvp_decimal": 4.11,
+          "ev_pct": -14.31
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 2.0500 (+105) / PIN_NVP 2.2600 (+126) => -9.45%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+105",
+          "pin_nvp_american": "+126",
+          "bck_decimal": 2.05,
+          "pin_nvp_decimal": 2.26,
+          "ev_pct": -9.45
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home 0.25: BCK 2.0000 (+100) / PIN_NVP 2.1000 (+110) => -4.76%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "0.25",
+          "betbck_american": "+100",
+          "pin_nvp_american": "+110",
+          "bck_decimal": 2.0,
+          "pin_nvp_decimal": 2.1,
+          "ev_pct": -4.76
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away -0.25: BCK 1.7692 (-130) / PIN_NVP 1.9091 (-110) => -7.32%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "-0.25",
+          "betbck_american": "-130",
+          "pin_nvp_american": "-110",
+          "bck_decimal": 1.7692,
+          "pin_nvp_decimal": 1.9091,
+          "ev_pct": -7.32
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 2.5: BCK 2.2000 (+120) / PIN_NVP 2.3700 (+137) => -7.09%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "2.5",
+          "betbck_american": "+120",
+          "pin_nvp_american": "+137",
+          "bck_decimal": 2.2,
+          "pin_nvp_decimal": 2.37,
+          "ev_pct": -7.09
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 2.5: BCK 1.6250 (-160) / PIN_NVP 1.7299 (-137) => -6.12%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "2.5",
+          "betbck_american": "-160",
+          "pin_nvp_american": "-137",
+          "bck_decimal": 1.625,
+          "pin_nvp_decimal": 1.7299,
+          "ev_pct": -6.12
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Home: BCK 4.1000 (+310) / PIN_NVP 4.5700 (+357) => -10.32%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+310",
+          "pin_nvp_american": "+357",
+          "bck_decimal": 4.1,
+          "pin_nvp_decimal": 4.57,
+          "ev_pct": -10.32
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Away: BCK 2.7500 (+175) / PIN_NVP 3.0200 (+202) => -8.85%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+175",
+          "pin_nvp_american": "+202",
+          "bck_decimal": 2.75,
+          "pin_nvp_decimal": 3.02,
+          "ev_pct": -8.85
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Home 0.25: BCK 1.6250 (-160) / PIN_NVP 1.7407 (-135) => -6.56%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Home",
+          "line": "0.25",
+          "betbck_american": "-160",
+          "pin_nvp_american": "-135",
+          "bck_decimal": 1.625,
+          "pin_nvp_decimal": 1.7407,
+          "ev_pct": -6.56
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Away -0.25: BCK 2.3000 (+130) / PIN_NVP 2.3500 (+135) => -2.29%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Away",
+          "line": "-0.25",
+          "betbck_american": "+130",
+          "pin_nvp_american": "+135",
+          "bck_decimal": 2.3,
+          "pin_nvp_decimal": 2.35,
+          "ev_pct": -2.29
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Over 0.5: BCK 1.4505 (-222) / PIN_NVP 1.5025 (-199) => -3.43%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Over",
+          "line": "0.5",
+          "betbck_american": "-222",
+          "pin_nvp_american": "-199",
+          "bck_decimal": 1.4505,
+          "pin_nvp_decimal": 1.5025,
+          "ev_pct": -3.43
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Under 0.5: BCK 2.6200 (+162) / PIN_NVP 2.9900 (+199) => -12.40%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Under",
+          "line": "0.5",
+          "betbck_american": "+162",
+          "pin_nvp_american": "+199",
+          "bck_decimal": 2.62,
+          "pin_nvp_decimal": 2.99,
+          "ev_pct": -12.4
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+252",
+        "pinnacle_nvp": "+311",
+        "betbck_decimal": 3.52,
+        "pin_nvp_decimal": 4.11,
+        "ev_pct": -14.31
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+105",
+        "pinnacle_nvp": "+126",
+        "betbck_decimal": 2.05,
+        "pin_nvp_decimal": 2.26,
+        "ev_pct": -9.45
+      },
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "0.25",
+        "betbck_odds": "+100",
+        "pinnacle_nvp": "+110",
+        "betbck_decimal": 2.0,
+        "pin_nvp_decimal": 2.1,
+        "ev_pct": -4.76
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "-0.25",
+        "betbck_odds": "-130",
+        "pinnacle_nvp": "-110",
+        "betbck_decimal": 1.7692,
+        "pin_nvp_decimal": 1.9091,
+        "ev_pct": -7.32
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "2.5",
+        "betbck_odds": "+120",
+        "pinnacle_nvp": "+137",
+        "betbck_decimal": 2.2,
+        "pin_nvp_decimal": 2.37,
+        "ev_pct": -7.09
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "2.5",
+        "betbck_odds": "-160",
+        "pinnacle_nvp": "-137",
+        "betbck_decimal": 1.625,
+        "pin_nvp_decimal": 1.7299,
+        "ev_pct": -6.12
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+310",
+        "pinnacle_nvp": "+357",
+        "betbck_decimal": 4.1,
+        "pin_nvp_decimal": 4.57,
+        "ev_pct": -10.32
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+175",
+        "pinnacle_nvp": "+202",
+        "betbck_decimal": 2.75,
+        "pin_nvp_decimal": 3.02,
+        "ev_pct": -8.85
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Home",
+        "line": "0.25",
+        "betbck_odds": "-160",
+        "pinnacle_nvp": "-135",
+        "betbck_decimal": 1.625,
+        "pin_nvp_decimal": 1.7407,
+        "ev_pct": -6.56
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Away",
+        "line": "-0.25",
+        "betbck_odds": "+130",
+        "pinnacle_nvp": "+135",
+        "betbck_decimal": 2.3,
+        "pin_nvp_decimal": 2.35,
+        "ev_pct": -2.29
+      },
+      {
+        "market": "1H Total",
+        "selection": "Over",
+        "line": "0.5",
+        "betbck_odds": "-222",
+        "pinnacle_nvp": "-199",
+        "betbck_decimal": 1.4505,
+        "pin_nvp_decimal": 1.5025,
+        "ev_pct": -3.43
+      },
+      {
+        "market": "1H Total",
+        "selection": "Under",
+        "line": "0.5",
+        "betbck_odds": "+162",
+        "pinnacle_nvp": "+199",
+        "betbck_decimal": 2.62,
+        "pin_nvp_decimal": 2.99,
+        "ev_pct": -12.4
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T06:40:58.805799Z",
+    "event_id": "1629370328",
+    "timestamp": "2026-05-03T06:40:57.471893Z",
+    "teams": {
+      "home": "Lillestrom",
+      "away": "Sarpsborg 08",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Sarpsborg 08 @ Lillestrom | ? | market=Total | +294 -> +262",
+        "detail": {
+          "home": "Lillestrom",
+          "away": "Sarpsborg 08",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+294",
+          "new_odds": "+262"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lillestrom' (from 'Lillestrom' / 'Sarpsborg 08'): first word of home team 'lillestrom'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lillestrom' -> HTTP 200 (56481 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lillestrom",
+          "status": 200,
+          "response_bytes": 56481
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Sarpsborg 08 FF' vs 'Lillestrom SK'  <->  POD 'lillestrom' vs 'sarpsborg 08'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Sarpsborg 08 FF",
+          "bck_away": "Lillestrom SK",
+          "pod_home": "lillestrom",
+          "pod_away": "sarpsborg 08",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Sarpsborg 08 FF' vs 'Lillestrom SK'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Sarpsborg 08 FF 1H' vs 'Lillestrom SK 1H'  <->  POD 'lillestrom' vs 'sarpsborg 08'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Sarpsborg 08 FF 1H",
+          "bck_away": "Lillestrom SK 1H",
+          "pod_home": "lillestrom",
+          "pod_away": "sarpsborg 08",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Sarpsborg 08 FF 1H' vs 'Lillestrom SK 1H'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=-135 | away_moneyline=+285 | home_spreads=[{'line': '-0.75', 'odds': '-105'}] | away_spreads=[{'line': '+0.75', 'odds': '-125'}]",
+        "detail": {
+          "home_moneyline": "-135",
+          "away_moneyline": "+285",
+          "home_spreads": [
+            {
+              "line": "-0.75",
+              "odds": "-105"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+0.75",
+              "odds": "-125"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 1.7407 (-135) / PIN_NVP 1.8197 (-122) => -4.30%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "-135",
+          "pin_nvp_american": "-122",
+          "bck_decimal": 1.7407,
+          "pin_nvp_decimal": 1.8197,
+          "ev_pct": -4.3
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 3.8500 (+285) / PIN_NVP 4.1600 (+316) => -7.54%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+285",
+          "pin_nvp_american": "+316",
+          "bck_decimal": 3.85,
+          "pin_nvp_decimal": 4.16,
+          "ev_pct": -7.54
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home -0.75: BCK 1.9524 (-105) / PIN_NVP 2.0400 (+104) => -4.30%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "-0.75",
+          "betbck_american": "-105",
+          "pin_nvp_american": "+104",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 2.04,
+          "ev_pct": -4.3
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away 0.75: BCK 1.8000 (-125) / PIN_NVP 1.9615 (-104) => -8.21%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "0.75",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-104",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.9615,
+          "ev_pct": -8.21
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 3.0: BCK 1.6452 (-155) / PIN_NVP 1.7407 (-135) => -5.40%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "3.0",
+          "betbck_american": "-155",
+          "pin_nvp_american": "-135",
+          "bck_decimal": 1.6452,
+          "pin_nvp_decimal": 1.7407,
+          "ev_pct": -5.4
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 3.0: BCK 2.1500 (+115) / PIN_NVP 2.3500 (+135) => -8.63%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "3.0",
+          "betbck_american": "+115",
+          "pin_nvp_american": "+135",
+          "bck_decimal": 2.15,
+          "pin_nvp_decimal": 2.35,
+          "ev_pct": -8.63
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Home: BCK 2.2000 (+120) / PIN_NVP 2.3500 (+135) => -6.54%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+120",
+          "pin_nvp_american": "+135",
+          "bck_decimal": 2.2,
+          "pin_nvp_decimal": 2.35,
+          "ev_pct": -6.54
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Away: BCK 4.1000 (+310) / PIN_NVP 4.5600 (+356) => -10.01%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+310",
+          "pin_nvp_american": "+356",
+          "bck_decimal": 4.1,
+          "pin_nvp_decimal": 4.56,
+          "ev_pct": -10.01
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Home -0.25: BCK 1.8000 (-125) / PIN_NVP 1.9434 (-106) => -7.17%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Home",
+          "line": "-0.25",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-106",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.9434,
+          "ev_pct": -7.17
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Away 0.25: BCK 1.9524 (-105) / PIN_NVP 2.0600 (+106) => -5.41%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Away",
+          "line": "0.25",
+          "betbck_american": "-105",
+          "pin_nvp_american": "+106",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 2.06,
+          "ev_pct": -5.41
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Over 1.5: BCK 2.1500 (+115) / PIN_NVP 2.2600 (+126) => -4.74%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Over",
+          "line": "1.5",
+          "betbck_american": "+115",
+          "pin_nvp_american": "+126",
+          "bck_decimal": 2.15,
+          "pin_nvp_decimal": 2.26,
+          "ev_pct": -4.74
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Under 1.5: BCK 1.6452 (-155) / PIN_NVP 1.7937 (-126) => -8.40%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Under",
+          "line": "1.5",
+          "betbck_american": "-155",
+          "pin_nvp_american": "-126",
+          "bck_decimal": 1.6452,
+          "pin_nvp_decimal": 1.7937,
+          "ev_pct": -8.4
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "-135",
+        "pinnacle_nvp": "-122",
+        "betbck_decimal": 1.7407,
+        "pin_nvp_decimal": 1.8197,
+        "ev_pct": -4.3
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+285",
+        "pinnacle_nvp": "+316",
+        "betbck_decimal": 3.85,
+        "pin_nvp_decimal": 4.16,
+        "ev_pct": -7.54
+      },
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "-0.75",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "+104",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 2.04,
+        "ev_pct": -4.3
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "0.75",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-104",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.9615,
+        "ev_pct": -8.21
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "3.0",
+        "betbck_odds": "-155",
+        "pinnacle_nvp": "-135",
+        "betbck_decimal": 1.6452,
+        "pin_nvp_decimal": 1.7407,
+        "ev_pct": -5.4
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "3.0",
+        "betbck_odds": "+115",
+        "pinnacle_nvp": "+135",
+        "betbck_decimal": 2.15,
+        "pin_nvp_decimal": 2.35,
+        "ev_pct": -8.63
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+120",
+        "pinnacle_nvp": "+135",
+        "betbck_decimal": 2.2,
+        "pin_nvp_decimal": 2.35,
+        "ev_pct": -6.54
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+310",
+        "pinnacle_nvp": "+356",
+        "betbck_decimal": 4.1,
+        "pin_nvp_decimal": 4.56,
+        "ev_pct": -10.01
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Home",
+        "line": "-0.25",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-106",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.9434,
+        "ev_pct": -7.17
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Away",
+        "line": "0.25",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "+106",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 2.06,
+        "ev_pct": -5.41
+      },
+      {
+        "market": "1H Total",
+        "selection": "Over",
+        "line": "1.5",
+        "betbck_odds": "+115",
+        "pinnacle_nvp": "+126",
+        "betbck_decimal": 2.15,
+        "pin_nvp_decimal": 2.26,
+        "ev_pct": -4.74
+      },
+      {
+        "market": "1H Total",
+        "selection": "Under",
+        "line": "1.5",
+        "betbck_odds": "-155",
+        "pinnacle_nvp": "-126",
+        "betbck_decimal": 1.6452,
+        "pin_nvp_decimal": 1.7937,
+        "ev_pct": -8.4
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T06:41:00.348458Z",
+    "event_id": "1629700299",
+    "timestamp": "2026-05-03T06:40:59.117631Z",
+    "teams": {
+      "home": "Uni-President 7-Eleven Lions",
+      "away": "Rakuten Monkeys",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Rakuten Monkeys @ Uni-President 7-Eleven Lions | ? | market=Spread | +154 -> +132",
+        "detail": {
+          "home": "Uni-President 7-Eleven Lions",
+          "away": "Rakuten Monkeys",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+154",
+          "new_odds": "+132"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lions' (from 'Uni-President 7-Eleven Lions' / 'Rakuten Monkeys'): last word of home team 'uni-president 7-eleven lions'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lions' -> HTTP 200 (54596 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lions",
+          "status": 200,
+          "response_bytes": 54596
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Rakuten Monkeys' vs 'Uni Lions'  <->  POD 'uni-president 7-eleven lions' vs 'rakuten monkeys'  [token_set_h=100 | token_set_a=100 | partial_h=78 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Rakuten Monkeys",
+          "bck_away": "Uni Lions",
+          "pod_home": "uni-president 7-eleven lions",
+          "pod_away": "rakuten monkeys",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 78,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Rakuten Monkeys' vs 'Uni Lions'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+144 | away_moneyline=-164",
+        "detail": {
+          "home_moneyline": "+144",
+          "away_moneyline": "-164",
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 2.4400 (+144) / PIN_NVP 2.6600 (+166) => -8.27%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+144",
+          "pin_nvp_american": "+166",
+          "bck_decimal": 2.44,
+          "pin_nvp_decimal": 2.66,
+          "ev_pct": -8.27
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 1.6098 (-164) / PIN_NVP 1.6024 (-166) => +0.48%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "-164",
+          "pin_nvp_american": "-166",
+          "bck_decimal": 1.6098,
+          "pin_nvp_decimal": 1.6024,
+          "ev_pct": 0.48
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 6.5: BCK 1.9524 (-105) / PIN_NVP 2.0800 (+108) => -6.00%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "6.5",
+          "betbck_american": "-105",
+          "pin_nvp_american": "+108",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 2.08,
+          "ev_pct": -6.0
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 6.5: BCK 1.8000 (-125) / PIN_NVP 1.9259 (-108) => -6.64%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "6.5",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-108",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.9259,
+          "ev_pct": -6.64
+        }
+      }
+    ],
+    "result": "ev_found",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+144",
+        "pinnacle_nvp": "+166",
+        "betbck_decimal": 2.44,
+        "pin_nvp_decimal": 2.66,
+        "ev_pct": -8.27
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "-164",
+        "pinnacle_nvp": "-166",
+        "betbck_decimal": 1.6098,
+        "pin_nvp_decimal": 1.6024,
+        "ev_pct": 0.48
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "6.5",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "+108",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 2.08,
+        "ev_pct": -6.0
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "6.5",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-108",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.9259,
+        "ev_pct": -6.64
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T06:47:41.039405Z",
+    "event_id": "1629472859",
+    "timestamp": "2026-05-03T06:47:36.880088Z",
+    "teams": {
+      "home": "Ghazl El Mahallah",
+      "away": "Ismaily",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Ismaily @ Ghazl El Mahallah | ? | market=Spread | +149 -> +134",
+        "detail": {
+          "home": "Ghazl El Mahallah",
+          "away": "Ismaily",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+149",
+          "new_odds": "+134"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'mahallah' (from 'Ghazl El Mahallah' / 'Ismaily'): last word of home team 'ghazl el mahallah'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='mahallah' -> HTTP 200 (42950 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "mahallah",
+          "status": 200,
+          "response_bytes": 42950
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for ismaily @ ghazl el mahallah (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T06:53:41.223374Z",
+    "event_id": "1629405665",
+    "timestamp": "2026-05-03T06:53:37.042374Z",
+    "teams": {
+      "home": "Dender",
+      "away": "RAAL La Louviere",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "RAAL La Louviere @ Dender | ? | market=Total | +503 -> +455",
+        "detail": {
+          "home": "Dender",
+          "away": "RAAL La Louviere",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+503",
+          "new_odds": "+455"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'dender' (from 'Dender' / 'RAAL La Louviere'): first word of home team 'dender'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='dender' -> HTTP 200 (56381 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "dender",
+          "status": 200,
+          "response_bytes": 56381
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'La Louviere' vs 'Dender'  <->  POD 'dender' vs 'raal la louviere'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "La Louviere",
+          "bck_away": "Dender",
+          "pod_home": "dender",
+          "pod_away": "raal la louviere",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'La Louviere' vs 'Dender'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'La Louviere 1H' vs 'Dender 1H'  <->  POD 'dender' vs 'raal la louviere'  [token_set_h=100 | token_set_a=88 | partial_h=100 | partial_a=88 | threshold=60]",
+        "detail": {
+          "bck_home": "La Louviere 1H",
+          "bck_away": "Dender 1H",
+          "pod_home": "dender",
+          "pod_away": "raal la louviere",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 88,
+            "partial_h": 100,
+            "partial_a": 88,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'La Louviere 1H' vs 'Dender 1H'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+175 | away_moneyline=+145 | home_spreads=[{'line': '0', 'odds': '+100'}] | away_spreads=[{'line': '0', 'odds': '-130'}]",
+        "detail": {
+          "home_moneyline": "+175",
+          "away_moneyline": "+145",
+          "home_spreads": [
+            {
+              "line": "0",
+              "odds": "+100"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "0",
+              "odds": "-130"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 2.7500 (+175) / PIN_NVP 2.9200 (+192) => -5.92%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+175",
+          "pin_nvp_american": "+192",
+          "bck_decimal": 2.75,
+          "pin_nvp_decimal": 2.92,
+          "ev_pct": -5.92
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 2.4500 (+145) / PIN_NVP 2.5300 (+153) => -3.12%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+145",
+          "pin_nvp_american": "+153",
+          "bck_decimal": 2.45,
+          "pin_nvp_decimal": 2.53,
+          "ev_pct": -3.12
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home 0: BCK 2.0000 (+100) / PIN_NVP 2.1600 (+116) => -7.24%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "0",
+          "betbck_american": "+100",
+          "pin_nvp_american": "+116",
+          "bck_decimal": 2.0,
+          "pin_nvp_decimal": 2.16,
+          "ev_pct": -7.24
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away 0: BCK 1.7692 (-130) / PIN_NVP 1.8621 (-116) => -5.14%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "0",
+          "betbck_american": "-130",
+          "pin_nvp_american": "-116",
+          "bck_decimal": 1.7692,
+          "pin_nvp_decimal": 1.8621,
+          "ev_pct": -5.14
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 2.5: BCK 1.8000 (-125) / PIN_NVP 1.8475 (-118) => -2.54%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "2.5",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-118",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.8475,
+          "ev_pct": -2.54
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 2.5: BCK 1.8696 (-115) / PIN_NVP 2.1800 (+118) => -14.28%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "2.5",
+          "betbck_american": "-115",
+          "pin_nvp_american": "+118",
+          "bck_decimal": 1.8696,
+          "pin_nvp_decimal": 2.18,
+          "ev_pct": -14.28
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Home: BCK 3.3000 (+230) / PIN_NVP 3.5800 (+258) => -7.87%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+230",
+          "pin_nvp_american": "+258",
+          "bck_decimal": 3.3,
+          "pin_nvp_decimal": 3.58,
+          "ev_pct": -7.87
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Away: BCK 3.0000 (+200) / PIN_NVP 3.2000 (+220) => -6.31%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+200",
+          "pin_nvp_american": "+220",
+          "bck_decimal": 3.0,
+          "pin_nvp_decimal": 3.2,
+          "ev_pct": -6.31
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Home 0: BCK 2.0000 (+100) / PIN_NVP 2.1200 (+112) => -5.88%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Home",
+          "line": "0",
+          "betbck_american": "+100",
+          "pin_nvp_american": "+112",
+          "bck_decimal": 2.0,
+          "pin_nvp_decimal": 2.12,
+          "ev_pct": -5.88
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Away 0: BCK 1.7692 (-130) / PIN_NVP 1.8929 (-112) => -6.34%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Away",
+          "line": "0",
+          "betbck_american": "-130",
+          "pin_nvp_american": "-112",
+          "bck_decimal": 1.7692,
+          "pin_nvp_decimal": 1.8929,
+          "ev_pct": -6.34
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Over 1.5: BCK 2.7500 (+175) / PIN_NVP 2.8600 (+186) => -3.71%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Over",
+          "line": "1.5",
+          "betbck_american": "+175",
+          "pin_nvp_american": "+186",
+          "bck_decimal": 2.75,
+          "pin_nvp_decimal": 2.86,
+          "ev_pct": -3.71
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Under 1.5: BCK 1.4255 (-235) / PIN_NVP 1.5376 (-186) => -7.37%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Under",
+          "line": "1.5",
+          "betbck_american": "-235",
+          "pin_nvp_american": "-186",
+          "bck_decimal": 1.4255,
+          "pin_nvp_decimal": 1.5376,
+          "ev_pct": -7.37
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+175",
+        "pinnacle_nvp": "+192",
+        "betbck_decimal": 2.75,
+        "pin_nvp_decimal": 2.92,
+        "ev_pct": -5.92
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+145",
+        "pinnacle_nvp": "+153",
+        "betbck_decimal": 2.45,
+        "pin_nvp_decimal": 2.53,
+        "ev_pct": -3.12
+      },
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "0",
+        "betbck_odds": "+100",
+        "pinnacle_nvp": "+116",
+        "betbck_decimal": 2.0,
+        "pin_nvp_decimal": 2.16,
+        "ev_pct": -7.24
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "0",
+        "betbck_odds": "-130",
+        "pinnacle_nvp": "-116",
+        "betbck_decimal": 1.7692,
+        "pin_nvp_decimal": 1.8621,
+        "ev_pct": -5.14
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "2.5",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-118",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.8475,
+        "ev_pct": -2.54
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "2.5",
+        "betbck_odds": "-115",
+        "pinnacle_nvp": "+118",
+        "betbck_decimal": 1.8696,
+        "pin_nvp_decimal": 2.18,
+        "ev_pct": -14.28
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+230",
+        "pinnacle_nvp": "+258",
+        "betbck_decimal": 3.3,
+        "pin_nvp_decimal": 3.58,
+        "ev_pct": -7.87
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+200",
+        "pinnacle_nvp": "+220",
+        "betbck_decimal": 3.0,
+        "pin_nvp_decimal": 3.2,
+        "ev_pct": -6.31
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Home",
+        "line": "0",
+        "betbck_odds": "+100",
+        "pinnacle_nvp": "+112",
+        "betbck_decimal": 2.0,
+        "pin_nvp_decimal": 2.12,
+        "ev_pct": -5.88
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Away",
+        "line": "0",
+        "betbck_odds": "-130",
+        "pinnacle_nvp": "-112",
+        "betbck_decimal": 1.7692,
+        "pin_nvp_decimal": 1.8929,
+        "ev_pct": -6.34
+      },
+      {
+        "market": "1H Total",
+        "selection": "Over",
+        "line": "1.5",
+        "betbck_odds": "+175",
+        "pinnacle_nvp": "+186",
+        "betbck_decimal": 2.75,
+        "pin_nvp_decimal": 2.86,
+        "ev_pct": -3.71
+      },
+      {
+        "market": "1H Total",
+        "selection": "Under",
+        "line": "1.5",
+        "betbck_odds": "-235",
+        "pinnacle_nvp": "-186",
+        "betbck_decimal": 1.4255,
+        "pin_nvp_decimal": 1.5376,
+        "ev_pct": -7.37
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T06:57:13.793165Z",
+    "event_id": "1629445735",
+    "timestamp": "2026-05-03T06:57:12.861423Z",
+    "teams": {
+      "home": "Hong Kong FC",
+      "away": "Southern District",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Southern District @ Hong Kong FC | ? | market=Moneyline | +379 -> +278",
+        "detail": {
+          "home": "Hong Kong FC",
+          "away": "Southern District",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+379",
+          "new_odds": "+278"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'hong' (from 'Hong Kong FC' / 'Southern District'): first word of home team 'hong kong fc'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='hong' -> HTTP 200 (42949 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "hong",
+          "status": 200,
+          "response_bytes": 42949
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for southern district @ hong kong fc (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T06:57:20.225648Z",
+    "event_id": "1777791430762",
+    "timestamp": "2026-05-03T06:57:19.592706Z",
+    "teams": {
+      "home": "Hong Kong FC",
+      "away": "Southern District",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Southern District @ Hong Kong FC | ? | market=Spread | +195 -> +157",
+        "detail": {
+          "home": "Hong Kong FC",
+          "away": "Southern District",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+195",
+          "new_odds": "+157"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'hong' (from 'Hong Kong FC' / 'Southern District'): first word of home team 'hong kong fc'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='hong' -> HTTP 200 (42949 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "hong",
+          "status": 200,
+          "response_bytes": 42949
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for southern district @ hong kong fc (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T06:59:04.204070Z",
+    "event_id": "1629454287",
+    "timestamp": "2026-05-03T06:59:03.302651Z",
+    "teams": {
+      "home": "CA Progreso",
+      "away": "Cerro Largo",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Cerro Largo @ CA Progreso | ? | market=Total | +372 -> +342",
+        "detail": {
+          "home": "CA Progreso",
+          "away": "Cerro Largo",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+372",
+          "new_odds": "+342"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'progreso' (from 'CA Progreso' / 'Cerro Largo'): first word of home team 'progreso'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='progreso' -> HTTP 200 (42949 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "progreso",
+          "status": 200,
+          "response_bytes": 42949
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for cerro largo @ progreso (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:00:18.680768Z",
+    "event_id": "1629345636",
+    "timestamp": "2026-05-03T07:00:17.776950Z",
+    "teams": {
+      "home": "Gimhae",
+      "away": "Busan IParkKorea Republic",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Busan IParkKorea Republic @ Gimhae | ? | market=Moneyline | +499 -> +443",
+        "detail": {
+          "home": "Gimhae",
+          "away": "Busan IParkKorea Republic",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+499",
+          "new_odds": "+443"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'gimhae' (from 'Gimhae' / 'Busan IParkKorea Republic'): first word of home team 'gimhae'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='gimhae' -> HTTP 200 (42949 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "gimhae",
+          "status": 200,
+          "response_bytes": 42949
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for busan iparkkorea republic @ gimhae (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:00:20.305443Z",
+    "event_id": "1629330855",
+    "timestamp": "2026-05-03T07:00:19.506642Z",
+    "teams": {
+      "home": "Cheonan City",
+      "away": "Chungnam AsanKorea Republic",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Chungnam AsanKorea Republic @ Cheonan City | ? | market=Moneyline | +262 -> +230",
+        "detail": {
+          "home": "Cheonan City",
+          "away": "Chungnam AsanKorea Republic",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+262",
+          "new_odds": "+230"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'cheonan' (from 'Cheonan City' / 'Chungnam AsanKorea Republic'): first word of home team 'cheonan city'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='cheonan' -> HTTP 200 (42949 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "cheonan",
+          "status": 200,
+          "response_bytes": 42949
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for chungnam asankorea republic @ cheonan city (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:00:22.378352Z",
+    "event_id": "1629349181",
+    "timestamp": "2026-05-03T07:00:21.651004Z",
+    "teams": {
+      "home": "Paju Citizen",
+      "away": "Chungbuk CheongjuKorea Republic",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Chungbuk CheongjuKorea Republic @ Paju Citizen | ? | market=Moneyline | +237 -> +208",
+        "detail": {
+          "home": "Paju Citizen",
+          "away": "Chungbuk CheongjuKorea Republic",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+237",
+          "new_odds": "+208"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'citizen' (from 'Paju Citizen' / 'Chungbuk CheongjuKorea Republic'): last word of home team 'paju citizen'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='citizen' -> HTTP 200 (42949 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "citizen",
+          "status": 200,
+          "response_bytes": 42949
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for chungbuk cheongjukorea republic @ paju citizen (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]

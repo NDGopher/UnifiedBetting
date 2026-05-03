@@ -100,15 +100,15 @@ def setup_logging():
             backupCount=3,
             encoding='utf-8'
         )
-        matching_handler.setLevel(logging.DEBUG)
+        matching_handler.setLevel(logging.INFO)
         matching_formatter = logging.Formatter(
             '%(asctime)s - %(levelname)s - %(message)s'
         )
         matching_handler.setFormatter(matching_formatter)
 
-        # Create matching logger
+        # Create matching logger — INFO level prevents O(n*m) debug spam (~100K writes/run)
         matching_logger = logging.getLogger("matching")
-        matching_logger.setLevel(logging.DEBUG)
+        matching_logger.setLevel(logging.INFO)
         matching_logger.addHandler(matching_handler)
         matching_logger.propagate = False  # Don't propagate to root logger
     except (OSError, PermissionError):

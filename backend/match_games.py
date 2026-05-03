@@ -309,11 +309,39 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
     # Use all major sports events for matching (will be filtered by sport during matching)
     pinnacle_events = [event for events in events_by_sport.values() for event in events]
     
-    # Log all Pinnacle events for debugging (limited)
-    logger.info(f"[MATCH] Pinnacle events to match:")
+    # Log all Pinnacle events for debugging (debug only — 1298 lines at INFO would tank performance)
+    logger.debug(f"[MATCH] Pinnacle events to match:")
     for i, event in enumerate(pinnacle_events):
-        logger.info(f"[MATCH]   {i+1}. {event.get('home_team', '?')} vs {event.get('away_team', '?')} (ID: {event.get('event_id', '?')})")
-    
+        logger.debug(f"[MATCH]   {i+1}. {event.get('home_team', '?')} vs {event.get('away_team', '?')} (ID: {event.get('event_id', '?')})")
+
+    # --- PRE-NORMALIZE all Pinnacle teams once (avoids ~877K redundant normalize calls in inner loop) ---
+    pin_norm_cache: dict = {}
+    for event in pinnacle_events:
+        eid = event.get("event_id")
+        if eid is not None:
+            pin_norm_cache[eid] = (
+                normalize_team_name_for_matching(event.get("home_team", "")),
+                normalize_team_name_for_matching(event.get("away_team", "")),
+            )
+    logger.info(f"[MATCH] Pre-normalized {len(pin_norm_cache)} Pinnacle events")
+
+    # --- Sport category constants — defined once, not per-iteration ---
+    _basketball_sports = {"basketball", "nba", "wnba", "ncaab", "ncaa basketball", "euroleague", "fib"}
+    _football_sports   = {"football", "nfl", "ncaaf", "ncaa football", "college football", "american football"}
+    _baseball_sports   = {"baseball", "mlb", "minor league", "college baseball", "ncaa baseball"}
+    _soccer_sports     = {"soccer", "football", "mls", "premier league", "la liga", "bundesliga",
+                          "serie a", "ligue 1", "champions league", "europa league"}
+    _hockey_sports     = {"hockey", "nhl", "ncaa hockey", "college hockey"}
+
+    def _sport_category(league: str, sport: str) -> str | None:
+        combined = league + " " + sport
+        if any(s in combined for s in _basketball_sports): return "basketball"
+        if any(s in combined for s in _football_sports):   return "football"
+        if any(s in combined for s in _baseball_sports):   return "baseball"
+        if any(s in combined for s in _soccer_sports):     return "soccer"
+        if any(s in combined for s in _hockey_sports):     return "hockey"
+        return None
+
     for game_idx, betbck_game in enumerate(betbck_games):
         # Progress logging every 10 games
         if game_idx % 10 == 0:
@@ -328,11 +356,11 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             
         betbck_home_raw = betbck_game.get("betbck_site_home_team", "")
         betbck_away_raw = betbck_game.get("betbck_site_away_team", "")
-        logger.info(f"[BETBCK] Raw teams: home='{betbck_home_raw}', away='{betbck_away_raw}'")
-        logger.info(f"[BETBCK] Raw odds: {betbck_game.get('betbck_site_odds', {})}")
+        logger.debug(f"[BETBCK] Raw teams: home='{betbck_home_raw}', away='{betbck_away_raw}'")
+        logger.debug(f"[BETBCK] Raw odds: {betbck_game.get('betbck_site_odds', {})}")
         norm_bck_home = normalize_team_name_for_matching(betbck_home_raw)
         norm_bck_away = normalize_team_name_for_matching(betbck_away_raw)
-        logger.info(f"[NORM] BetBCK normalized: '{betbck_home_raw}' -> '{norm_bck_home}', '{betbck_away_raw}' -> '{norm_bck_away}'")
+        logger.debug(f"[NORM] BetBCK normalized: '{betbck_home_raw}' -> '{norm_bck_home}', '{betbck_away_raw}' -> '{norm_bck_away}'")
         
         if not norm_bck_home or not norm_bck_away:
             logger.warning(f"[SKIP] Could not normalize: '{betbck_home_raw}' vs '{betbck_away_raw}' -> '{norm_bck_home}' vs '{norm_bck_away}'")
@@ -345,15 +373,20 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             })
             continue
             
-        logger.info(f"[MATCH] Normalized BetBCK: '{norm_bck_home}' vs '{norm_bck_away}'")
+        logger.debug(f"[MATCH] Normalized BetBCK: '{norm_bck_home}' vs '{norm_bck_away}'")
         
         # Determine sport of this BetBCK game
         betbck_sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
-        logger.info(f"[MATCH] BetBCK game sport: {betbck_sport}")
+        logger.debug(f"[MATCH] BetBCK game sport: {betbck_sport}")
         
         # Only match against events from the same sport
         relevant_events = events_by_sport.get(betbck_sport, [])
-        logger.info(f"[MATCH] Found {len(relevant_events)} {betbck_sport} events to match against")
+        logger.debug(f"[MATCH] Found {len(relevant_events)} {betbck_sport} events to match against")
+
+        # Pre-compute betbck_sport_category once per BetBCK game (not per Pinnacle event)
+        _bck_league = betbck_game.get('league', '').lower()
+        _bck_sport  = betbck_game.get('sport', '').lower()
+        betbck_sport_category_outer = _sport_category(_bck_league, _bck_sport)
         
         best_match = None
         best_score = 0
@@ -388,7 +421,7 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                     
                     # Only match games within 24 hours of each other
                     if time_diff > 86400:  # 24 hours in seconds
-                        logger.info(f"[TIME-SKIP] Time difference too large: {time_diff/3600:.1f} hours between BetBCK {betbck_time} and Pinnacle {pinnacle_time}")
+                        logger.debug(f"[TIME-SKIP] Time diff too large: {time_diff/3600:.1f}h")
                         continue
                     else:
                         logger.debug(f"[TIME-MATCH] Time difference acceptable: {time_diff/3600:.1f} hours between {betbck_time} and {pinnacle_time}")
@@ -397,63 +430,30 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                     # Continue if we can't parse times, but log the issue
                     pass
             else:
-                logger.warning(f"[TIME-CHECK] Missing datetime - BetBCK: {betbck_time}, Pinnacle: {pinnacle_time}")
-                # If either time is missing, skip the date check but log it
+                logger.debug(f"[TIME-CHECK] Missing datetime - BetBCK: {betbck_time}, Pinnacle: {pinnacle_time}")
                 pass
             
             # Check for league/competition context compatibility
             if not is_league_compatible(betbck_game, pinnacle_event):
                 logger.debug(f"[LEAGUE-SKIP] Incompatible leagues: BetBCK={betbck_game.get('league', 'Unknown')} vs Pinnacle={pinnacle_event.get('league', 'Unknown')}")
                 continue
-            
-            # Define sport categories for loose matching
-            basketball_sports = ["basketball", "nba", "wnba", "ncaab", "ncaa basketball", "euroleague", "fib", "basketball"]
-            football_sports = ["football", "nfl", "ncaaf", "ncaa football", "college football", "american football"]
-            baseball_sports = ["baseball", "mlb", "minor league", "college baseball", "ncaa baseball"]
-            soccer_sports = ["soccer", "football", "mls", "premier league", "la liga", "bundesliga", "serie a", "ligue 1", "champions league", "europa league"]
-            hockey_sports = ["hockey", "nhl", "ncaa hockey", "college hockey"]
-            
-            # Check if sports are compatible (loose matching)
-            betbck_sport_category = None
-            pinnacle_sport_category = None
-            
-            # Get league/sport info from the games
-            betbck_league = betbck_game.get('league', '').lower()
-            pinnacle_league = pinnacle_event.get('league', '').lower()
-            betbck_sport = betbck_game.get('sport', '').lower()
-            pinnacle_sport = pinnacle_event.get('sport', '').lower()
-            
-            if any(sport in betbck_league or sport in betbck_sport for sport in basketball_sports):
-                betbck_sport_category = "basketball"
-            elif any(sport in betbck_league or sport in betbck_sport for sport in football_sports):
-                betbck_sport_category = "football"
-            elif any(sport in betbck_league or sport in betbck_sport for sport in baseball_sports):
-                betbck_sport_category = "baseball"
-            elif any(sport in betbck_league or sport in betbck_sport for sport in soccer_sports):
-                betbck_sport_category = "soccer"
-            elif any(sport in betbck_league or sport in betbck_sport for sport in hockey_sports):
-                betbck_sport_category = "hockey"
-                
-            if any(sport in pinnacle_league or sport in pinnacle_sport for sport in basketball_sports):
-                pinnacle_sport_category = "basketball"
-            elif any(sport in pinnacle_league or sport in pinnacle_sport for sport in football_sports):
-                pinnacle_sport_category = "football"
-            elif any(sport in pinnacle_league or sport in pinnacle_sport for sport in baseball_sports):
-                pinnacle_sport_category = "baseball"
-            elif any(sport in pinnacle_league or sport in pinnacle_sport for sport in soccer_sports):
-                pinnacle_sport_category = "soccer"
-            elif any(sport in pinnacle_league or sport in pinnacle_sport for sport in hockey_sports):
-                pinnacle_sport_category = "hockey"
-            
-            # Skip if sports don't match (but allow if we can't determine sport for either)
-            if betbck_sport_category and pinnacle_sport_category and betbck_sport_category != pinnacle_sport_category:
-                logger.debug(f"[LEAGUE-CHECK] Skipping - BetBCK: {betbck_sport_category} vs Pinnacle: {pinnacle_sport_category}")
+
+            # Sport-category filter — use pre-computed betbck value; compute pinnacle once per event
+            pinnacle_sport_category = _sport_category(
+                pinnacle_event.get('league', '').lower(),
+                pinnacle_event.get('sport', '').lower(),
+            )
+            if betbck_sport_category_outer and pinnacle_sport_category and betbck_sport_category_outer != pinnacle_sport_category:
+                logger.debug(f"[LEAGUE-CHECK] Skipping - BetBCK: {betbck_sport_category_outer} vs Pinnacle: {pinnacle_sport_category}")
                 continue
             # --- END LEAGUE CHECK ---
-                
-            norm_pin_home = normalize_team_name_for_matching(pin_home_raw)
-            norm_pin_away = normalize_team_name_for_matching(pin_away_raw)
-            logger.info(f"[NORM] Pinnacle normalized: '{pin_home_raw}' -> '{norm_pin_home}', '{pin_away_raw}' -> '{norm_pin_away}'")
+
+            # Use pre-normalized names from cache (avoids 877K+ normalize calls)
+            cached = pin_norm_cache.get(pinnacle_event.get("event_id"))
+            if cached is None:
+                continue
+            norm_pin_home, norm_pin_away = cached
+            logger.debug(f"[NORM] Pinnacle normalized: '{pin_home_raw}' -> '{norm_pin_home}', '{pin_away_raw}' -> '{norm_pin_away}'")
             
             if not norm_pin_home or not norm_pin_away:
                 continue
@@ -477,7 +477,7 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 best_orientation = True
                 # Early termination: if we have a very high score, stop searching
                 if score_direct >= 95:  # Very high confidence match
-                    logger.info(f"[MATCH] Early termination: High confidence match found (score: {score_direct})")
+                    logger.debug(f"[MATCH] Early termination at score {score_direct}")
                     break
             if score_flipped > best_score:
                 best_score = score_flipped
@@ -485,7 +485,7 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 best_orientation = False
                 # Early termination: if we have a very high score, stop searching
                 if score_flipped >= 95:  # Very high confidence match
-                    logger.info(f"[MATCH] Early termination: High confidence match found (score: {score_flipped})")
+                    logger.debug(f"[MATCH] Early termination at score {score_flipped}")
                     break
                 
         if best_match and best_score >= FUZZY_MATCH_THRESHOLD:
@@ -498,9 +498,10 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             match_pinnacle_to_betbck.matched_betbck_ids = matched_betbck_ids
 
             # --- Explicitly map BetBCK odds to event ID home/away ---
-            # Get normalized names
-            norm_event_home = normalize_team_name_for_matching(best_match["home_team"])
-            norm_event_away = normalize_team_name_for_matching(best_match["away_team"])
+            # Use pre-normalized cache instead of calling normalize again
+            _cached_best = pin_norm_cache.get(best_match["event_id"], (None, None))
+            norm_event_home = _cached_best[0] or normalize_team_name_for_matching(best_match["home_team"])
+            norm_event_away = _cached_best[1] or normalize_team_name_for_matching(best_match["away_team"])
             # Map BetBCK normalized names to event ID home/away
             betbck_odds = betbck_game.get("betbck_site_odds", {})
             # BetBCK top/bottom teams (as shown in UI)
@@ -520,7 +521,7 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 logger.warning(f"[MAPPING] Could not confidently map BetBCK teams to event ID home/away: top='{betbck_top_team}', bottom='{betbck_bottom_team}', event_home='{norm_event_home}', event_away='{norm_event_away}'")
                 betbck_home_odds = None
                 betbck_away_odds = None
-            logger.info(f"[MAPPING] Event: {best_match['home_team']} vs {best_match['away_team']} | BetBCK home odds: {betbck_home_odds}, away odds: {betbck_away_odds}")
+            logger.debug(f"[MAPPING] Event: {best_match['home_team']} vs {best_match['away_team']} | BetBCK home odds: {betbck_home_odds}, away odds: {betbck_away_odds}")
             # Determine sport for this match - use BetBCK sport if available, otherwise fall back to team name detection
             sport = betbck_game.get('sport', '').lower()
             if not sport or sport == 'soccer':  # If no sport or default soccer, try team name detection
@@ -561,13 +562,15 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
     
     # Log unmatched Pinnacle events
     for pinnacle_event in pinnacle_events:
-        if pinnacle_event.get("event_id") not in processed_pinnacle_event_ids:
+        eid = pinnacle_event.get("event_id")
+        if eid not in processed_pinnacle_event_ids:
+            _cached = pin_norm_cache.get(eid, (None, None))
             unmatched_pinnacle.append({
                 "pinnacle_home": pinnacle_event.get("home_team", ""),
                 "pinnacle_away": pinnacle_event.get("away_team", ""),
-                "event_id": pinnacle_event.get("event_id", ""),
-                "norm_home": normalize_team_name_for_matching(pinnacle_event.get("home_team", "")),
-                "norm_away": normalize_team_name_for_matching(pinnacle_event.get("away_team", ""))
+                "event_id": eid or "",
+                "norm_home": _cached[0] or normalize_team_name_for_matching(pinnacle_event.get("home_team", "")),
+                "norm_away": _cached[1] or normalize_team_name_for_matching(pinnacle_event.get("away_team", ""))
             })
     
     # Summary logging
