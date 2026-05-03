@@ -444,7 +444,13 @@ def normalize_team_name_for_matching(name):
         'slovakia', 'slovenia', 'croatia', 'serbia', 'bulgaria', 'romania', 'hungary',
         'ukraine', 'turkey', 'greece', 'portugal', 'brazil', 'argentina', 'mexico',
         'united states', 'canada', 'australia', 'japan', 'south korea', 'china',
-        'india', 'south africa', 'new zealand', 'egypt', 'morocco', 'algeria', 'tunisia',
+        'india', 'indonesia', 'malaysia', 'thailand', 'vietnam', 'philippines', 'singapore',
+        'myanmar', 'cambodia', 'laos', 'brunei', 'timor-leste',
+        'taiwan', 'chinese taipei', 'hong kong', 'macau',
+        'belarus', 'moldova', 'georgia', 'armenia', 'azerbaijan',
+        'kazakhstan', 'uzbekistan', 'kyrgyzstan', 'tajikistan', 'turkmenistan',
+        'lithuania', 'latvia', 'estonia',
+        'south africa', 'new zealand', 'egypt', 'morocco', 'algeria', 'tunisia',
         'nigeria', 'kenya', 'ethiopia', 'ghana', 'senegal', 'ivory coast', 'cameroon',
         'zambia', 'zimbabwe', 'uganda', 'tanzania', 'angola', 'mozambique', 'sudan',
         'south sudan', 'democratic republic of the congo', 'republic of the congo',
@@ -517,6 +523,38 @@ def clean_pod_team_name_for_search(name: str) -> str:
     result = normalize_team_name_for_matching(name)
     print(f"[DEBUG] clean_pod_team_name_for_search output: '{result}'")
     return result
+
+def strip_team_name_for_display(name: str) -> str:
+    """Strip country/league suffix from a POD team name, preserving original casing.
+
+    Handles all POD concatenation patterns:
+      'SionSwitzerland'                      → 'Sion'
+      'HeredianoCosta Rica'                  → 'Herediano'
+      'Orange CountyUSA - USL Championship'  → 'Orange County'
+      'CeutaSpain - Segunda Division'        → 'Ceuta'
+      'Taila SantosPFL'                      → 'Taila Santos'
+    """
+    if not name or name == "?":
+        return name
+    # Step 1: strip " - League/competition" trailer
+    cleaned = re.sub(r'\s+-\s+.+$', '', name).strip()
+    # Step 2: get the normalised (lowercase, suffix-stripped) version
+    stripped_lower = normalize_team_name_for_matching(cleaned)
+    if not stripped_lower:
+        return cleaned
+    cleaned_lower = cleaned.lower()
+    # Step 3: direct prefix match (most common case)
+    if cleaned_lower.startswith(stripped_lower):
+        return cleaned[:len(stripped_lower)].strip()
+    # Step 4: normalize may have also stripped a leading club prefix (fc, sc…).
+    # Try to recover the display name by locating stripped_lower after that prefix.
+    common_prefixes = ['fc ', 'sc ', 'bk ', 'sk ', 'ac ', 'as ', 'fk ', 'cd ', 'ca ', 'afc ']
+    for pfx in common_prefixes:
+        if cleaned_lower.startswith(pfx):
+            remainder_lower = cleaned_lower[len(pfx):]
+            if remainder_lower.startswith(stripped_lower):
+                return cleaned[len(pfx):len(pfx) + len(stripped_lower)].strip()
+    return cleaned
 
 def normalize_total_line(line):
     if line is None:

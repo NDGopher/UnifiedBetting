@@ -19,7 +19,7 @@ from odds_processing import fetch_live_pinnacle_event_odds
 from utils import process_event_odds_for_display
 import copy
 from team_utils import match_betbck_to_pinnacle_markets
-from utils.pod_utils import clean_pod_team_name_for_search, american_to_decimal, calculate_ev, decimal_to_american, normalize_team_name_for_matching, is_prop_or_corner_alert, determine_betbck_search_term
+from utils.pod_utils import clean_pod_team_name_for_search, american_to_decimal, calculate_ev, decimal_to_american, normalize_team_name_for_matching, is_prop_or_corner_alert, determine_betbck_search_term, strip_team_name_for_display
 # from pto_scraper import PTOScraper  # PTO disabled for now
 from thread_safe_manager import event_manager
 import gc
@@ -276,8 +276,8 @@ async def event_alert_worker(event_id):
                                     logger.warning(f"[PerEventQueue] No valid betting data for event {event_id}, skipping broadcast")
                                 else:
                                     cleaned_payload = payload.copy()
-                                    cleaned_payload["homeTeam"] = payload.get("homeTeam", "")
-                                    cleaned_payload["awayTeam"] = payload.get("awayTeam", "")
+                                    cleaned_payload["homeTeam"] = strip_team_name_for_display(payload.get("homeTeam", ""))
+                                    cleaned_payload["awayTeam"] = strip_team_name_for_display(payload.get("awayTeam", ""))
 
                                     event_data = {
                                         "alert_arrival_timestamp": now,
@@ -2014,18 +2014,7 @@ def build_event_object(event_id, entry):
     # Handles patterns like "HeredianoCosta Rica", "Orange CountyUSA - USL Championship",
     # "CeutaSpain - Segunda Division", "Taila SantosPFL", etc.
     def _clean_display_name(raw: str) -> str:
-        if not raw:
-            return raw
-        # Step 1: strip any " - League/competition" trailer (e.g., "USA - USL Championship")
-        name = re.sub(r'\s+-\s+.+$', '', raw).strip()
-        # Step 2: use normalize_team_name_for_matching to strip remaining country/code suffix
-        stripped_lower = normalize_team_name_for_matching(name)
-        if not stripped_lower:
-            return name.strip()
-        name_lower = name.lower()
-        if name_lower.startswith(stripped_lower):
-            return name[:len(stripped_lower)].strip()
-        return name.strip()
+        return strip_team_name_for_display(raw) if raw else raw
 
     display_home = _clean_display_name(display_home)
     display_away = _clean_display_name(display_away)

@@ -766,7 +766,8 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         if len(a_cells)>3: txt_el=a_cells[3];_and_True = "o" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"away_team_total_over_line":extract_line_value_from_text(txt_el,"Total"), "away_team_total_over_odds":extract_american_odds_from_text(txt_el)}))
         if len(a_cells)>4: txt_el=a_cells[4];_and_True = "u" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"away_team_total_under_line":extract_line_value_from_text(txt_el,"Total"), "away_team_total_under_odds":extract_american_odds_from_text(txt_el)}))
         
-        if len(data_rows)>2 and "draw" in data_rows[2].get_text(strip=True).lower():
+        _draw_row_text = data_rows[2].get_text(strip=True).lower() if len(data_rows) > 2 else ""
+        if _draw_row_text and any(w in _draw_row_text for w in ("draw", "tie", "empate")):
             tds_draw = data_rows[2].find_all('td',class_=lambda x:x and 'tbl_betAmount_td' in x)
             if len(tds_draw)>1: output_data["draw_moneyline_american"]=extract_american_odds_from_text(tds_draw[1])
         

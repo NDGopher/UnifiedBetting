@@ -409,95 +409,23 @@ class BuckeyeScraper:
             return None
     
     def get_betbck_odds(self, pinnacle_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Get BetBCK odds for the teams in the event using BUCKEYE-SPECIFIC relaxed matching logic."""
+        """Get BetBCK odds using the same search-term logic as the POD pipeline."""
         try:
-            # BUCKEYE-SPECIFIC: Use less aggressive team name cleaning
             raw_home = pinnacle_data.get("home", "")
             raw_away = pinnacle_data.get("away", "")
-            
-            # Simple cleaning for Buckeye (less aggressive than POD Alerts)
-            def buckeye_clean_team_name(name: str) -> str:
-                if not name:
-                    return ""
-                # Just lowercase and basic cleanup
-                cleaned = name.lower().strip()
-                # Remove common suffixes but keep more of the original name
-                suffixes_to_remove = ['fc', 'sc', 'bk', 'sk', 'ac', 'as', 'fk', 'cd', 'ca', 'afc', 'cfr', 'kc', 'scr']
-                for suffix in suffixes_to_remove:
-                    if cleaned.endswith(f' {suffix}'):
-                        cleaned = cleaned[:-len(f' {suffix}')].strip()
-                return cleaned
-            
-            buckeye_home_clean = buckeye_clean_team_name(raw_home)
-            buckeye_away_clean = buckeye_clean_team_name(raw_away)
-            logger.info(f"[BETBCK-MATCH] (BUCKEYE) Pinnacle cleaned: home='{buckeye_home_clean}', away='{buckeye_away_clean}'")
-            
-            if not buckeye_home_clean or not buckeye_away_clean:
-                logger.warning(f"[BETBCK-MATCH] Missing cleaned team names: home='{buckeye_home_clean}', away='{buckeye_away_clean}'")
+            clean_home = normalize_team_name_for_matching(raw_home)
+            clean_away = normalize_team_name_for_matching(raw_away)
+            if not clean_home or not clean_away:
+                logger.warning(f"[BETBCK-MATCH] Empty cleaned name: raw='{raw_home}' vs '{raw_away}'")
                 return None
-            
-            # Use simple search term (just combine team names)
-            search_term = f"{buckeye_home_clean} {buckeye_away_clean}"
-            logger.info(f"[BETBCK-MATCH] (BUCKEYE) Using search term: '{search_term}'")
-            
-            try:
-                from betbck_scraper import scrape_betbck_for_game
-                # Pass cleaned names and search term to scraper
-                betbck_data = scrape_betbck_for_game(buckeye_home_clean, buckeye_away_clean, search_term)
-                if betbck_data and betbck_data.get("status", "success") == "success":
-                    bck_home = buckeye_clean_team_name(betbck_data.get("pod_home_team", ""))
-                    bck_away = buckeye_clean_team_name(betbck_data.get("pod_away_team", ""))
-                    logger.info(f"[BETBCK-MATCH] (BUCKEYE) BetBCK cleaned: home='{bck_home}', away='{bck_away}'")
-                    
-                    # BUCKEYE-SPECIFIC: More relaxed matching logic
-                    def buckeye_team_match(team1: str, team2: str) -> bool:
-                        """More relaxed team matching for Buckeye scraper"""
-                        if not team1 or not team2:
-                            return False
-                        # Exact match
-                        if team1 == team2:
-                            return True
-                        # One team contains the other (partial match)
-                        if team1 in team2 or team2 in team1:
-                            return True
-                        # Check for common variations
-                        variations = [
-                            ('new york', 'ny'),
-                            ('los angeles', 'la'),
-                            ('st louis', 'st. louis'),
-                            ('tottenham hotspur', 'tottenham'),
-                            ('paris saint germain', 'psg'),
-                            ('inter milan', 'inter')
-                        ]
-                        for var1, var2 in variations:
-                            if (team1 == var1 and team2 == var2) or (team1 == var2 and team2 == var1):
-                                return True
-                        return False
-                    
-                    # Check if teams match (more relaxed)
-                    home_match = buckeye_team_match(buckeye_home_clean, bck_home)
-                    away_match = buckeye_team_match(buckeye_away_clean, bck_away)
-                    
-                    if home_match and away_match:
-                        logger.info("[BETBCK-MATCH] (BUCKEYE) Home/Away teams match. No flip needed.")
-                        return betbck_data
-                    elif home_match and buckeye_team_match(buckeye_home_clean, bck_away) and buckeye_team_match(buckeye_away_clean, bck_home):
-                        logger.info("[BETBCK-MATCH] (BUCKEYE) Home/Away teams reversed. Flipping odds.")
-                        flipped = betbck_data.copy()
-                        flipped["home_moneyline_american"], flipped["away_moneyline_american"] = betbck_data.get("away_moneyline_american"), betbck_data.get("home_moneyline_american")
-                        flipped["home_spreads"], flipped["away_spreads"] = betbck_data.get("away_spreads", []), betbck_data.get("home_spreads", [])
-                        flipped["pod_home_team"], flipped["pod_away_team"] = betbck_data.get("pod_away_team"), betbck_data.get("pod_home_team")
-                        return flipped
-                    else:
-                        logger.warning(f"[BETBCK-MATCH] (BUCKEYE) Team names do not match. Skipping event. (Pinnacle: {buckeye_home_clean} vs {buckeye_away_clean}, BetBCK: {bck_home} vs {bck_away})")
-                        return None
-                else:
-                    logger.warning(f"[BETBCK-MATCH] (BUCKEYE) BetBCK scraper returned no data for {buckeye_home_clean} vs {buckeye_away_clean}")
-            except ImportError:
-                logger.error("[BETBCK-MATCH] BetBCK scraper not available")
-            except Exception as e:
-                logger.error(f"[BETBCK-MATCH] Error in BetBCK scraper: {e}")
-            logger.warning(f"[BETBCK-MATCH] No BetBCK odds found for {buckeye_home_clean} vs {buckeye_away_clean}")
+            search_term = determine_betbck_search_term(raw_home, raw_away)
+            logger.info(f"[BETBCK-MATCH] '{clean_home}' vs '{clean_away}' → search: '{search_term}'")
+            from betbck_scraper import scrape_betbck_for_game
+            betbck_data = scrape_betbck_for_game(clean_home, clean_away, search_term)
+            if betbck_data and betbck_data.get("status") == "success":
+                logger.info(f"[BETBCK-MATCH] Match found for '{clean_home}' vs '{clean_away}'")
+                return betbck_data
+            logger.warning(f"[BETBCK-MATCH] No BetBCK data for '{clean_home}' vs '{clean_away}'")
             return None
         except Exception as e:
             logger.error(f"[BETBCK-MATCH] Error getting BetBCK odds: {e}")
@@ -544,6 +472,12 @@ class BuckeyeScraper:
                         logger.warning(f"[MAIN-CALC] No Pinnacle data for event {event_id}")
                         continue
                     logger.info(f"[MAIN-CALC] Got Pinnacle data for {pinnacle_data.get('home', '')} vs {pinnacle_data.get('away', '')}")
+                    # Skip BetBCK scrape if Pinnacle has no markets (pre-event / expired)
+                    _num0 = pinnacle_data.get("periods", {}).get("num_0", {})
+                    if not (_num0.get("money_line") or _num0.get("spreads") or _num0.get("totals")):
+                        logger.info(f"[MAIN-CALC] Skipping {event_id}: Pinnacle returned 0 markets")
+                        processed_count += 1
+                        continue
                     # Get BetBCK odds for this event
                     betbck_data = self.get_betbck_odds(pinnacle_data)
                     if not betbck_data:
