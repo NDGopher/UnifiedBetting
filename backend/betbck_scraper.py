@@ -1145,6 +1145,35 @@ def scrape_betbck_with_periods_selenium(pod_home_team, pod_away_team, search_tea
         if driver:
             driver.quit()
 
+def _build_1h_data_dict(tds_home_row, tds_away_row):
+    """Build a 1H/period data dict from two rows of BetBCK odds cells.
+    Extracts spreads and ML via the standard helpers; extracts totals using
+    the Total extractor so Over and Under odds are captured separately.
+    """
+    result = {
+        "home_spreads":            extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row) > 0 else [],
+        "away_spreads":            extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row) > 0 else [],
+        "home_moneyline_american": extract_american_odds_from_text(tds_home_row[1]) if len(tds_home_row) > 1 else None,
+        "away_moneyline_american": extract_american_odds_from_text(tds_away_row[1]) if len(tds_away_row) > 1 else None,
+        "game_total_line":         None,
+        "game_total_over_odds":    None,
+        "game_total_under_odds":   None,
+    }
+    # Column 2: home row → Over line/odds; away row → Under line/odds
+    if len(tds_home_row) > 2:
+        cell = tds_home_row[2]
+        result["game_total_line"] = extract_line_value_from_text(cell, "Total")
+        if "o" in cell.get_text(" ", strip=True).lower():
+            result["game_total_over_odds"] = extract_american_odds_from_text(cell)
+    if len(tds_away_row) > 2:
+        cell = tds_away_row[2]
+        if not result["game_total_line"]:
+            result["game_total_line"] = extract_line_value_from_text(cell, "Total")
+        if "u" in cell.get_text(" ", strip=True).lower():
+            result["game_total_under_odds"] = extract_american_odds_from_text(cell)
+    return result
+
+
 def extract_1h_data_from_html(html_content, home_team, away_team):
     """Extract 1H data from HTML content that contains period information."""
     try:
@@ -1182,14 +1211,7 @@ def extract_1h_data_from_html(html_content, home_team, away_team):
                         tds_home_row = data_rows[0].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
                         tds_away_row = data_rows[1].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
                         
-                        return {
-                            "home_spreads": extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row)>0 else [],
-                            "away_spreads": extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row)>0 else [],
-                            "home_moneyline_american": extract_american_odds_from_text(tds_home_row[1]) if len(tds_home_row)>1 else None,
-                            "away_moneyline_american": extract_american_odds_from_text(tds_away_row[1]) if len(tds_away_row)>1 else None,
-                            "home_totals": extract_all_spread_options_from_text(tds_home_row[2]) if len(tds_home_row)>2 else [],
-                            "away_totals": extract_all_spread_options_from_text(tds_away_row[2]) if len(tds_away_row)>2 else [],
-                        }
+                        return _build_1h_data_dict(tds_home_row, tds_away_row)
             else:
                 # Also check for any text that might indicate 1H data
                 wrapper_text = wrapper.get_text().lower()
@@ -1272,14 +1294,7 @@ def extract_1h_data_from_html(html_content, home_team, away_team):
                                         print(f"[BetbckParser] Away cell {i} select {j} options: {[opt.get_text(strip=True) for opt in options[:3]]}")
                             
                             print(f"[BetbckParser] Successfully extracted 1H/1st 5 data from separate table {table_idx}")
-                            return {
-                                "home_spreads": extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row)>0 else [],
-                                "away_spreads": extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row)>0 else [],
-                                "home_moneyline_american": extract_american_odds_from_text(tds_home_row[1]) if len(tds_home_row)>1 else None,
-                                "away_moneyline_american": extract_american_odds_from_text(tds_away_row[1]) if len(tds_away_row)>1 else None,
-                                "home_totals": extract_all_spread_options_from_text(tds_home_row[2]) if len(tds_home_row)>2 else [],
-                                "away_totals": extract_all_spread_options_from_text(tds_away_row[2]) if len(tds_away_row)>2 else [],
-                            }
+                            return _build_1h_data_dict(tds_home_row, tds_away_row)
                     else:
                         print(f"[BetbckParser] No odds table found in 1H/1st 5 table {table_idx}")
                 else:
@@ -1388,14 +1403,7 @@ def extract_1h_data_from_html(html_content, home_team, away_team):
                                 print(f"[BetbckParser] Away cell {i}: '{cell_text}'")
                             
                             print(f"[BetbckParser] Successfully extracted 1st 5 innings data from separate table {table_idx}")
-                            return {
-                                "home_spreads": extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row)>0 else [],
-                                "away_spreads": extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row)>0 else [],
-                                "home_moneyline_american": extract_american_odds_from_text(tds_home_row[1]) if len(tds_home_row)>1 else None,
-                                "away_moneyline_american": extract_american_odds_from_text(tds_away_row[1]) if len(tds_away_row)>1 else None,
-                                "home_totals": extract_all_total_options_from_text(tds_home_row[2]) if len(tds_home_row)>2 else [],
-                                "away_totals": extract_all_total_options_from_text(tds_away_row[2]) if len(tds_away_row)>2 else []
-                            }
+                            return _build_1h_data_dict(tds_home_row, tds_away_row)
         
         # If we get here, we didn't find any F5 data, so return None
         print(f"[BetbckParser] No F5 data found in any table")
