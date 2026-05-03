@@ -443,7 +443,7 @@ def normalize_team_name_for_matching(name):
         'belgium', 'switzerland', 'austria', 'norway', 'sweden', 'poland', 'czech republic',
         'slovakia', 'slovenia', 'croatia', 'serbia', 'bulgaria', 'romania', 'hungary',
         'ukraine', 'turkey', 'greece', 'portugal', 'brazil', 'argentina', 'mexico',
-        'united states', 'canada', 'australia', 'japan', 'south korea', 'china',
+        'united states', 'canada', 'australia', 'japan', 'south korea', 'korea republic', 'republic of korea', 'china', 'china pr',
         'india', 'indonesia', 'malaysia', 'thailand', 'vietnam', 'philippines', 'singapore',
         'myanmar', 'cambodia', 'laos', 'brunei', 'timor-leste',
         'taiwan', 'chinese taipei', 'hong kong', 'macau',
