@@ -14,6 +14,7 @@ Usage:
     record = finalize_alert_log(event_id)   # stores in ring buffer, returns dict
 """
 
+import re
 import threading
 import traceback
 from collections import deque
@@ -84,6 +85,35 @@ class AlertLogger:
 
     # ── Public API ────────────────────────────────────────────────────────────
 
+    @staticmethod
+    def _strip_display_suffix(name: str) -> str:
+        """Strip trailing league/country abbreviations for clean display (preserves casing)."""
+        if not name or name == "?":
+            return name
+        _suffixes = [
+            'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'afl', 'cfl', 'mls',
+            'ufc', 'pfl', 'bellator', 'bkfc', 'lfa', 'rizin',
+            'usa', 'can', 'mex', 'bra', 'arg', 'per', 'uru', 'col',
+            'eng', 'esp', 'ger', 'fra', 'ita', 'por', 'ned', 'bel',
+            'rus', 'ukr', 'tur', 'gre', 'pol', 'cze', 'hun', 'rou',
+            'den', 'nor', 'swe', 'fin', 'isl', 'aut', 'sui',
+            'aus', 'jpn', 'kor', 'chn',
+            'peru', 'colombia', 'uruguay', 'argentina', 'brazil',
+            'germany', 'france', 'italy', 'spain', 'england', 'scotland',
+            'portugal', 'netherlands', 'belgium', 'austria', 'switzerland',
+            'norway', 'sweden', 'denmark', 'finland', 'russia', 'ukraine',
+            'turkey', 'greece', 'poland', 'czech republic', 'hungary', 'romania',
+        ]
+        result = name
+        lower = name.lower()
+        for s in _suffixes:
+            pattern = r'(\s+' + re.escape(s) + r'|' + re.escape(s) + r')$'
+            stripped = re.sub(pattern, '', lower, flags=re.IGNORECASE).strip()
+            if stripped and stripped != lower:
+                result = name[: len(stripped)].strip()
+                break
+        return result
+
     def log_raw_alert(self, payload: Dict):
         home = payload.get("homeTeam", "?")
         away = payload.get("awayTeam", "?")
@@ -91,7 +121,9 @@ class AlertLogger:
         market = payload.get("marketType", payload.get("bet_type", "?"))
         old_odds = payload.get("oldOdds", "?")
         new_odds = payload.get("newOdds", "?")
-        self.teams = {"home": home, "away": away, "league": league}
+        home_display = self._strip_display_suffix(home)
+        away_display = self._strip_display_suffix(away)
+        self.teams = {"home": home_display, "away": away_display, "league": league}
         print(self._divider)
         self._step(
             "ALERT IN",

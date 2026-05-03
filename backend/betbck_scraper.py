@@ -355,6 +355,28 @@ def alias_normalize(name):
             return canonical
     return name
 
+
+# ── Row-type classifier ────────────────────────────────────────────────────────
+_ROW_TYPE_RE = re.compile(
+    r'\b(Alt\s+Line|Alt\.?\s*Line|3[Pp]|3rd\s+(?:Period|Half)|2[Pp]|2nd\s+(?:Period|Half)|1[Pp]|1st\s+(?:Period|Half)|2[Hh]|1[Hh]|Reg(?:ular)?\s+Time|OT|ET)\b',
+    re.IGNORECASE,
+)
+
+def _classify_bck_row_type(bck_home: str, bck_away: str) -> str:
+    """Return a canonical row-type key for a BetBCK wrapper based on its team-name suffixes."""
+    m = _ROW_TYPE_RE.search(f"{bck_home} {bck_away}")
+    if not m:
+        return "full_game"
+    t = m.group(1).lower().strip()
+    if 'alt' in t:          return "alt_line"
+    if '3p' in t or '3rd' in t: return "period_3"
+    if '2p' in t or '2nd' in t: return "period_2"
+    if '1p' in t or '1st' in t: return "period_1"
+    if '2h' in t:           return "half_2"
+    if '1h' in t:           return "half_1"
+    if 'reg' in t:          return "reg_time"
+    return "full_game"
+
 def normalize_team_name_for_matching(name):
     original_name_for_debug = name
     if not name: return ""
@@ -768,47 +790,32 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         print(f"[BetbckParser] No game matching POD teams found after all wrappers. (Event ID: {event_id})")
         return None
 
-    if len(matches) == 1:
-        m = matches[0]
-        print(f"[BetbckParser] Single match: {m['bck_home']} vs {m['bck_away']} (Event ID: {event_id})")
-        return m["data"]
+    # --- Build row_data dict: collect ALL matched wrappers, keyed by row type ---
+    row_data = {}
+    for m in matches:
+        rtype = _classify_bck_row_type(m["bck_home"], m["bck_away"])
+        if rtype not in row_data:  # first match per type wins (keeps the closest-to-date order)
+            row_data[rtype] = m["data"]
+            print(f"[BetbckParser] row_data['{rtype}'] <- {m['bck_home']} vs {m['bck_away']} (Event ID: {event_id})")
 
-    # Multiple wrappers matched by team name.
-    # Step 1: prefer plain full-game rows (no alt-line / period / reg-time suffixes).
-    _PERIOD_SUFFIXES = re.compile(
-        r'\b(Alt\s+Line|Alt\.?\s*Line|\d[PH]|1st\s+Half|2nd\s+Half|Reg(?:ular)?\s+Time|OT|ET)\b',
-        re.IGNORECASE
-    )
-    plain_matches = [
-        m for m in matches
-        if not _PERIOD_SUFFIXES.search(m["bck_home"]) and not _PERIOD_SUFFIXES.search(m["bck_away"])
-    ]
-    candidate_pool = plain_matches if plain_matches else matches
-    if len(plain_matches) < len(matches):
-        dropped = [f"{m['bck_home']} vs {m['bck_away']}" for m in matches if m not in candidate_pool]
-        print(f"[BetbckParser] Plain-name filter: kept {len(candidate_pool)}/{len(matches)}, dropped: {dropped} (Event ID: {event_id})")
+    print(f"[BetbckParser] row_data keys: {list(row_data.keys())} (Event ID: {event_id})")
 
-    if len(candidate_pool) == 1:
-        m = candidate_pool[0]
-        print(f"[BetbckParser] Plain-name filter chose: {m['bck_home']} vs {m['bck_away']} (Event ID: {event_id})")
-        return m["data"]
+    # Pick the canonical full-game row for top-level (backward-compat) fields.
+    # Prefer an explicit plain-name match; fall back to date tiebreaker across all matches.
+    if "full_game" in row_data:
+        primary = row_data["full_game"]
+    elif event_date is not None:
+        dated = sorted(
+            matches,
+            key=lambda m: abs((m["bck_date"] - event_date).total_seconds()) if m["bck_date"] else float("inf")
+        )
+        primary = dated[0]["data"]
+        print(f"[BetbckParser] Primary (date fallback): {dated[0]['bck_home']} vs {dated[0]['bck_away']} (Event ID: {event_id})")
+    else:
+        primary = matches[0]["data"]
 
-    # Step 2: date tiebreaker within remaining candidates
-    print(f"[BetbckParser] {len(candidate_pool)} candidates after plain-name filter (Event ID: {event_id}) — applying date tiebreaker")
-    if event_date is not None:
-        dated = []
-        for m in candidate_pool:
-            diff = abs((m["bck_date"] - event_date).total_seconds()) if m["bck_date"] else float("inf")
-            dated.append((m, diff))
-        dated.sort(key=lambda x: x[1])
-        best, best_diff = dated[0]
-        print(f"[BetbckParser] Date tiebreaker: chose {best['bck_home']} vs {best['bck_away']} (Δ={best_diff/3600:.1f}h) (Event ID: {event_id})")
-        if best_diff > 43200:
-            print(f"[BetbckParser] WARNING: closest date match is {best_diff/3600:.1f}h from Pinnacle start — may be wrong game (Event ID: {event_id})")
-        return best["data"]
-
-    print(f"[BetbckParser] No event_date supplied — returning first of {len(candidate_pool)} candidates (Event ID: {event_id})")
-    return candidate_pool[0]["data"]
+    primary["row_data"] = row_data
+    return primary
 
 def parse_game_data_from_html(search_results_html, search_term):
     """

@@ -1680,5 +1680,305 @@
     ],
     "result": "found_no_ev",
     "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:16:06.152208Z",
+    "event_id": "1629500288",
+    "timestamp": "2026-05-03T00:16:03.311556Z",
+    "teams": {
+      "home": "Qihui Yan",
+      "away": "Taila SantosPFL",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Taila SantosPFL @ Qihui Yan | ? | market=Total | +185 -> +144",
+        "detail": {
+          "home": "Qihui Yan",
+          "away": "Taila SantosPFL",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+185",
+          "new_odds": "+144"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'qihui' (from 'Qihui Yan' / 'Taila SantosPFL'): first word of home team 'qihui yan'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='qihui' -> HTTP 200 (48196 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "qihui",
+          "status": 200,
+          "response_bytes": 48196
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Qihui Yan' vs 'Taila Santos'  <->  POD 'qihui yan' vs 'taila santos'  [exact_order1=100]",
+        "detail": {
+          "bck_home": "Qihui Yan",
+          "bck_away": "Taila Santos",
+          "pod_home": "qihui yan",
+          "pod_away": "taila santos",
+          "scores": {
+            "exact_order1": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Qihui Yan' vs 'Taila Santos'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "No odds extracted",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:17:13.518285Z",
+    "event_id": "1629426380",
+    "timestamp": "2026-05-03T00:17:12.742609Z",
+    "teams": {
+      "home": "San Antonio",
+      "away": "Colorado Springs SwitchbacksUSA",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Colorado Springs SwitchbacksUSA @ San Antonio | ? | market=Moneyline | +145 -> +129",
+        "detail": {
+          "home": "San Antonio",
+          "away": "Colorado Springs SwitchbacksUSA",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+145",
+          "new_odds": "+129"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'antonio' (from 'San Antonio' / 'Colorado Springs SwitchbacksUSA'): last word of home team 'san antonio'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='antonio' -> HTTP 200 (58699 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "antonio",
+          "status": 200,
+          "response_bytes": 58699
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=15 | partial_h=100 | partial_a=25 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves 1H' vs 'San Antonio Spurs 1H'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=11 | partial_h=100 | partial_a=24 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves 1H",
+          "bck_away": "San Antonio Spurs 1H",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 11,
+            "partial_h": 100,
+            "partial_a": 24,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs' | home=100/60, away=15/60 (combined=115, needed \u2265120)",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "best_score": 115,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 15,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:17:27.002700Z",
+    "event_id": "1777767430488",
+    "timestamp": "2026-05-03T00:17:26.197839Z",
+    "teams": {
+      "home": "San Antonio",
+      "away": "Colorado Springs SwitchbacksUSA",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Colorado Springs SwitchbacksUSA @ San Antonio | ? | market=Spread | +323 -> +280",
+        "detail": {
+          "home": "San Antonio",
+          "away": "Colorado Springs SwitchbacksUSA",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+323",
+          "new_odds": "+280"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'antonio' (from 'San Antonio' / 'Colorado Springs SwitchbacksUSA'): last word of home team 'san antonio'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='antonio' -> HTTP 200 (58699 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "antonio",
+          "status": 200,
+          "response_bytes": 58699
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=15 | partial_h=100 | partial_a=25 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves 1H' vs 'San Antonio Spurs 1H'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=11 | partial_h=100 | partial_a=24 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves 1H",
+          "bck_away": "San Antonio Spurs 1H",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 11,
+            "partial_h": 100,
+            "partial_a": 24,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs' | home=100/60, away=15/60 (combined=115, needed \u2265120)",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "best_score": 115,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 15,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]

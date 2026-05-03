@@ -13,6 +13,7 @@ import threading
 import traceback
 from pod_event_manager import PodEventManager
 from main_logic import process_alert_and_scrape_betbck, analyze_markets_for_ev
+from utils.pod_utils import analyze_markets_multi_row
 from odds_processing import fetch_live_pinnacle_event_odds
 from utils import process_event_odds_for_display
 import copy
@@ -1954,7 +1955,7 @@ def build_event_object(event_id, entry):
     if not bet_data.get("potential_bets_analyzed") and bet_data and pinnacle_data:
         try:
             wrapped_pinnacle_data = {"data": pinnacle_data}
-            bet_data["potential_bets_analyzed"] = analyze_markets_for_ev(bet_data, wrapped_pinnacle_data)
+            bet_data["potential_bets_analyzed"] = analyze_markets_multi_row(bet_data, wrapped_pinnacle_data)
         except Exception:
             bet_data["potential_bets_analyzed"] = []
     
@@ -1966,7 +1967,7 @@ def build_event_object(event_id, entry):
     if not potential_bets and bet_data and pinnacle_data:
         try:
             wrapped_pinnacle_data = {"data": pinnacle_data}
-            potential_bets = analyze_markets_for_ev(bet_data, wrapped_pinnacle_data)
+            potential_bets = analyze_markets_multi_row(bet_data, wrapped_pinnacle_data)
             # Store the re-analyzed data for future use
             bet_data["potential_bets_analyzed"] = potential_bets
         except Exception as e:

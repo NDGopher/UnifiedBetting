@@ -1176,6 +1176,108 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
         logger.error(f"[AnalyzeMarkets] Error analyzing markets: {e}")
         return []
 
+# ── Multi-row EV analysis ─────────────────────────────────────────────────────
+
+# Maps BetBCK row_type → Pinnacle period key
+_ROW_TYPE_TO_PERIOD = {
+    "full_game": "num_0",
+    "alt_line":  "num_0",
+    "reg_time":  "num_0",
+    "period_1":  "num_1",
+    "half_1":    "num_1",
+    "period_2":  "num_2",
+    "half_2":    "num_2",
+    "period_3":  "num_3",
+}
+
+# Human-readable prefix added to market labels for non-full-game rows
+_ROW_TYPE_LABEL = {
+    "alt_line": "Alt ",
+    "period_1": "1P ",
+    "half_1":   "1H ",
+    "period_2": "2P ",
+    "half_2":   "2H ",
+    "period_3": "3P ",
+    "reg_time": "RT ",
+}
+
+
+def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
+    """
+    Analyze EV across ALL BetBCK row types collected in bet_data['row_data'].
+    Falls back to analyze_markets_for_ev() when row_data is absent (backward compat).
+
+    Row-type → Pinnacle period mapping:
+      full_game / alt_line / reg_time → num_0
+      period_1  / half_1              → num_1
+      period_2  / half_2              → num_2
+      period_3                        → num_3
+
+    Each non-full-game row gets its market labels prefixed (e.g. "1P Spread").
+    """
+    row_data = bet_data.get("row_data") if isinstance(bet_data, dict) else None
+    if not row_data:
+        return analyze_markets_for_ev(bet_data, pinnacle_data)
+
+    if not pinnacle_data or not isinstance(pinnacle_data.get("data"), dict):
+        return analyze_markets_for_ev(bet_data, pinnacle_data)
+
+    pin_data = pinnacle_data["data"]
+    periods = pin_data.get("periods") or {}
+    if not isinstance(periods, dict):
+        periods = {}
+
+    all_bets: List[Dict] = []
+
+    # 1. Full-game row — use the standard function (handles spreads / ML / totals / 1H_data)
+    all_bets.extend(analyze_markets_for_ev(bet_data, pinnacle_data))
+
+    # 2. Additional row types — wrap the target Pinnacle period as "num_0" and re-run
+    SKIP_TYPES = {"full_game"}  # full_game already handled above
+    # half_1 is handled via the existing 1H_data path inside analyze_markets_for_ev; skip it here
+    # to avoid duplicates unless the 1H_data path is absent.
+    if not bet_data.get("1H_data"):
+        pass  # will process half_1 below
+    else:
+        SKIP_TYPES = SKIP_TYPES | {"half_1"}
+
+    for row_type, row_bet_data in row_data.items():
+        if row_type in SKIP_TYPES:
+            continue
+
+        period_key = _ROW_TYPE_TO_PERIOD.get(row_type)
+        if not period_key:
+            continue
+
+        # Get the Pinnacle period data; support both "num_N" and "N" key formats
+        period_pin = periods.get(period_key) or periods.get(period_key.replace("num_", ""))
+        if not period_pin or not isinstance(period_pin, dict):
+            logger.info(f"[MultiRow] No Pinnacle data for {row_type} ({period_key}) — skipping")
+            continue
+
+        # Re-wrap: make this period look like the full-game period to reuse existing logic
+        fake_pinnacle = {
+            "data": {
+                **pin_data,
+                "periods": {"num_0": period_pin},
+            }
+        }
+
+        try:
+            period_bets = analyze_markets_for_ev(row_bet_data, fake_pinnacle)
+            label = _ROW_TYPE_LABEL.get(row_type, "")
+            if label:
+                for bet in period_bets:
+                    bet["market"] = f"{label}{bet['market']}"
+            if period_bets:
+                logger.info(f"[MultiRow] {row_type}: +{len(period_bets)} markets")
+            all_bets.extend(period_bets)
+        except Exception as exc:
+            logger.error(f"[MultiRow] Error analyzing {row_type}: {exc}")
+
+    return all_bets
+
+
 skip_indicators = ["1H", "1st Half", "First Half", "1st 5 Innings", "First Five Innings", "1st Period", "2nd Period", "3rd Period", "hits+runs+errors", "h+r+e", "hre", "corners", "series"]
 prop_keywords = ['(Corners)', '(Bookings)', '(Hits+Runs+Errors)']
 

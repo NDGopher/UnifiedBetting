@@ -11,7 +11,7 @@ except ImportError as e:
     print(f"[MainLogic] CRITICAL_ERROR: {e}")
     raise
 from utils import normalize_team_name_for_matching, process_event_odds_for_display
-from utils.pod_utils import analyze_markets_for_ev, clean_pod_team_name_for_search
+from utils.pod_utils import analyze_markets_for_ev, analyze_markets_multi_row, clean_pod_team_name_for_search
 from pinnacle_fetcher import fetch_live_pinnacle_event_odds
 try:
     from alert_logger import get_logger_for_event
@@ -286,7 +286,7 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
             }
             alog.log_odds(odds_summary)
 
-        potential_bets = analyze_markets_for_ev(betbck_data, processed_pinnacle_data)
+        potential_bets = analyze_markets_multi_row(betbck_data, processed_pinnacle_data)
         betbck_data["potential_bets_analyzed"] = potential_bets
 
         if alog:
