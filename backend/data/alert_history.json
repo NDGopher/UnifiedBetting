@@ -3323,5 +3323,1053 @@
         "ev_pct": -11.46
       }
     ]
+  },
+  {
+    "logged_at": "2026-05-03T04:30:21.427530Z",
+    "event_id": "1629442830",
+    "timestamp": "2026-05-03T04:30:18.856260Z",
+    "teams": {
+      "home": "Urawa Red Diamonds",
+      "away": "Mynavi Sendai",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Mynavi Sendai @ Urawa Red Diamonds | ? | market=Spread | -121 -> -166",
+        "detail": {
+          "home": "Urawa Red Diamonds",
+          "away": "Mynavi Sendai",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "-121",
+          "new_odds": "-166"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'diamonds' (from 'Urawa Red Diamonds' / 'Mynavi Sendai'): last word of home team 'urawa red diamonds'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='diamonds' -> HTTP 200 (42951 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "diamonds",
+          "status": 200,
+          "response_bytes": 42951
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for mynavi sendai @ urawa red diamonds (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:33:35.013886Z",
+    "event_id": "1629385792",
+    "timestamp": "2026-05-03T04:33:33.784740Z",
+    "teams": {
+      "home": "Sporting Gijon",
+      "away": "Ceuta",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Ceuta @ Sporting Gijon | ? | market=Spread | +248 -> +223",
+        "detail": {
+          "home": "Sporting Gijon",
+          "away": "Ceuta",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+248",
+          "new_odds": "+223"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'gijon' (from 'Sporting Gijon' / 'Ceuta'): last word of home team 'sporting gijon'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='gijon' -> HTTP 200 (49988 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "gijon",
+          "status": 200,
+          "response_bytes": 49988
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Ceuta' vs 'Sporting Gijon'  <->  POD 'sporting gijon' vs 'ceutaspain - segunda division'  [token_set_h=100 | token_set_a=31 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Ceuta",
+          "bck_away": "Sporting Gijon",
+          "pod_home": "sporting gijon",
+          "pod_away": "ceutaspain - segunda division",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 31,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Ceuta' vs 'Sporting Gijon' | home=100/60, away=31/60 (combined=131, needed \u2265120)",
+        "detail": {
+          "bck_home": "Ceuta",
+          "bck_away": "Sporting Gijon",
+          "best_score": 131,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 31,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 31,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for ceutaspain - segunda division @ sporting gijon ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for ceutaspain - segunda division @ sporting gijon (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:36:46.636555Z",
+    "event_id": "1629370316",
+    "timestamp": "2026-05-03T04:36:44.904421Z",
+    "teams": {
+      "home": "Hammarby",
+      "away": "Vasteras",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Vasteras @ Hammarby | ? | market=Spread | +186 -> +168",
+        "detail": {
+          "home": "Hammarby",
+          "away": "Vasteras",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+186",
+          "new_odds": "+168"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'hammarby' (from 'Hammarby' / 'Vasteras'): first word of home team 'hammarby'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='hammarby' -> HTTP 200 (55082 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "hammarby",
+          "status": 200,
+          "response_bytes": 55082
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Vasteras SK' vs 'Hammarby IF'  <->  POD 'hammarby' vs 'vasteras'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Vasteras SK",
+          "bck_away": "Hammarby IF",
+          "pod_home": "hammarby",
+          "pod_away": "vasteras",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Vasteras SK' vs 'Hammarby IF'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Vasteras SK 1H' vs 'Hammarby IF 1H'  <->  POD 'hammarby' vs 'vasteras'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Vasteras SK 1H",
+          "bck_away": "Hammarby IF 1H",
+          "pod_home": "hammarby",
+          "pod_away": "vasteras",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Vasteras SK 1H' vs 'Hammarby IF 1H'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_spreads=[{'line': '-1.5', 'odds': '-125'}] | away_spreads=[{'line': '+1.5', 'odds': '-105'}]",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [
+            {
+              "line": "-1.5",
+              "odds": "-125"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+1.5",
+              "odds": "-105"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home -1.5: BCK 1.8000 (-125) / PIN_NVP 2.0200 (+102) => -10.89%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "-1.5",
+          "betbck_american": "-125",
+          "pin_nvp_american": "+102",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 2.02,
+          "ev_pct": -10.89
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away 1.5: BCK 1.9524 (-105) / PIN_NVP 1.9804 (-102) => -1.44%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "1.5",
+          "betbck_american": "-105",
+          "pin_nvp_american": "-102",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 1.9804,
+          "ev_pct": -1.44
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 3.0: BCK 1.7407 (-135) / PIN_NVP 1.9434 (-106) => -10.27%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "3.0",
+          "betbck_american": "-135",
+          "pin_nvp_american": "-106",
+          "bck_decimal": 1.7407,
+          "pin_nvp_decimal": 1.9434,
+          "ev_pct": -10.27
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 3.0: BCK 1.9524 (-105) / PIN_NVP 2.0600 (+106) => -5.36%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "3.0",
+          "betbck_american": "-105",
+          "pin_nvp_american": "+106",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 2.06,
+          "ev_pct": -5.36
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Home: BCK 1.6897 (-145) / PIN_NVP 1.7874 (-127) => -5.45%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "-145",
+          "pin_nvp_american": "-127",
+          "bck_decimal": 1.6897,
+          "pin_nvp_decimal": 1.7874,
+          "ev_pct": -5.45
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Away: BCK 7.9000 (+690) / PIN_NVP 9.2100 (+821) => -14.23%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+690",
+          "pin_nvp_american": "+821",
+          "bck_decimal": 7.9,
+          "pin_nvp_decimal": 9.21,
+          "ev_pct": -14.23
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Home -0.75: BCK 1.9524 (-105) / PIN_NVP 2.1300 (+113) => -8.55%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Home",
+          "line": "-0.75",
+          "betbck_american": "-105",
+          "pin_nvp_american": "+113",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 2.13,
+          "ev_pct": -8.55
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Away 0.75: BCK 1.8000 (-125) / PIN_NVP 1.8772 (-114) => -4.31%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Away",
+          "line": "0.75",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-114",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.8772,
+          "ev_pct": -4.31
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Over 1.25: BCK 1.8000 (-125) / PIN_NVP 2.0100 (+101) => -10.40%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Over",
+          "line": "1.25",
+          "betbck_american": "-125",
+          "pin_nvp_american": "+101",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 2.01,
+          "ev_pct": -10.4
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Under 1.25: BCK 1.8696 (-115) / PIN_NVP 1.9901 (-101) => -6.10%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Under",
+          "line": "1.25",
+          "betbck_american": "-115",
+          "pin_nvp_american": "-101",
+          "bck_decimal": 1.8696,
+          "pin_nvp_decimal": 1.9901,
+          "ev_pct": -6.1
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "-1.5",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "+102",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 2.02,
+        "ev_pct": -10.89
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "1.5",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "-102",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 1.9804,
+        "ev_pct": -1.44
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "3.0",
+        "betbck_odds": "-135",
+        "pinnacle_nvp": "-106",
+        "betbck_decimal": 1.7407,
+        "pin_nvp_decimal": 1.9434,
+        "ev_pct": -10.27
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "3.0",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "+106",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 2.06,
+        "ev_pct": -5.36
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "-145",
+        "pinnacle_nvp": "-127",
+        "betbck_decimal": 1.6897,
+        "pin_nvp_decimal": 1.7874,
+        "ev_pct": -5.45
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+690",
+        "pinnacle_nvp": "+821",
+        "betbck_decimal": 7.9,
+        "pin_nvp_decimal": 9.21,
+        "ev_pct": -14.23
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Home",
+        "line": "-0.75",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "+113",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 2.13,
+        "ev_pct": -8.55
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Away",
+        "line": "0.75",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-114",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.8772,
+        "ev_pct": -4.31
+      },
+      {
+        "market": "1H Total",
+        "selection": "Over",
+        "line": "1.25",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "+101",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 2.01,
+        "ev_pct": -10.4
+      },
+      {
+        "market": "1H Total",
+        "selection": "Under",
+        "line": "1.25",
+        "betbck_odds": "-115",
+        "pinnacle_nvp": "-101",
+        "betbck_decimal": 1.8696,
+        "pin_nvp_decimal": 1.9901,
+        "ev_pct": -6.1
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T04:40:02.496550Z",
+    "event_id": "1629691113",
+    "timestamp": "2026-05-03T04:40:01.733076Z",
+    "teams": {
+      "home": "Kiwoom Heroes",
+      "away": "Doosan BearsKorea Professional Baseball",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Doosan BearsKorea Professional Baseball @ Kiwoom Heroes | ? | market=Total | +102 -> -117",
+        "detail": {
+          "home": "Kiwoom Heroes",
+          "away": "Doosan BearsKorea Professional Baseball",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+102",
+          "new_odds": "-117"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'heroes' (from 'Kiwoom Heroes' / 'Doosan BearsKorea Professional Baseball'): last word of home team 'kiwoom heroes'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='heroes' -> HTTP 200 (42951 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "heroes",
+          "status": 200,
+          "response_bytes": 42951
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for doosan bearskorea professional baseball @ kiwoom heroes (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:40:21.148868Z",
+    "event_id": "1629691111",
+    "timestamp": "2026-05-03T04:40:20.575889Z",
+    "teams": {
+      "home": "LG T",
+      "away": "NC DinosKorea Professional Baseball",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "NC DinosKorea Professional Baseball @ LG T | ? | market=Spread | +189 -> +159",
+        "detail": {
+          "home": "LG T",
+          "away": "NC DinosKorea Professional Baseball",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+189",
+          "new_odds": "+159"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lg t' (from 'LG T' / 'NC DinosKorea Professional Baseball'): full cleaned home team",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lg t' -> HTTP 200 (42951 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lg t",
+          "status": 200,
+          "response_bytes": 42951
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for nc dinoskorea professional baseball @ lg t (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:41:59.445867Z",
+    "event_id": "1629184047",
+    "timestamp": "2026-05-03T04:41:58.696398Z",
+    "teams": {
+      "home": "Sochi",
+      "away": "Orenburg",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Orenburg @ Sochi | ? | market=Total | +167 -> +148",
+        "detail": {
+          "home": "Sochi",
+          "away": "Orenburg",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+167",
+          "new_odds": "+148"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'sochi' (from 'Sochi' / 'Orenburg'): first word of home team 'sochi'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='sochi' -> HTTP 200 (48368 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "sochi",
+          "status": 200,
+          "response_bytes": 48368
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Orenburg' vs 'Sochi'  <->  POD 'sochi' vs 'orenburg'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "Orenburg",
+          "bck_away": "Sochi",
+          "pod_home": "sochi",
+          "pod_away": "orenburg",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Orenburg' vs 'Sochi'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+210 | away_moneyline=+130",
+        "detail": {
+          "home_moneyline": "+210",
+          "away_moneyline": "+130",
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 3.1000 (+210) / PIN_NVP 3.2900 (+229) => -5.69%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+210",
+          "pin_nvp_american": "+229",
+          "bck_decimal": 3.1,
+          "pin_nvp_decimal": 3.29,
+          "ev_pct": -5.69
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 2.3000 (+130) / PIN_NVP 2.3200 (+132) => -0.82%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+130",
+          "pin_nvp_american": "+132",
+          "bck_decimal": 2.3,
+          "pin_nvp_decimal": 2.32,
+          "ev_pct": -0.82
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+210",
+        "pinnacle_nvp": "+229",
+        "betbck_decimal": 3.1,
+        "pin_nvp_decimal": 3.29,
+        "ev_pct": -5.69
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+130",
+        "pinnacle_nvp": "+132",
+        "betbck_decimal": 2.3,
+        "pin_nvp_decimal": 2.32,
+        "ev_pct": -0.82
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T04:47:20.251263Z",
+    "event_id": "1629488657",
+    "timestamp": "2026-05-03T04:47:18.857616Z",
+    "teams": {
+      "home": "Club Almagro",
+      "away": "Temperley",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Temperley @ Club Almagro | ? | market=Spread | +294 -> +266",
+        "detail": {
+          "home": "Club Almagro",
+          "away": "Temperley",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+294",
+          "new_odds": "+266"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'almagro' (from 'Club Almagro' / 'Temperley'): last word of home team 'club almagro'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='almagro' -> HTTP 200 (49959 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "almagro",
+          "status": 200,
+          "response_bytes": 49959
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Temperley' vs 'Almagro'  <->  POD 'club almagro' vs 'temperleyargentina - primera b nacional'  [token_set_h=100 | token_set_a=39 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Temperley",
+          "bck_away": "Almagro",
+          "pod_home": "club almagro",
+          "pod_away": "temperleyargentina - primera b nacional",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 39,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Temperley' vs 'Almagro' | home=100/60, away=39/60 (combined=139, needed \u2265120)",
+        "detail": {
+          "bck_home": "Temperley",
+          "bck_away": "Almagro",
+          "best_score": 139,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 39,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 39,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for temperleyargentina - primera b nacional @ club almagro ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for temperleyargentina - primera b nacional @ club almagro (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:49:08.570577Z",
+    "event_id": "1629691108",
+    "timestamp": "2026-05-03T04:49:07.737511Z",
+    "teams": {
+      "home": "Chiba Lotte Marines",
+      "away": "Saitama Seibu Lions",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Saitama Seibu Lions @ Chiba Lotte Marines | ? | market=Total | +104 -> -114",
+        "detail": {
+          "home": "Chiba Lotte Marines",
+          "away": "Saitama Seibu Lions",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+104",
+          "new_odds": "-114"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'marines' (from 'Chiba Lotte Marines' / 'Saitama Seibu Lions'): last word of home team 'chiba lotte marines'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='marines' -> HTTP 200 (48075 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "marines",
+          "status": 200,
+          "response_bytes": 48075
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Seibu Lions' vs 'Chiba Lotte Marines'  <->  POD 'chiba lotte marines' vs 'saitama seibu lions'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Seibu Lions",
+          "bck_away": "Chiba Lotte Marines",
+          "pod_home": "chiba lotte marines",
+          "pod_away": "saitama seibu lions",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Seibu Lions' vs 'Chiba Lotte Marines'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+138 | away_moneyline=-158",
+        "detail": {
+          "home_moneyline": "+138",
+          "away_moneyline": "-158",
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 2.3800 (+138) / PIN_NVP 2.4200 (+142) => -1.82%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+138",
+          "pin_nvp_american": "+142",
+          "bck_decimal": 2.38,
+          "pin_nvp_decimal": 2.42,
+          "ev_pct": -1.82
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 1.6329 (-158) / PIN_NVP 1.7042 (-142) => -4.06%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "-158",
+          "pin_nvp_american": "-142",
+          "bck_decimal": 1.6329,
+          "pin_nvp_decimal": 1.7042,
+          "ev_pct": -4.06
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 5.5: BCK 1.8333 (-120) / PIN_NVP 1.8000 (-125) => +1.91%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "5.5",
+          "betbck_american": "-120",
+          "pin_nvp_american": "-125",
+          "bck_decimal": 1.8333,
+          "pin_nvp_decimal": 1.8,
+          "ev_pct": 1.91
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 5.5: BCK 1.9091 (-110) / PIN_NVP 2.2500 (+125) => -15.19%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "5.5",
+          "betbck_american": "-110",
+          "pin_nvp_american": "+125",
+          "bck_decimal": 1.9091,
+          "pin_nvp_decimal": 2.25,
+          "ev_pct": -15.19
+        }
+      }
+    ],
+    "result": "ev_found",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+138",
+        "pinnacle_nvp": "+142",
+        "betbck_decimal": 2.38,
+        "pin_nvp_decimal": 2.42,
+        "ev_pct": -1.82
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "-158",
+        "pinnacle_nvp": "-142",
+        "betbck_decimal": 1.6329,
+        "pin_nvp_decimal": 1.7042,
+        "ev_pct": -4.06
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "5.5",
+        "betbck_odds": "-120",
+        "pinnacle_nvp": "-125",
+        "betbck_decimal": 1.8333,
+        "pin_nvp_decimal": 1.8,
+        "ev_pct": 1.91
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "5.5",
+        "betbck_odds": "-110",
+        "pinnacle_nvp": "+125",
+        "betbck_decimal": 1.9091,
+        "pin_nvp_decimal": 2.25,
+        "ev_pct": -15.19
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T04:49:27.152525Z",
+    "event_id": "1629982404",
+    "timestamp": "2026-05-03T04:49:26.575708Z",
+    "teams": {
+      "home": "SSG Landers",
+      "away": "Lotte GiantsKorea Professional Baseball",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Lotte GiantsKorea Professional Baseball @ SSG Landers | ? | market=Moneyline | -111 -> -130",
+        "detail": {
+          "home": "SSG Landers",
+          "away": "Lotte GiantsKorea Professional Baseball",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "-111",
+          "new_odds": "-130"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'landers' (from 'SSG Landers' / 'Lotte GiantsKorea Professional Baseball'): last word of home team 'ssg landers'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='landers' -> HTTP 200 (42951 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "landers",
+          "status": 200,
+          "response_bytes": 42951
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for lotte giantskorea professional baseball @ ssg landers (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]
