@@ -311,6 +311,7 @@ async def event_alert_worker(event_id):
                             _alog_rec = finalize_alert_log(event_id)
                             if _alog_rec:
                                 await manager.broadcast({"type": "alert_log", "data": _alog_rec})
+                                await sse_manager.broadcast({"type": "alert_log", "data": _alog_rec})
                     else:
                         logger.info(f"[PerEventQueue] Updating existing event {event_id} with fresh Pinnacle data.")
                         start_alert_log(event_id)
@@ -336,6 +337,7 @@ async def event_alert_worker(event_id):
                             _alog_rec = finalize_alert_log(event_id)
                             if _alog_rec:
                                 await manager.broadcast({"type": "alert_log", "data": _alog_rec})
+                                await sse_manager.broadcast({"type": "alert_log", "data": _alog_rec})
                 logger.info(f"[PerEventQueue] Lock released for Event ID: {event_id}")
             except Exception as e:
                 logger.error(f"[PerEventQueue] Error processing alert for {event_id}: {e}")
@@ -343,6 +345,7 @@ async def event_alert_worker(event_id):
                 _alog_rec = finalize_alert_log(event_id)
                 if _alog_rec:
                     await manager.broadcast({"type": "alert_log", "data": _alog_rec})
+                    await sse_manager.broadcast({"type": "alert_log", "data": _alog_rec})
         except Exception as outer_e:
             logger.error(f"[PerEventQueue] OUTER error in worker for {event_id}: {outer_e}")
             traceback.print_exc()
