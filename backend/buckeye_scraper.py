@@ -6,7 +6,7 @@ import logging
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 from pathlib import Path
-from utils.pod_utils import normalize_team_name_for_matching, analyze_markets_for_ev, clean_pod_team_name_for_search, determine_betbck_search_term
+from utils.pod_utils import normalize_team_name_for_matching, analyze_markets_for_ev, analyze_markets_multi_row, clean_pod_team_name_for_search, determine_betbck_search_term
 
 # Use the specialized buckeye logger
 logger = logging.getLogger("buckeye")
@@ -393,8 +393,13 @@ class BuckeyeScraper:
             from odds_processing import fetch_live_pinnacle_event_odds
             
             odds_data = fetch_live_pinnacle_event_odds(event_id)
-            if odds_data and odds_data.get("status") == "success":
-                return odds_data.get("data", {})
+            # fetch_live_pinnacle_event_odds returns {"success": True, "data": <swordfish_response>}
+            # swordfish_response itself is {"data": {"home":..., "periods":{...}}}
+            # We unwrap to the inner event detail {"home":..., "periods":{...}} so
+            # get_betbck_odds can read .get("home") and calculate_ev can re-wrap correctly.
+            if odds_data and odds_data.get("success") == True:
+                swordfish_response = odds_data.get("data", {})
+                return swordfish_response.get("data", {})
             
             logger.warning(f"No Pinnacle odds found for event {event_id}")
             return None
@@ -502,12 +507,19 @@ class BuckeyeScraper:
         """Calculate EV for all markets using robust logic from POD Alerts"""
         try:
             logger.info(f"[EV-CALC] Calculating EV for {pinnacle_data.get('home', '')} vs {pinnacle_data.get('away', '')}")
-            # Use robust EV calculation logic
-            ev_results = analyze_markets_for_ev(betbck_data, {"data": pinnacle_data})
+            # pinnacle_data is the inner event detail {"home":..., "periods":{...}}
+            # Wrap it back into {"data": {...}} so process_event_odds_for_display can add NVP,
+            # then pass the NVP-enriched structure to analyze_markets_for_ev.
+            from utils.pod_utils import process_event_odds_for_display
+            wrapped = {"data": pinnacle_data}
+            processed = process_event_odds_for_display(wrapped)
+            # analyze_markets_multi_row handles row_data dispatch and falls back
+            # to analyze_markets_for_ev for the full_game row — correct for all cases.
+            ev_results = analyze_markets_multi_row(betbck_data, processed)
             if ev_results:
                 logger.info(f"[EV-CALC] Found {len(ev_results)} EV opportunities")
                 for result in ev_results:
-                    logger.debug(f"[EV-CALC] Market: {result.get('market', 'Unknown')}, EV: {result.get('ev', 0):.3f}")
+                    logger.debug(f"[EV-CALC] Market: {result.get('market', 'Unknown')}, EV: {result.get('ev', 'N/A')}")
             else:
                 logger.info(f"[EV-CALC] No EV opportunities found")
             return ev_results
