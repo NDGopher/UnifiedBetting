@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Button, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Alert, FormControlLabel, Checkbox, Collapse } from '@mui/material';
+import { Box, Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Alert, FormControlLabel, Checkbox, Collapse, Slider, Switch, TextField, Divider, InputAdornment, Select, MenuItem, FormControl, InputLabel, Chip, Tooltip } from '@mui/material';
 import MatchingStats from './MatchingStats';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Analytics, ExpandMore, ExpandLess } from '@mui/icons-material';
+import { Analytics, ExpandMore, ExpandLess, SmartToy, TuneRounded } from '@mui/icons-material';
 import { API_BASE } from '../utils/apiConfig';
 dayjs.extend(relativeTime);
 
@@ -41,6 +41,20 @@ const BuckeyeScraper: React.FC = () => {
   const [pipelineRunning, setPipelineRunning] = useState(false);
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const [showSportSelection, setShowSportSelection] = useState(false);
+
+  // EV range filter (display only)
+  const EV_MAX_SLIDER = 20;
+  const [minEv, setMinEv] = useState<number>(0);
+  const [maxEv, setMaxEv] = useState<number>(EV_MAX_SLIDER);
+
+  // Auto-bettor
+  const [showAutoBettor, setShowAutoBettor] = useState(false);
+  const [autoBettorEnabled, setAutoBettorEnabled] = useState(false);
+  const [abMinEv, setAbMinEv] = useState<number>(1);
+  const [abMaxEv, setAbMaxEv] = useState<number>(12);
+  const [abUnitSize, setAbUnitSize] = useState<string>('50');
+  const [abMaxPerEvent, setAbMaxPerEvent] = useState<string>('200');
+  const [abKelly, setAbKelly] = useState<string>('fixed');
 
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const isPolling = useRef(false);
@@ -396,6 +410,29 @@ const BuckeyeScraper: React.FC = () => {
     );
   };
 
+  const evLabel = (v: number, isMax: boolean) =>
+    isMax && v >= EV_MAX_SLIDER ? 'All' : `${v}%`;
+
+  const filteredMarkets = topMarkets.filter(row => {
+    const v = parseFloat(row.ev?.replace('%', '') || '0');
+    const passMin = v >= minEv;
+    const passMax = maxEv >= EV_MAX_SLIDER ? true : v <= maxEv;
+    return passMin && passMax;
+  });
+
+  const sliderSx = {
+    color: '#2E7D32',
+    '& .MuiSlider-thumb': { width: 14, height: 14, bgcolor: '#2E7D32' },
+    '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
+    '& .MuiSlider-track': { bgcolor: '#2E7D32', border: 'none' },
+    '& .MuiSlider-valueLabel': {
+      bgcolor: '#1a1a1a',
+      border: '1px solid rgba(46,125,50,0.5)',
+      fontSize: '0.75rem',
+      color: '#2E7D32',
+    },
+  };
+
   return (
     <>
       <Box sx={{ display: 'flex', gap: 2, mb: 2, justifyContent: 'flex-start', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -496,6 +533,73 @@ const BuckeyeScraper: React.FC = () => {
         >
           Ace
         </Button>
+
+        {/* Divider */}
+        <Box sx={{ width: '1px', height: 24, bgcolor: 'rgba(255,255,255,0.12)', mx: 0.5 }} />
+
+        {/* EV Filter — always inline, no toggle needed */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 1.5, py: 0.5, border: '1px solid rgba(255,255,255,0.12)', borderRadius: 2, height: 36, minWidth: 260 }}>
+          <TuneRounded sx={{ fontSize: '0.95rem', color: '#B0B0B0', flexShrink: 0 }} />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0, flex: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 26, flexShrink: 0 }}>Min</Typography>
+              <Slider
+                value={minEv}
+                onChange={(_, v) => setMinEv(v as number)}
+                min={0} max={EV_MAX_SLIDER} step={0.5}
+                valueLabelDisplay="auto"
+                valueLabelFormat={v => evLabel(v, false)}
+                sx={{ ...sliderSx, py: 0.5, my: 0 }}
+              />
+              <Typography sx={{ fontSize: '0.7rem', color: '#2E7D32', width: 28, textAlign: 'right', flexShrink: 0 }}>
+                {evLabel(minEv, false)}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 26, flexShrink: 0 }}>Max</Typography>
+              <Slider
+                value={maxEv}
+                onChange={(_, v) => setMaxEv(v as number)}
+                min={0} max={EV_MAX_SLIDER} step={0.5}
+                valueLabelDisplay="auto"
+                valueLabelFormat={v => evLabel(v, true)}
+                sx={{ ...sliderSx, py: 0.5, my: 0 }}
+              />
+              <Typography sx={{ fontSize: '0.7rem', color: maxEv >= EV_MAX_SLIDER ? '#777' : '#2E7D32', width: 28, textAlign: 'right', flexShrink: 0 }}>
+                {evLabel(maxEv, true)}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Auto-bettor toggle */}
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<SmartToy sx={{ fontSize: '1rem !important' }} />}
+          onClick={() => setShowAutoBettor(v => !v)}
+          sx={{
+            color: showAutoBettor ? (autoBettorEnabled ? '#4CAF50' : '#2E7D32') : '#B0B0B0',
+            borderColor: showAutoBettor ? (autoBettorEnabled ? '#4CAF50' : '#2E7D32') : 'rgba(255,255,255,0.2)',
+            borderRadius: 2, fontWeight: 500, px: 1.5, py: 0.5,
+            fontSize: '0.8rem', minWidth: 'auto', height: 36, textTransform: 'none',
+            '&:hover': { bgcolor: 'rgba(46,125,50,0.08)', borderColor: '#2E7D32' },
+          }}
+        >
+          Auto-Bet
+          {autoBettorEnabled && (
+            <Box component="span" sx={{
+              ml: 0.8, width: 7, height: 7, borderRadius: '50%',
+              bgcolor: '#4CAF50', display: 'inline-block',
+              boxShadow: '0 0 6px #4CAF50',
+              animation: 'pulse 1.6s ease-in-out infinite',
+              '@keyframes pulse': {
+                '0%,100%': { opacity: 1 },
+                '50%': { opacity: 0.4 },
+              }
+            }} />
+          )}
+        </Button>
       </Box>
       <Collapse in={showSportSelection}>
         <Box sx={{ mb: 2, p: 2, bgcolor: 'rgba(26, 26, 26, 0.5)', borderRadius: 2, border: '1px solid rgba(255, 255, 255, 0.1)' }}>
@@ -547,10 +651,122 @@ const BuckeyeScraper: React.FC = () => {
           )}
         </Box>
       </Collapse>
+      {/* Auto-bettor settings panel */}
+      <Collapse in={showAutoBettor}>
+        <Box sx={{ mb: 2, p: 2.5, bgcolor: 'rgba(20,30,20,0.7)', borderRadius: 2, border: `1px solid ${autoBettorEnabled ? 'rgba(76,175,80,0.4)' : 'rgba(255,255,255,0.1)'}`, backdropFilter: 'blur(10px)' }}>
+          {/* Header row */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <SmartToy sx={{ color: autoBettorEnabled ? '#4CAF50' : '#B0B0B0', fontSize: '1.1rem' }} />
+              <Typography sx={{ color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>Auto-Bettor</Typography>
+              {autoBettorEnabled && (
+                <Chip label="ACTIVE" size="small" sx={{ bgcolor: 'rgba(76,175,80,0.15)', color: '#4CAF50', border: '1px solid rgba(76,175,80,0.4)', fontSize: '0.65rem', height: 18, fontWeight: 700, letterSpacing: '0.04em' }} />
+              )}
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ fontSize: '0.8rem', color: autoBettorEnabled ? '#4CAF50' : '#777' }}>
+                {autoBettorEnabled ? 'Enabled' : 'Disabled'}
+              </Typography>
+              <Switch
+                checked={autoBettorEnabled}
+                onChange={e => setAutoBettorEnabled(e.target.checked)}
+                size="small"
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: '#4CAF50' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { bgcolor: '#4CAF50' },
+                  '& .MuiSwitch-track': { bgcolor: 'rgba(255,255,255,0.2)' },
+                }}
+              />
+            </Box>
+          </Box>
+
+          <Divider sx={{ borderColor: 'rgba(255,255,255,0.07)', mb: 2 }} />
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
+            {/* Left: EV range */}
+            <Box>
+              <Typography sx={{ color: '#B0B0B0', fontSize: '0.75rem', fontWeight: 600, mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                EV Range to Bet
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 32, flexShrink: 0 }}>Min</Typography>
+                <Slider value={abMinEv} onChange={(_, v) => setAbMinEv(v as number)} min={0} max={20} step={0.5}
+                  valueLabelDisplay="auto" valueLabelFormat={v => `${v}%`} sx={sliderSx} />
+                <Typography sx={{ fontSize: '0.75rem', color: '#2E7D32', width: 32, textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>
+                  {abMinEv}%
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 32, flexShrink: 0 }}>Max</Typography>
+                <Slider value={abMaxEv} onChange={(_, v) => setAbMaxEv(v as number)} min={0} max={20} step={0.5}
+                  valueLabelDisplay="auto" valueLabelFormat={v => `${v}%`} sx={sliderSx} />
+                <Typography sx={{ fontSize: '0.75rem', color: abMaxEv >= 20 ? '#777' : '#2E7D32', width: 32, textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>
+                  {abMaxEv >= 20 ? 'All' : `${abMaxEv}%`}
+                </Typography>
+              </Box>
+              <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 1 }}>
+                Only bets with EV between {abMinEv}% and {abMaxEv >= 20 ? '∞' : `${abMaxEv}%`} will be placed.
+              </Typography>
+            </Box>
+
+            {/* Right: stake settings */}
+            <Box>
+              <Typography sx={{ color: '#B0B0B0', fontSize: '0.75rem', fontWeight: 600, mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                Stake Settings
+              </Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5, mb: 1.5 }}>
+                <TextField
+                  label="Unit Size"
+                  value={abUnitSize}
+                  onChange={e => setAbUnitSize(e.target.value)}
+                  size="small"
+                  InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
+                  sx={{ '& .MuiOutlinedInput-root': { bgcolor: 'rgba(255,255,255,0.04)', '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' }, '&:hover fieldset': { borderColor: 'rgba(46,125,50,0.5)' }, '&.Mui-focused fieldset': { borderColor: '#2E7D32' } }, '& .MuiInputLabel-root': { color: '#777', fontSize: '0.8rem' }, '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' }, '& input': { color: '#fff', fontSize: '0.85rem' } }}
+                />
+                <TextField
+                  label="Max / Event"
+                  value={abMaxPerEvent}
+                  onChange={e => setAbMaxPerEvent(e.target.value)}
+                  size="small"
+                  InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
+                  sx={{ '& .MuiOutlinedInput-root': { bgcolor: 'rgba(255,255,255,0.04)', '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' }, '&:hover fieldset': { borderColor: 'rgba(46,125,50,0.5)' }, '&.Mui-focused fieldset': { borderColor: '#2E7D32' } }, '& .MuiInputLabel-root': { color: '#777', fontSize: '0.8rem' }, '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' }, '& input': { color: '#fff', fontSize: '0.85rem' } }}
+                />
+              </Box>
+              <FormControl size="small" fullWidth>
+                <InputLabel sx={{ color: '#777', fontSize: '0.8rem', '&.Mui-focused': { color: '#2E7D32' } }}>Sizing Method</InputLabel>
+                <Select value={abKelly} onChange={e => setAbKelly(e.target.value)} label="Sizing Method"
+                  sx={{ bgcolor: 'rgba(255,255,255,0.04)', color: '#fff', fontSize: '0.85rem', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(46,125,50,0.5)' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#2E7D32' }, '& .MuiSvgIcon-root': { color: '#777' } }}>
+                  <MenuItem value="fixed">Fixed Unit Size</MenuItem>
+                  <MenuItem value="quarter_kelly">Quarter Kelly</MenuItem>
+                  <MenuItem value="half_kelly">Half Kelly</MenuItem>
+                  <MenuItem value="full_kelly">Full Kelly</MenuItem>
+                </Select>
+              </FormControl>
+              <Typography sx={{ fontSize: '0.68rem', color: '#555', mt: 1 }}>
+                {abKelly === 'fixed' ? `Flat $${abUnitSize} per qualifying bet.` : abKelly === 'quarter_kelly' ? 'Quarter Kelly — conservative, recommended for live use.' : abKelly === 'half_kelly' ? 'Half Kelly — moderate risk.' : 'Full Kelly — aggressive, higher variance.'}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Divider sx={{ borderColor: 'rgba(255,255,255,0.07)', mt: 2, mb: 1.5 }} />
+          <Typography sx={{ fontSize: '0.7rem', color: '#555', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            ⚑ Duplicate protection is always on — each game/market combination will never be bet more than once per run.
+          </Typography>
+        </Box>
+      </Collapse>
+
       {lastUpdate && (
-        <Typography variant="body2" sx={{ color: '#aaa', mb: 1, ml: 1 }}>
-          Last Updated: {dayjs(lastUpdate).format('YYYY-MM-DD HH:mm:ss')} ({dayjs(lastUpdate).fromNow()})
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, ml: 0.5 }}>
+          <Typography variant="body2" sx={{ color: '#aaa', fontSize: '0.8rem' }}>
+            Last Updated: {dayjs(lastUpdate).format('YYYY-MM-DD HH:mm:ss')} ({dayjs(lastUpdate).fromNow()})
+          </Typography>
+          {topMarkets.length > 0 && (
+            <Typography variant="body2" sx={{ color: '#555', fontSize: '0.75rem' }}>
+              Showing {filteredMarkets.length} of {topMarkets.length} bets
+              {(minEv > 0 || maxEv < EV_MAX_SLIDER) && <Box component="span" sx={{ color: '#2E7D32', ml: 0.5 }}>(filtered)</Box>}
+            </Typography>
+          )}
+        </Box>
       )}
       {loading && <CircularProgress sx={{ mb: 2 }} />}
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -695,7 +911,7 @@ const BuckeyeScraper: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {topMarkets.length === 0 && !loading && !error ? (
+            {filteredMarkets.length === 0 && !loading && !error ? (
               <TableRow>
                 <TableCell colSpan={8} align="center" sx={{ 
                   color: '#9E9E9E', 
@@ -703,11 +919,13 @@ const BuckeyeScraper: React.FC = () => {
                   py: 4,
                   fontSize: '0.875rem'
                 }}>
-                  No valid markets found. Click RUN CALCULATIONS to populate or check backend filters.
+                  {topMarkets.length > 0
+                    ? `No bets match the current EV filter (${minEv}%–${maxEv >= EV_MAX_SLIDER ? '∞' : `${maxEv}%`}). Try widening the range.`
+                    : 'No valid markets found. Click RUN CALCULATIONS to populate or check backend filters.'}
                 </TableCell>
               </TableRow>
             ) : (
-              topMarkets.map((row, idx) => (
+              filteredMarkets.map((row, idx) => (
                 <TableRow 
                   key={idx}
                   sx={{

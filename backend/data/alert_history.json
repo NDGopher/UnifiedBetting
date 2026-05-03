@@ -19146,5 +19146,421 @@
         "ev_pct": -10.75
       }
     ]
+  },
+  {
+    "logged_at": "2026-05-03T07:45:33.443450Z",
+    "event_id": "1629700299",
+    "timestamp": "2026-05-03T07:45:32.465965Z",
+    "teams": {
+      "home": "Uni-President 7-Eleven Lions",
+      "away": "Rakuten Monkeys",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Rakuten Monkeys @ Uni-President 7-Eleven Lions | ? | market=Spread | +317 -> +279",
+        "detail": {
+          "home": "Uni-President 7-Eleven Lions",
+          "away": "Rakuten Monkeys",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+317",
+          "new_odds": "+279"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lions' (from 'Uni-President 7-Eleven Lions' / 'Rakuten Monkeys'): last word of home team 'uni-president 7-eleven lions'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lions' -> HTTP 200 (54596 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lions",
+          "status": 200,
+          "response_bytes": 54596
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Rakuten Monkeys' vs 'Uni Lions'  <->  POD 'uni-president 7-eleven lions' vs 'rakuten monkeys'  [token_set_h=100 | token_set_a=100 | partial_h=78 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Rakuten Monkeys",
+          "bck_away": "Uni Lions",
+          "pod_home": "uni-president 7-eleven lions",
+          "pod_away": "rakuten monkeys",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 78,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Rakuten Monkeys' vs 'Uni Lions'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+157 | away_moneyline=-177",
+        "detail": {
+          "home_moneyline": "+157",
+          "away_moneyline": "-177",
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 2.5700 (+157) / PIN_NVP 2.3400 (+134) => +9.97%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+157",
+          "pin_nvp_american": "+134",
+          "bck_decimal": 2.57,
+          "pin_nvp_decimal": 2.34,
+          "ev_pct": 9.97
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 1.5650 (-177) / PIN_NVP 1.7463 (-134) => -10.47%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "-177",
+          "pin_nvp_american": "-134",
+          "bck_decimal": 1.565,
+          "pin_nvp_decimal": 1.7463,
+          "ev_pct": -10.47
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 6.5: BCK 1.9524 (-105) / PIN_NVP 2.1000 (+110) => -7.16%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "6.5",
+          "betbck_american": "-105",
+          "pin_nvp_american": "+110",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 2.1,
+          "ev_pct": -7.16
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 6.5: BCK 1.8000 (-125) / PIN_NVP 1.9091 (-110) => -5.61%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "6.5",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-110",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.9091,
+          "ev_pct": -5.61
+        }
+      }
+    ],
+    "result": "ev_found",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+157",
+        "pinnacle_nvp": "+134",
+        "betbck_decimal": 2.57,
+        "pin_nvp_decimal": 2.34,
+        "ev_pct": 9.97
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "-177",
+        "pinnacle_nvp": "-134",
+        "betbck_decimal": 1.565,
+        "pin_nvp_decimal": 1.7463,
+        "ev_pct": -10.47
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "6.5",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "+110",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 2.1,
+        "ev_pct": -7.16
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "6.5",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-110",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.9091,
+        "ev_pct": -5.61
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T07:45:39.777730Z",
+    "event_id": "1777794330525",
+    "timestamp": "2026-05-03T07:45:39.105684Z",
+    "teams": {
+      "home": "Uni-President 7-Eleven Lions",
+      "away": "Rakuten Monkeys",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Rakuten Monkeys @ Uni-President 7-Eleven Lions | ? | market=Moneyline | +143 -> +120",
+        "detail": {
+          "home": "Uni-President 7-Eleven Lions",
+          "away": "Rakuten Monkeys",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+143",
+          "new_odds": "+120"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lions' (from 'Uni-President 7-Eleven Lions' / 'Rakuten Monkeys'): last word of home team 'uni-president 7-eleven lions'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lions' -> HTTP 200 (54596 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lions",
+          "status": 200,
+          "response_bytes": 54596
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Rakuten Monkeys' vs 'Uni Lions'  <->  POD 'uni-president 7-eleven lions' vs 'rakuten monkeys'  [token_set_h=100 | token_set_a=100 | partial_h=78 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Rakuten Monkeys",
+          "bck_away": "Uni Lions",
+          "pod_home": "uni-president 7-eleven lions",
+          "pod_away": "rakuten monkeys",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 78,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Rakuten Monkeys' vs 'Uni Lions'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+157 | away_moneyline=-177",
+        "detail": {
+          "home_moneyline": "+157",
+          "away_moneyline": "-177",
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:45:50.866797Z",
+    "event_id": "1629530099",
+    "timestamp": "2026-05-03T07:45:50.292971Z",
+    "teams": {
+      "home": "Universidad de Concepcion",
+      "away": "Universidad Catolica",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Universidad Catolica @ Universidad de Concepcion | ? | market=Spread | +170 -> +148",
+        "detail": {
+          "home": "Universidad de Concepcion",
+          "away": "Universidad Catolica",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+170",
+          "new_odds": "+148"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'concepcion' (from 'Universidad de Concepcion' / 'Universidad Catolica'): last word of home team 'universidad de concepcion'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='concepcion' -> HTTP 200 (42949 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "concepcion",
+          "status": 200,
+          "response_bytes": 42949
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for universidad catolica @ universidad de concepcion (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:47:55.691659Z",
+    "event_id": "1629676488",
+    "timestamp": "2026-05-03T07:47:54.505716Z",
+    "teams": {
+      "home": "Bayern Munich",
+      "away": "Rasta Vechta",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Rasta Vechta @ Bayern Munich | ? | market=Total | +105 -> -122",
+        "detail": {
+          "home": "Bayern Munich",
+          "away": "Rasta Vechta",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+105",
+          "new_odds": "-122"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'munich' (from 'Bayern Munich' / 'Rasta Vechta'): last word of home team 'bayern munich'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='munich' -> HTTP 200 (54379 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "munich",
+          "status": 200,
+          "response_bytes": 54379
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Paris Saint Germain' vs 'Bayern Munich'  <->  POD 'bayern munich' vs 'rasta vechta'  [token_set_h=100 | token_set_a=30 | partial_h=100 | partial_a=38 | threshold=60]",
+        "detail": {
+          "bck_home": "Paris Saint Germain",
+          "bck_away": "Bayern Munich",
+          "pod_home": "bayern munich",
+          "pod_away": "rasta vechta",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 30,
+            "partial_h": 100,
+            "partial_a": 38,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Paris Saint Germain to Advance' vs 'Bayern Munich to Advance'  <->  POD 'bayern munich' vs 'rasta vechta'  [token_set_h=100 | token_set_a=30 | partial_h=100 | partial_a=38 | threshold=60]",
+        "detail": {
+          "bck_home": "Paris Saint Germain to Advance",
+          "bck_away": "Bayern Munich to Advance",
+          "pod_home": "bayern munich",
+          "pod_away": "rasta vechta",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 30,
+            "partial_h": 100,
+            "partial_a": 38,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Paris Saint Germain' vs 'Bayern Munich' | home=100/60, away=30/60 (combined=130, needed \u2265120)",
+        "detail": {
+          "bck_home": "Paris Saint Germain",
+          "bck_away": "Bayern Munich",
+          "best_score": 130,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 30,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 30,
+            "partial_h": 100,
+            "partial_a": 38,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for rasta vechta @ bayern munich ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for rasta vechta @ bayern munich (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]
