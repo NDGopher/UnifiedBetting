@@ -241,6 +241,13 @@ def determine_sport_from_teams(home_team: str, away_team: str) -> str:
                      'cowboys', 'giants', 'eagles', 'commanders', 'bears', 'lions', 'packers', 'vikings',
                      'falcons', 'panthers', 'saints', 'buccaneers', 'cardinals', 'rams', 'seahawks', '49ers']
     
+    # NHL teams — checked before "other" fallback so they get their own bucket
+    hockey_teams = ['bruins', 'sabres', 'red wings', 'panthers', 'canadiens', 'senators',
+                    'lightning', 'maple leafs', 'coyotes', 'blackhawks', 'avalanche', 'stars',
+                    'wild', 'predators', 'blues', 'jets', 'ducks', 'flames', 'oilers', 'kings',
+                    'sharks', 'golden knights', 'kraken', 'canucks', 'rangers', 'islanders',
+                    'devils', 'flyers', 'penguins', 'capitals', 'hurricanes', 'blue jackets']
+
     # UFC/Boxing fighters (individual names) - expanded list
     ufc_names = ['amanda', 'tatiana', 'keith', 'devin', 'fernando', 'anthony', 'stephen',
                  'diego', 'david', 'rafa', 'dustin', 'santiago', 'jose', 'joaquim', 'jesus',
@@ -261,6 +268,8 @@ def determine_sport_from_teams(home_team: str, away_team: str) -> str:
         return 'basketball'
     elif any(team in teams_combined for team in football_teams):
         return 'football'
+    elif any(team in teams_combined for team in hockey_teams):
+        return 'hockey'
     else:
         return 'other'
 
@@ -268,6 +277,7 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
     betbck_games = betbck_data.get("games", [])
     matched_events = []
     processed_pinnacle_event_ids = set()
+    matched_betbck_ids: set = set()   # LOCAL — reset every call, never persists across runs
     unmatched_betbck = []
     unmatched_pinnacle = []
     
@@ -347,8 +357,7 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
         if game_idx % 10 == 0:
             logger.info(f"[MATCH] Progress: {game_idx}/{len(betbck_games)} games processed")
         
-        # Skip if this BetBCK game was already matched
-        matched_betbck_ids = getattr(match_pinnacle_to_betbck, 'matched_betbck_ids', set())
+        # Skip if this BetBCK game was already matched within this run
         betbck_game_id = betbck_game.get('betbck_game_id', f"{betbck_game.get('betbck_site_home_team', '')}_{betbck_game.get('betbck_site_away_team', '')}")
         if betbck_game_id in matched_betbck_ids:
             logger.debug(f"[SKIP] BetBCK game already matched: {betbck_game_id}")
@@ -492,10 +501,8 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             processed_pinnacle_event_ids.add(best_match["event_id"])
             logger.info(f"[MATCHED] SUCCESS: '{betbck_home_raw}' vs '{betbck_away_raw}' <-> '{best_match['home_team']}' vs '{best_match['away_team']}' | Score: {best_score} | Orientation: {'direct' if best_orientation else 'flipped'}")
             
-            # Add this BetBCK game to a "matched" set to avoid reprocessing
-            matched_betbck_ids = getattr(match_pinnacle_to_betbck, 'matched_betbck_ids', set())
+            # Track this BetBCK game as matched within this run (local set, never persists)
             matched_betbck_ids.add(betbck_game.get('betbck_game_id', f"{betbck_home_raw}_{betbck_away_raw}"))
-            match_pinnacle_to_betbck.matched_betbck_ids = matched_betbck_ids
 
             # --- Explicitly map BetBCK odds to event ID home/away ---
             # Use pre-normalized cache instead of calling normalize again

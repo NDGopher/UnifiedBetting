@@ -17409,5 +17409,701 @@
     ],
     "result": "not_found",
     "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:10:31.432365Z",
+    "event_id": "1629349181",
+    "timestamp": "2026-05-03T07:10:28.829184Z",
+    "teams": {
+      "home": "Cheonan City",
+      "away": "Chungnam AsanKorea Republic",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Chungnam AsanKorea Republic @ Cheonan City | ? | market=Moneyline | +262 -> +230",
+        "detail": {
+          "home": "Cheonan City",
+          "away": "Chungnam AsanKorea Republic",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+262",
+          "new_odds": "+230"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'cheonan' (from 'Cheonan City' / 'Chungnam AsanKorea Republic'): first word of home team 'cheonan city'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='cheonan' -> HTTP 200 (42950 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "cheonan",
+          "status": 200,
+          "response_bytes": 42950
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for chungnam asankorea republic @ cheonan city (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:10:32.230866Z",
+    "event_id": "1629345636",
+    "timestamp": "2026-05-03T07:10:31.903478Z",
+    "teams": {
+      "home": "Gimhae",
+      "away": "Busan IParkKorea Republic",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Busan IParkKorea Republic @ Gimhae | ? | market=Moneyline | +449 -> +402",
+        "detail": {
+          "home": "Gimhae",
+          "away": "Busan IParkKorea Republic",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+449",
+          "new_odds": "+402"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'gimhae' (from 'Gimhae' / 'Busan IParkKorea Republic'): first word of home team 'gimhae'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='gimhae' -> HTTP 200 (42950 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "gimhae",
+          "status": 200,
+          "response_bytes": 42950
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for busan iparkkorea republic @ gimhae (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:20:59.191808Z",
+    "event_id": "1629465799",
+    "timestamp": "2026-05-03T07:20:57.572463Z",
+    "teams": {
+      "home": "Boston River",
+      "away": "Central Espanol",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Central Espanol @ Boston River | ? | market=Moneyline | +226 -> +198",
+        "detail": {
+          "home": "Boston River",
+          "away": "Central Espanol",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+226",
+          "new_odds": "+198"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'river' (from 'Boston River' / 'Central Espanol'): last word of home team 'boston river'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='river' -> HTTP 200 (56384 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "river",
+          "status": 200,
+          "response_bytes": 56384
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Atletico Tucuman' vs 'River Plate'  <->  POD 'boston river' vs 'central espanol'  [token_set_h=100 | token_set_a=26 | partial_h=100 | partial_a=32 | threshold=60]",
+        "detail": {
+          "bck_home": "Atletico Tucuman",
+          "bck_away": "River Plate",
+          "pod_home": "boston river",
+          "pod_away": "central espanol",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 26,
+            "partial_h": 100,
+            "partial_a": 32,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Atletico Tucuman 1H' vs 'River Plate 1H'  <->  POD 'boston river' vs 'central espanol'  [token_set_h=59 | token_set_a=24 | partial_h=42 | partial_a=29 | threshold=60]",
+        "detail": {
+          "bck_home": "Atletico Tucuman 1H",
+          "bck_away": "River Plate 1H",
+          "pod_home": "boston river",
+          "pod_away": "central espanol",
+          "scores": {
+            "token_set_h": 59,
+            "token_set_a": 24,
+            "partial_h": 42,
+            "partial_a": 29,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Atletico Tucuman' vs 'River Plate' | home=100/60, away=26/60 (combined=126, needed \u2265120)",
+        "detail": {
+          "bck_home": "Atletico Tucuman",
+          "bck_away": "River Plate",
+          "best_score": 126,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 26,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 26,
+            "partial_h": 100,
+            "partial_a": 32,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for central espanol @ boston river ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for central espanol @ boston river (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:21:05.392728Z",
+    "event_id": "1777792855640",
+    "timestamp": "2026-05-03T07:21:04.015733Z",
+    "teams": {
+      "home": "Boston River",
+      "away": "Central Espanol",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Central Espanol @ Boston River | ? | market=Spread | +306 -> +278",
+        "detail": {
+          "home": "Boston River",
+          "away": "Central Espanol",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+306",
+          "new_odds": "+278"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'river' (from 'Boston River' / 'Central Espanol'): last word of home team 'boston river'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='river' -> HTTP 200 (56384 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "river",
+          "status": 200,
+          "response_bytes": 56384
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Atletico Tucuman' vs 'River Plate'  <->  POD 'boston river' vs 'central espanol'  [token_set_h=100 | token_set_a=26 | partial_h=100 | partial_a=32 | threshold=60]",
+        "detail": {
+          "bck_home": "Atletico Tucuman",
+          "bck_away": "River Plate",
+          "pod_home": "boston river",
+          "pod_away": "central espanol",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 26,
+            "partial_h": 100,
+            "partial_a": 32,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Atletico Tucuman 1H' vs 'River Plate 1H'  <->  POD 'boston river' vs 'central espanol'  [token_set_h=59 | token_set_a=24 | partial_h=42 | partial_a=29 | threshold=60]",
+        "detail": {
+          "bck_home": "Atletico Tucuman 1H",
+          "bck_away": "River Plate 1H",
+          "pod_home": "boston river",
+          "pod_away": "central espanol",
+          "scores": {
+            "token_set_h": 59,
+            "token_set_a": 24,
+            "partial_h": 42,
+            "partial_a": 29,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Atletico Tucuman' vs 'River Plate' | home=100/60, away=26/60 (combined=126, needed \u2265120)",
+        "detail": {
+          "bck_home": "Atletico Tucuman",
+          "bck_away": "River Plate",
+          "best_score": 126,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 26,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 26,
+            "partial_h": 100,
+            "partial_a": 32,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for central espanol @ boston river ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for central espanol @ boston river (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:24:30.648227Z",
+    "event_id": "1629530364",
+    "timestamp": "2026-05-03T07:24:28.223724Z",
+    "teams": {
+      "home": "Persik Kediri",
+      "away": "Arema FC",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Arema FC @ Persik Kediri | ? | market=Spread | +234 -> +212",
+        "detail": {
+          "home": "Persik Kediri",
+          "away": "Arema FC",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+234",
+          "new_odds": "+212"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'kediri' (from 'Persik Kediri' / 'Arema FC'): last word of home team 'persik kediri'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='kediri' -> HTTP 200 (42948 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "kediri",
+          "status": 200,
+          "response_bytes": 42948
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for arema fc @ persik kediri (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:26:47.148909Z",
+    "event_id": "1629472880",
+    "timestamp": "2026-05-03T07:26:46.018577Z",
+    "teams": {
+      "home": "Keflavik",
+      "away": "Vikingur Reykjavik",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Vikingur Reykjavik @ Keflavik | ? | market=Spread | +269 -> +219",
+        "detail": {
+          "home": "Keflavik",
+          "away": "Vikingur Reykjavik",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+269",
+          "new_odds": "+219"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'keflavik' (from 'Keflavik' / 'Vikingur Reykjavik'): first word of home team 'keflavik'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='keflavik' -> HTTP 200 (50013 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "keflavik",
+          "status": 200,
+          "response_bytes": 50013
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Vikingur Reykjavik' vs 'Keflavik'  <->  POD 'keflavik' vs 'vikingur reykjavik'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "Vikingur Reykjavik",
+          "bck_away": "Keflavik",
+          "pod_home": "keflavik",
+          "pod_away": "vikingur reykjavik",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Vikingur Reykjavik' vs 'Keflavik'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+470 | away_moneyline=-240 | home_spreads=[{'line': '+1.25', 'odds': '-105'}] | away_spreads=[{'line': '-1.25', 'odds': '-125'}]",
+        "detail": {
+          "home_moneyline": "+470",
+          "away_moneyline": "-240",
+          "home_spreads": [
+            {
+              "line": "+1.25",
+              "odds": "-105"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "-1.25",
+              "odds": "-125"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 5.7000 (+470) / PIN_NVP 6.1000 (+510) => -6.60%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+470",
+          "pin_nvp_american": "+510",
+          "bck_decimal": 5.7,
+          "pin_nvp_decimal": 6.1,
+          "ev_pct": -6.6
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 1.4167 (-240) / PIN_NVP 1.5525 (-181) => -8.66%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "-240",
+          "pin_nvp_american": "-181",
+          "bck_decimal": 1.4167,
+          "pin_nvp_decimal": 1.5525,
+          "ev_pct": -8.66
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home 1.25: BCK 1.9524 (-105) / PIN_NVP 1.8621 (-116) => +5.02%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "1.25",
+          "betbck_american": "-105",
+          "pin_nvp_american": "-116",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 1.8621,
+          "ev_pct": 5.02
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away -1.25: BCK 1.8000 (-125) / PIN_NVP 2.1600 (+116) => -16.82%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "-1.25",
+          "betbck_american": "-125",
+          "pin_nvp_american": "+116",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 2.16,
+          "ev_pct": -16.82
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 3.5: BCK 2.2000 (+120) / PIN_NVP 2.3500 (+135) => -6.50%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "3.5",
+          "betbck_american": "+120",
+          "pin_nvp_american": "+135",
+          "bck_decimal": 2.2,
+          "pin_nvp_decimal": 2.35,
+          "ev_pct": -6.5
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 3.5: BCK 1.6250 (-160) / PIN_NVP 1.7407 (-135) => -6.56%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "3.5",
+          "betbck_american": "-160",
+          "pin_nvp_american": "-135",
+          "bck_decimal": 1.625,
+          "pin_nvp_decimal": 1.7407,
+          "ev_pct": -6.56
+        }
+      }
+    ],
+    "result": "ev_found",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+470",
+        "pinnacle_nvp": "+510",
+        "betbck_decimal": 5.7,
+        "pin_nvp_decimal": 6.1,
+        "ev_pct": -6.6
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "-240",
+        "pinnacle_nvp": "-181",
+        "betbck_decimal": 1.4167,
+        "pin_nvp_decimal": 1.5525,
+        "ev_pct": -8.66
+      },
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "1.25",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "-116",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 1.8621,
+        "ev_pct": 5.02
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "-1.25",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "+116",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 2.16,
+        "ev_pct": -16.82
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "3.5",
+        "betbck_odds": "+120",
+        "pinnacle_nvp": "+135",
+        "betbck_decimal": 2.2,
+        "pin_nvp_decimal": 2.35,
+        "ev_pct": -6.5
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "3.5",
+        "betbck_odds": "-160",
+        "pinnacle_nvp": "-135",
+        "betbck_decimal": 1.625,
+        "pin_nvp_decimal": 1.7407,
+        "ev_pct": -6.56
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T07:26:53.642204Z",
+    "event_id": "1777793204565",
+    "timestamp": "2026-05-03T07:26:52.813227Z",
+    "teams": {
+      "home": "Keflavik",
+      "away": "Vikingur Reykjavik",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Vikingur Reykjavik @ Keflavik | ? | market=Moneyline | +541 -> +447",
+        "detail": {
+          "home": "Keflavik",
+          "away": "Vikingur Reykjavik",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+541",
+          "new_odds": "+447"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'keflavik' (from 'Keflavik' / 'Vikingur Reykjavik'): first word of home team 'keflavik'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='keflavik' -> HTTP 200 (50013 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "keflavik",
+          "status": 200,
+          "response_bytes": 50013
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Vikingur Reykjavik' vs 'Keflavik'  <->  POD 'keflavik' vs 'vikingur reykjavik'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "Vikingur Reykjavik",
+          "bck_away": "Keflavik",
+          "pod_home": "keflavik",
+          "pod_away": "vikingur reykjavik",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Vikingur Reykjavik' vs 'Keflavik'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+470 | away_moneyline=-240 | home_spreads=[{'line': '+1.25', 'odds': '-105'}] | away_spreads=[{'line': '-1.25', 'odds': '-125'}]",
+        "detail": {
+          "home_moneyline": "+470",
+          "away_moneyline": "-240",
+          "home_spreads": [
+            {
+              "line": "+1.25",
+              "odds": "-105"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "-1.25",
+              "odds": "-125"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
   }
 ]
