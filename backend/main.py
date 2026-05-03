@@ -2007,18 +2007,21 @@ def build_event_object(event_id, entry):
     display_away = original_alert.get('awayTeam', '')
 
     # Strip country/league suffixes while preserving original casing.
-    # normalize_team_name_for_matching handles both spaced ("Herediano Costa Rica")
-    # and concatenated ("HeredianoCosta Rica") cases via regex suffix matching.
+    # Handles patterns like "HeredianoCosta Rica", "Orange CountyUSA - USL Championship",
+    # "CeutaSpain - Segunda Division", "Taila SantosPFL", etc.
     def _clean_display_name(raw: str) -> str:
         if not raw:
             return raw
-        stripped_lower = normalize_team_name_for_matching(raw)
+        # Step 1: strip any " - League/competition" trailer (e.g., "USA - USL Championship")
+        name = re.sub(r'\s+-\s+.+$', '', raw).strip()
+        # Step 2: use normalize_team_name_for_matching to strip remaining country/code suffix
+        stripped_lower = normalize_team_name_for_matching(name)
         if not stripped_lower:
-            return raw.strip()
-        raw_lower = raw.lower()
-        if raw_lower.startswith(stripped_lower):
-            return raw[:len(stripped_lower)].strip()
-        return raw.strip()
+            return name.strip()
+        name_lower = name.lower()
+        if name_lower.startswith(stripped_lower):
+            return name[:len(stripped_lower)].strip()
+        return name.strip()
 
     display_home = _clean_display_name(display_home)
     display_away = _clean_display_name(display_away)
