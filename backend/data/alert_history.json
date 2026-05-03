@@ -2916,5 +2916,412 @@
     ],
     "result": "not_found",
     "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:14:35.182798Z",
+    "event_id": "1629691111",
+    "timestamp": "2026-05-03T04:14:31.975368Z",
+    "teams": {
+      "home": "LG T",
+      "away": "NC DinosKorea Professional Baseball",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "NC DinosKorea Professional Baseball @ LG T | ? | market=Moneyline | +107 -> -109",
+        "detail": {
+          "home": "LG T",
+          "away": "NC DinosKorea Professional Baseball",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+107",
+          "new_odds": "-109"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lg t' (from 'LG T' / 'NC DinosKorea Professional Baseball'): full cleaned home team",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lg t' -> HTTP 200 (42948 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lg t",
+          "status": 200,
+          "response_bytes": 42948
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for nc dinoskorea professional baseball @ lg t (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:15:31.662280Z",
+    "event_id": "1629687707",
+    "timestamp": "2026-05-03T04:15:30.751168Z",
+    "teams": {
+      "home": "Kia Tigers",
+      "away": "KT WizKorea Professional Baseball",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "KT WizKorea Professional Baseball @ Kia Tigers | ? | market=Spread | +295 -> +269",
+        "detail": {
+          "home": "Kia Tigers",
+          "away": "KT WizKorea Professional Baseball",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+295",
+          "new_odds": "+269"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'tigers' (from 'Kia Tigers' / 'KT WizKorea Professional Baseball'): last word of home team 'kia tigers'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='tigers' -> HTTP 200 (60284 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "tigers",
+          "status": 200,
+          "response_bytes": 60284
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Texas Rangers' vs 'Detroit Tigers'  <->  POD 'kia tigers' vs 'kt wizkorea professional baseball'  [token_set_h=100 | token_set_a=10 | partial_h=100 | partial_a=43 | threshold=60]",
+        "detail": {
+          "bck_home": "Texas Rangers",
+          "bck_away": "Detroit Tigers",
+          "pod_home": "kia tigers",
+          "pod_away": "kt wizkorea professional baseball",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 10,
+            "partial_h": 100,
+            "partial_a": 43,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Yomiuri Giants' vs 'Hanshin Tigers'  <->  POD 'kia tigers' vs 'kt wizkorea professional baseball'  [token_set_h=75 | token_set_a=21 | partial_h=80 | partial_a=36 | threshold=60]",
+        "detail": {
+          "bck_home": "Yomiuri Giants",
+          "bck_away": "Hanshin Tigers",
+          "pod_home": "kia tigers",
+          "pod_away": "kt wizkorea professional baseball",
+          "scores": {
+            "token_set_h": 75,
+            "token_set_a": 21,
+            "partial_h": 80,
+            "partial_a": 36,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Texas Rangers' vs 'Detroit Tigers' | home=100/60, away=10/60 (combined=110, needed \u2265120)",
+        "detail": {
+          "bck_home": "Texas Rangers",
+          "bck_away": "Detroit Tigers",
+          "best_score": 110,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 10,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 10,
+            "partial_h": 100,
+            "partial_a": 43,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for kt wizkorea professional baseball @ kia tigers ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for kt wizkorea professional baseball @ kia tigers (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:21:41.517050Z",
+    "event_id": "1629691113",
+    "timestamp": "2026-05-03T04:21:40.825493Z",
+    "teams": {
+      "home": "Kiwoom Heroes",
+      "away": "Doosan BearsKorea Professional Baseball",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Doosan BearsKorea Professional Baseball @ Kiwoom Heroes | ? | market=Spread | +180 -> +155",
+        "detail": {
+          "home": "Kiwoom Heroes",
+          "away": "Doosan BearsKorea Professional Baseball",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+180",
+          "new_odds": "+155"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'heroes' (from 'Kiwoom Heroes' / 'Doosan BearsKorea Professional Baseball'): last word of home team 'kiwoom heroes'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='heroes' -> HTTP 200 (42948 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "heroes",
+          "status": 200,
+          "response_bytes": 42948
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for doosan bearskorea professional baseball @ kiwoom heroes (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T04:23:02.775714Z",
+    "event_id": "1629691110",
+    "timestamp": "2026-05-03T04:23:01.608032Z",
+    "teams": {
+      "home": "Hanshin Tigers",
+      "away": "Yomiuri Giants",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Yomiuri Giants @ Hanshin Tigers | ? | market=Moneyline | +143 -> +127",
+        "detail": {
+          "home": "Hanshin Tigers",
+          "away": "Yomiuri Giants",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+143",
+          "new_odds": "+127"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'tigers' (from 'Hanshin Tigers' / 'Yomiuri Giants'): last word of home team 'hanshin tigers'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='tigers' -> HTTP 200 (60284 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "tigers",
+          "status": 200,
+          "response_bytes": 60284
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Texas Rangers' vs 'Detroit Tigers'  <->  POD 'hanshin tigers' vs 'yomiuri giants'  [token_set_h=100 | token_set_a=30 | partial_h=100 | partial_a=33 | threshold=60]",
+        "detail": {
+          "bck_home": "Texas Rangers",
+          "bck_away": "Detroit Tigers",
+          "pod_home": "hanshin tigers",
+          "pod_away": "yomiuri giants",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 30,
+            "partial_h": 100,
+            "partial_a": 33,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Yomiuri Giants' vs 'Hanshin Tigers'  <->  POD 'hanshin tigers' vs 'yomiuri giants'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "Yomiuri Giants",
+          "bck_away": "Hanshin Tigers",
+          "pod_home": "hanshin tigers",
+          "pod_away": "yomiuri giants",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Yomiuri Giants' vs 'Hanshin Tigers'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=-167 | away_moneyline=+147",
+        "detail": {
+          "home_moneyline": "-167",
+          "away_moneyline": "+147",
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 1.5988 (-167) / PIN_NVP 1.7353 (-136) => -7.90%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "-167",
+          "pin_nvp_american": "-136",
+          "bck_decimal": 1.5988,
+          "pin_nvp_decimal": 1.7353,
+          "ev_pct": -7.9
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 2.4700 (+147) / PIN_NVP 2.3600 (+136) => +4.75%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+147",
+          "pin_nvp_american": "+136",
+          "bck_decimal": 2.47,
+          "pin_nvp_decimal": 2.36,
+          "ev_pct": 4.75
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 5.0: BCK 1.8000 (-125) / PIN_NVP 1.8333 (-120) => -1.64%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "5.0",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-120",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.8333,
+          "ev_pct": -1.64
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 5.0: BCK 1.9524 (-105) / PIN_NVP 2.2000 (+120) => -11.46%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "5.0",
+          "betbck_american": "-105",
+          "pin_nvp_american": "+120",
+          "bck_decimal": 1.9524,
+          "pin_nvp_decimal": 2.2,
+          "ev_pct": -11.46
+        }
+      }
+    ],
+    "result": "ev_found",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "-167",
+        "pinnacle_nvp": "-136",
+        "betbck_decimal": 1.5988,
+        "pin_nvp_decimal": 1.7353,
+        "ev_pct": -7.9
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+147",
+        "pinnacle_nvp": "+136",
+        "betbck_decimal": 2.47,
+        "pin_nvp_decimal": 2.36,
+        "ev_pct": 4.75
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "5.0",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-120",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.8333,
+        "ev_pct": -1.64
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "5.0",
+        "betbck_odds": "-105",
+        "pinnacle_nvp": "+120",
+        "betbck_decimal": 1.9524,
+        "pin_nvp_decimal": 2.2,
+        "ev_pct": -11.46
+      }
+    ]
   }
 ]
