@@ -314,31 +314,19 @@ async def event_alert_worker(event_id):
                                 await manager.broadcast({"type": "alert_log", "data": _alog_rec})
                                 await sse_manager.broadcast({"type": "alert_log", "data": _alog_rec})
                     else:
-                        logger.info(f"[PerEventQueue] Updating existing event {event_id} with fresh Pinnacle data.")
-                        start_alert_log(event_id)
-                        try:
-                            _upd_alog = get_logger_for_event(event_id)
-                            if _upd_alog:
-                                _upd_alog.log_raw_alert(payload)
-                                _upd_alog.log_info("Existing event — Pinnacle odds refresh only")
-                                _upd_alog.set_result("completed")
-                            event = active_events[event_id]
-                            betbck_data = event.get("betbck_data", {}).get("data", {})
-                            potential_bets = betbck_data.get("potential_bets_analyzed", [])
-                            has_positive_ev = event.get("has_positive_ev", False) or any(float(b.get("ev", "0").replace('%','')) > 0 for b in potential_bets)
-                            pod_event_manager.update_event_data(event_id, {
-                                "last_pinnacle_data_update_timestamp": now,
-                                "pinnacle_data_processed": live_pinnacle_odds_processed,
-                                "has_positive_ev": has_positive_ev
-                            })
-                            updated_event = pod_event_manager.get_active_events().get(event_id)
-                            if updated_event:
-                                broadcast_pod_alert_safe(event_id, updated_event)
-                        finally:
-                            _alog_rec = finalize_alert_log(event_id)
-                            if _alog_rec:
-                                await manager.broadcast({"type": "alert_log", "data": _alog_rec})
-                                await sse_manager.broadcast({"type": "alert_log", "data": _alog_rec})
+                        logger.info(f"[PerEventQueue] Updating existing event {event_id} with fresh Pinnacle data (silent — no new alert log entry).")
+                        event = active_events[event_id]
+                        betbck_data = event.get("betbck_data", {}).get("data", {})
+                        potential_bets = betbck_data.get("potential_bets_analyzed", [])
+                        has_positive_ev = event.get("has_positive_ev", False) or any(float(b.get("ev", "0").replace('%','')) > 0 for b in potential_bets)
+                        pod_event_manager.update_event_data(event_id, {
+                            "last_pinnacle_data_update_timestamp": now,
+                            "pinnacle_data_processed": live_pinnacle_odds_processed,
+                            "has_positive_ev": has_positive_ev
+                        })
+                        updated_event = pod_event_manager.get_active_events().get(event_id)
+                        if updated_event:
+                            broadcast_pod_alert_safe(event_id, updated_event)
                 logger.info(f"[PerEventQueue] Lock released for Event ID: {event_id}")
             except Exception as e:
                 logger.error(f"[PerEventQueue] Error processing alert for {event_id}: {e}")

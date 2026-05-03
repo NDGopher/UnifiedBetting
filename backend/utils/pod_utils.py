@@ -466,6 +466,7 @@ def normalize_team_name_for_matching(name):
         'guyana', 'suriname', 'trinidad and tobago', 'barbados',
         
         # Country abbreviations (3-letter codes)
+        'cyp', 'cyprus',
         'den', 'isl', 'fin', 'rus', 'ger', 'fra', 'ita', 'esp', 'eng', 'sco', 'wal',
         'nir', 'irl', 'ned', 'bel', 'sui', 'aut', 'nor', 'swe', 'pol', 'cze', 'svk',
         'slo', 'cro', 'srb', 'bul', 'rou', 'hun', 'ukr', 'tur', 'gre', 'por', 'bra',

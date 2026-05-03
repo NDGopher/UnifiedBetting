@@ -259,6 +259,29 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
                 pass
 
         betbck_result = scrape_betbck_for_game_queued(pod_home_team_raw, pod_away_team_raw, search_term, event_id, event_date=event_date)
+
+        # If home-team search failed, retry with away team's significant word
+        _first_failed = (
+            not betbck_result or
+            (isinstance(betbck_result, dict) and betbck_result.get("status") == "error")
+        )
+        if _first_failed:
+            away_parts = pod_away_clean.split()
+            if away_parts:
+                skip_words = {'fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif', 'kc', 'sr', 'mg', 'us', 'br'}
+                away_search = None
+                if len(away_parts) > 1 and len(away_parts[-1]) > 3 and away_parts[-1].lower() not in skip_words:
+                    away_search = away_parts[-1]
+                elif len(away_parts[0]) > 2 and away_parts[0].lower() not in skip_words:
+                    away_search = away_parts[0]
+                else:
+                    away_search = pod_away_clean
+                if away_search and away_search.lower() != search_term.lower():
+                    print(f"[MainLogic] Home-team search '{search_term}' failed — retrying with away-team term '{away_search}'")
+                    if alog:
+                        alog.log_info(f"Retrying with away-team search term: '{away_search}'")
+                    betbck_result = scrape_betbck_for_game_queued(pod_home_team_raw, pod_away_team_raw, away_search, event_id, event_date=event_date)
+
         if not betbck_result:
             if alog:
                 alog.log_not_found(pod_home_clean, pod_away_clean, league)
