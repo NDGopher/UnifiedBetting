@@ -1257,16 +1257,28 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
 
     all_bets: List[Dict] = []
 
-    # 1. Full-game row — use the standard function (handles spreads / ML / totals / 1H_data)
-    all_bets.extend(analyze_markets_for_ev(bet_data, pinnacle_data))
+    # 1. Full-game row — ONLY when primary is actually the full_game entry.
+    #
+    #    If row_data has no "full_game" key, primary was set via date/index fallback
+    #    and could be a period row (e.g. "period_1").  Calling analyze_markets_for_ev
+    #    on that data with the real Pinnacle feed would compare period-specific spreads
+    #    against Pinnacle num_0 (full-game) — exactly the cross-period contamination
+    #    we must prevent.  In that case every row is handled safely by step 2 below.
+    if "full_game" in row_data:
+        all_bets.extend(analyze_markets_for_ev(bet_data, pinnacle_data))
+        logger.debug("[MultiRow] Step 1: full_game row processed via analyze_markets_for_ev")
+    else:
+        logger.warning(
+            f"[MultiRow] No full_game match in row_data {list(row_data.keys())} — "
+            "skipping step 1 to avoid cross-period contamination; "
+            "all rows will be handled by per-period loop"
+        )
 
     # 2. Additional row types — wrap the target Pinnacle period as "num_0" and re-run
-    SKIP_TYPES = {"full_game"}  # full_game already handled above
-    # half_1 is handled via the existing 1H_data path inside analyze_markets_for_ev; skip it here
-    # to avoid duplicates unless the 1H_data path is absent.
-    if not bet_data.get("1H_data"):
-        pass  # will process half_1 below
-    else:
+    SKIP_TYPES = {"full_game"}  # full_game already handled in step 1 above
+    # half_1 is handled via the existing 1H_data path inside analyze_markets_for_ev;
+    # skip it here to avoid duplicates — but only when 1H_data is present on primary.
+    if bet_data.get("1H_data"):
         SKIP_TYPES = SKIP_TYPES | {"half_1"}
 
     for row_type, row_bet_data in row_data.items():
@@ -1293,6 +1305,21 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
 
         try:
             period_bets = analyze_markets_for_ev(row_bet_data, fake_pinnacle)
+
+            # reg_time is BetBCK's 2-way (home/away) regulation-only market.
+            # Pinnacle's num_0 for soccer is 3-way (home/draw/away), so its NVP for
+            # home and away already absorbs the draw probability into the vig.
+            # Comparing a 2-way ML against that NVP overstates EV — drop ML here.
+            if row_type == "reg_time":
+                before = len(period_bets)
+                period_bets = [b for b in period_bets if b.get("market") != "Moneyline"]
+                dropped = before - len(period_bets)
+                if dropped:
+                    logger.info(
+                        f"[MultiRow] reg_time: dropped {dropped} Moneyline bet(s) "
+                        "(2-way BetBCK vs 3-way Pinnacle NVP is invalid)"
+                    )
+
             label = _ROW_TYPE_LABEL.get(row_type, "")
             for bet in period_bets:
                 if label:
