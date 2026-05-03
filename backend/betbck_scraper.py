@@ -358,7 +358,16 @@ def alias_normalize(name):
 
 # ── Row-type classifier ────────────────────────────────────────────────────────
 _ROW_TYPE_RE = re.compile(
-    r'\b(Alt\s+Line|Alt\.?\s*Line|3[Pp]|3rd\s+(?:Period|Half)|2[Pp]|2nd\s+(?:Period|Half)|1[Pp]|1st\s+(?:Period|Half)|2[Hh]|1[Hh]|Reg(?:ular)?\s+Time|OT|ET)\b',
+    r'\b('
+    r'Alt\s+Line|Alt\.?\s*Line'
+    r'|3[Pp]|3rd\s+(?:Period|Half)'
+    r'|2[Pp]|2nd\s+(?:Period|Half)'
+    r'|1st\s+5(?:\s+[Ii]nnings?)?|F5|First\s+5(?:\s+[Ii]nnings?)?'  # baseball F5
+    r'|1[Pp]|1st\s+(?:Period|Half)'
+    r'|2[Hh]|1[Hh]'
+    r'|Reg(?:ular)?\s+Time'
+    r'|OT|ET'
+    r')\b',
     re.IGNORECASE,
 )
 
@@ -368,13 +377,18 @@ def _classify_bck_row_type(bck_home: str, bck_away: str) -> str:
     if not m:
         return "full_game"
     t = m.group(1).lower().strip()
-    if 'alt' in t:          return "alt_line"
-    if '3p' in t or '3rd' in t: return "period_3"
-    if '2p' in t or '2nd' in t: return "period_2"
-    if '1p' in t or '1st' in t: return "period_1"
-    if '2h' in t:           return "half_2"
-    if '1h' in t:           return "half_1"
-    if 'reg' in t:          return "reg_time"
+    if 'alt' in t:                                        return "alt_line"
+    if '3p' in t or '3rd' in t:                          return "period_3"
+    # 2nd: disambiguate Half vs Period — "2nd Half" must not fall into period_2
+    if '2h' in t or ('2nd' in t and 'half' in t):        return "half_2"
+    if '2p' in t or '2nd' in t:                          return "period_2"
+    # Baseball F5 — must be before generic "1st" to avoid period_1 misclassification
+    if t == 'f5' or '1st 5' in t or 'first 5' in t:     return "half_1"
+    # 1st: disambiguate Half vs Period — "1st Half" must not fall into period_1
+    if '1h' in t or ('1st' in t and 'half' in t):        return "half_1"
+    if '1p' in t or '1st' in t:                          return "period_1"
+    if 'reg' in t:                                        return "reg_time"
+    if t in ('ot', 'et'):                                 return "ot"  # no Pinnacle period; skipped downstream
     return "full_game"
 
 def normalize_team_name_for_matching(name):
@@ -862,9 +876,10 @@ def parse_game_data_from_html(search_results_html, search_term):
     # Use the existing parsing function with the extracted team names
     result = parse_specific_game_from_search_html(search_results_html, home_team, away_team)
     
-    # If we found a game, also try to extract 1H data from the same HTML
+    # Derive 1H_data from already-parsed row_data (covers all period types correctly)
     if result:
-        result['1H_data'] = extract_1h_data_from_html(search_results_html, home_team, away_team, result.get('bck_local_is_pod_home', True))
+        _rdata = result.get('row_data', {})
+        result['1H_data'] = _rdata.get('half_1') or _rdata.get('period_1')
     
     return result
 
@@ -914,10 +929,13 @@ def scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck
             'inetSportSelection': inetSportSelection,
             'keyword_search': actual_search_query
         }
-    # Add 1H data if we found a game
+    # Derive 1H_data from already-parsed row_data (covers all period types correctly)
     if parsed_game_data:
         print(f"[BetbckScraper-CORE] Scraper returned parsed game data.")
-        parsed_game_data['1H_data'] = extract_1h_data_from_html(search_results_html, pod_home_team, pod_away_team, parsed_game_data.get('bck_local_is_pod_home', True))
+        _rdata = parsed_game_data.get('row_data', {})
+        parsed_game_data['1H_data'] = _rdata.get('half_1') or _rdata.get('period_1')
+        if parsed_game_data['1H_data']:
+            print(f"[BetbckScraper-CORE] 1H_data populated from row_data: keys={list(_rdata.keys())}")
     else: 
         print(f"[BetbckScraper-CORE] Scraper did NOT find or parse specific game from HTML.")
     return parsed_game_data 
@@ -1132,9 +1150,10 @@ def scrape_betbck_with_periods_selenium(pod_home_team, pod_away_team, search_tea
         # Now parse the game data including any loaded period data
         result = parse_specific_game_from_search_html(page_source, pod_home_team, pod_away_team, event_id)
         
-        # If we found a game, also try to extract 1H data from the same HTML
+        # Derive 1H_data from already-parsed row_data
         if result:
-            result['1H_data'] = extract_1h_data_from_html(page_source, pod_home_team, pod_away_team)
+            _rdata = result.get('row_data', {})
+            result['1H_data'] = _rdata.get('half_1') or _rdata.get('period_1')
         
         return result
         

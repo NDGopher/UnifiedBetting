@@ -282,7 +282,7 @@ class BetBCKRequestManager:
 
             # Parse game data using correct POD team names
             if pod_home_team and pod_away_team:
-                from betbck_scraper import parse_specific_game_from_search_html, extract_1h_data_from_html
+                from betbck_scraper import parse_specific_game_from_search_html
                 from utils.pod_utils import clean_pod_team_name_for_search
                 
                 # Clean the team names to remove UEFA and other suffixes
@@ -299,10 +299,18 @@ class BetBCKRequestManager:
                 
                 game_data = parse_specific_game_from_search_html(search_results_html, pod_home_clean, pod_away_clean, event_id, event_date)
                 
-                # Add 1H data if we found a game
+                # Derive 1H/period data from already-parsed row_data.
+                # parse_specific_game_from_search_html already matched every period wrapper
+                # (half_1, period_1, half_2, period_2, period_3, etc.) with the correct
+                # home/away orientation — no need to re-scan all tables.
                 if game_data:
-                    logger.info(f"[BetBCK-Manager] Game data found, extracting 1H data...")
-                    game_data['1H_data'] = extract_1h_data_from_html(search_results_html, pod_home_clean, pod_away_clean, game_data.get('bck_local_is_pod_home', True))
+                    logger.info(f"[BetBCK-Manager] Game data found, deriving 1H_data from row_data...")
+                    _row_data = game_data.get('row_data', {})
+                    game_data['1H_data'] = _row_data.get('half_1') or _row_data.get('period_1')
+                    if game_data['1H_data']:
+                        logger.info(f"[BetBCK-Manager] 1H_data set from row_data key: {'half_1' if _row_data.get('half_1') else 'period_1'}")
+                    else:
+                        logger.info(f"[BetBCK-Manager] No half_1/period_1 in row_data {list(_row_data.keys())} — 1H_data=None")
             else:
                 game_data = parse_game_data_from_html(search_results_html, search_term)
 
