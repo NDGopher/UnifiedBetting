@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef, useContext } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   Table,
   TableBody,
@@ -22,12 +22,9 @@ import {
 import { 
   Refresh as RefreshIcon,
   Star as StarIcon,
-  TrendingUp,
   Close,
   CheckCircle,
-  Warning
 } from "@mui/icons-material";
-import { BetbckTabContext } from "../App";
 import { useWebSocket } from '../hooks/useWebSocket';
 import { showEnhancedNotification } from '../utils/notificationUtils';
 import { API_BASE, WS_BASE } from '../utils/apiConfig';
@@ -61,7 +58,14 @@ const NEGATIVE_EV_DISMISS_MS = 60 * 1000; // 1 minute for negative EV alerts
 const POSITIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for positive EV alerts
 const MAX_RETRIES = 3; // Maximum number of retries before showing error
 
-const PODAlerts: React.FC = () => {
+interface PODAlertsProps {
+  minEv: number;
+  maxEv: number;
+  onMinEvChange: (v: number) => void;
+  onMaxEvChange: (v: number) => void;
+}
+
+const PODAlerts: React.FC<PODAlertsProps> = ({ minEv, maxEv, onMinEvChange, onMaxEvChange }) => {
   const [events, setEvents] = useState<{ [eventId: string]: EventData }>({});
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const [modalMarket, setModalMarket] = useState<null | { event: EventData; market: Market }>(null);
@@ -69,8 +73,6 @@ const PODAlerts: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [retryCount, setRetryCount] = useState(0);
-  const [showOnlyEV, setShowOnlyEV] = useState(false);
-  const [minEV, setMinEV] = useState<number>(0);
   const prevMarketsRef = useRef<{ [eventId: string]: Market[] }>({});
   const notifiedEventsRef = useRef<Set<string>>(new Set());
   const { lastMessage, isConnected } = useWebSocket(`${WS_BASE}/api/ws`);
@@ -404,34 +406,31 @@ const PODAlerts: React.FC = () => {
           >
             Test
           </Button>
-          <Button 
-            onClick={() => setShowOnlyEV(ev => !ev)} 
-            variant={showOnlyEV ? "contained" : "outlined"} 
-            size="small" 
-            color="success"
-            startIcon={<TrendingUp />}
-            sx={{ minWidth: 'auto' }}
-          >
-            {showOnlyEV ? "All" : "+EV Only"}
-          </Button>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 200 }}>
-          <Typography variant="caption" sx={{ color: '#B0B0B0', whiteSpace: 'nowrap' }}>
-            Min EV: {minEV === 0 ? 'All' : `+${minEV}%`}
-          </Typography>
-          <Slider
-            value={minEV}
-            onChange={(_, val) => setMinEV(val as number)}
-            min={0}
-            max={10}
-            step={0.5}
-            size="small"
-            sx={{
-              color: '#4caf50',
-              width: 130,
-              '& .MuiSlider-thumb': { width: 14, height: 14 },
-            }}
-          />
+        {/* EV Range filter — shared with Auto-Bettor */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 180 }}>
+            <Typography variant="caption" sx={{ color: '#B0B0B0', whiteSpace: 'nowrap', width: 50 }}>
+              Min EV: <Box component="span" sx={{ color: '#4caf50', fontWeight: 600 }}>{minEv === 0 ? 'Off' : `+${minEv}%`}</Box>
+            </Typography>
+            <Slider
+              value={minEv}
+              onChange={(_, val) => onMinEvChange(val as number)}
+              min={0} max={20} step={0.5} size="small"
+              sx={{ color: '#4caf50', width: 110, '& .MuiSlider-thumb': { width: 13, height: 13 } }}
+            />
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 180 }}>
+            <Typography variant="caption" sx={{ color: '#B0B0B0', whiteSpace: 'nowrap', width: 50 }}>
+              Max EV: <Box component="span" sx={{ color: maxEv >= 20 ? '#555' : '#4caf50', fontWeight: 600 }}>{maxEv >= 20 ? '∞' : `${maxEv}%`}</Box>
+            </Typography>
+            <Slider
+              value={maxEv}
+              onChange={(_, val) => onMaxEvChange(val as number)}
+              min={0} max={20} step={0.5} size="small"
+              sx={{ color: '#4caf50', width: 110, '& .MuiSlider-thumb': { width: 13, height: 13 } }}
+            />
+          </Box>
         </Box>
       </Box>
       {error && (
@@ -453,8 +452,8 @@ const PODAlerts: React.FC = () => {
           {activeEvents
             .filter(([, event]) => {
               const best = getBestEV(event.markets);
-              if (showOnlyEV && best <= 0) return false;
-              if (minEV > 0 && best < minEV) return false;
+              if (minEv > 0 && best < minEv) return false;
+              if (maxEv < 20 && best > maxEv) return false;
               return true;
             })
             .map(([eventId, event]) => {

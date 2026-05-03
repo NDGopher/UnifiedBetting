@@ -197,10 +197,15 @@ const inputSx = {
   '& input': { color: '#fff', fontSize: '0.85rem' },
 };
 
-function AutoBetPlacementPanel() {
+interface AutoBetProps {
+  minEv: number;
+  maxEv: number;
+  onMinEvChange: (v: number) => void;
+  onMaxEvChange: (v: number) => void;
+}
+
+function AutoBetPlacementPanel({ minEv, maxEv, onMinEvChange, onMaxEvChange }: AutoBetProps) {
   const [enabled, setEnabled] = useState(false);
-  const [minEv, setMinEv] = useState(2);
-  const [maxEv, setMaxEv] = useState(20);
   const [unitSize, setUnitSize] = useState('50');
   const [maxPerEvent, setMaxPerEvent] = useState('200');
   const [kelly, setKelly] = useState('fixed');
@@ -257,7 +262,7 @@ function AutoBetPlacementPanel() {
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
             <Typography sx={{ fontSize: '0.75rem', color: '#777', width: 30, flexShrink: 0 }}>Min</Typography>
-            <Slider value={minEv} onChange={(_, v) => setMinEv(v as number)}
+            <Slider value={minEv} onChange={(_, v) => onMinEvChange(v as number)}
               min={0} max={20} step={0.5} valueLabelDisplay="auto" valueLabelFormat={v => `${v}%`} sx={sliderSx} />
             <Typography sx={{ fontSize: '0.8rem', color: '#2E7D32', width: 36, textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>
               {minEv}%
@@ -265,7 +270,7 @@ function AutoBetPlacementPanel() {
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Typography sx={{ fontSize: '0.75rem', color: '#777', width: 30, flexShrink: 0 }}>Max</Typography>
-            <Slider value={maxEv} onChange={(_, v) => setMaxEv(v as number)}
+            <Slider value={maxEv} onChange={(_, v) => onMaxEvChange(v as number)}
               min={0} max={20} step={0.5} valueLabelDisplay="auto" valueLabelFormat={v => v >= 20 ? '∞' : `${v}%`} sx={sliderSx} />
             <Typography sx={{ fontSize: '0.8rem', color: maxEv >= 20 ? '#555' : '#2E7D32', width: 36, textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>
               {maxEv >= 20 ? '∞' : `${maxEv}%`}
@@ -339,6 +344,8 @@ function openBetbckTabOnLoad(betbckTabRef: React.MutableRefObject<Window | null>
 
 function App() {
   const betbckTabRef = useRef<Window | null>(null);
+  const [abMinEv, setAbMinEv] = useState(2);
+  const [abMaxEv, setAbMaxEv] = useState(20);
 
   React.useEffect(() => {
     openBetbckTabOnLoad(betbckTabRef);
@@ -480,7 +487,7 @@ function App() {
                       LIVE
                     </Box>
                   </Box>
-                  <PODAlerts />
+                  <PODAlerts minEv={abMinEv} maxEv={abMaxEv} onMinEvChange={setAbMinEv} onMaxEvChange={setAbMaxEv} />
                 </Paper>
               </Grid>
               {/* PropBuilder Section — disabled until prop support is re-enabled
@@ -538,7 +545,7 @@ function App() {
               </Grid>
               {/* Auto Bet Placement Section */}
               <Grid item xs={12}>
-                <AutoBetPlacementPanel />
+                <AutoBetPlacementPanel minEv={abMinEv} maxEv={abMaxEv} onMinEvChange={setAbMinEv} onMaxEvChange={setAbMaxEv} />
               </Grid>
               
               {/* EV Calculator at the bottom, centered */}
