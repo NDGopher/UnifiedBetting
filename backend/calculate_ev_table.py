@@ -322,6 +322,19 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                     start_time_fmt = str(start_time)
             # League extraction
             league = swordfish_data.get('league_name') or swordfish_data.get('league') or swordfish_data.get('sport_name') or sport
+
+            # Skip youth/reserve/amateur leagues — BetBCK only carries senior professional lines
+            _league_lower = (league or '').lower()
+            _youth_indicators = [
+                'u19', 'u20', 'u21', 'u22', 'u23', 'u17', 'u18', 'u16', 'u15',
+                'under-19', 'under-21', 'under-23',
+                'youth', 'reserve', 'reserves', 'juniors', 'junior',
+                'amateur', 'women', "women's",
+            ]
+            if any(ind in _league_lower for ind in _youth_indicators):
+                logger.info(f"[EV] Skipping youth/reserve league: '{league}' ({home_team} vs {away_team})")
+                continue
+
             event_name = f"{home_team} vs {away_team}" if home_team and away_team else home_team or away_team or "-"
             game_id = str(event_id)
             # --- Moneyline ---

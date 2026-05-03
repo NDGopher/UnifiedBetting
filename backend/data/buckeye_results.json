@@ -1,32 +1,18 @@
 {
   "events": [
     {
-      "sport": "other",
-      "matchup": "Kayserispor vs Eyupspor",
-      "bet": "Over 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "-120",
-      "pinnacle_nvp": "-155",
-      "ev": "11.45%",
-      "ev_val": 0.11448834853090184,
-      "start_time": "2026-05-03 07:00 AM",
-      "league": "Turkey - Super Lig U19",
-      "pinnacle_limit": 175,
-      "event_id": "1629704012"
-    },
-    {
-      "sport": "other",
-      "matchup": "Kayserispor vs Eyupspor",
-      "bet": "ML - Eyupspor",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+365",
-      "pinnacle_nvp": "+327",
-      "ev": "8.85%",
-      "ev_val": 0.08848314606741581,
-      "start_time": "2026-05-03 07:00 AM",
-      "league": "Turkey - Super Lig U19",
-      "pinnacle_limit": 175,
-      "event_id": "1629704012"
+      "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Toronto Raptors 8.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "-112",
+      "ev": "3.36%",
+      "ev_val": 0.0335526481635533,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 10000,
+      "event_id": "1629527137"
     },
     {
       "sport": "other",
@@ -44,27 +30,27 @@
     },
     {
       "sport": "other",
-      "matchup": "Keflavik vs Vikingur Reykjavik",
-      "bet": "Keflavik 1.25",
-      "bet_type": "Spread",
-      "betbck_odds": "-105",
-      "pinnacle_nvp": "-110",
-      "ev": "2.43%",
-      "ev_val": 0.02433418278119226,
-      "start_time": "2026-05-03 01:00 PM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 400,
-      "event_id": "1629472880"
+      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
+      "bet": "ML - V-Varen Nagasaki",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+155",
+      "pinnacle_nvp": "+150",
+      "ev": "2.12%",
+      "ev_val": 0.021225470564677495,
+      "start_time": "2026-05-03 03:00 AM",
+      "league": "Japan - J League",
+      "pinnacle_limit": 10000,
+      "event_id": "1629454203"
     },
     {
       "sport": "basketball",
       "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Toronto Raptors 8.5",
+      "bet": "Toronto Raptors 9.0",
       "bet_type": "Spread",
-      "betbck_odds": "-105",
-      "pinnacle_nvp": "-108",
-      "ev": "1.16%",
-      "ev_val": 0.011596348383913213,
+      "betbck_odds": "-117",
+      "pinnacle_nvp": "-122",
+      "ev": "1.79%",
+      "ev_val": 0.017947779747999215,
       "start_time": "2026-05-03 06:35 PM",
       "league": "NBA",
       "pinnacle_limit": 10000,
@@ -85,18 +71,18 @@
       "event_id": "1629500366"
     },
     {
-      "sport": "other",
-      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
-      "bet": "ML - V-Varen Nagasaki",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+155",
-      "pinnacle_nvp": "+153",
-      "ev": "0.79%",
-      "ev_val": 0.007905138339920903,
-      "start_time": "2026-05-03 03:00 AM",
-      "league": "Japan - J League",
+      "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Toronto Raptors 9.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-129",
+      "pinnacle_nvp": "-131",
+      "ev": "0.75%",
+      "ev_val": 0.00748796733803192,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
       "pinnacle_limit": 10000,
-      "event_id": "1629454203"
+      "event_id": "1629527137"
     },
     {
       "sport": "basketball",
@@ -156,20 +142,6 @@
     },
     {
       "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Toronto Raptors 9.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-117",
-      "pinnacle_nvp": "-117",
-      "ev": "0.04%",
-      "ev_val": 0.00037802303174472307,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
-    },
-    {
-      "sport": "basketball",
       "matchup": "Detroit Pistons vs Orlando Magic",
       "bet": "Under 202.0",
       "bet_type": "Total",
@@ -181,6 +153,20 @@
       "league": "NBA",
       "pinnacle_limit": 4000,
       "event_id": "1629725995"
+    },
+    {
+      "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Toronto Raptors 10.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-141",
+      "pinnacle_nvp": "-140",
+      "ev": "-0.16%",
+      "ev_val": -0.001623914628487988,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 10000,
+      "event_id": "1629527137"
     },
     {
       "sport": "hockey",
@@ -254,6 +240,20 @@
     },
     {
       "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Toronto Raptors 10.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-153",
+      "pinnacle_nvp": "-151",
+      "ev": "-0.51%",
+      "ev_val": -0.005057297688429552,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 10000,
+      "event_id": "1629527137"
+    },
+    {
+      "sport": "basketball",
       "matchup": "New York Knicks vs Philadelphia 76ers",
       "bet": "New York Knicks -7.0",
       "bet_type": "Spread",
@@ -265,20 +265,6 @@
       "league": "NBA",
       "pinnacle_limit": 5000,
       "event_id": "1629971487"
-    },
-    {
-      "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Toronto Raptors 9.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-129",
-      "pinnacle_nvp": "-127",
-      "ev": "-0.61%",
-      "ev_val": -0.006050504787451061,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
     },
     {
       "sport": "other",
@@ -365,20 +351,6 @@
       "event_id": "1629669917"
     },
     {
-      "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Toronto Raptors 10.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-141",
-      "pinnacle_nvp": "-137",
-      "ev": "-1.26%",
-      "ev_val": -0.012582404300387928,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
-    },
-    {
       "sport": "hockey",
       "matchup": "Colorado Avalanche vs Minnesota Wild",
       "bet": "Over 5.5",
@@ -449,6 +421,20 @@
       "event_id": "1629476585"
     },
     {
+      "sport": "other",
+      "matchup": "IBV vs Breidablik",
+      "bet": "IBV 1.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "-102",
+      "ev": "-1.49%",
+      "ev_val": -0.014944019989428736,
+      "start_time": "2026-05-03 11:00 AM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 400,
+      "event_id": "1629476541"
+    },
+    {
       "sport": "basketball",
       "matchup": "Detroit Pistons vs Orlando Magic",
       "bet": "Orlando Magic 10.0",
@@ -461,20 +447,6 @@
       "league": "NBA",
       "pinnacle_limit": 15000,
       "event_id": "1629725995"
-    },
-    {
-      "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Toronto Raptors 10.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-153",
-      "pinnacle_nvp": "-147",
-      "ev": "-1.57%",
-      "ev_val": -0.015717398070339228,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
     },
     {
       "sport": "other",
@@ -575,6 +547,20 @@
       "event_id": "1628857866"
     },
     {
+      "sport": "other",
+      "matchup": "Keflavik vs Vikingur Reykjavik",
+      "bet": "Keflavik 1.25",
+      "bet_type": "Spread",
+      "betbck_odds": "-115",
+      "pinnacle_nvp": "-110",
+      "ev": "-1.91%",
+      "ev_val": -0.019115835576440587,
+      "start_time": "2026-05-03 01:00 PM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 400,
+      "event_id": "1629472880"
+    },
+    {
       "sport": "baseball",
       "matchup": "Wei Chuan Dragons vs Fubon Guardians",
       "bet": "ML - Wei Chuan Dragons",
@@ -660,6 +646,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Keflavik vs Vikingur Reykjavik",
+      "bet": "Under 3.0",
+      "bet_type": "Total",
+      "betbck_odds": "+120",
+      "pinnacle_nvp": "+125",
+      "ev": "-2.27%",
+      "ev_val": -0.02265659706796963,
+      "start_time": "2026-05-03 01:00 PM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 300,
+      "event_id": "1629472880"
+    },
+    {
+      "sport": "other",
       "matchup": "Noah vs Pyunik",
       "bet": "Noah -0.75",
       "bet_type": "Spread",
@@ -730,20 +730,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Hajduk Split vs Varazdin",
-      "bet": "Hajduk Split -1.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-105",
-      "pinnacle_nvp": "+100",
-      "ev": "-2.38%",
-      "ev_val": -0.023809523809523836,
-      "start_time": "2026-05-03 11:45 AM",
-      "league": "Croatia - HNL",
-      "pinnacle_limit": 400,
-      "event_id": "1629199008"
-    },
-    {
-      "sport": "other",
       "matchup": "Godoy Cruz vs Deportivo Moron",
       "bet": "Under 1.5",
       "bet_type": "Total",
@@ -783,20 +769,6 @@
       "league": "NHL",
       "pinnacle_limit": 5000,
       "event_id": "1629913925"
-    },
-    {
-      "sport": "other",
-      "matchup": "Sochi vs Orenburg",
-      "bet": "ML - Orenburg",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+125",
-      "pinnacle_nvp": "+131",
-      "ev": "-2.47%",
-      "ev_val": -0.024707412223667125,
-      "start_time": "2026-05-03 06:30 AM",
-      "league": "Russia - Premier League",
-      "pinnacle_limit": 2400,
-      "event_id": "1629184047"
     },
     {
       "sport": "other",
@@ -939,6 +911,20 @@
       "event_id": "1629385786"
     },
     {
+      "sport": "soccer",
+      "matchup": "Bournemouth vs Crystal Palace",
+      "bet": "ML - Bournemouth",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-155",
+      "pinnacle_nvp": "-145",
+      "ev": "-2.77%",
+      "ev_val": -0.027682452528025703,
+      "start_time": "2026-05-03 08:00 AM",
+      "league": "England - Premier League",
+      "pinnacle_limit": 15000,
+      "event_id": "1628649353"
+    },
+    {
       "sport": "other",
       "matchup": "Rapid Bucuresti vs CFR Cluj",
       "bet": "Over 2.5",
@@ -965,20 +951,6 @@
       "league": "France - Ligue 1",
       "pinnacle_limit": 10000,
       "event_id": "1628790356"
-    },
-    {
-      "sport": "other",
-      "matchup": "Sparta Prague vs Jablonec",
-      "bet": "Jablonec 0.75",
-      "bet_type": "Spread",
-      "betbck_odds": "+110",
-      "pinnacle_nvp": "+116",
-      "ev": "-2.78%",
-      "ev_val": -0.02777777777777779,
-      "start_time": "2026-05-03 11:30 AM",
-      "league": "Czech Republic - First Liga",
-      "pinnacle_limit": 500,
-      "event_id": "1629428991"
     },
     {
       "sport": "basketball",
@@ -1066,6 +1038,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Sochi vs Orenburg",
+      "bet": "ML - Orenburg",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+125",
+      "pinnacle_nvp": "+132",
+      "ev": "-2.89%",
+      "ev_val": -0.02891670263271484,
+      "start_time": "2026-05-03 06:30 AM",
+      "league": "Russia - Premier League",
+      "pinnacle_limit": 2400,
+      "event_id": "1629184047"
+    },
+    {
+      "sport": "other",
       "matchup": "Almirante Brown vs Chaco For Ever",
       "bet": "Under 1.5",
       "bet_type": "Total",
@@ -1091,20 +1077,6 @@
       "league": "NHL",
       "pinnacle_limit": 5000,
       "event_id": "1629820104"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Bournemouth vs Crystal Palace",
-      "bet": "ML - Bournemouth",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-155",
-      "pinnacle_nvp": "-144",
-      "ev": "-3.00%",
-      "ev_val": -0.029975654290931297,
-      "start_time": "2026-05-03 08:00 AM",
-      "league": "England - Premier League",
-      "pinnacle_limit": 15000,
-      "event_id": "1628649353"
     },
     {
       "sport": "other",
@@ -1262,6 +1234,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Getafe vs Rayo Vallecano",
+      "bet": "ML - Getafe",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "+102",
+      "ev": "-3.20%",
+      "ev_val": -0.03203720754538797,
+      "start_time": "2026-05-03 09:15 AM",
+      "league": "Spain - La Liga",
+      "pinnacle_limit": 15000,
+      "event_id": "1628801527"
+    },
+    {
+      "sport": "other",
       "matchup": "Hapoel Kiryat Shmona vs Hapoel Haifa",
       "bet": "Hapoel Haifa 0.0",
       "bet_type": "Spread",
@@ -1373,20 +1359,6 @@
       "event_id": "1629476445"
     },
     {
-      "sport": "other",
-      "matchup": "America de Cali vs Deportivo Pereira",
-      "bet": "ML - America de Cali",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-250",
-      "pinnacle_nvp": "-223",
-      "ev": "-3.31%",
-      "ev_val": -0.03314917127071826,
-      "start_time": "2026-05-03 05:45 PM",
-      "league": "Colombia - Primera A",
-      "pinnacle_limit": 300,
-      "event_id": "1629185142"
-    },
-    {
       "sport": "basketball",
       "matchup": "New York Knicks vs Philadelphia 76ers",
       "bet": "New York Knicks -5.5",
@@ -1413,20 +1385,6 @@
       "league": "Chile - Primera Division",
       "pinnacle_limit": 600,
       "event_id": "1629411039"
-    },
-    {
-      "sport": "other",
-      "matchup": "Hajduk Split vs Varazdin",
-      "bet": "ML - Hajduk Split",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-195",
-      "pinnacle_nvp": "-177",
-      "ev": "-3.33%",
-      "ev_val": -0.0333415253543049,
-      "start_time": "2026-05-03 11:45 AM",
-      "league": "Croatia - HNL",
-      "pinnacle_limit": 400,
-      "event_id": "1629199008"
     },
     {
       "sport": "other",
@@ -1483,20 +1441,6 @@
       "league": "CONMEBOL - Copa Sudamericana",
       "pinnacle_limit": 300,
       "event_id": "1629527191"
-    },
-    {
-      "sport": "other",
-      "matchup": "Fredericia vs FC Copenhagen",
-      "bet": "ML - FC Copenhagen",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-190",
-      "pinnacle_nvp": "-172",
-      "ev": "-3.46%",
-      "ev_val": -0.034588368454342766,
-      "start_time": "2026-05-03 09:00 AM",
-      "league": "Denmark - Superliga",
-      "pinnacle_limit": 1350,
-      "event_id": "1629393183"
     },
     {
       "sport": "other",
@@ -1612,6 +1556,20 @@
     },
     {
       "sport": "other",
+      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
+      "bet": "V-Varen Nagasaki 0.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-135",
+      "pinnacle_nvp": "-124",
+      "ev": "-3.56%",
+      "ev_val": -0.03560069765055918,
+      "start_time": "2026-05-03 03:00 AM",
+      "league": "Japan - J League",
+      "pinnacle_limit": 15000,
+      "event_id": "1629454203"
+    },
+    {
+      "sport": "other",
       "matchup": "Waterford vs Dundalk",
       "bet": "ML - Dundalk",
       "bet_type": "Moneyline",
@@ -1651,20 +1609,6 @@
       "league": "Slovenia - Prva Liga",
       "pinnacle_limit": 450,
       "event_id": "1629184062"
-    },
-    {
-      "sport": "other",
-      "matchup": "Sandefjord vs Aalesunds",
-      "bet": "Over 3.25",
-      "bet_type": "Total",
-      "betbck_odds": "+100",
-      "pinnacle_nvp": "+108",
-      "ev": "-3.61%",
-      "ev_val": -0.03614457831325313,
-      "start_time": "2026-05-03 10:00 AM",
-      "league": "Norway - Eliteserien",
-      "pinnacle_limit": 1350,
-      "event_id": "1629401530"
     },
     {
       "sport": "basketball",
@@ -1821,6 +1765,20 @@
       "event_id": "1629530097"
     },
     {
+      "sport": "other",
+      "matchup": "Hajduk Split vs Varazdin",
+      "bet": "Hajduk Split -1.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "+103",
+      "ev": "-3.78%",
+      "ev_val": -0.03776197516956514,
+      "start_time": "2026-05-03 11:45 AM",
+      "league": "Croatia - HNL",
+      "pinnacle_limit": 400,
+      "event_id": "1629199008"
+    },
+    {
       "sport": "hockey",
       "matchup": "Colorado Avalanche vs Minnesota Wild",
       "bet": "Colorado Avalanche -1.5",
@@ -1959,6 +1917,20 @@
       "league": "Armenia - Premier League",
       "pinnacle_limit": 225,
       "event_id": "1629543886"
+    },
+    {
+      "sport": "other",
+      "matchup": "Sparta Prague vs Jablonec",
+      "bet": "Jablonec 0.75",
+      "bet_type": "Spread",
+      "betbck_odds": "+110",
+      "pinnacle_nvp": "+118",
+      "ev": "-3.89%",
+      "ev_val": -0.0389016018306636,
+      "start_time": "2026-05-03 11:30 AM",
+      "league": "Czech Republic - First Liga",
+      "pinnacle_limit": 500,
+      "event_id": "1629428991"
     },
     {
       "sport": "other",
@@ -2185,6 +2157,20 @@
       "event_id": "1628810148"
     },
     {
+      "sport": "other",
+      "matchup": "Hajduk Split vs Varazdin",
+      "bet": "ML - Hajduk Split",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-195",
+      "pinnacle_nvp": "-173",
+      "ev": "-4.07%",
+      "ev_val": -0.04069720176251568,
+      "start_time": "2026-05-03 11:45 AM",
+      "league": "Croatia - HNL",
+      "pinnacle_limit": 400,
+      "event_id": "1629199008"
+    },
+    {
       "sport": "hockey",
       "matchup": "Vegas Golden Knights vs Anaheim Ducks",
       "bet": "ML - Anaheim Ducks",
@@ -2239,20 +2225,6 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 300,
       "event_id": "1629487427"
-    },
-    {
-      "sport": "other",
-      "matchup": "Getafe vs Rayo Vallecano",
-      "bet": "ML - Getafe",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-105",
-      "pinnacle_nvp": "+104",
-      "ev": "-4.15%",
-      "ev_val": -0.04154101503144214,
-      "start_time": "2026-05-03 09:15 AM",
-      "league": "Spain - La Liga",
-      "pinnacle_limit": 15000,
-      "event_id": "1628801527"
     },
     {
       "sport": "other",
@@ -2494,6 +2466,20 @@
     },
     {
       "sport": "other",
+      "matchup": "America de Cali vs Deportivo Pereira",
+      "bet": "ML - America de Cali",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-250",
+      "pinnacle_nvp": "-216",
+      "ev": "-4.31%",
+      "ev_val": -0.04306220095693791,
+      "start_time": "2026-05-03 05:45 PM",
+      "league": "Colombia - Primera A",
+      "pinnacle_limit": 300,
+      "event_id": "1629185142"
+    },
+    {
+      "sport": "other",
       "matchup": "Joaquin Buckley vs Sean Brady",
       "bet": "ML - Sean Brady",
       "bet_type": "Moneyline",
@@ -2620,20 +2606,6 @@
     },
     {
       "sport": "other",
-      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
-      "bet": "V-Varen Nagasaki 0.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-135",
-      "pinnacle_nvp": "-122",
-      "ev": "-4.46%",
-      "ev_val": -0.044598934829450765,
-      "start_time": "2026-05-03 03:00 AM",
-      "league": "Japan - J League",
-      "pinnacle_limit": 15000,
-      "event_id": "1629454203"
-    },
-    {
-      "sport": "other",
       "matchup": "Mura vs Koper",
       "bet": "Koper -0.75",
       "bet_type": "Spread",
@@ -2673,20 +2645,6 @@
       "league": "Denmark - Superliga",
       "pinnacle_limit": 1350,
       "event_id": "1629375474"
-    },
-    {
-      "sport": "other",
-      "matchup": "Sandefjord vs Aalesunds",
-      "bet": "Sandefjord -0.75",
-      "bet_type": "Spread",
-      "betbck_odds": "-110",
-      "pinnacle_nvp": "+100",
-      "ev": "-4.55%",
-      "ev_val": -0.045454545454545414,
-      "start_time": "2026-05-03 10:00 AM",
-      "league": "Norway - Eliteserien",
-      "pinnacle_limit": 1800,
-      "event_id": "1629401530"
     },
     {
       "sport": "other",
@@ -2759,20 +2717,6 @@
       "event_id": "1629488657"
     },
     {
-      "sport": "other",
-      "matchup": "Fredericia vs FC Copenhagen",
-      "bet": "FC Copenhagen -1.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-120",
-      "pinnacle_nvp": "-108",
-      "ev": "-4.61%",
-      "ev_val": -0.04613250086715215,
-      "start_time": "2026-05-03 09:00 AM",
-      "league": "Denmark - Superliga",
-      "pinnacle_limit": 1350,
-      "event_id": "1629393183"
-    },
-    {
       "sport": "soccer",
       "matchup": "Borussia Monchengladbach vs Borussia Dortmund",
       "bet": "ML - Borussia Monchengladbach",
@@ -2799,6 +2743,34 @@
       "league": "Brazil - Serie B",
       "pinnacle_limit": 450,
       "event_id": "1629405692"
+    },
+    {
+      "sport": "other",
+      "matchup": "Fredericia vs FC Copenhagen",
+      "bet": "ML - FC Copenhagen",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-190",
+      "pinnacle_nvp": "-166",
+      "ev": "-4.66%",
+      "ev_val": -0.04664847628127167,
+      "start_time": "2026-05-03 09:00 AM",
+      "league": "Denmark - Superliga",
+      "pinnacle_limit": 1350,
+      "event_id": "1629393183"
+    },
+    {
+      "sport": "other",
+      "matchup": "Sochi vs Orenburg",
+      "bet": "ML - Sochi",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+210",
+      "pinnacle_nvp": "+225",
+      "ev": "-4.70%",
+      "ev_val": -0.047033507531509366,
+      "start_time": "2026-05-03 06:30 AM",
+      "league": "Russia - Premier League",
+      "pinnacle_limit": 2400,
+      "event_id": "1629184047"
     },
     {
       "sport": "other",
@@ -3068,6 +3040,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Sandefjord vs Aalesunds",
+      "bet": "Sandefjord -0.75",
+      "bet_type": "Spread",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+101",
+      "ev": "-4.97%",
+      "ev_val": -0.04973075704783014,
+      "start_time": "2026-05-03 10:00 AM",
+      "league": "Norway - Eliteserien",
+      "pinnacle_limit": 1800,
+      "event_id": "1629401530"
+    },
+    {
+      "sport": "other",
       "matchup": "Ostersunds FK vs Varnamo",
       "bet": "Over 2.5",
       "bet_type": "Total",
@@ -3163,20 +3149,6 @@
       "league": "Iceland - Premier League",
       "pinnacle_limit": 400,
       "event_id": "1629476541"
-    },
-    {
-      "sport": "other",
-      "matchup": "Sochi vs Orenburg",
-      "bet": "ML - Sochi",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+210",
-      "pinnacle_nvp": "+226",
-      "ev": "-5.02%",
-      "ev_val": -0.05024509803921562,
-      "start_time": "2026-05-03 06:30 AM",
-      "league": "Russia - Premier League",
-      "pinnacle_limit": 2400,
-      "event_id": "1629184047"
     },
     {
       "sport": "basketball",
@@ -3292,20 +3264,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Elversberg vs Paderborn",
-      "bet": "ML - Elversberg",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+115",
-      "pinnacle_nvp": "+127",
-      "ev": "-5.12%",
-      "ev_val": -0.05119152691968232,
-      "start_time": "2026-05-03 06:30 AM",
-      "league": "Germany - Bundesliga 2",
-      "pinnacle_limit": 2400,
-      "event_id": "1629360526"
-    },
-    {
-      "sport": "other",
       "matchup": "Racing Club vs Huracan",
       "bet": "Under 2.0",
       "bet_type": "Total",
@@ -3387,20 +3345,6 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 300,
       "event_id": "1629472943"
-    },
-    {
-      "sport": "other",
-      "matchup": "Sparta Prague vs Jablonec",
-      "bet": "Under 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "+110",
-      "pinnacle_nvp": "+121",
-      "ev": "-5.19%",
-      "ev_val": -0.05191873589164775,
-      "start_time": "2026-05-03 11:30 AM",
-      "league": "Czech Republic - First Liga",
-      "pinnacle_limit": 375,
-      "event_id": "1629428991"
     },
     {
       "sport": "soccer",
@@ -3782,20 +3726,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Keflavik vs Vikingur Reykjavik",
-      "bet": "Over 3.5",
-      "bet_type": "Total",
-      "betbck_odds": "+120",
-      "pinnacle_nvp": "+133",
-      "ev": "-5.46%",
-      "ev_val": -0.054576708207992985,
-      "start_time": "2026-05-03 01:00 PM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 300,
-      "event_id": "1629472880"
-    },
-    {
-      "sport": "other",
       "matchup": "Greuther Furth vs Nurnberg",
       "bet": "Greuther Furth 0.0",
       "bet_type": "Spread",
@@ -3894,6 +3824,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Elversberg vs Paderborn",
+      "bet": "ML - Elversberg",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+115",
+      "pinnacle_nvp": "+128",
+      "ev": "-5.58%",
+      "ev_val": -0.05577514273166462,
+      "start_time": "2026-05-03 06:30 AM",
+      "league": "Germany - Bundesliga 2",
+      "pinnacle_limit": 2400,
+      "event_id": "1629360526"
+    },
+    {
+      "sport": "other",
       "matchup": "AZ Alkmaar vs FC Twente",
       "bet": "ML - FC Twente",
       "bet_type": "Moneyline",
@@ -3933,6 +3877,20 @@
       "league": "Netherlands - Eredivisie",
       "pinnacle_limit": 1800,
       "event_id": "1629398958"
+    },
+    {
+      "sport": "other",
+      "matchup": "Dender vs RAAL La Louviere",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-140",
+      "pinnacle_nvp": "-123",
+      "ev": "-5.60%",
+      "ev_val": -0.056010069225928216,
+      "start_time": "2026-05-03 12:15 PM",
+      "league": "Belgium - Pro League",
+      "pinnacle_limit": 600,
+      "event_id": "1629405665"
     },
     {
       "sport": "other",
@@ -4034,20 +3992,6 @@
     },
     {
       "sport": "other",
-      "matchup": "IBV vs Breidablik",
-      "bet": "IBV 1.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-115",
-      "pinnacle_nvp": "-102",
-      "ev": "-5.67%",
-      "ev_val": -0.05672794278945292,
-      "start_time": "2026-05-03 11:00 AM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 400,
-      "event_id": "1629476541"
-    },
-    {
-      "sport": "other",
       "matchup": "Freiburg vs Wolfsburg",
       "bet": "Wolfsburg 0.0",
       "bet_type": "Spread",
@@ -4104,6 +4048,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Sandefjord vs Aalesunds",
+      "bet": "Over 3.25",
+      "bet_type": "Total",
+      "betbck_odds": "+100",
+      "pinnacle_nvp": "+112",
+      "ev": "-5.70%",
+      "ev_val": -0.05704856199905706,
+      "start_time": "2026-05-03 10:00 AM",
+      "league": "Norway - Eliteserien",
+      "pinnacle_limit": 1350,
+      "event_id": "1629401530"
+    },
+    {
+      "sport": "other",
       "matchup": "Academia Puerto Cabello vs Cienciano",
       "bet": "Under 2.5",
       "bet_type": "Total",
@@ -4115,6 +4073,20 @@
       "league": "CONMEBOL - Copa Sudamericana",
       "pinnacle_limit": 225,
       "event_id": "1629530373"
+    },
+    {
+      "sport": "other",
+      "matchup": "Keflavik vs Vikingur Reykjavik",
+      "bet": "ML - Vikingur Reykjavik",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-230",
+      "pinnacle_nvp": "-192",
+      "ev": "-5.73%",
+      "ev_val": -0.05730446209221285,
+      "start_time": "2026-05-03 01:00 PM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 400,
+      "event_id": "1629472880"
     },
     {
       "sport": "soccer",
@@ -4129,20 +4101,6 @@
       "league": "Italy - Serie A",
       "pinnacle_limit": 10000,
       "event_id": "1628790352"
-    },
-    {
-      "sport": "other",
-      "matchup": "Kayserispor vs Eyupspor",
-      "bet": "Eyupspor 0.75",
-      "bet_type": "Spread",
-      "betbck_odds": "-130",
-      "pinnacle_nvp": "-114",
-      "ev": "-5.74%",
-      "ev_val": -0.05741567968525885,
-      "start_time": "2026-05-03 07:00 AM",
-      "league": "Turkey - Super Lig U19",
-      "pinnacle_limit": 175,
-      "event_id": "1629704012"
     },
     {
       "sport": "other",
@@ -4227,6 +4185,20 @@
       "league": "Ecuador - Serie A",
       "pinnacle_limit": 400,
       "event_id": "1629476585"
+    },
+    {
+      "sport": "other",
+      "matchup": "Hajduk Split vs Varazdin",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "+110",
+      "pinnacle_nvp": "+123",
+      "ev": "-5.83%",
+      "ev_val": -0.058295964125560484,
+      "start_time": "2026-05-03 11:45 AM",
+      "league": "Croatia - HNL",
+      "pinnacle_limit": 300,
+      "event_id": "1629199008"
     },
     {
       "sport": "other",
@@ -4327,20 +4299,6 @@
       "event_id": "1629405662"
     },
     {
-      "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Cleveland Cavaliers -8.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-105",
-      "pinnacle_nvp": "+108",
-      "ev": "-5.91%",
-      "ev_val": -0.059093516924842326,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
-    },
-    {
       "sport": "other",
       "matchup": "Viktoria Plzen vs Hradec Kralove",
       "bet": "Over 3.0",
@@ -4411,20 +4369,6 @@
       "event_id": "1629199004"
     },
     {
-      "sport": "soccer",
-      "matchup": "Bournemouth vs Crystal Palace",
-      "bet": "Crystal Palace 0.75",
-      "bet_type": "Spread",
-      "betbck_odds": "+100",
-      "pinnacle_nvp": "+113",
-      "ev": "-5.93%",
-      "ev_val": -0.059266227657572834,
-      "start_time": "2026-05-03 08:00 AM",
-      "league": "England - Premier League",
-      "pinnacle_limit": 20000,
-      "event_id": "1628649353"
-    },
-    {
       "sport": "other",
       "matchup": "Colo Colo vs Coquimbo Unido",
       "bet": "Colo Colo -0.5",
@@ -4467,6 +4411,20 @@
       "event_id": "1628896068"
     },
     {
+      "sport": "soccer",
+      "matchup": "Bournemouth vs Crystal Palace",
+      "bet": "Bournemouth -0.75",
+      "bet_type": "Spread",
+      "betbck_odds": "-130",
+      "pinnacle_nvp": "-114",
+      "ev": "-5.94%",
+      "ev_val": -0.059420112051691065,
+      "start_time": "2026-05-03 08:00 AM",
+      "league": "England - Premier League",
+      "pinnacle_limit": 20000,
+      "event_id": "1628649353"
+    },
+    {
       "sport": "basketball",
       "matchup": "Detroit Pistons vs Orlando Magic",
       "bet": "Detroit Pistons -8.0",
@@ -4493,6 +4451,20 @@
       "league": "Switzerland - Super League",
       "pinnacle_limit": 1350,
       "event_id": "1629385804"
+    },
+    {
+      "sport": "other",
+      "matchup": "Getafe vs Rayo Vallecano",
+      "bet": "Getafe -0.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+103",
+      "ev": "-5.96%",
+      "ev_val": -0.059561128526645635,
+      "start_time": "2026-05-03 09:15 AM",
+      "league": "Spain - La Liga",
+      "pinnacle_limit": 15000,
+      "event_id": "1628801527"
     },
     {
       "sport": "other",
@@ -4664,6 +4636,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Elversberg vs Paderborn",
+      "bet": "ML - Paderborn",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+205",
+      "pinnacle_nvp": "+225",
+      "ev": "-6.04%",
+      "ev_val": -0.06038200862600129,
+      "start_time": "2026-05-03 06:30 AM",
+      "league": "Germany - Bundesliga 2",
+      "pinnacle_limit": 2400,
+      "event_id": "1629360526"
+    },
+    {
+      "sport": "other",
       "matchup": "Municipal Liberia vs Deportivo Saprissa",
       "bet": "Municipal Liberia 0.25",
       "bet_type": "Spread",
@@ -4818,6 +4804,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Fredericia vs FC Copenhagen",
+      "bet": "FC Copenhagen -1.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-120",
+      "pinnacle_nvp": "-105",
+      "ev": "-6.13%",
+      "ev_val": -0.06127325482164192,
+      "start_time": "2026-05-03 09:00 AM",
+      "league": "Denmark - Superliga",
+      "pinnacle_limit": 1350,
+      "event_id": "1629393183"
+    },
+    {
+      "sport": "other",
       "matchup": "Gimnasia Jujuy vs Deportivo Maipu",
       "bet": "Deportivo Maipu 0.5",
       "bet_type": "Spread",
@@ -4843,6 +4843,34 @@
       "league": "Spain - La Liga",
       "pinnacle_limit": 15000,
       "event_id": "1628810297"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Tokyo Yakult Swallows vs Yokohama Bay Stars",
+      "bet": "Over 8.0",
+      "bet_type": "Total",
+      "betbck_odds": "-120",
+      "pinnacle_nvp": "-105",
+      "ev": "-6.18%",
+      "ev_val": -0.06175366769020807,
+      "start_time": "2026-05-03 04:00 AM",
+      "league": "Nippon Professional Baseball",
+      "pinnacle_limit": 3000,
+      "event_id": "1629691143"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Lillestrom vs Sarpsborg 08",
+      "bet": "Over 3.0",
+      "bet_type": "Total",
+      "betbck_odds": "-150",
+      "pinnacle_nvp": "-129",
+      "ev": "-6.21%",
+      "ev_val": -0.062089664228099806,
+      "start_time": "2026-05-03 07:30 AM",
+      "league": "Norway - Eliteserien",
+      "pinnacle_limit": 1350,
+      "event_id": "1629370328"
     },
     {
       "sport": "other",
@@ -4874,20 +4902,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Hajduk Split vs Varazdin",
-      "bet": "Under 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "+110",
-      "pinnacle_nvp": "+124",
-      "ev": "-6.25%",
-      "ev_val": -0.0625,
-      "start_time": "2026-05-03 11:45 AM",
-      "league": "Croatia - HNL",
-      "pinnacle_limit": 300,
-      "event_id": "1629199008"
-    },
-    {
-      "sport": "other",
       "matchup": "Arda vs Cherno More",
       "bet": "Over 2.0",
       "bet_type": "Total",
@@ -4899,34 +4913,6 @@
       "league": "Bulgaria - First League",
       "pinnacle_limit": 600,
       "event_id": "1629349237"
-    },
-    {
-      "sport": "other",
-      "matchup": "Dender vs RAAL La Louviere",
-      "bet": "Over 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "-140",
-      "pinnacle_nvp": "-121",
-      "ev": "-6.27%",
-      "ev_val": -0.06271967507615395,
-      "start_time": "2026-05-03 12:15 PM",
-      "league": "Belgium - Pro League",
-      "pinnacle_limit": 600,
-      "event_id": "1629405665"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Bournemouth vs Crystal Palace",
-      "bet": "Bournemouth -0.75",
-      "bet_type": "Spread",
-      "betbck_odds": "-130",
-      "pinnacle_nvp": "-113",
-      "ev": "-6.29%",
-      "ev_val": -0.06290743155149936,
-      "start_time": "2026-05-03 08:00 AM",
-      "league": "England - Premier League",
-      "pinnacle_limit": 20000,
-      "event_id": "1628649353"
     },
     {
       "sport": "other",
@@ -5069,18 +5055,32 @@
       "event_id": "1629393206"
     },
     {
-      "sport": "baseball",
-      "matchup": "Tokyo Yakult Swallows vs Yokohama Bay Stars",
-      "bet": "Under 8.0",
-      "bet_type": "Total",
-      "betbck_odds": "-110",
-      "pinnacle_nvp": "+104",
+      "sport": "soccer",
+      "matchup": "Bournemouth vs Crystal Palace",
+      "bet": "Crystal Palace 0.75",
+      "bet_type": "Spread",
+      "betbck_odds": "+100",
+      "pinnacle_nvp": "+114",
       "ev": "-6.37%",
-      "ev_val": -0.06371215836640065,
-      "start_time": "2026-05-03 04:00 AM",
-      "league": "Nippon Professional Baseball",
-      "pinnacle_limit": 3000,
-      "event_id": "1629691143"
+      "ev_val": -0.06367041198501877,
+      "start_time": "2026-05-03 08:00 AM",
+      "league": "England - Premier League",
+      "pinnacle_limit": 20000,
+      "event_id": "1628649353"
+    },
+    {
+      "sport": "other",
+      "matchup": "Sparta Prague vs Jablonec",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-150",
+      "pinnacle_nvp": "-128",
+      "ev": "-6.37%",
+      "ev_val": -0.06367041198501877,
+      "start_time": "2026-05-03 11:30 AM",
+      "league": "Czech Republic - First Liga",
+      "pinnacle_limit": 375,
+      "event_id": "1629428991"
     },
     {
       "sport": "other",
@@ -5151,34 +5151,6 @@
       "league": "Egypt - Premier League",
       "pinnacle_limit": 375,
       "event_id": "1629472859"
-    },
-    {
-      "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Cleveland Cavaliers -8.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-117",
-      "pinnacle_nvp": "-102",
-      "ev": "-6.38%",
-      "ev_val": -0.0637552475008305,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
-    },
-    {
-      "sport": "other",
-      "matchup": "Kayserispor vs Eyupspor",
-      "bet": "ML - Kayserispor",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-130",
-      "pinnacle_nvp": "-112",
-      "ev": "-6.39%",
-      "ev_val": -0.06389906389906386,
-      "start_time": "2026-05-03 07:00 AM",
-      "league": "Turkey - Super Lig U19",
-      "pinnacle_limit": 175,
-      "event_id": "1629704012"
     },
     {
       "sport": "other",
@@ -5462,20 +5434,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Kayserispor vs Eyupspor",
-      "bet": "Kayserispor -0.75",
-      "bet_type": "Spread",
-      "betbck_odds": "+100",
-      "pinnacle_nvp": "+114",
-      "ev": "-6.54%",
-      "ev_val": -0.06542056074766356,
-      "start_time": "2026-05-03 07:00 AM",
-      "league": "Turkey - Super Lig U19",
-      "pinnacle_limit": 175,
-      "event_id": "1629704012"
-    },
-    {
-      "sport": "other",
       "matchup": "Radomiak Radom vs Lechia Gdansk",
       "bet": "Radomiak Radom -0.25",
       "bet_type": "Spread",
@@ -5560,20 +5518,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Elversberg vs Paderborn",
-      "bet": "ML - Paderborn",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+205",
-      "pinnacle_nvp": "+226",
-      "ev": "-6.58%",
-      "ev_val": -0.0658499234303217,
-      "start_time": "2026-05-03 06:30 AM",
-      "league": "Germany - Bundesliga 2",
-      "pinnacle_limit": 2400,
-      "event_id": "1629360526"
-    },
-    {
-      "sport": "other",
       "matchup": "Bohemians vs Shelbourne",
       "bet": "ML - Bohemians",
       "bet_type": "Moneyline",
@@ -5585,20 +5529,6 @@
       "league": "Ireland - Premier",
       "pinnacle_limit": 600,
       "event_id": "1629476510"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "Tokyo Yakult Swallows vs Yokohama Bay Stars",
-      "bet": "Over 8.0",
-      "bet_type": "Total",
-      "betbck_odds": "-120",
-      "pinnacle_nvp": "-104",
-      "ev": "-6.61%",
-      "ev_val": -0.06605535744608593,
-      "start_time": "2026-05-03 04:00 AM",
-      "league": "Nippon Professional Baseball",
-      "pinnacle_limit": 3000,
-      "event_id": "1629691143"
     },
     {
       "sport": "soccer",
@@ -5881,6 +5811,20 @@
       "event_id": "1629725925"
     },
     {
+      "sport": "baseball",
+      "matchup": "Tokyo Yakult Swallows vs Yokohama Bay Stars",
+      "bet": "Under 8.0",
+      "bet_type": "Total",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+105",
+      "ev": "-6.78%",
+      "ev_val": -0.06782670454545447,
+      "start_time": "2026-05-03 04:00 AM",
+      "league": "Nippon Professional Baseball",
+      "pinnacle_limit": 3000,
+      "event_id": "1629691143"
+    },
+    {
       "sport": "other",
       "matchup": "Juan Pablo II College vs Universitario de Deportes",
       "bet": "Juan Pablo II College 0.75",
@@ -5980,20 +5924,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Getafe vs Rayo Vallecano",
-      "bet": "Getafe -0.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-110",
-      "pinnacle_nvp": "+105",
-      "ev": "-6.83%",
-      "ev_val": -0.0682816451484094,
-      "start_time": "2026-05-03 09:15 AM",
-      "league": "Spain - La Liga",
-      "pinnacle_limit": 15000,
-      "event_id": "1628801527"
-    },
-    {
-      "sport": "other",
       "matchup": "Auxerre vs Angers",
       "bet": "Angers 0.75",
       "bet_type": "Spread",
@@ -6009,15 +5939,15 @@
     {
       "sport": "other",
       "matchup": "Fredericia vs FC Copenhagen",
-      "bet": "Over 3.5",
-      "bet_type": "Total",
+      "bet": "Fredericia 1.0",
+      "bet_type": "Spread",
       "betbck_odds": "-110",
       "pinnacle_nvp": "+105",
       "ev": "-6.83%",
       "ev_val": -0.0682816451484094,
       "start_time": "2026-05-03 09:00 AM",
       "league": "Denmark - Superliga",
-      "pinnacle_limit": 900,
+      "pinnacle_limit": 1350,
       "event_id": "1629393183"
     },
     {
@@ -6061,20 +5991,6 @@
       "league": "Israel - Premier League",
       "pinnacle_limit": 300,
       "event_id": "1629476519"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Lillestrom vs Sarpsborg 08",
-      "bet": "Over 3.0",
-      "bet_type": "Total",
-      "betbck_odds": "-150",
-      "pinnacle_nvp": "-127",
-      "ev": "-6.84%",
-      "ev_val": -0.068380845910192,
-      "start_time": "2026-05-03 07:30 AM",
-      "league": "Norway - Eliteserien",
-      "pinnacle_limit": 1350,
-      "event_id": "1629370328"
     },
     {
       "sport": "other",
@@ -6159,34 +6075,6 @@
       "league": "Belarus - Premier League",
       "pinnacle_limit": 450,
       "event_id": "1629462719"
-    },
-    {
-      "sport": "other",
-      "matchup": "Keflavik vs Vikingur Reykjavik",
-      "bet": "ML - Vikingur Reykjavik",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-240",
-      "pinnacle_nvp": "-192",
-      "ev": "-6.92%",
-      "ev_val": -0.06920718353044242,
-      "start_time": "2026-05-03 01:00 PM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 400,
-      "event_id": "1629472880"
-    },
-    {
-      "sport": "other",
-      "matchup": "Getafe vs Rayo Vallecano",
-      "bet": "ML - Rayo Vallecano",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+350",
-      "pinnacle_nvp": "+384",
-      "ev": "-6.93%",
-      "ev_val": -0.06928645294725955,
-      "start_time": "2026-05-03 09:15 AM",
-      "league": "Spain - La Liga",
-      "pinnacle_limit": 15000,
-      "event_id": "1628801527"
     },
     {
       "sport": "other",
@@ -6329,20 +6217,6 @@
       "event_id": "1629405695"
     },
     {
-      "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Cleveland Cavaliers -7.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-129",
-      "pinnacle_nvp": "-110",
-      "ev": "-7.01%",
-      "ev_val": -0.07009230044546233,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
-    },
-    {
       "sport": "soccer",
       "matchup": "Manchester United vs Liverpool",
       "bet": "Manchester United -0.25",
@@ -6397,6 +6271,20 @@
       "league": "Belarus - Premier League",
       "pinnacle_limit": 450,
       "event_id": "1629462719"
+    },
+    {
+      "sport": "other",
+      "matchup": "Fredericia vs FC Copenhagen",
+      "bet": "Over 3.5",
+      "bet_type": "Total",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+105",
+      "ev": "-7.05%",
+      "ev_val": -0.07054970346109579,
+      "start_time": "2026-05-03 09:00 AM",
+      "league": "Denmark - Superliga",
+      "pinnacle_limit": 900,
+      "event_id": "1629393183"
     },
     {
       "sport": "other",
@@ -6621,20 +6509,6 @@
       "league": "Poland - Ekstraklasa",
       "pinnacle_limit": 900,
       "event_id": "1629375486"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Bournemouth vs Crystal Palace",
-      "bet": "ML - Crystal Palace",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+415",
-      "pinnacle_nvp": "+455",
-      "ev": "-7.14%",
-      "ev_val": -0.07140281283808148,
-      "start_time": "2026-05-03 08:00 AM",
-      "league": "England - Premier League",
-      "pinnacle_limit": 15000,
-      "event_id": "1628649353"
     },
     {
       "sport": "other",
@@ -6890,6 +6764,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Getafe vs Rayo Vallecano",
+      "bet": "Over 2.0",
+      "bet_type": "Total",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "+110",
+      "ev": "-7.25%",
+      "ev_val": -0.07250311050786107,
+      "start_time": "2026-05-03 09:15 AM",
+      "league": "Spain - La Liga",
+      "pinnacle_limit": 10000,
+      "event_id": "1628801527"
+    },
+    {
+      "sport": "other",
       "matchup": "Greuther Furth vs Nurnberg",
       "bet": "Over 3.0",
       "bet_type": "Total",
@@ -6929,20 +6817,6 @@
       "league": "Slovakia - Super Liga",
       "pinnacle_limit": 400,
       "event_id": "1629410946"
-    },
-    {
-      "sport": "other",
-      "matchup": "Keflavik vs Vikingur Reykjavik",
-      "bet": "Under 3.5",
-      "bet_type": "Total",
-      "betbck_odds": "-160",
-      "pinnacle_nvp": "-133",
-      "ev": "-7.30%",
-      "ev_val": -0.07301768397033648,
-      "start_time": "2026-05-03 01:00 PM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 300,
-      "event_id": "1629472880"
     },
     {
       "sport": "soccer",
@@ -7030,20 +6904,6 @@
     },
     {
       "sport": "soccer",
-      "matchup": "Lillestrom vs Sarpsborg 08",
-      "bet": "Under 3.0",
-      "bet_type": "Total",
-      "betbck_odds": "+110",
-      "pinnacle_nvp": "+127",
-      "ev": "-7.37%",
-      "ev_val": -0.07366563740626375,
-      "start_time": "2026-05-03 07:30 AM",
-      "league": "Norway - Eliteserien",
-      "pinnacle_limit": 1350,
-      "event_id": "1629370328"
-    },
-    {
-      "sport": "soccer",
       "matchup": "Arsenal vs Atletico Madrid",
       "bet": "ML - Atletico Madrid",
       "bet_type": "Moneyline",
@@ -7128,20 +6988,6 @@
     },
     {
       "sport": "other",
-      "matchup": "IBV vs Breidablik",
-      "bet": "Breidablik -1.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-115",
-      "pinnacle_nvp": "+102",
-      "ev": "-7.40%",
-      "ev_val": -0.07401425587354926,
-      "start_time": "2026-05-03 11:00 AM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 400,
-      "event_id": "1629476541"
-    },
-    {
-      "sport": "other",
       "matchup": "Celta Vigo vs Elche",
       "bet": "Over 2.75",
       "bet_type": "Total",
@@ -7209,6 +7055,20 @@
       "league": "Argentina - Liga Pro",
       "pinnacle_limit": 325,
       "event_id": "1629487050"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Bournemouth vs Crystal Palace",
+      "bet": "ML - Crystal Palace",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+415",
+      "pinnacle_nvp": "+456",
+      "ev": "-7.44%",
+      "ev_val": -0.07440690150970519,
+      "start_time": "2026-05-03 08:00 AM",
+      "league": "England - Premier League",
+      "pinnacle_limit": 15000,
+      "event_id": "1628649353"
     },
     {
       "sport": "soccer",
@@ -7281,20 +7141,6 @@
       "event_id": "1629370296"
     },
     {
-      "sport": "other",
-      "matchup": "Elversberg vs Paderborn",
-      "bet": "Elversberg -0.25",
-      "bet_type": "Spread",
-      "betbck_odds": "-120",
-      "pinnacle_nvp": "-102",
-      "ev": "-7.45%",
-      "ev_val": -0.0745414773683325,
-      "start_time": "2026-05-03 06:30 AM",
-      "league": "Germany - Bundesliga 2",
-      "pinnacle_limit": 2400,
-      "event_id": "1629360526"
-    },
-    {
       "sport": "soccer",
       "matchup": "Club Atletico Mitre vs Acassuso",
       "bet": "Club Atletico Mitre -0.75",
@@ -7323,20 +7169,6 @@
       "event_id": "1628786090"
     },
     {
-      "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Cleveland Cavaliers -7.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-141",
-      "pinnacle_nvp": "-118",
-      "ev": "-7.46%",
-      "ev_val": -0.07459672000215023,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
-    },
-    {
       "sport": "other",
       "matchup": "Zaglebie Lubin vs Cracovia Krakow",
       "bet": "ML - Cracovia Krakow",
@@ -7349,20 +7181,6 @@
       "league": "Poland - Ekstraklasa",
       "pinnacle_limit": 900,
       "event_id": "1629375486"
-    },
-    {
-      "sport": "other",
-      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
-      "bet": "Nagoya Grampus 0.0",
-      "bet_type": "Spread",
-      "betbck_odds": "+105",
-      "pinnacle_nvp": "+122",
-      "ev": "-7.49%",
-      "ev_val": -0.07490974729241895,
-      "start_time": "2026-05-03 03:00 AM",
-      "league": "Japan - J League",
-      "pinnacle_limit": 15000,
-      "event_id": "1629454203"
     },
     {
       "sport": "other",
@@ -7533,20 +7351,6 @@
       "event_id": "1629184062"
     },
     {
-      "sport": "basketball",
-      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
-      "bet": "Cleveland Cavaliers -6.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-153",
-      "pinnacle_nvp": "-127",
-      "ev": "-7.57%",
-      "ev_val": -0.07568766280501393,
-      "start_time": "2026-05-03 06:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 10000,
-      "event_id": "1629527137"
-    },
-    {
       "sport": "other",
       "matchup": "Karlsruher vs Darmstadt",
       "bet": "Over 3.5",
@@ -7615,20 +7419,6 @@
       "league": "Romania - Liga 1",
       "pinnacle_limit": 150,
       "event_id": "1629500366"
-    },
-    {
-      "sport": "other",
-      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
-      "bet": "Under 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "-125",
-      "pinnacle_nvp": "-105",
-      "ev": "-7.64%",
-      "ev_val": -0.07644946126218577,
-      "start_time": "2026-05-03 03:00 AM",
-      "league": "Japan - J League",
-      "pinnacle_limit": 7500,
-      "event_id": "1629454203"
     },
     {
       "sport": "other",
@@ -7758,20 +7548,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Getafe vs Rayo Vallecano",
-      "bet": "Over 2.0",
-      "bet_type": "Total",
-      "betbck_odds": "-105",
-      "pinnacle_nvp": "+112",
-      "ev": "-7.69%",
-      "ev_val": -0.07688843859056638,
-      "start_time": "2026-05-03 09:15 AM",
-      "league": "Spain - La Liga",
-      "pinnacle_limit": 10000,
-      "event_id": "1628801527"
-    },
-    {
-      "sport": "other",
       "matchup": "Antalyaspor vs Alanyaspor",
       "bet": "Over 2.5",
       "bet_type": "Total",
@@ -7825,20 +7601,6 @@
       "league": "Germany - Bundesliga 2",
       "pinnacle_limit": 2400,
       "event_id": "1629360528"
-    },
-    {
-      "sport": "other",
-      "matchup": "Hajduk Split vs Varazdin",
-      "bet": "Over 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "-150",
-      "pinnacle_nvp": "-124",
-      "ev": "-7.72%",
-      "ev_val": -0.07715023994093773,
-      "start_time": "2026-05-03 11:45 AM",
-      "league": "Croatia - HNL",
-      "pinnacle_limit": 300,
-      "event_id": "1629199008"
     },
     {
       "sport": "other",
@@ -7982,6 +7744,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Getafe vs Rayo Vallecano",
+      "bet": "ML - Rayo Vallecano",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+350",
+      "pinnacle_nvp": "+388",
+      "ev": "-7.81%",
+      "ev_val": -0.07805777504609712,
+      "start_time": "2026-05-03 09:15 AM",
+      "league": "Spain - La Liga",
+      "pinnacle_limit": 15000,
+      "event_id": "1628801527"
+    },
+    {
+      "sport": "other",
       "matchup": "Flamengo vs Vasco da Gama",
       "bet": "ML - Vasco da Gama",
       "bet_type": "Moneyline",
@@ -8119,6 +7895,20 @@
       "league": "Sweden - Allsvenskan",
       "pinnacle_limit": 1625,
       "event_id": "1629370316"
+    },
+    {
+      "sport": "other",
+      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-125",
+      "pinnacle_nvp": "-105",
+      "ev": "-7.83%",
+      "ev_val": -0.07834101382488479,
+      "start_time": "2026-05-03 03:00 AM",
+      "league": "Japan - J League",
+      "pinnacle_limit": 7500,
+      "event_id": "1629454203"
     },
     {
       "sport": "other",
@@ -8514,6 +8304,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Sparta Prague vs Jablonec",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "+110",
+      "pinnacle_nvp": "+128",
+      "ev": "-7.98%",
+      "ev_val": -0.07975460122699385,
+      "start_time": "2026-05-03 11:30 AM",
+      "league": "Czech Republic - First Liga",
+      "pinnacle_limit": 375,
+      "event_id": "1629428991"
+    },
+    {
+      "sport": "other",
       "matchup": "Racing Club vs Huracan",
       "bet": "ML - Huracan",
       "bet_type": "Moneyline",
@@ -8609,6 +8413,20 @@
       "league": "Bulgaria - First League",
       "pinnacle_limit": 225,
       "event_id": "1629496020"
+    },
+    {
+      "sport": "other",
+      "matchup": "Hajduk Split vs Varazdin",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-150",
+      "pinnacle_nvp": "-123",
+      "ev": "-8.07%",
+      "ev_val": -0.08071336642765214,
+      "start_time": "2026-05-03 11:45 AM",
+      "league": "Croatia - HNL",
+      "pinnacle_limit": 300,
+      "event_id": "1629199008"
     },
     {
       "sport": "soccer",
@@ -8749,6 +8567,20 @@
       "league": "Egypt - Premier League",
       "pinnacle_limit": 375,
       "event_id": "1629487441"
+    },
+    {
+      "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Cleveland Cavaliers -8.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "+112",
+      "ev": "-8.12%",
+      "ev_val": -0.08123249299719892,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 10000,
+      "event_id": "1629527137"
     },
     {
       "sport": "soccer",
@@ -8892,6 +8724,20 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Lillestrom vs Sarpsborg 08",
+      "bet": "Under 3.0",
+      "bet_type": "Total",
+      "betbck_odds": "+110",
+      "pinnacle_nvp": "+129",
+      "ev": "-8.22%",
+      "ev_val": -0.08216783216783208,
+      "start_time": "2026-05-03 07:30 AM",
+      "league": "Norway - Eliteserien",
+      "pinnacle_limit": 1350,
+      "event_id": "1629370328"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Everton vs Manchester City",
       "bet": "Under 3.0",
       "bet_type": "Total",
@@ -8903,20 +8749,6 @@
       "league": "England - Premier League",
       "pinnacle_limit": 3000,
       "event_id": "1628858803"
-    },
-    {
-      "sport": "other",
-      "matchup": "Getafe vs Rayo Vallecano",
-      "bet": "Under 2.0",
-      "bet_type": "Total",
-      "betbck_odds": "-135",
-      "pinnacle_nvp": "-111",
-      "ev": "-8.24%",
-      "ev_val": -0.08237177609871338,
-      "start_time": "2026-05-03 09:15 AM",
-      "league": "Spain - La Liga",
-      "pinnacle_limit": 10000,
-      "event_id": "1628801527"
     },
     {
       "sport": "other",
@@ -9242,6 +9074,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Elversberg vs Paderborn",
+      "bet": "Elversberg -0.25",
+      "bet_type": "Spread",
+      "betbck_odds": "-120",
+      "pinnacle_nvp": "+100",
+      "ev": "-8.33%",
+      "ev_val": -0.08333333333333326,
+      "start_time": "2026-05-03 06:30 AM",
+      "league": "Germany - Bundesliga 2",
+      "pinnacle_limit": 2400,
+      "event_id": "1629360526"
+    },
+    {
+      "sport": "other",
       "matchup": "Volendam vs Heerenveen",
       "bet": "Over 3.25",
       "bet_type": "Total",
@@ -9480,20 +9326,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Fredericia vs FC Copenhagen",
-      "bet": "Fredericia 1.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-110",
-      "pinnacle_nvp": "+108",
-      "ev": "-8.44%",
-      "ev_val": -0.08436886854153036,
-      "start_time": "2026-05-03 09:00 AM",
-      "league": "Denmark - Superliga",
-      "pinnacle_limit": 1350,
-      "event_id": "1629393183"
-    },
-    {
-      "sport": "other",
       "matchup": "FC Lugano vs Young Boys",
       "bet": "Under 3.0",
       "bet_type": "Total",
@@ -9661,6 +9493,20 @@
       "event_id": "1629423204"
     },
     {
+      "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Cleveland Cavaliers -7.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-141",
+      "pinnacle_nvp": "-115",
+      "ev": "-8.55%",
+      "ev_val": -0.08548964250613778,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 10000,
+      "event_id": "1629527137"
+    },
+    {
       "sport": "soccer",
       "matchup": "Internazionale vs Parma",
       "bet": "Under 3.0",
@@ -9703,6 +9549,20 @@
       "event_id": "1629360528"
     },
     {
+      "sport": "other",
+      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
+      "bet": "Nagoya Grampus 0.0",
+      "bet_type": "Spread",
+      "betbck_odds": "+105",
+      "pinnacle_nvp": "+124",
+      "ev": "-8.56%",
+      "ev_val": -0.08563782337198933,
+      "start_time": "2026-05-03 03:00 AM",
+      "league": "Japan - J League",
+      "pinnacle_limit": 15000,
+      "event_id": "1629454203"
+    },
+    {
       "sport": "soccer",
       "matchup": "Lille vs Le Havre",
       "bet": "Over 2.5",
@@ -9717,18 +9577,18 @@
       "event_id": "1628790356"
     },
     {
-      "sport": "other",
-      "matchup": "Sparta Prague vs Jablonec",
-      "bet": "Over 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "-150",
-      "pinnacle_nvp": "-122",
-      "ev": "-8.58%",
-      "ev_val": -0.08575607972206989,
-      "start_time": "2026-05-03 11:30 AM",
-      "league": "Czech Republic - First Liga",
-      "pinnacle_limit": 375,
-      "event_id": "1629428991"
+      "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Cleveland Cavaliers -6.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-153",
+      "pinnacle_nvp": "-124",
+      "ev": "-8.59%",
+      "ev_val": -0.08590670467560535,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 10000,
+      "event_id": "1629527137"
     },
     {
       "sport": "other",
@@ -9743,6 +9603,20 @@
       "league": "Spain - Segunda Division",
       "pinnacle_limit": 900,
       "event_id": "1629476446"
+    },
+    {
+      "sport": "other",
+      "matchup": "Getafe vs Rayo Vallecano",
+      "bet": "Under 2.0",
+      "bet_type": "Total",
+      "betbck_odds": "-135",
+      "pinnacle_nvp": "-110",
+      "ev": "-8.62%",
+      "ev_val": -0.08622533294449308,
+      "start_time": "2026-05-03 09:15 AM",
+      "league": "Spain - La Liga",
+      "pinnacle_limit": 10000,
+      "event_id": "1628801527"
     },
     {
       "sport": "other",
@@ -9785,6 +9659,20 @@
       "league": "Ukraine - Premier League",
       "pinnacle_limit": 450,
       "event_id": "1629301885"
+    },
+    {
+      "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Cleveland Cavaliers -8.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-117",
+      "pinnacle_nvp": "+103",
+      "ev": "-8.64%",
+      "ev_val": -0.0863542587680517,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 10000,
+      "event_id": "1629527137"
     },
     {
       "sport": "other",
@@ -9841,6 +9729,20 @@
       "league": "Czech Republic - First Liga",
       "pinnacle_limit": 750,
       "event_id": "1629423191"
+    },
+    {
+      "sport": "basketball",
+      "matchup": "Cleveland Cavaliers vs Toronto Raptors",
+      "bet": "Cleveland Cavaliers -7.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-129",
+      "pinnacle_nvp": "-106",
+      "ev": "-8.68%",
+      "ev_val": -0.08683446581810061,
+      "start_time": "2026-05-03 06:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 10000,
+      "event_id": "1629527137"
     },
     {
       "sport": "other",
@@ -9942,6 +9844,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Hajduk Split vs Varazdin",
+      "bet": "Varazdin 1.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-125",
+      "pinnacle_nvp": "-103",
+      "ev": "-8.72%",
+      "ev_val": -0.08722109533468558,
+      "start_time": "2026-05-03 11:45 AM",
+      "league": "Croatia - HNL",
+      "pinnacle_limit": 400,
+      "event_id": "1629199008"
+    },
+    {
+      "sport": "other",
       "matchup": "Istra 1961 vs Slaven Belupo",
       "bet": "ML - Slaven Belupo",
       "bet_type": "Moneyline",
@@ -10037,6 +9953,20 @@
       "league": "Sweden - Allsvenskan",
       "pinnacle_limit": 1625,
       "event_id": "1629370316"
+    },
+    {
+      "sport": "other",
+      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-115",
+      "pinnacle_nvp": "+105",
+      "ev": "-8.76%",
+      "ev_val": -0.08757188023850448,
+      "start_time": "2026-05-03 03:00 AM",
+      "league": "Japan - J League",
+      "pinnacle_limit": 7500,
+      "event_id": "1629454203"
     },
     {
       "sport": "other",
@@ -10264,20 +10194,6 @@
     },
     {
       "sport": "other",
-      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
-      "bet": "Over 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "-115",
-      "pinnacle_nvp": "+105",
-      "ev": "-8.98%",
-      "ev_val": -0.08979298082214981,
-      "start_time": "2026-05-03 03:00 AM",
-      "league": "Japan - J League",
-      "pinnacle_limit": 7500,
-      "event_id": "1629454203"
-    },
-    {
-      "sport": "other",
       "matchup": "Pacific vs Vancouver FC",
       "bet": "Over 2.5",
       "bet_type": "Total",
@@ -10359,6 +10275,20 @@
       "league": "Sweden - Superettan",
       "pinnacle_limit": 500,
       "event_id": "1629476423"
+    },
+    {
+      "sport": "other",
+      "matchup": "Fredericia vs FC Copenhagen",
+      "bet": "ML - Fredericia",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+390",
+      "pinnacle_nvp": "+439",
+      "ev": "-9.11%",
+      "ev_val": -0.09107772212947496,
+      "start_time": "2026-05-03 09:00 AM",
+      "league": "Denmark - Superliga",
+      "pinnacle_limit": 1350,
+      "event_id": "1629393183"
     },
     {
       "sport": "soccer",
@@ -10530,6 +10460,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Fredericia vs FC Copenhagen",
+      "bet": "Under 3.5",
+      "bet_type": "Total",
+      "betbck_odds": "-130",
+      "pinnacle_nvp": "-105",
+      "ev": "-9.22%",
+      "ev_val": -0.09223664995855874,
+      "start_time": "2026-05-03 09:00 AM",
+      "league": "Denmark - Superliga",
+      "pinnacle_limit": 900,
+      "event_id": "1629393183"
+    },
+    {
+      "sport": "other",
       "matchup": "Austria Vienna vs Hartberg",
       "bet": "Under 2.5",
       "bet_type": "Total",
@@ -10642,20 +10586,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Dender vs RAAL La Louviere",
-      "bet": "Under 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "+100",
-      "pinnacle_nvp": "+121",
-      "ev": "-9.34%",
-      "ev_val": -0.0933816863100635,
-      "start_time": "2026-05-03 12:15 PM",
-      "league": "Belgium - Pro League",
-      "pinnacle_limit": 600,
-      "event_id": "1629405665"
-    },
-    {
-      "sport": "other",
       "matchup": "Pharco FC vs Al Mokawloon Al Arab",
       "bet": "Over 1.75",
       "bet_type": "Total",
@@ -10698,17 +10628,17 @@
     },
     {
       "sport": "other",
-      "matchup": "Fredericia vs FC Copenhagen",
-      "bet": "Under 3.5",
+      "matchup": "Sandefjord vs Aalesunds",
+      "bet": "Under 3.25",
       "bet_type": "Total",
-      "betbck_odds": "-130",
-      "pinnacle_nvp": "-105",
-      "ev": "-9.41%",
-      "ev_val": -0.09409586828941674,
-      "start_time": "2026-05-03 09:00 AM",
-      "league": "Denmark - Superliga",
-      "pinnacle_limit": 900,
-      "event_id": "1629393183"
+      "betbck_odds": "-140",
+      "pinnacle_nvp": "-112",
+      "ev": "-9.39%",
+      "ev_val": -0.09392932648746588,
+      "start_time": "2026-05-03 10:00 AM",
+      "league": "Norway - Eliteserien",
+      "pinnacle_limit": 1350,
+      "event_id": "1629401530"
     },
     {
       "sport": "other",
@@ -10978,6 +10908,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Keflavik vs Vikingur Reykjavik",
+      "bet": "Over 3.0",
+      "bet_type": "Total",
+      "betbck_odds": "-160",
+      "pinnacle_nvp": "-125",
+      "ev": "-9.67%",
+      "ev_val": -0.09672040022234574,
+      "start_time": "2026-05-03 01:00 PM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 300,
+      "event_id": "1629472880"
+    },
+    {
+      "sport": "other",
       "matchup": "Waterford vs Dundalk",
       "bet": "Under 3.0",
       "bet_type": "Total",
@@ -11118,20 +11062,6 @@
     },
     {
       "sport": "other",
-      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
-      "bet": "ML - Nagoya Grampus",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+175",
-      "pinnacle_nvp": "+205",
-      "ev": "-9.90%",
-      "ev_val": -0.09895150720838797,
-      "start_time": "2026-05-03 03:00 AM",
-      "league": "Japan - J League",
-      "pinnacle_limit": 10000,
-      "event_id": "1629454203"
-    },
-    {
-      "sport": "other",
       "matchup": "UCV vs Independiente del Valle",
       "bet": "Under 2.5",
       "bet_type": "Total",
@@ -11174,20 +11104,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Hajduk Split vs Varazdin",
-      "bet": "Varazdin 1.0",
-      "bet_type": "Spread",
-      "betbck_odds": "-125",
-      "pinnacle_nvp": "+100",
-      "ev": "-10.00%",
-      "ev_val": -0.09999999999999998,
-      "start_time": "2026-05-03 11:45 AM",
-      "league": "Croatia - HNL",
-      "pinnacle_limit": 400,
-      "event_id": "1629199008"
-    },
-    {
-      "sport": "other",
       "matchup": "Al-Ahli vs Al-Akhdoud",
       "bet": "Under 3.5",
       "bet_type": "Total",
@@ -11227,6 +11143,20 @@
       "league": "Denmark - Division 1",
       "pinnacle_limit": 750,
       "event_id": "1629360513"
+    },
+    {
+      "sport": "other",
+      "matchup": "Dender vs RAAL La Louviere",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "+100",
+      "pinnacle_nvp": "+123",
+      "ev": "-10.15%",
+      "ev_val": -0.10152740341419586,
+      "start_time": "2026-05-03 12:15 PM",
+      "league": "Belgium - Pro League",
+      "pinnacle_limit": 600,
+      "event_id": "1629405665"
     },
     {
       "sport": "other",
@@ -11552,6 +11482,34 @@
     },
     {
       "sport": "other",
+      "matchup": "V-Varen Nagasaki vs Nagoya Grampus",
+      "bet": "ML - Nagoya Grampus",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+175",
+      "pinnacle_nvp": "+208",
+      "ev": "-10.74%",
+      "ev_val": -0.10743265173644923,
+      "start_time": "2026-05-03 03:00 AM",
+      "league": "Japan - J League",
+      "pinnacle_limit": 10000,
+      "event_id": "1629454203"
+    },
+    {
+      "sport": "other",
+      "matchup": "IBV vs Breidablik",
+      "bet": "Breidablik -1.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-125",
+      "pinnacle_nvp": "+102",
+      "ev": "-10.85%",
+      "ev_val": -0.10846953937592874,
+      "start_time": "2026-05-03 11:00 AM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 400,
+      "event_id": "1629476541"
+    },
+    {
+      "sport": "other",
       "matchup": "Leones del Norte vs Emelec",
       "bet": "ML - Leones del Norte",
       "bet_type": "Moneyline",
@@ -11605,20 +11563,6 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 300,
       "event_id": "1629488660"
-    },
-    {
-      "sport": "other",
-      "matchup": "Keflavik vs Vikingur Reykjavik",
-      "bet": "ML - Keflavik",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+470",
-      "pinnacle_nvp": "+541",
-      "ev": "-11.08%",
-      "ev_val": -0.11076443057722307,
-      "start_time": "2026-05-03 01:00 PM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 400,
-      "event_id": "1629472880"
     },
     {
       "sport": "other",
@@ -11678,17 +11622,17 @@
     },
     {
       "sport": "other",
-      "matchup": "Sandefjord vs Aalesunds",
-      "bet": "Under 3.25",
-      "bet_type": "Total",
-      "betbck_odds": "-140",
-      "pinnacle_nvp": "-108",
-      "ev": "-11.18%",
-      "ev_val": -0.11176905995558839,
-      "start_time": "2026-05-03 10:00 AM",
-      "league": "Norway - Eliteserien",
-      "pinnacle_limit": 1350,
-      "event_id": "1629401530"
+      "matchup": "Keflavik vs Vikingur Reykjavik",
+      "bet": "Vikingur Reykjavik -1.25",
+      "bet_type": "Spread",
+      "betbck_odds": "-115",
+      "pinnacle_nvp": "+110",
+      "ev": "-11.14%",
+      "ev_val": -0.11142337576458927,
+      "start_time": "2026-05-03 01:00 PM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 400,
+      "event_id": "1629472880"
     },
     {
       "sport": "other",
@@ -11902,20 +11846,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Fredericia vs FC Copenhagen",
-      "bet": "ML - Fredericia",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+390",
-      "pinnacle_nvp": "+456",
-      "ev": "-11.79%",
-      "ev_val": -0.11791179117911776,
-      "start_time": "2026-05-03 09:00 AM",
-      "league": "Denmark - Superliga",
-      "pinnacle_limit": 1350,
-      "event_id": "1629393183"
-    },
-    {
-      "sport": "other",
       "matchup": "Rosario Central vs Libertad Asuncion",
       "bet": "ML - Libertad Asuncion",
       "bet_type": "Moneyline",
@@ -12070,20 +12000,6 @@
     },
     {
       "sport": "other",
-      "matchup": "IBV vs Breidablik",
-      "bet": "ML - IBV",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+360",
-      "pinnacle_nvp": "+427",
-      "ev": "-12.66%",
-      "ev_val": -0.1266375545851529,
-      "start_time": "2026-05-03 11:00 AM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 400,
-      "event_id": "1629476541"
-    },
-    {
-      "sport": "other",
       "matchup": "Kristiansund vs Ham-Kam",
       "bet": "Over 3.0",
       "bet_type": "Total",
@@ -12210,6 +12126,20 @@
     },
     {
       "sport": "other",
+      "matchup": "IBV vs Breidablik",
+      "bet": "ML - IBV",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+355",
+      "pinnacle_nvp": "+427",
+      "ev": "-13.61%",
+      "ev_val": -0.13613062464400993,
+      "start_time": "2026-05-03 11:00 AM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 400,
+      "event_id": "1629476541"
+    },
+    {
+      "sport": "other",
       "matchup": "GAIS vs Orgryte",
       "bet": "ML - Orgryte",
       "bet_type": "Moneyline",
@@ -12266,6 +12196,20 @@
     },
     {
       "sport": "other",
+      "matchup": "Keflavik vs Vikingur Reykjavik",
+      "bet": "ML - Keflavik",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+450",
+      "pinnacle_nvp": "+541",
+      "ev": "-14.20%",
+      "ev_val": -0.14196567862714515,
+      "start_time": "2026-05-03 01:00 PM",
+      "league": "Iceland - Premier League",
+      "pinnacle_limit": 400,
+      "event_id": "1629472880"
+    },
+    {
+      "sport": "other",
       "matchup": "Unirea Slobozia vs Hermannstadt",
       "bet": "ML - Unirea Slobozia",
       "bet_type": "Moneyline",
@@ -12280,20 +12224,6 @@
     },
     {
       "sport": "other",
-      "matchup": "Keflavik vs Vikingur Reykjavik",
-      "bet": "Vikingur Reykjavik -1.25",
-      "bet_type": "Spread",
-      "betbck_odds": "-125",
-      "pinnacle_nvp": "+110",
-      "ev": "-14.45%",
-      "ev_val": -0.14448669201520914,
-      "start_time": "2026-05-03 01:00 PM",
-      "league": "Iceland - Premier League",
-      "pinnacle_limit": 400,
-      "event_id": "1629472880"
-    },
-    {
-      "sport": "other",
       "matchup": "Arda vs Cherno More",
       "bet": "ML - Cherno More",
       "bet_type": "Moneyline",
@@ -12305,8 +12235,22 @@
       "league": "Bulgaria - First League",
       "pinnacle_limit": 800,
       "event_id": "1629349237"
+    },
+    {
+      "sport": "other",
+      "matchup": "America de Cali vs Deportivo Pereira",
+      "bet": "ML - Deportivo Pereira",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+655",
+      "pinnacle_nvp": "+786",
+      "ev": "-14.77%",
+      "ev_val": -0.1476631293745767,
+      "start_time": "2026-05-03 05:45 PM",
+      "league": "Colombia - Primera A",
+      "pinnacle_limit": 300,
+      "event_id": "1629185142"
     }
   ],
-  "total_events": 879,
-  "last_run": "2026-05-03T07:35:14.153801"
+  "total_events": 875,
+  "last_run": "2026-05-03T07:41:16.445683"
 }
