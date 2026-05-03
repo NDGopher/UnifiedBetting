@@ -22,6 +22,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from database_models import save_alert_log_record
 from alert_history import append_alert_to_history
+from utils.pod_utils import normalize_team_name_for_matching
 
 # ── Ring buffer (last 50 alerts) ──────────────────────────────────────────────
 _RING_BUFFER_SIZE = 50
@@ -87,32 +88,23 @@ class AlertLogger:
 
     @staticmethod
     def _strip_display_suffix(name: str) -> str:
-        """Strip trailing league/country abbreviations for clean display (preserves casing)."""
+        """Strip trailing league/country suffixes for clean display (preserves casing).
+
+        Handles all POD patterns:
+          'HeredianoCosta Rica', 'Orange CountyUSA - USL Championship',
+          'CeutaSpain - Segunda Division', 'Taila SantosPFL', etc.
+        """
         if not name or name == "?":
             return name
-        _suffixes = [
-            'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'afl', 'cfl', 'mls',
-            'ufc', 'pfl', 'bellator', 'bkfc', 'lfa', 'rizin',
-            'usa', 'can', 'mex', 'bra', 'arg', 'per', 'uru', 'col',
-            'eng', 'esp', 'ger', 'fra', 'ita', 'por', 'ned', 'bel',
-            'rus', 'ukr', 'tur', 'gre', 'pol', 'cze', 'hun', 'rou',
-            'den', 'nor', 'swe', 'fin', 'isl', 'aut', 'sui',
-            'aus', 'jpn', 'kor', 'chn',
-            'peru', 'colombia', 'uruguay', 'argentina', 'brazil',
-            'germany', 'france', 'italy', 'spain', 'england', 'scotland',
-            'portugal', 'netherlands', 'belgium', 'austria', 'switzerland',
-            'norway', 'sweden', 'denmark', 'finland', 'russia', 'ukraine',
-            'turkey', 'greece', 'poland', 'czech republic', 'hungary', 'romania',
-        ]
-        result = name
-        lower = name.lower()
-        for s in _suffixes:
-            pattern = r'(\s+' + re.escape(s) + r'|' + re.escape(s) + r')$'
-            stripped = re.sub(pattern, '', lower, flags=re.IGNORECASE).strip()
-            if stripped and stripped != lower:
-                result = name[: len(stripped)].strip()
-                break
-        return result
+        # Step 1: strip any " - League/competition" trailer
+        cleaned = re.sub(r'\s+-\s+.+$', '', name).strip()
+        # Step 2: strip remaining country/code suffix via the authoritative list
+        stripped_lower = normalize_team_name_for_matching(cleaned)
+        if not stripped_lower:
+            return cleaned
+        if cleaned.lower().startswith(stripped_lower):
+            return cleaned[:len(stripped_lower)].strip()
+        return cleaned
 
     def log_raw_alert(self, payload: Dict):
         home = payload.get("homeTeam", "?")
@@ -127,19 +119,23 @@ class AlertLogger:
         print(self._divider)
         self._step(
             "ALERT IN",
-            f"{away} @ {home} | {league} | market={market} | {old_odds} -> {new_odds}",
-            {"home": home, "away": away, "league": league, "market": market,
+            f"{away_display} @ {home_display} | {league} | market={market} | {old_odds} -> {new_odds}",
+            {"home": home_display, "away": away_display, "league": league, "market": market,
              "old_odds": old_odds, "new_odds": new_odds},
         )
 
     def log_prop_skip(self, home: str, away: str, reason: str):
         self.result = "skipped_prop"
-        self._step("SKIP", f"Prop/corner bet skipped: {reason}", {"home": home, "away": away})
+        home_d = self.teams.get("home") or self._strip_display_suffix(home)
+        away_d = self.teams.get("away") or self._strip_display_suffix(away)
+        self._step("SKIP", f"Prop/corner bet skipped: {reason}", {"home": home_d, "away": away_d})
 
     def log_search_term(self, search_term: str, raw_home: str, raw_away: str, reason: str):
+        home_d = self.teams.get("home") or self._strip_display_suffix(raw_home)
+        away_d = self.teams.get("away") or self._strip_display_suffix(raw_away)
         self._step(
             "SEARCH TERM",
-            f"Using '{search_term}' (from '{raw_home}' / '{raw_away}'): {reason}",
+            f"Using '{search_term}' (from '{home_d}' / '{away_d}'): {reason}",
         )
 
     def log_search(self, term: str, status_code: int, response_size: int, url: str = ""):
