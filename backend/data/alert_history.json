@@ -18503,5 +18503,250 @@
         "ev_pct": -1.96
       }
     ]
+  },
+  {
+    "logged_at": "2026-05-03T07:34:12.307174Z",
+    "event_id": "1629385792",
+    "timestamp": "2026-05-03T07:34:08.885996Z",
+    "teams": {
+      "home": "Sporting Gijon",
+      "away": "Ceuta",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Ceuta @ Sporting Gijon | ? | market=Total | +403 -> +367",
+        "detail": {
+          "home": "Sporting Gijon",
+          "away": "Ceuta",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+403",
+          "new_odds": "+367"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'gijon' (from 'Sporting Gijon' / 'Ceuta'): last word of home team 'sporting gijon'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='gijon' -> HTTP 200 (49972 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "gijon",
+          "status": 200,
+          "response_bytes": 49972
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Ceuta' vs 'Sporting Gijon'  <->  POD 'sporting gijon' vs 'ceutaspain - segunda division'  [token_set_h=100 | token_set_a=31 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Ceuta",
+          "bck_away": "Sporting Gijon",
+          "pod_home": "sporting gijon",
+          "pod_away": "ceutaspain - segunda division",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 31,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Ceuta' vs 'Sporting Gijon' | home=100/60, away=31/60 (combined=131, needed \u2265120)",
+        "detail": {
+          "bck_home": "Ceuta",
+          "bck_away": "Sporting Gijon",
+          "best_score": 131,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 31,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 31,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for ceutaspain - segunda division @ sporting gijon ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for ceutaspain - segunda division @ sporting gijon (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:34:46.462063Z",
+    "event_id": "1777793678813",
+    "timestamp": "2026-05-03T07:34:45.505364Z",
+    "teams": {
+      "home": "Sporting Gijon",
+      "away": "Ceuta",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Ceuta @ Sporting Gijon | ? | market=Total | +145 -> +127",
+        "detail": {
+          "home": "Sporting Gijon",
+          "away": "Ceuta",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+145",
+          "new_odds": "+127"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'gijon' (from 'Sporting Gijon' / 'Ceuta'): last word of home team 'sporting gijon'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='gijon' -> HTTP 200 (49972 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "gijon",
+          "status": 200,
+          "response_bytes": 49972
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Ceuta' vs 'Sporting Gijon'  <->  POD 'sporting gijon' vs 'ceutaspain - segunda division'  [token_set_h=100 | token_set_a=31 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Ceuta",
+          "bck_away": "Sporting Gijon",
+          "pod_home": "sporting gijon",
+          "pod_away": "ceutaspain - segunda division",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 31,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Ceuta' vs 'Sporting Gijon' | home=100/60, away=31/60 (combined=131, needed \u2265120)",
+        "detail": {
+          "bck_home": "Ceuta",
+          "bck_away": "Sporting Gijon",
+          "best_score": 131,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 31,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 31,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for ceutaspain - segunda division @ sporting gijon ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for ceutaspain - segunda division @ sporting gijon (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T07:35:55.252595Z",
+    "event_id": "1629530099",
+    "timestamp": "2026-05-03T07:35:54.150720Z",
+    "teams": {
+      "home": "Universidad de Concepcion",
+      "away": "Universidad Catolica",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Universidad Catolica @ Universidad de Concepcion | ? | market=Spread | +197 -> +170",
+        "detail": {
+          "home": "Universidad de Concepcion",
+          "away": "Universidad Catolica",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+197",
+          "new_odds": "+170"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'concepcion' (from 'Universidad de Concepcion' / 'Universidad Catolica'): last word of home team 'universidad de concepcion'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='concepcion' -> HTTP 200 (42951 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "concepcion",
+          "status": 200,
+          "response_bytes": 42951
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for universidad catolica @ universidad de concepcion (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]

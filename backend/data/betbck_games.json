@@ -13,7 +13,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.431529",
+    "timestamp": "2026-05-03T07:34:53.542459",
     "event_datetime": "2026-05-03T11:45",
     "sport": "soccer"
   },
@@ -31,7 +31,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.436331",
+    "timestamp": "2026-05-03T07:34:53.545878",
     "event_datetime": "2026-05-03T12:35",
     "sport": "soccer"
   },
@@ -49,7 +49,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.439837",
+    "timestamp": "2026-05-03T07:34:53.549432",
     "event_datetime": "2026-05-03T13:15",
     "sport": "soccer"
   },
@@ -67,7 +67,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.443307",
+    "timestamp": "2026-05-03T07:34:53.552915",
     "event_datetime": "2026-05-03T15:05",
     "sport": "soccer"
   },
@@ -85,7 +85,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.447020",
+    "timestamp": "2026-05-03T07:34:53.556322",
     "event_datetime": "2026-05-03T15:07",
     "sport": "soccer"
   },
@@ -103,7 +103,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.450321",
+    "timestamp": "2026-05-03T07:34:53.559712",
     "event_datetime": "2026-05-03T15:10",
     "sport": "soccer"
   },
@@ -121,7 +121,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.453640",
+    "timestamp": "2026-05-03T07:34:53.563137",
     "event_datetime": "2026-05-03T18:20",
     "sport": "soccer"
   },
@@ -191,7 +191,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.457191",
+    "timestamp": "2026-05-03T07:34:53.566891",
     "event_datetime": "2026-05-03T14:30",
     "sport": "basketball"
   },
@@ -261,7 +261,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.461120",
+    "timestamp": "2026-05-03T07:34:53.570560",
     "event_datetime": "2026-05-03T18:30",
     "sport": "basketball"
   },
@@ -331,7 +331,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.465386",
+    "timestamp": "2026-05-03T07:34:53.574293",
     "event_datetime": "2026-05-04T19:00",
     "sport": "basketball"
   },
@@ -401,7 +401,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.469282",
+    "timestamp": "2026-05-03T07:34:53.578146",
     "event_datetime": "2026-05-04T20:30",
     "sport": "basketball"
   },
@@ -471,7 +471,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.473069",
+    "timestamp": "2026-05-03T07:34:53.582120",
     "event_datetime": "2026-05-05T19:30",
     "sport": "basketball"
   },
@@ -489,7 +489,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.476624",
+    "timestamp": "2026-05-03T07:34:53.585537",
     "event_datetime": "2026-05-03T11:45",
     "sport": "baseball"
   },
@@ -519,7 +519,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.480053",
+    "timestamp": "2026-05-03T07:34:53.589850",
     "event_datetime": "2026-05-03T12:35",
     "sport": "baseball"
   },
@@ -537,7 +537,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.483516",
+    "timestamp": "2026-05-03T07:34:53.593292",
     "event_datetime": "2026-05-03T12:35",
     "sport": "baseball"
   },
@@ -567,7 +567,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:02.487474",
+    "timestamp": "2026-05-03T07:34:53.596897",
     "event_datetime": "2026-05-03T12:35",
     "sport": "baseball"
   },
@@ -597,7 +597,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.490804",
+    "timestamp": "2026-05-03T07:34:53.600389",
     "event_datetime": "2026-05-03T12:35",
     "sport": "baseball"
   },
@@ -627,7 +627,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.494236",
+    "timestamp": "2026-05-03T07:34:53.603837",
     "event_datetime": "2026-05-03T12:40",
     "sport": "baseball"
   },
@@ -645,7 +645,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:02.497657",
+    "timestamp": "2026-05-03T07:34:53.607484",
     "event_datetime": "2026-05-03T12:40",
     "sport": "baseball"
   },
@@ -675,7 +675,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:02.501235",
+    "timestamp": "2026-05-03T07:34:53.611190",
     "event_datetime": "2026-05-03T13:15",
     "sport": "baseball"
   },
@@ -693,7 +693,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.504459",
+    "timestamp": "2026-05-03T07:34:53.614597",
     "event_datetime": "2026-05-03T13:20",
     "sport": "baseball"
   },
@@ -723,7 +723,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.507958",
+    "timestamp": "2026-05-03T07:34:53.618242",
     "event_datetime": "2026-05-03T14:10",
     "sport": "baseball"
   },
@@ -741,7 +741,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:02.511841",
+    "timestamp": "2026-05-03T07:34:53.621521",
     "event_datetime": "2026-05-03T15:05",
     "sport": "baseball"
   },
@@ -771,7 +771,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "+110"
     },
-    "timestamp": "2026-05-03T07:27:02.515304",
+    "timestamp": "2026-05-03T07:34:53.624897",
     "event_datetime": "2026-05-03T15:07",
     "sport": "baseball"
   },
@@ -801,7 +801,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.518671",
+    "timestamp": "2026-05-03T07:34:53.628408",
     "event_datetime": "2026-05-03T15:10",
     "sport": "baseball"
   },
@@ -819,7 +819,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.521989",
+    "timestamp": "2026-05-03T07:34:53.631885",
     "event_datetime": "2026-05-03T18:20",
     "sport": "baseball"
   },
@@ -837,7 +837,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.525747",
+    "timestamp": "2026-05-03T07:34:53.635676",
     "event_datetime": "2027-05-03T03:05",
     "sport": "baseball"
   },
@@ -855,7 +855,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.529322",
+    "timestamp": "2026-05-03T07:34:53.639315",
     "event_datetime": "2027-05-03T03:05",
     "sport": "baseball"
   },
@@ -873,7 +873,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.533089",
+    "timestamp": "2026-05-03T07:34:53.642982",
     "event_datetime": "2027-05-03T04:00",
     "sport": "baseball"
   },
@@ -903,7 +903,7 @@
       "game_total_over_odds": "+130",
       "game_total_under_odds": "-150"
     },
-    "timestamp": "2026-05-03T07:27:02.537764",
+    "timestamp": "2026-05-03T07:34:53.646804",
     "event_datetime": "2026-05-03T17:00",
     "sport": "hockey"
   },
@@ -933,7 +933,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:02.543036",
+    "timestamp": "2026-05-03T07:34:53.650696",
     "event_datetime": "2026-05-03T20:00",
     "sport": "hockey"
   },
@@ -963,7 +963,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.546979",
+    "timestamp": "2026-05-03T07:34:53.654998",
     "event_datetime": "2026-05-04T18:00",
     "sport": "hockey"
   },
@@ -993,7 +993,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.551135",
+    "timestamp": "2026-05-03T07:34:53.658783",
     "event_datetime": "2026-05-04T20:30",
     "sport": "hockey"
   },
@@ -1023,7 +1023,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.554399",
+    "timestamp": "2026-05-03T07:34:53.662550",
     "event_datetime": "2026-06-11T14:00",
     "sport": "soccer"
   },
@@ -1053,7 +1053,7 @@
       "game_total_over_odds": "-155",
       "game_total_under_odds": "+115"
     },
-    "timestamp": "2026-05-03T07:27:02.557589",
+    "timestamp": "2026-05-03T07:34:53.666126",
     "event_datetime": "2026-06-11T21:00",
     "sport": "soccer"
   },
@@ -1083,7 +1083,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.560837",
+    "timestamp": "2026-05-03T07:34:53.669434",
     "event_datetime": "2026-06-12T20:00",
     "sport": "soccer"
   },
@@ -1113,7 +1113,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.564196",
+    "timestamp": "2026-05-03T07:34:53.672801",
     "event_datetime": "2026-06-13T14:00",
     "sport": "soccer"
   },
@@ -1143,7 +1143,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.567474",
+    "timestamp": "2026-05-03T07:34:53.676095",
     "event_datetime": "2026-06-13T17:00",
     "sport": "soccer"
   },
@@ -1173,7 +1173,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.570670",
+    "timestamp": "2026-05-03T07:34:53.679341",
     "event_datetime": "2026-06-13T20:00",
     "sport": "soccer"
   },
@@ -1203,7 +1203,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.573988",
+    "timestamp": "2026-05-03T07:34:53.682578",
     "event_datetime": "2026-06-13T23:00",
     "sport": "soccer"
   },
@@ -1233,7 +1233,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.577320",
+    "timestamp": "2026-05-03T07:34:53.685841",
     "event_datetime": "2026-06-14T12:00",
     "sport": "soccer"
   },
@@ -1263,7 +1263,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.580619",
+    "timestamp": "2026-05-03T07:34:53.689446",
     "event_datetime": "2026-06-14T15:00",
     "sport": "soccer"
   },
@@ -1293,7 +1293,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.584776",
+    "timestamp": "2026-05-03T07:34:53.692753",
     "event_datetime": "2026-06-14T18:00",
     "sport": "soccer"
   },
@@ -1323,7 +1323,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.589906",
+    "timestamp": "2026-05-03T07:34:53.696202",
     "event_datetime": "2026-06-15T11:00",
     "sport": "soccer"
   },
@@ -1353,7 +1353,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.594558",
+    "timestamp": "2026-05-03T07:34:53.699442",
     "event_datetime": "2026-06-15T14:00",
     "sport": "soccer"
   },
@@ -1383,7 +1383,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.598505",
+    "timestamp": "2026-05-03T07:34:53.702806",
     "event_datetime": "2026-06-15T17:00",
     "sport": "soccer"
   },
@@ -1413,7 +1413,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.602806",
+    "timestamp": "2026-05-03T07:34:53.706400",
     "event_datetime": "2026-06-16T14:00",
     "sport": "soccer"
   },
@@ -1443,7 +1443,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.606785",
+    "timestamp": "2026-05-03T07:34:53.710303",
     "event_datetime": "2026-06-16T17:00",
     "sport": "soccer"
   },
@@ -1473,7 +1473,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.612019",
+    "timestamp": "2026-05-03T07:34:53.714557",
     "event_datetime": "2026-06-16T20:00",
     "sport": "soccer"
   },
@@ -1503,7 +1503,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.616355",
+    "timestamp": "2026-05-03T07:34:53.718407",
     "event_datetime": "2026-06-16T23:00",
     "sport": "soccer"
   },
@@ -1533,7 +1533,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.621496",
+    "timestamp": "2026-05-03T07:34:53.721864",
     "event_datetime": "2026-06-17T12:00",
     "sport": "soccer"
   },
@@ -1563,7 +1563,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.624939",
+    "timestamp": "2026-05-03T07:34:53.725147",
     "event_datetime": "2026-06-17T15:00",
     "sport": "soccer"
   },
@@ -1593,7 +1593,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.628396",
+    "timestamp": "2026-05-03T07:34:53.728744",
     "event_datetime": "2026-06-17T18:00",
     "sport": "soccer"
   },
@@ -1623,7 +1623,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.631910",
+    "timestamp": "2026-05-03T07:34:53.732177",
     "event_datetime": "2026-06-17T21:00",
     "sport": "soccer"
   },
@@ -1653,7 +1653,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.636981",
+    "timestamp": "2026-05-03T07:34:53.735641",
     "event_datetime": "2026-05-05T14:00",
     "sport": "soccer"
   },
@@ -1671,7 +1671,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.643215",
+    "timestamp": "2026-05-03T07:34:53.739378",
     "event_datetime": "2026-05-05T14:00",
     "sport": "soccer"
   },
@@ -1701,7 +1701,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.649027",
+    "timestamp": "2026-05-03T07:34:53.742961",
     "event_datetime": "2026-05-06T14:00",
     "sport": "soccer"
   },
@@ -1719,7 +1719,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.655024",
+    "timestamp": "2026-05-03T07:34:53.746777",
     "event_datetime": "2026-05-06T14:00",
     "sport": "soccer"
   },
@@ -1749,7 +1749,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.660420",
+    "timestamp": "2026-05-03T07:34:53.750388",
     "event_datetime": "2026-05-07T14:00",
     "sport": "soccer"
   },
@@ -1779,7 +1779,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.665880",
+    "timestamp": "2026-05-03T07:34:53.753850",
     "event_datetime": "2026-05-07T14:00",
     "sport": "soccer"
   },
@@ -1809,7 +1809,7 @@
       "game_total_over_odds": "+110",
       "game_total_under_odds": "-150"
     },
-    "timestamp": "2026-05-03T07:27:02.671289",
+    "timestamp": "2026-05-03T07:34:53.757323",
     "event_datetime": "2026-05-03T08:00",
     "sport": "soccer"
   },
@@ -1839,7 +1839,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.676718",
+    "timestamp": "2026-05-03T07:34:53.760867",
     "event_datetime": "2026-05-03T09:30",
     "sport": "soccer"
   },
@@ -1869,7 +1869,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.682563",
+    "timestamp": "2026-05-03T07:34:53.764703",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -1899,7 +1899,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.687987",
+    "timestamp": "2026-05-03T07:34:53.768188",
     "event_datetime": "2026-05-04T09:00",
     "sport": "soccer"
   },
@@ -1929,7 +1929,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.693350",
+    "timestamp": "2026-05-03T07:34:53.771532",
     "event_datetime": "2026-05-04T14:00",
     "sport": "soccer"
   },
@@ -1959,7 +1959,7 @@
       "game_total_over_odds": "+135",
       "game_total_under_odds": "-175"
     },
-    "timestamp": "2026-05-03T07:27:02.698599",
+    "timestamp": "2026-05-03T07:34:53.774890",
     "event_datetime": "2027-05-03T07:00",
     "sport": "soccer"
   },
@@ -1977,7 +1977,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.703888",
+    "timestamp": "2026-05-03T07:34:53.778353",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -1995,7 +1995,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.709189",
+    "timestamp": "2026-05-03T07:34:53.782139",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -2025,7 +2025,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.714565",
+    "timestamp": "2026-05-03T07:34:53.785531",
     "event_datetime": "2027-05-03T07:00",
     "sport": "soccer"
   },
@@ -2055,7 +2055,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.717974",
+    "timestamp": "2026-05-03T07:34:53.788910",
     "event_datetime": "2026-05-03T09:15",
     "sport": "soccer"
   },
@@ -2085,7 +2085,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.721172",
+    "timestamp": "2026-05-03T07:34:53.792137",
     "event_datetime": "2026-05-03T11:30",
     "sport": "soccer"
   },
@@ -2115,7 +2115,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.724612",
+    "timestamp": "2026-05-03T07:34:53.795668",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -2145,7 +2145,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.728189",
+    "timestamp": "2026-05-03T07:34:53.799095",
     "event_datetime": "2026-05-04T14:00",
     "sport": "soccer"
   },
@@ -2175,7 +2175,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.731668",
+    "timestamp": "2026-05-03T07:34:53.802504",
     "event_datetime": "2027-05-03T07:00",
     "sport": "soccer"
   },
@@ -2205,7 +2205,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.735956",
+    "timestamp": "2026-05-03T07:34:53.805871",
     "event_datetime": "2026-05-03T09:15",
     "sport": "soccer"
   },
@@ -2235,7 +2235,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.739368",
+    "timestamp": "2026-05-03T07:34:53.809241",
     "event_datetime": "2026-05-03T11:30",
     "sport": "soccer"
   },
@@ -2265,7 +2265,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.743338",
+    "timestamp": "2026-05-03T07:34:53.812602",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -2295,7 +2295,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.746643",
+    "timestamp": "2026-05-03T07:34:53.815900",
     "event_datetime": "2026-05-04T13:30",
     "sport": "soccer"
   },
@@ -2325,7 +2325,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.750047",
+    "timestamp": "2026-05-03T07:34:53.819229",
     "event_datetime": "2027-05-03T05:30",
     "sport": "soccer"
   },
@@ -2355,7 +2355,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.753403",
+    "timestamp": "2026-05-03T07:34:53.822527",
     "event_datetime": "2026-05-03T08:00",
     "sport": "soccer"
   },
@@ -2385,7 +2385,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.757930",
+    "timestamp": "2026-05-03T07:34:53.825964",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -2415,7 +2415,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.762617",
+    "timestamp": "2026-05-03T07:34:53.829489",
     "event_datetime": "2026-05-03T13:45",
     "sport": "soccer"
   },
@@ -2445,7 +2445,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.766466",
+    "timestamp": "2026-05-03T07:34:53.832866",
     "event_datetime": "2026-05-04T11:30",
     "sport": "soccer"
   },
@@ -2475,7 +2475,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.770312",
+    "timestamp": "2026-05-03T07:34:53.836305",
     "event_datetime": "2026-05-04T13:45",
     "sport": "soccer"
   },
@@ -2505,7 +2505,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.774044",
+    "timestamp": "2026-05-03T07:34:53.839798",
     "event_datetime": "2026-05-03T08:30",
     "sport": "soccer"
   },
@@ -2535,7 +2535,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.779473",
+    "timestamp": "2026-05-03T07:34:53.843575",
     "event_datetime": "2026-05-03T10:30",
     "sport": "soccer"
   },
@@ -2565,7 +2565,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.783274",
+    "timestamp": "2026-05-03T07:34:53.847253",
     "event_datetime": "2026-05-03T12:30",
     "sport": "soccer"
   },
@@ -2595,7 +2595,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:02.787386",
+    "timestamp": "2026-05-03T07:34:53.850830",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -2625,7 +2625,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.790987",
+    "timestamp": "2026-05-03T07:34:53.854379",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -2655,7 +2655,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.794913",
+    "timestamp": "2026-05-03T07:34:53.857904",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -2685,7 +2685,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.798484",
+    "timestamp": "2026-05-03T07:34:53.861531",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -2715,7 +2715,7 @@
       "game_total_over_odds": "+110",
       "game_total_under_odds": "-150"
     },
-    "timestamp": "2026-05-03T07:27:02.802446",
+    "timestamp": "2026-05-03T07:34:53.865160",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -2745,7 +2745,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.806320",
+    "timestamp": "2026-05-03T07:34:53.868502",
     "event_datetime": "2026-05-03T08:00",
     "sport": "soccer"
   },
@@ -2775,7 +2775,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.809956",
+    "timestamp": "2026-05-03T07:34:53.871804",
     "event_datetime": "2026-05-03T10:15",
     "sport": "soccer"
   },
@@ -2805,7 +2805,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.813409",
+    "timestamp": "2026-05-03T07:34:53.875141",
     "event_datetime": "2026-05-03T10:15",
     "sport": "soccer"
   },
@@ -2835,7 +2835,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.816889",
+    "timestamp": "2026-05-03T07:34:53.878737",
     "event_datetime": "2026-05-03T10:15",
     "sport": "soccer"
   },
@@ -2865,7 +2865,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.820546",
+    "timestamp": "2026-05-03T07:34:53.882087",
     "event_datetime": "2026-05-03T13:45",
     "sport": "soccer"
   },
@@ -2895,12 +2895,12 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.824372",
+    "timestamp": "2026-05-03T07:34:53.885616",
     "event_datetime": "2027-05-03T05:15",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "04c4ab31",
+    "betbck_game_id": "16eea40e",
     "betbck_site_home_team": "203829Feyenoord",
     "betbck_site_away_team": "203830Fortuna Sittard",
     "betbck_site_odds": {
@@ -2925,12 +2925,12 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.828419",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:53.889132",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "b36b6495",
+    "betbck_game_id": "3dbef608",
     "betbck_site_home_team": "203833Heracles Almelo",
     "betbck_site_away_team": "203834PEC Zwolle",
     "betbck_site_odds": {
@@ -2955,8 +2955,8 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.832277",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:53.892633",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
@@ -2985,7 +2985,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.835799",
+    "timestamp": "2026-05-03T07:34:53.896343",
     "event_datetime": "2026-05-03T09:45",
     "sport": "soccer"
   },
@@ -3015,7 +3015,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.839233",
+    "timestamp": "2026-05-03T07:34:53.900529",
     "event_datetime": "2026-05-03T09:45",
     "sport": "soccer"
   },
@@ -3045,7 +3045,7 @@
       "game_total_over_odds": "-150",
       "game_total_under_odds": "+110"
     },
-    "timestamp": "2026-05-03T07:27:02.842789",
+    "timestamp": "2026-05-03T07:34:53.904046",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -3063,7 +3063,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.846289",
+    "timestamp": "2026-05-03T07:34:53.907502",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -3093,7 +3093,7 @@
       "game_total_over_odds": "-155",
       "game_total_under_odds": "+115"
     },
-    "timestamp": "2026-05-03T07:27:02.849784",
+    "timestamp": "2026-05-03T07:34:53.911545",
     "event_datetime": "2026-05-03T11:30",
     "sport": "soccer"
   },
@@ -3120,10 +3120,10 @@
         }
       ],
       "game_total_line": 2.5,
-      "game_total_over_odds": "-135",
-      "game_total_under_odds": "-105"
+      "game_total_over_odds": "-140",
+      "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:02.853191",
+    "timestamp": "2026-05-03T07:34:53.915210",
     "event_datetime": "2026-05-03T12:15",
     "sport": "soccer"
   },
@@ -3141,7 +3141,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.856409",
+    "timestamp": "2026-05-03T07:34:53.918750",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -3159,7 +3159,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.859871",
+    "timestamp": "2026-05-03T07:34:53.922236",
     "event_datetime": "2026-05-03T11:30",
     "sport": "soccer"
   },
@@ -3189,7 +3189,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.863216",
+    "timestamp": "2026-05-03T07:34:53.925750",
     "event_datetime": "2026-05-03T09:30",
     "sport": "soccer"
   },
@@ -3219,7 +3219,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.866797",
+    "timestamp": "2026-05-03T07:34:53.930286",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -3249,7 +3249,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.871227",
+    "timestamp": "2026-05-03T07:34:53.933834",
     "event_datetime": "2026-05-03T14:30",
     "sport": "soccer"
   },
@@ -3279,7 +3279,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.874969",
+    "timestamp": "2026-05-03T07:34:53.938018",
     "event_datetime": "2026-05-04T14:15",
     "sport": "soccer"
   },
@@ -3309,7 +3309,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.878408",
+    "timestamp": "2026-05-03T07:34:53.941791",
     "event_datetime": "2026-05-03T18:00",
     "sport": "soccer"
   },
@@ -3339,7 +3339,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.881700",
+    "timestamp": "2026-05-03T07:34:53.945193",
     "event_datetime": "2026-05-03T20:15",
     "sport": "soccer"
   },
@@ -3369,7 +3369,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.885225",
+    "timestamp": "2026-05-03T07:34:53.948870",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -3399,7 +3399,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.888742",
+    "timestamp": "2026-05-03T07:34:53.952663",
     "event_datetime": "2026-05-03T16:30",
     "sport": "soccer"
   },
@@ -3429,7 +3429,7 @@
       "game_total_over_odds": "+120",
       "game_total_under_odds": "-160"
     },
-    "timestamp": "2026-05-03T07:27:02.892131",
+    "timestamp": "2026-05-03T07:34:53.956076",
     "event_datetime": "2026-05-03T18:00",
     "sport": "soccer"
   },
@@ -3459,7 +3459,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.895813",
+    "timestamp": "2026-05-03T07:34:53.959623",
     "event_datetime": "2026-05-03T20:05",
     "sport": "soccer"
   },
@@ -3489,7 +3489,7 @@
       "game_total_over_odds": "+105",
       "game_total_under_odds": "-145"
     },
-    "timestamp": "2026-05-03T07:27:02.899390",
+    "timestamp": "2026-05-03T07:34:53.963640",
     "event_datetime": "2026-05-05T17:00",
     "sport": "soccer"
   },
@@ -3519,7 +3519,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.902864",
+    "timestamp": "2026-05-03T07:34:53.967302",
     "event_datetime": "2026-05-05T19:00",
     "sport": "soccer"
   },
@@ -3549,7 +3549,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.906438",
+    "timestamp": "2026-05-03T07:34:53.970817",
     "event_datetime": "2026-05-05T19:00",
     "sport": "soccer"
   },
@@ -3579,7 +3579,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:02.911247",
+    "timestamp": "2026-05-03T07:34:53.974371",
     "event_datetime": "2026-05-05T19:30",
     "sport": "soccer"
   },
@@ -3609,7 +3609,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:02.916148",
+    "timestamp": "2026-05-03T07:34:53.977754",
     "event_datetime": "2026-05-05T17:00",
     "sport": "soccer"
   },
@@ -3627,7 +3627,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.920212",
+    "timestamp": "2026-05-03T07:34:53.981229",
     "event_datetime": "2026-05-05T17:00",
     "sport": "soccer"
   },
@@ -3645,7 +3645,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.923709",
+    "timestamp": "2026-05-03T07:34:53.984472",
     "event_datetime": "2026-05-05T17:00",
     "sport": "soccer"
   },
@@ -3663,7 +3663,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.927153",
+    "timestamp": "2026-05-03T07:34:53.987718",
     "event_datetime": "2026-05-05T19:30",
     "sport": "soccer"
   },
@@ -3693,7 +3693,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.931052",
+    "timestamp": "2026-05-03T07:34:53.991190",
     "event_datetime": "2026-05-05T19:30",
     "sport": "soccer"
   },
@@ -3723,7 +3723,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.935690",
+    "timestamp": "2026-05-03T07:34:53.994908",
     "event_datetime": "2026-05-05T21:00",
     "sport": "soccer"
   },
@@ -3753,7 +3753,7 @@
       "game_total_over_odds": "-140",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:02.939600",
+    "timestamp": "2026-05-03T07:34:53.998505",
     "event_datetime": "2026-05-05T06:35",
     "sport": "soccer"
   },
@@ -3763,27 +3763,27 @@
     "betbck_site_away_team": "207042Hibernian",
     "betbck_site_odds": {
       "site_top_team_moneyline_american": "-155",
-      "site_bottom_team_moneyline_american": "+350",
+      "site_bottom_team_moneyline_american": "+355",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
           "line": -0.75,
-          "odds": "-125",
+          "odds": "-130",
           "raw": "-½,-1"
         }
       ],
       "site_bottom_team_spreads": [
         {
           "line": 0.75,
-          "odds": "-105",
+          "odds": "+100",
           "raw": "+½,+1"
         }
       ],
-      "game_total_line": 2.75,
-      "game_total_over_odds": "-140",
-      "game_total_under_odds": "+100"
+      "game_total_line": 3.0,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:02.944145",
+    "timestamp": "2026-05-03T07:34:54.001833",
     "event_datetime": "2027-05-03T06:00",
     "sport": "soccer"
   },
@@ -3813,12 +3813,12 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.949299",
+    "timestamp": "2026-05-03T07:34:54.005377",
     "event_datetime": "2026-05-04T11:30",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "37d5ac3f",
+    "betbck_game_id": "8650656b",
     "betbck_site_home_team": "206229Sarpsborg 08 FF",
     "betbck_site_away_team": "206230Lillestrom SK",
     "betbck_site_odds": {
@@ -3843,8 +3843,8 @@
       "game_total_over_odds": "-150",
       "game_total_under_odds": "+110"
     },
-    "timestamp": "2026-05-03T07:27:02.953515",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.009257",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
@@ -3873,7 +3873,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:02.956884",
+    "timestamp": "2026-05-03T07:34:54.012767",
     "event_datetime": "2026-05-03T10:00",
     "sport": "soccer"
   },
@@ -3903,7 +3903,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.960351",
+    "timestamp": "2026-05-03T07:34:54.016218",
     "event_datetime": "2026-05-03T10:00",
     "sport": "soccer"
   },
@@ -3933,7 +3933,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:02.963722",
+    "timestamp": "2026-05-03T07:34:54.019547",
     "event_datetime": "2026-05-03T10:00",
     "sport": "soccer"
   },
@@ -3963,7 +3963,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:02.967020",
+    "timestamp": "2026-05-03T07:34:54.022906",
     "event_datetime": "2026-05-03T12:15",
     "sport": "soccer"
   },
@@ -3993,7 +3993,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:02.970232",
+    "timestamp": "2026-05-03T07:34:54.026249",
     "event_datetime": "2026-05-04T12:00",
     "sport": "soccer"
   },
@@ -4023,7 +4023,7 @@
       "game_total_over_odds": "+105",
       "game_total_under_odds": "-145"
     },
-    "timestamp": "2026-05-03T07:27:02.973661",
+    "timestamp": "2026-05-03T07:34:54.029669",
     "event_datetime": "2027-05-03T06:00",
     "sport": "soccer"
   },
@@ -4053,7 +4053,7 @@
       "game_total_over_odds": "-140",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:02.977034",
+    "timestamp": "2026-05-03T07:34:54.033341",
     "event_datetime": "2027-05-03T07:00",
     "sport": "soccer"
   },
@@ -4062,7 +4062,7 @@
     "betbck_site_home_team": "205009Silkeborg",
     "betbck_site_away_team": "205010Odense BK",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+365",
+      "site_top_team_moneyline_american": "+370",
       "site_bottom_team_moneyline_american": "-165",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
@@ -4083,7 +4083,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:02.980332",
+    "timestamp": "2026-05-03T07:34:54.036970",
     "event_datetime": "2027-05-03T07:00",
     "sport": "soccer"
   },
@@ -4113,7 +4113,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:02.983599",
+    "timestamp": "2026-05-03T07:34:54.040652",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -4143,7 +4143,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:02.986944",
+    "timestamp": "2026-05-03T07:34:54.044213",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -4173,7 +4173,7 @@
       "game_total_over_odds": "+115",
       "game_total_under_odds": "-155"
     },
-    "timestamp": "2026-05-03T07:27:02.990369",
+    "timestamp": "2026-05-03T07:34:54.047645",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -4191,7 +4191,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:02.993957",
+    "timestamp": "2026-05-03T07:34:54.051091",
     "event_datetime": "2027-05-03T07:00",
     "sport": "soccer"
   },
@@ -4221,7 +4221,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:02.998016",
+    "timestamp": "2026-05-03T07:34:54.054570",
     "event_datetime": "2027-05-03T07:00",
     "sport": "soccer"
   },
@@ -4251,7 +4251,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.001569",
+    "timestamp": "2026-05-03T07:34:54.058046",
     "event_datetime": "2026-05-03T09:30",
     "sport": "soccer"
   },
@@ -4269,7 +4269,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.004728",
+    "timestamp": "2026-05-03T07:34:54.061598",
     "event_datetime": "2026-05-03T09:30",
     "sport": "soccer"
   },
@@ -4299,7 +4299,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:03.008414",
+    "timestamp": "2026-05-03T07:34:54.065390",
     "event_datetime": "2026-05-04T12:00",
     "sport": "soccer"
   },
@@ -4329,7 +4329,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.011825",
+    "timestamp": "2026-05-03T07:34:54.068821",
     "event_datetime": "2026-05-04T12:00",
     "sport": "soccer"
   },
@@ -4359,7 +4359,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.015113",
+    "timestamp": "2026-05-03T07:34:54.072110",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -4389,7 +4389,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.018391",
+    "timestamp": "2026-05-03T07:34:54.075543",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -4419,7 +4419,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:03.021598",
+    "timestamp": "2026-05-03T07:34:54.078975",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -4449,7 +4449,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.025117",
+    "timestamp": "2026-05-03T07:34:54.082572",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -4479,7 +4479,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.028775",
+    "timestamp": "2026-05-03T07:34:54.085985",
     "event_datetime": "2027-05-03T07:00",
     "sport": "soccer"
   },
@@ -4509,7 +4509,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.032158",
+    "timestamp": "2026-05-03T07:34:54.089350",
     "event_datetime": "2026-05-03T09:30",
     "sport": "soccer"
   },
@@ -4539,7 +4539,7 @@
       "game_total_over_odds": "-140",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:03.035456",
+    "timestamp": "2026-05-03T07:34:54.092666",
     "event_datetime": "2026-05-03T09:30",
     "sport": "soccer"
   },
@@ -4569,7 +4569,7 @@
       "game_total_over_odds": "+105",
       "game_total_under_odds": "-145"
     },
-    "timestamp": "2026-05-03T07:27:03.040021",
+    "timestamp": "2026-05-03T07:34:54.096320",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -4596,10 +4596,10 @@
         }
       ],
       "game_total_line": 2.5,
-      "game_total_over_odds": "-155",
-      "game_total_under_odds": "+115"
+      "game_total_over_odds": "-150",
+      "game_total_under_odds": "+110"
     },
-    "timestamp": "2026-05-03T07:27:03.043386",
+    "timestamp": "2026-05-03T07:34:54.099754",
     "event_datetime": "2026-05-03T11:45",
     "sport": "soccer"
   },
@@ -4629,7 +4629,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.046723",
+    "timestamp": "2026-05-03T07:34:54.103363",
     "event_datetime": "2026-05-04T11:00",
     "sport": "soccer"
   },
@@ -4659,7 +4659,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.050318",
+    "timestamp": "2026-05-03T07:34:54.106919",
     "event_datetime": "2026-05-04T11:00",
     "sport": "soccer"
   },
@@ -4689,7 +4689,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.053660",
+    "timestamp": "2026-05-03T07:34:54.110509",
     "event_datetime": "2026-05-04T11:00",
     "sport": "soccer"
   },
@@ -4719,7 +4719,7 @@
       "game_total_over_odds": "+110",
       "game_total_under_odds": "-150"
     },
-    "timestamp": "2026-05-03T07:27:03.056973",
+    "timestamp": "2026-05-03T07:34:54.113897",
     "event_datetime": "2026-05-04T11:00",
     "sport": "soccer"
   },
@@ -4749,7 +4749,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.060544",
+    "timestamp": "2026-05-03T07:34:54.117288",
     "event_datetime": "2026-05-04T11:00",
     "sport": "soccer"
   },
@@ -4779,7 +4779,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.064257",
+    "timestamp": "2026-05-03T07:34:54.120738",
     "event_datetime": "2026-05-04T11:00",
     "sport": "soccer"
   },
@@ -4809,7 +4809,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.067730",
+    "timestamp": "2026-05-03T07:34:54.124135",
     "event_datetime": "2027-05-03T05:15",
     "sport": "soccer"
   },
@@ -4839,7 +4839,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.071205",
+    "timestamp": "2026-05-03T07:34:54.127700",
     "event_datetime": "2026-05-03T07:45",
     "sport": "soccer"
   },
@@ -4869,7 +4869,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:03.074618",
+    "timestamp": "2026-05-03T07:34:54.131180",
     "event_datetime": "2026-05-03T10:30",
     "sport": "soccer"
   },
@@ -4899,7 +4899,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.078019",
+    "timestamp": "2026-05-03T07:34:54.134647",
     "event_datetime": "2026-05-04T12:00",
     "sport": "soccer"
   },
@@ -4929,7 +4929,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.081402",
+    "timestamp": "2026-05-03T07:34:54.138127",
     "event_datetime": "2027-05-03T06:00",
     "sport": "soccer"
   },
@@ -4959,7 +4959,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.084846",
+    "timestamp": "2026-05-03T07:34:54.141779",
     "event_datetime": "2026-05-03T08:30",
     "sport": "soccer"
   },
@@ -4989,7 +4989,7 @@
       "game_total_over_odds": "-150",
       "game_total_under_odds": "+110"
     },
-    "timestamp": "2026-05-03T07:27:03.088270",
+    "timestamp": "2026-05-03T07:34:54.145215",
     "event_datetime": "2026-05-03T11:30",
     "sport": "soccer"
   },
@@ -5019,7 +5019,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.091687",
+    "timestamp": "2026-05-03T07:34:54.148848",
     "event_datetime": "2027-05-03T06:00",
     "sport": "soccer"
   },
@@ -5049,7 +5049,7 @@
       "game_total_over_odds": "-150",
       "game_total_under_odds": "+110"
     },
-    "timestamp": "2026-05-03T07:27:03.095087",
+    "timestamp": "2026-05-03T07:34:54.152248",
     "event_datetime": "2026-05-03T08:00",
     "sport": "soccer"
   },
@@ -5079,7 +5079,7 @@
       "game_total_over_odds": "-140",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:03.098579",
+    "timestamp": "2026-05-03T07:34:54.155642",
     "event_datetime": "2026-05-04T12:05",
     "sport": "soccer"
   },
@@ -5097,12 +5097,12 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.102021",
+    "timestamp": "2026-05-03T07:34:54.159149",
     "event_datetime": "2027-05-03T05:00",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "18d3f747",
+    "betbck_game_id": "80e27e6a",
     "betbck_site_home_team": "223021Polissya",
     "betbck_site_away_team": "223022Metalist 1925 Kharkiv",
     "betbck_site_odds": {
@@ -5115,8 +5115,8 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.105403",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.162934",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
@@ -5145,7 +5145,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.108894",
+    "timestamp": "2026-05-03T07:34:54.166733",
     "event_datetime": "2026-05-03T10:00",
     "sport": "soccer"
   },
@@ -5175,12 +5175,12 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.112638",
+    "timestamp": "2026-05-03T07:34:54.170285",
     "event_datetime": "2026-05-04T10:00",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "f2698ebe",
+    "betbck_game_id": "9581f24c",
     "betbck_site_home_team": "204409Hartberg",
     "betbck_site_away_team": "204410Austria Wien",
     "betbck_site_odds": {
@@ -5205,8 +5205,8 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.116119",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.173762",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
@@ -5235,7 +5235,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.119419",
+    "timestamp": "2026-05-03T07:34:54.177267",
     "event_datetime": "2026-05-03T10:00",
     "sport": "soccer"
   },
@@ -5265,7 +5265,7 @@
       "game_total_over_odds": "+105",
       "game_total_under_odds": "-145"
     },
-    "timestamp": "2026-05-03T07:27:03.122789",
+    "timestamp": "2026-05-03T07:34:54.180820",
     "event_datetime": "2026-05-04T11:30",
     "sport": "soccer"
   },
@@ -5295,7 +5295,7 @@
       "game_total_over_odds": "-140",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:03.126312",
+    "timestamp": "2026-05-03T07:34:54.184331",
     "event_datetime": "2026-05-04T13:30",
     "sport": "soccer"
   },
@@ -5325,7 +5325,7 @@
       "game_total_over_odds": "+110",
       "game_total_under_odds": "-150"
     },
-    "timestamp": "2026-05-03T07:27:03.130162",
+    "timestamp": "2026-05-03T07:34:54.187690",
     "event_datetime": "2026-05-04T11:00",
     "sport": "soccer"
   },
@@ -5355,7 +5355,7 @@
       "game_total_over_odds": "+130",
       "game_total_under_odds": "-170"
     },
-    "timestamp": "2026-05-03T07:27:03.133593",
+    "timestamp": "2026-05-03T07:34:54.191067",
     "event_datetime": "2026-05-03T10:15",
     "sport": "soccer"
   },
@@ -5385,7 +5385,7 @@
       "game_total_over_odds": "+125",
       "game_total_under_odds": "-165"
     },
-    "timestamp": "2026-05-03T07:27:03.136953",
+    "timestamp": "2026-05-03T07:34:54.194972",
     "event_datetime": "2026-05-04T09:30",
     "sport": "soccer"
   },
@@ -5415,7 +5415,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.140472",
+    "timestamp": "2026-05-03T07:34:54.198397",
     "event_datetime": "2026-05-04T12:30",
     "sport": "soccer"
   },
@@ -5445,7 +5445,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.143887",
+    "timestamp": "2026-05-03T07:34:54.201574",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -5475,7 +5475,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.147224",
+    "timestamp": "2026-05-03T07:34:54.205044",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -5505,7 +5505,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.150558",
+    "timestamp": "2026-05-03T07:34:54.208493",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -5535,7 +5535,7 @@
       "game_total_over_odds": "+120",
       "game_total_under_odds": "-160"
     },
-    "timestamp": "2026-05-03T07:27:03.153918",
+    "timestamp": "2026-05-03T07:34:54.212024",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -5565,7 +5565,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.157142",
+    "timestamp": "2026-05-03T07:34:54.215448",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -5583,7 +5583,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.160767",
+    "timestamp": "2026-05-03T07:34:54.218862",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -5613,7 +5613,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.164725",
+    "timestamp": "2026-05-03T07:34:54.222280",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -5631,7 +5631,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.168186",
+    "timestamp": "2026-05-03T07:34:54.225782",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -5661,7 +5661,7 @@
       "game_total_over_odds": "-140",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:03.171557",
+    "timestamp": "2026-05-03T07:34:54.230127",
     "event_datetime": "2026-05-04T09:00",
     "sport": "soccer"
   },
@@ -5691,7 +5691,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.175137",
+    "timestamp": "2026-05-03T07:34:54.233953",
     "event_datetime": "2026-05-04T12:00",
     "sport": "soccer"
   },
@@ -5709,7 +5709,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.178437",
+    "timestamp": "2026-05-03T07:34:54.238320",
     "event_datetime": "2026-05-04T12:00",
     "sport": "soccer"
   },
@@ -5739,7 +5739,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.181687",
+    "timestamp": "2026-05-03T07:34:54.242137",
     "event_datetime": "2026-05-05T12:00",
     "sport": "soccer"
   },
@@ -5769,7 +5769,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.185062",
+    "timestamp": "2026-05-03T07:34:54.246956",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -5799,7 +5799,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.188425",
+    "timestamp": "2026-05-03T07:34:54.250454",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -5829,7 +5829,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.192592",
+    "timestamp": "2026-05-03T07:34:54.254160",
     "event_datetime": "2027-05-03T03:00",
     "sport": "soccer"
   },
@@ -5859,7 +5859,7 @@
       "game_total_over_odds": "+120",
       "game_total_under_odds": "-160"
     },
-    "timestamp": "2026-05-03T07:27:03.196378",
+    "timestamp": "2026-05-03T07:34:54.257632",
     "event_datetime": "2026-05-03T10:00",
     "sport": "soccer"
   },
@@ -5889,7 +5889,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.199822",
+    "timestamp": "2026-05-03T07:34:54.261201",
     "event_datetime": "2026-05-03T10:00",
     "sport": "soccer"
   },
@@ -5919,7 +5919,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.203399",
+    "timestamp": "2026-05-03T07:34:54.264717",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -5949,7 +5949,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.206804",
+    "timestamp": "2026-05-03T07:34:54.268240",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -5979,7 +5979,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.210237",
+    "timestamp": "2026-05-03T07:34:54.271705",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -6009,7 +6009,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.213616",
+    "timestamp": "2026-05-03T07:34:54.275462",
     "event_datetime": "2026-05-04T11:10",
     "sport": "soccer"
   },
@@ -6039,7 +6039,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.216915",
+    "timestamp": "2026-05-03T07:34:54.278870",
     "event_datetime": "2026-05-04T13:00",
     "sport": "soccer"
   },
@@ -6069,7 +6069,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.220196",
+    "timestamp": "2026-05-03T07:34:54.282218",
     "event_datetime": "2026-05-04T13:00",
     "sport": "soccer"
   },
@@ -6099,7 +6099,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.223453",
+    "timestamp": "2026-05-03T07:34:54.285476",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -6129,7 +6129,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:03.226838",
+    "timestamp": "2026-05-03T07:34:54.289245",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -6147,7 +6147,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.230861",
+    "timestamp": "2026-05-03T07:34:54.292837",
     "event_datetime": "2026-05-03T16:30",
     "sport": "soccer"
   },
@@ -6177,7 +6177,7 @@
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:03.234258",
+    "timestamp": "2026-05-03T07:34:54.296660",
     "event_datetime": "2026-05-03T16:30",
     "sport": "soccer"
   },
@@ -6207,7 +6207,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.239163",
+    "timestamp": "2026-05-03T07:34:54.300348",
     "event_datetime": "2026-05-03T18:30",
     "sport": "soccer"
   },
@@ -6237,7 +6237,7 @@
       "game_total_over_odds": "-160",
       "game_total_under_odds": "+120"
     },
-    "timestamp": "2026-05-03T07:27:03.242761",
+    "timestamp": "2026-05-03T07:34:54.303866",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -6267,7 +6267,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.246274",
+    "timestamp": "2026-05-03T07:34:54.308197",
     "event_datetime": "2026-05-03T11:30",
     "sport": "soccer"
   },
@@ -6297,7 +6297,7 @@
       "game_total_over_odds": "-185",
       "game_total_under_odds": "+145"
     },
-    "timestamp": "2026-05-03T07:27:03.249698",
+    "timestamp": "2026-05-03T07:34:54.312345",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -6327,7 +6327,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.253360",
+    "timestamp": "2026-05-03T07:34:54.315948",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -6357,7 +6357,7 @@
       "game_total_over_odds": "-160",
       "game_total_under_odds": "+120"
     },
-    "timestamp": "2026-05-03T07:27:03.256761",
+    "timestamp": "2026-05-03T07:34:54.319583",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -6387,7 +6387,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.260136",
+    "timestamp": "2026-05-03T07:34:54.323051",
     "event_datetime": "2026-05-03T13:30",
     "sport": "soccer"
   },
@@ -6417,7 +6417,7 @@
       "game_total_over_odds": "+150",
       "game_total_under_odds": "-190"
     },
-    "timestamp": "2026-05-03T07:27:03.263487",
+    "timestamp": "2026-05-03T07:34:54.327074",
     "event_datetime": "2026-05-03T13:30",
     "sport": "soccer"
   },
@@ -6447,7 +6447,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.267149",
+    "timestamp": "2026-05-03T07:34:54.330622",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -6477,7 +6477,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.270458",
+    "timestamp": "2026-05-03T07:34:54.333998",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -6507,7 +6507,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.273909",
+    "timestamp": "2026-05-03T07:34:54.337376",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -6537,7 +6537,7 @@
       "game_total_over_odds": "+115",
       "game_total_under_odds": "-155"
     },
-    "timestamp": "2026-05-03T07:27:03.277290",
+    "timestamp": "2026-05-03T07:34:54.341074",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -6567,7 +6567,7 @@
       "game_total_over_odds": "-165",
       "game_total_under_odds": "+125"
     },
-    "timestamp": "2026-05-03T07:27:03.281121",
+    "timestamp": "2026-05-03T07:34:54.344706",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -6597,7 +6597,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.285006",
+    "timestamp": "2026-05-03T07:34:54.348745",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -6627,7 +6627,7 @@
       "game_total_over_odds": "-185",
       "game_total_under_odds": "+145"
     },
-    "timestamp": "2026-05-03T07:27:03.288508",
+    "timestamp": "2026-05-03T07:34:54.352330",
     "event_datetime": "2026-05-03T14:30",
     "sport": "soccer"
   },
@@ -6657,7 +6657,7 @@
       "game_total_over_odds": "-155",
       "game_total_under_odds": "+115"
     },
-    "timestamp": "2026-05-03T07:27:03.291982",
+    "timestamp": "2026-05-03T07:34:54.356156",
     "event_datetime": "2026-05-03T14:30",
     "sport": "soccer"
   },
@@ -6675,7 +6675,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.295991",
+    "timestamp": "2026-05-03T07:34:54.360616",
     "event_datetime": "2026-05-03T15:00",
     "sport": "soccer"
   },
@@ -6705,7 +6705,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.300062",
+    "timestamp": "2026-05-03T07:34:54.364376",
     "event_datetime": "2026-05-03T16:30",
     "sport": "soccer"
   },
@@ -6735,7 +6735,7 @@
       "game_total_over_odds": "-160",
       "game_total_under_odds": "+120"
     },
-    "timestamp": "2026-05-03T07:27:03.304064",
+    "timestamp": "2026-05-03T07:34:54.368088",
     "event_datetime": "2026-05-04T15:00",
     "sport": "soccer"
   },
@@ -6765,7 +6765,7 @@
       "game_total_over_odds": "-155",
       "game_total_under_odds": "+115"
     },
-    "timestamp": "2026-05-03T07:27:03.308043",
+    "timestamp": "2026-05-03T07:34:54.371607",
     "event_datetime": "2026-05-04T17:15",
     "sport": "soccer"
   },
@@ -6795,12 +6795,12 @@
       "game_total_over_odds": "-155",
       "game_total_under_odds": "+115"
     },
-    "timestamp": "2026-05-03T07:27:03.312576",
+    "timestamp": "2026-05-03T07:34:54.375754",
     "event_datetime": "2026-05-04T19:30",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "7d629264",
+    "betbck_game_id": "98d02aa2",
     "betbck_site_home_team": "220009Cerro Porteno",
     "betbck_site_away_team": "220010Deportivo Recoleta",
     "betbck_site_odds": {
@@ -6813,12 +6813,12 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.316027",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.379302",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "89de8288",
+    "betbck_game_id": "3b65aaaf",
     "betbck_site_home_team": "220017Sportivo Ameliano",
     "betbck_site_away_team": "220018Olimpia Asuncion",
     "betbck_site_odds": {
@@ -6843,8 +6843,8 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.319644",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.382852",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
@@ -6861,7 +6861,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.323002",
+    "timestamp": "2026-05-03T07:34:54.386506",
     "event_datetime": "2026-05-03T18:00",
     "sport": "soccer"
   },
@@ -6891,7 +6891,7 @@
       "game_total_over_odds": "+115",
       "game_total_under_odds": "-155"
     },
-    "timestamp": "2026-05-03T07:27:03.326441",
+    "timestamp": "2026-05-03T07:34:54.389914",
     "event_datetime": "2026-05-03T16:30",
     "sport": "soccer"
   },
@@ -6921,7 +6921,7 @@
       "game_total_over_odds": "-155",
       "game_total_under_odds": "+115"
     },
-    "timestamp": "2026-05-03T07:27:03.330229",
+    "timestamp": "2026-05-03T07:34:54.393243",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -6951,7 +6951,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.333628",
+    "timestamp": "2026-05-03T07:34:54.396845",
     "event_datetime": "2026-05-03T15:30",
     "sport": "soccer"
   },
@@ -6981,7 +6981,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.337010",
+    "timestamp": "2026-05-03T07:34:54.400365",
     "event_datetime": "2026-05-03T17:00",
     "sport": "soccer"
   },
@@ -7011,7 +7011,7 @@
       "game_total_over_odds": "-125",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:03.340465",
+    "timestamp": "2026-05-03T07:34:54.403737",
     "event_datetime": "2026-05-03T17:00",
     "sport": "soccer"
   },
@@ -7041,7 +7041,7 @@
       "game_total_over_odds": "+105",
       "game_total_under_odds": "-145"
     },
-    "timestamp": "2026-05-03T07:27:03.343803",
+    "timestamp": "2026-05-03T07:34:54.407258",
     "event_datetime": "2026-05-03T17:30",
     "sport": "soccer"
   },
@@ -7071,7 +7071,7 @@
       "game_total_over_odds": "+110",
       "game_total_under_odds": "-150"
     },
-    "timestamp": "2026-05-03T07:27:03.347171",
+    "timestamp": "2026-05-03T07:34:54.410578",
     "event_datetime": "2026-05-03T20:00",
     "sport": "soccer"
   },
@@ -7101,7 +7101,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.351046",
+    "timestamp": "2026-05-03T07:34:54.413926",
     "event_datetime": "2027-05-03T05:30",
     "sport": "soccer"
   },
@@ -7131,7 +7131,7 @@
       "game_total_over_odds": "+115",
       "game_total_under_odds": "-155"
     },
-    "timestamp": "2026-05-03T07:27:03.354299",
+    "timestamp": "2026-05-03T07:34:54.417122",
     "event_datetime": "2026-05-03T08:00",
     "sport": "soccer"
   },
@@ -7161,7 +7161,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.357752",
+    "timestamp": "2026-05-03T07:34:54.420923",
     "event_datetime": "2026-05-03T08:15",
     "sport": "soccer"
   },
@@ -7191,7 +7191,7 @@
       "game_total_over_odds": "+105",
       "game_total_under_odds": "-145"
     },
-    "timestamp": "2026-05-03T07:27:03.361089",
+    "timestamp": "2026-05-03T07:34:54.424655",
     "event_datetime": "2026-05-03T10:30",
     "sport": "soccer"
   },
@@ -7221,7 +7221,7 @@
       "game_total_over_odds": "+115",
       "game_total_under_odds": "-155"
     },
-    "timestamp": "2026-05-03T07:27:03.365341",
+    "timestamp": "2026-05-03T07:34:54.428412",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -7251,7 +7251,7 @@
       "game_total_over_odds": "+115",
       "game_total_under_odds": "-155"
     },
-    "timestamp": "2026-05-03T07:27:03.368899",
+    "timestamp": "2026-05-03T07:34:54.431757",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -7281,7 +7281,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.372306",
+    "timestamp": "2026-05-03T07:34:54.435093",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -7311,7 +7311,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.375889",
+    "timestamp": "2026-05-03T07:34:54.438848",
     "event_datetime": "2026-05-03T11:30",
     "sport": "soccer"
   },
@@ -7341,7 +7341,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.379368",
+    "timestamp": "2026-05-03T07:34:54.442336",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -7359,7 +7359,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.382983",
+    "timestamp": "2026-05-03T07:34:54.445736",
     "event_datetime": "2026-05-03T12:00",
     "sport": "soccer"
   },
@@ -7389,7 +7389,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.386731",
+    "timestamp": "2026-05-03T07:34:54.449654",
     "event_datetime": "2026-05-03T12:30",
     "sport": "soccer"
   },
@@ -7419,7 +7419,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.390236",
+    "timestamp": "2026-05-03T07:34:54.453130",
     "event_datetime": "2026-05-03T12:30",
     "sport": "soccer"
   },
@@ -7434,14 +7434,14 @@
       "site_top_team_spreads": [
         {
           "line": 1.25,
-          "odds": "-130",
+          "odds": "-135",
           "raw": "+1,+1½"
         }
       ],
       "site_bottom_team_spreads": [
         {
           "line": -1.25,
-          "odds": "+100",
+          "odds": "+105",
           "raw": "-1,-1½"
         }
       ],
@@ -7449,7 +7449,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.393764",
+    "timestamp": "2026-05-03T07:34:54.456651",
     "event_datetime": "2026-05-03T12:30",
     "sport": "soccer"
   },
@@ -7467,7 +7467,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.397408",
+    "timestamp": "2026-05-03T07:34:54.460292",
     "event_datetime": "2026-05-03T12:30",
     "sport": "soccer"
   },
@@ -7497,7 +7497,7 @@
       "game_total_over_odds": "+110",
       "game_total_under_odds": "-150"
     },
-    "timestamp": "2026-05-03T07:27:03.400782",
+    "timestamp": "2026-05-03T07:34:54.463732",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -7527,7 +7527,7 @@
       "game_total_over_odds": "+120",
       "game_total_under_odds": "-160"
     },
-    "timestamp": "2026-05-03T07:27:03.404186",
+    "timestamp": "2026-05-03T07:34:54.467251",
     "event_datetime": "2026-05-03T13:00",
     "sport": "soccer"
   },
@@ -7557,7 +7557,7 @@
       "game_total_over_odds": "+125",
       "game_total_under_odds": "-165"
     },
-    "timestamp": "2026-05-03T07:27:03.407579",
+    "timestamp": "2026-05-03T07:34:54.470650",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -7587,7 +7587,7 @@
       "game_total_over_odds": "-155",
       "game_total_under_odds": "+115"
     },
-    "timestamp": "2026-05-03T07:27:03.411258",
+    "timestamp": "2026-05-03T07:34:54.474335",
     "event_datetime": "2026-05-03T15:30",
     "sport": "soccer"
   },
@@ -7617,7 +7617,7 @@
       "game_total_over_odds": "-155",
       "game_total_under_odds": "+115"
     },
-    "timestamp": "2026-05-03T07:27:03.414807",
+    "timestamp": "2026-05-03T07:34:54.477965",
     "event_datetime": "2026-05-03T15:30",
     "sport": "soccer"
   },
@@ -7647,7 +7647,7 @@
       "game_total_over_odds": "-140",
       "game_total_under_odds": "+100"
     },
-    "timestamp": "2026-05-03T07:27:03.418482",
+    "timestamp": "2026-05-03T07:34:54.481553",
     "event_datetime": "2026-05-03T15:30",
     "sport": "soccer"
   },
@@ -7677,7 +7677,7 @@
       "game_total_over_odds": "-130",
       "game_total_under_odds": "-110"
     },
-    "timestamp": "2026-05-03T07:27:03.422220",
+    "timestamp": "2026-05-03T07:34:54.485545",
     "event_datetime": "2026-05-03T15:30",
     "sport": "soccer"
   },
@@ -7707,7 +7707,7 @@
       "game_total_over_odds": "+105",
       "game_total_under_odds": "-145"
     },
-    "timestamp": "2026-05-03T07:27:03.425697",
+    "timestamp": "2026-05-03T07:34:54.489211",
     "event_datetime": "2026-05-03T15:30",
     "sport": "soccer"
   },
@@ -7725,7 +7725,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.429368",
+    "timestamp": "2026-05-03T07:34:54.492764",
     "event_datetime": "2026-05-03T17:45",
     "sport": "soccer"
   },
@@ -7743,7 +7743,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.432758",
+    "timestamp": "2026-05-03T07:34:54.496314",
     "event_datetime": "2026-05-03T17:45",
     "sport": "soccer"
   },
@@ -7773,7 +7773,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.436073",
+    "timestamp": "2026-05-03T07:34:54.499735",
     "event_datetime": "2026-05-03T18:00",
     "sport": "soccer"
   },
@@ -7803,7 +7803,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.439528",
+    "timestamp": "2026-05-03T07:34:54.502999",
     "event_datetime": "2026-05-05T09:30",
     "sport": "soccer"
   },
@@ -7821,7 +7821,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.443232",
+    "timestamp": "2026-05-03T07:34:54.506567",
     "event_datetime": "2026-05-05T12:00",
     "sport": "soccer"
   },
@@ -7839,7 +7839,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.447024",
+    "timestamp": "2026-05-03T07:34:54.510090",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -7869,7 +7869,7 @@
       "game_total_over_odds": "-145",
       "game_total_under_odds": "+105"
     },
-    "timestamp": "2026-05-03T07:27:03.450661",
+    "timestamp": "2026-05-03T07:34:54.513766",
     "event_datetime": "2026-05-03T14:00",
     "sport": "soccer"
   },
@@ -7899,7 +7899,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.454336",
+    "timestamp": "2026-05-03T07:34:54.517239",
     "event_datetime": "2026-05-03T16:00",
     "sport": "soccer"
   },
@@ -7917,7 +7917,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.457746",
+    "timestamp": "2026-05-03T07:34:54.520586",
     "event_datetime": "2026-05-03T16:30",
     "sport": "soccer"
   },
@@ -7947,7 +7947,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.461567",
+    "timestamp": "2026-05-03T07:34:54.524380",
     "event_datetime": "2026-05-03T18:30",
     "sport": "soccer"
   },
@@ -7965,7 +7965,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.465549",
+    "timestamp": "2026-05-03T07:34:54.528408",
     "event_datetime": "2026-05-03T18:30",
     "sport": "soccer"
   },
@@ -7995,7 +7995,7 @@
       "game_total_over_odds": "-135",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.469141",
+    "timestamp": "2026-05-03T07:34:54.531991",
     "event_datetime": "2026-05-03T11:00",
     "sport": "soccer"
   },
@@ -8025,7 +8025,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.472995",
+    "timestamp": "2026-05-03T07:34:54.535646",
     "event_datetime": "2026-05-03T13:15",
     "sport": "soccer"
   },
@@ -8055,7 +8055,7 @@
       "game_total_over_odds": "-160",
       "game_total_under_odds": "+120"
     },
-    "timestamp": "2026-05-03T07:27:03.476797",
+    "timestamp": "2026-05-03T07:34:54.539222",
     "event_datetime": "2026-05-03T15:30",
     "sport": "soccer"
   },
@@ -8073,7 +8073,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.480367",
+    "timestamp": "2026-05-03T07:34:54.543001",
     "event_datetime": "2026-05-03T18:00",
     "sport": "soccer"
   },
@@ -8103,7 +8103,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.484351",
+    "timestamp": "2026-05-03T07:34:54.546477",
     "event_datetime": "2026-05-04T13:00",
     "sport": "soccer"
   },
@@ -8121,7 +8121,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.489715",
+    "timestamp": "2026-05-03T07:34:54.550177",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -8139,7 +8139,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.495388",
+    "timestamp": "2026-05-03T07:34:54.553819",
     "event_datetime": "2027-05-03T06:30",
     "sport": "soccer"
   },
@@ -8157,7 +8157,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.499016",
+    "timestamp": "2026-05-03T07:34:54.557311",
     "event_datetime": "2027-05-03T06:42",
     "sport": "soccer"
   },
@@ -8175,7 +8175,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.502374",
+    "timestamp": "2026-05-03T07:34:54.560863",
     "event_datetime": "2027-05-03T06:42",
     "sport": "soccer"
   },
@@ -8193,7 +8193,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.505632",
+    "timestamp": "2026-05-03T07:34:54.564329",
     "event_datetime": "2027-05-03T06:42",
     "sport": "soccer"
   },
@@ -8211,7 +8211,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.509332",
+    "timestamp": "2026-05-03T07:34:54.567962",
     "event_datetime": "2027-05-03T06:54",
     "sport": "soccer"
   },
@@ -8229,7 +8229,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.512716",
+    "timestamp": "2026-05-03T07:34:54.571355",
     "event_datetime": "2027-05-03T06:54",
     "sport": "soccer"
   },
@@ -8247,7 +8247,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.516048",
+    "timestamp": "2026-05-03T07:34:54.574650",
     "event_datetime": "2027-05-03T06:54",
     "sport": "soccer"
   },
@@ -8265,7 +8265,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.519357",
+    "timestamp": "2026-05-03T07:34:54.578156",
     "event_datetime": "2027-05-03T06:54",
     "sport": "soccer"
   },
@@ -8283,7 +8283,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.522568",
+    "timestamp": "2026-05-03T07:34:54.581595",
     "event_datetime": "2027-05-03T06:54",
     "sport": "soccer"
   },
@@ -8301,7 +8301,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.526321",
+    "timestamp": "2026-05-03T07:34:54.584949",
     "event_datetime": "2027-05-03T07:06",
     "sport": "soccer"
   },
@@ -8319,7 +8319,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.529589",
+    "timestamp": "2026-05-03T07:34:54.588413",
     "event_datetime": "2027-05-03T07:06",
     "sport": "soccer"
   },
@@ -8337,7 +8337,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.532843",
+    "timestamp": "2026-05-03T07:34:54.592038",
     "event_datetime": "2027-05-03T07:06",
     "sport": "soccer"
   },
@@ -8355,12 +8355,12 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.536227",
+    "timestamp": "2026-05-03T07:34:54.596033",
     "event_datetime": "2027-05-03T07:18",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "a54e6935",
+    "betbck_game_id": "c2851465",
     "betbck_site_home_team": "7429B Harman",
     "betbck_site_away_team": "7430A Putnam",
     "betbck_site_odds": {
@@ -8373,12 +8373,12 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.539493",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.599706",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "de505559",
+    "betbck_game_id": "37c9dfba",
     "betbck_site_home_team": "7431V Hovland",
     "betbck_site_away_team": "7432C Morikawa",
     "betbck_site_odds": {
@@ -8391,12 +8391,12 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.542684",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.603120",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "7ac20a21",
+    "betbck_game_id": "a9d12e48",
     "betbck_site_home_team": "7433K Kitayama",
     "betbck_site_away_team": "7434R Henley",
     "betbck_site_odds": {
@@ -8409,8 +8409,8 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.545887",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.606640",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
@@ -8427,7 +8427,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.549032",
+    "timestamp": "2026-05-03T07:34:54.609994",
     "event_datetime": "2026-05-03T07:42",
     "sport": "soccer"
   },
@@ -8445,7 +8445,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.552241",
+    "timestamp": "2026-05-03T07:34:54.613763",
     "event_datetime": "2026-05-03T07:54",
     "sport": "soccer"
   },
@@ -8463,7 +8463,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.555419",
+    "timestamp": "2026-05-03T07:34:54.617146",
     "event_datetime": "2026-05-03T08:06",
     "sport": "soccer"
   },
@@ -8481,7 +8481,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.558762",
+    "timestamp": "2026-05-03T07:34:54.620337",
     "event_datetime": "2026-05-03T08:06",
     "sport": "soccer"
   },
@@ -8499,7 +8499,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.562049",
+    "timestamp": "2026-05-03T07:34:54.624170",
     "event_datetime": "2026-05-03T08:06",
     "sport": "soccer"
   },
@@ -8517,7 +8517,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.565381",
+    "timestamp": "2026-05-03T07:34:54.627474",
     "event_datetime": "2026-05-03T08:18",
     "sport": "soccer"
   },
@@ -8535,7 +8535,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.568555",
+    "timestamp": "2026-05-03T07:34:54.631155",
     "event_datetime": "2026-05-03T08:30",
     "sport": "soccer"
   },
@@ -8553,7 +8553,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.571773",
+    "timestamp": "2026-05-03T07:34:54.634384",
     "event_datetime": "2026-05-03T08:42",
     "sport": "soccer"
   },
@@ -8571,7 +8571,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.575656",
+    "timestamp": "2026-05-03T07:34:54.638884",
     "event_datetime": "2027-05-03T06:42",
     "sport": "soccer"
   },
@@ -8589,7 +8589,7 @@
       "game_total_over_odds": "+110",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.579475",
+    "timestamp": "2026-05-03T07:34:54.643087",
     "event_datetime": "2027-05-03T06:42",
     "sport": "soccer"
   },
@@ -8607,7 +8607,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.583153",
+    "timestamp": "2026-05-03T07:34:54.646675",
     "event_datetime": "2027-05-03T06:54",
     "sport": "soccer"
   },
@@ -8625,7 +8625,7 @@
       "game_total_over_odds": "+100",
       "game_total_under_odds": "-130"
     },
-    "timestamp": "2026-05-03T07:27:03.586518",
+    "timestamp": "2026-05-03T07:34:54.650414",
     "event_datetime": "2027-05-03T07:06",
     "sport": "soccer"
   },
@@ -8643,7 +8643,7 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.589893",
+    "timestamp": "2026-05-03T07:34:54.653886",
     "event_datetime": "2027-05-03T07:06",
     "sport": "soccer"
   },
@@ -8661,12 +8661,12 @@
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-125"
     },
-    "timestamp": "2026-05-03T07:27:03.593261",
+    "timestamp": "2026-05-03T07:34:54.657286",
     "event_datetime": "2027-05-03T07:06",
     "sport": "soccer"
   },
   {
-    "betbck_game_id": "590edf45",
+    "betbck_game_id": "9caffc92",
     "betbck_site_home_team": "74013Collin Morikawa",
     "betbck_site_away_team": "740144th Round Score",
     "betbck_site_odds": {
@@ -8679,8 +8679,8 @@
       "game_total_over_odds": "+110",
       "game_total_under_odds": "-140"
     },
-    "timestamp": "2026-05-03T07:27:03.596688",
-    "event_datetime": "2026-05-03T07:30",
+    "timestamp": "2026-05-03T07:34:54.660835",
+    "event_datetime": "2027-05-03T07:30",
     "sport": "soccer"
   },
   {
@@ -8697,7 +8697,7 @@
       "game_total_over_odds": "+105",
       "game_total_under_odds": "-135"
     },
-    "timestamp": "2026-05-03T07:27:03.600455",
+    "timestamp": "2026-05-03T07:34:54.664512",
     "event_datetime": "2026-05-03T07:42",
     "sport": "soccer"
   },
@@ -8715,7 +8715,7 @@
       "game_total_over_odds": "-110",
       "game_total_under_odds": "-120"
     },
-    "timestamp": "2026-05-03T07:27:03.604388",
+    "timestamp": "2026-05-03T07:34:54.668459",
     "event_datetime": "2026-05-03T08:06",
     "sport": "soccer"
   },
@@ -8733,7 +8733,7 @@
       "game_total_over_odds": "+125",
       "game_total_under_odds": "-155"
     },
-    "timestamp": "2026-05-03T07:27:03.607734",
+    "timestamp": "2026-05-03T07:34:54.672189",
     "event_datetime": "2026-05-03T08:42",
     "sport": "soccer"
   },
@@ -8751,7 +8751,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:03.611179",
+    "timestamp": "2026-05-03T07:34:54.675696",
     "event_datetime": "2026-05-03T08:42",
     "sport": "soccer"
   },
@@ -8769,7 +8769,7 @@
       "game_total_over_odds": "+115",
       "game_total_under_odds": "-145"
     },
-    "timestamp": "2026-05-03T07:27:03.614796",
+    "timestamp": "2026-05-03T07:34:54.679721",
     "event_datetime": "2026-05-03T08:42",
     "sport": "soccer"
   },
@@ -8799,7 +8799,7 @@
       "game_total_over_odds": "+185",
       "game_total_under_odds": "-225"
     },
-    "timestamp": "2026-05-03T07:27:03.617991",
+    "timestamp": "2026-05-03T07:34:54.683177",
     "event_datetime": "2026-05-03T10:05",
     "sport": "soccer"
   },
@@ -8829,7 +8829,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-115"
     },
-    "timestamp": "2026-05-03T07:27:03.621449",
+    "timestamp": "2026-05-03T07:34:54.686845",
     "event_datetime": "2026-05-03T10:05",
     "sport": "soccer"
   },
@@ -8847,7 +8847,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.624723",
+    "timestamp": "2026-05-03T07:34:54.690221",
     "event_datetime": "2026-05-09T16:00",
     "sport": "soccer"
   },
@@ -8865,7 +8865,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.628163",
+    "timestamp": "2026-05-03T07:34:54.693889",
     "event_datetime": "2026-05-09T16:00",
     "sport": "soccer"
   },
@@ -8883,7 +8883,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.631507",
+    "timestamp": "2026-05-03T07:34:54.697322",
     "event_datetime": "2026-05-09T16:00",
     "sport": "soccer"
   },
@@ -8901,7 +8901,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.634873",
+    "timestamp": "2026-05-03T07:34:54.700822",
     "event_datetime": "2026-05-09T16:00",
     "sport": "soccer"
   },
@@ -8919,7 +8919,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.638709",
+    "timestamp": "2026-05-03T07:34:54.704145",
     "event_datetime": "2026-06-14T19:20",
     "sport": "soccer"
   },
@@ -8937,7 +8937,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.642025",
+    "timestamp": "2026-05-03T07:34:54.707518",
     "event_datetime": "2026-06-14T19:50",
     "sport": "soccer"
   },
@@ -8955,7 +8955,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.645446",
+    "timestamp": "2026-05-03T07:34:54.711752",
     "event_datetime": "2026-06-14T21:50",
     "sport": "soccer"
   },
@@ -8973,7 +8973,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.648699",
+    "timestamp": "2026-05-03T07:34:54.715181",
     "event_datetime": "2026-05-09T20:00",
     "sport": "soccer"
   },
@@ -8991,7 +8991,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.652136",
+    "timestamp": "2026-05-03T07:34:54.718705",
     "event_datetime": "2026-05-10T20:10",
     "sport": "soccer"
   },
@@ -9009,7 +9009,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.655499",
+    "timestamp": "2026-05-03T07:34:54.722401",
     "event_datetime": "2026-05-10T22:00",
     "sport": "soccer"
   },
@@ -9027,7 +9027,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.658837",
+    "timestamp": "2026-05-03T07:34:54.725909",
     "event_datetime": "2026-05-09T16:00",
     "sport": "soccer"
   },
@@ -9045,7 +9045,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.662491",
+    "timestamp": "2026-05-03T07:34:54.729586",
     "event_datetime": "2027-05-03T05:00",
     "sport": "soccer"
   },
@@ -9063,7 +9063,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.665803",
+    "timestamp": "2026-05-03T07:34:54.732964",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   },
@@ -9093,7 +9093,7 @@
       "game_total_over_odds": "-115",
       "game_total_under_odds": "-105"
     },
-    "timestamp": "2026-05-03T07:27:03.669262",
+    "timestamp": "2026-05-03T07:34:54.736855",
     "event_datetime": "2027-05-03T03:15",
     "sport": "soccer"
   },
@@ -9123,7 +9123,7 @@
       "game_total_over_odds": null,
       "game_total_under_odds": null
     },
-    "timestamp": "2026-05-03T07:27:03.672607",
+    "timestamp": "2026-05-03T07:34:54.740298",
     "event_datetime": "2026-05-03T09:00",
     "sport": "soccer"
   }
