@@ -18,6 +18,7 @@ import {
   Alert,
   Grid,
   Slider,
+  Tooltip,
 } from "@mui/material";
 import { 
   Refresh as RefreshIcon,
@@ -37,6 +38,9 @@ interface Market {
   pinnacle_nvp: string;
   betbck_odds: string;
   ev: string;
+  pinnacle_period?: string;
+  pinnacle_limit?: number | null;
+  row_type?: string;
 }
 
 interface EventData {
@@ -572,7 +576,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                               color: '#B0B0B0',
                               fontSize: '0.875rem'
                             }}>
-                              Selection
+                              Market / Selection
                             </TableCell>
                             <TableCell align="center" sx={{ 
                               fontWeight: 600,
@@ -646,7 +650,23 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                   }
                                 }}
                               >
-                                <TableCell sx={{ textAlign: 'left', pl: 0, whiteSpace: 'normal' }}>{selectionDisplay}</TableCell>
+                                <TableCell sx={{ textAlign: 'left', pl: 0, whiteSpace: 'normal' }}>
+                                  <Box>
+                                    <Tooltip
+                                      title={market.pinnacle_period ? `Pinnacle period: ${market.pinnacle_period === 'num_0' ? 'Full Game' : market.pinnacle_period === 'num_1' ? '1st Half' : market.pinnacle_period}` : ''}
+                                      placement="top"
+                                      disableHoverListener={!market.pinnacle_period}
+                                    >
+                                      <Typography variant="caption" sx={{ color: '#7e9fc5', display: 'block', fontSize: '0.7rem', lineHeight: 1.2, cursor: market.pinnacle_period ? 'help' : 'default' }}>
+                                        {market.market}
+                                        {market.pinnacle_period && market.pinnacle_period !== 'num_0' && (
+                                          <span style={{ marginLeft: 4, color: '#64b5f6' }}>●</span>
+                                        )}
+                                      </Typography>
+                                    </Tooltip>
+                                    <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>{selectionDisplay}</Typography>
+                                  </Box>
+                                </TableCell>
                                 <TableCell align="center">{market.market.toLowerCase() === 'total' ? formatTotal(lineDisplay) : lineDisplay}</TableCell>
                                 <TableCell 
                                   align="center"

@@ -20921,5 +20921,1535 @@
     ],
     "result": "not_found",
     "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T15:44:19.289049Z",
+    "event_id": "1629428991",
+    "timestamp": "2026-05-03T15:44:18.747893Z",
+    "teams": {
+      "home": "Sparta Prague",
+      "away": "Jablonec",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Jablonec @ Sparta Prague | ? | market=Spread | +281 -> +238",
+        "detail": {
+          "home": "Sparta Prague",
+          "away": "Jablonec",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+281",
+          "new_odds": "+238"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'prague' (from 'Sparta Prague' / 'Jablonec'): last word of home team 'sparta prague'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='prague' -> HTTP 200 (42951 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "prague",
+          "status": 200,
+          "response_bytes": 42951
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for jablonec @ sparta prague (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T15:45:23.619536Z",
+    "event_id": "1629399026",
+    "timestamp": "2026-05-03T15:45:23.077476Z",
+    "teams": {
+      "home": "Apollon Limassol",
+      "away": "Pafos FCCyp",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Pafos FCCyp @ Apollon Limassol | ? | market=Spread | +329 -> +291",
+        "detail": {
+          "home": "Apollon Limassol",
+          "away": "Pafos FCCyp",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+329",
+          "new_odds": "+291"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'limassol' (from 'Apollon Limassol' / 'Pafos FCCyp'): last word of home team 'apollon limassol'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='limassol' -> HTTP 200 (42951 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "limassol",
+          "status": 200,
+          "response_bytes": 42951
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for pafos fccyp @ apollon limassol (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T15:46:02.997271Z",
+    "event_id": "1629530099",
+    "timestamp": "2026-05-03T15:46:02.398542Z",
+    "teams": {
+      "home": "Universidad de Concepcion",
+      "away": "Universidad Catolica",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Universidad Catolica @ Universidad de Concepcion | ? | market=Spread | +307 -> +278",
+        "detail": {
+          "home": "Universidad de Concepcion",
+          "away": "Universidad Catolica",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+307",
+          "new_odds": "+278"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'concepcion' (from 'Universidad de Concepcion' / 'Universidad Catolica'): last word of home team 'universidad de concepcion'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='concepcion' -> HTTP 200 (42951 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "concepcion",
+          "status": 200,
+          "response_bytes": 42951
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for universidad catolica @ universidad de concepcion (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T15:47:37.540872Z",
+    "event_id": "1629410070",
+    "timestamp": "2026-05-03T15:47:35.051372Z",
+    "teams": {
+      "home": "Braga",
+      "away": "Estoril",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Estoril @ Braga | ? | market=Spread | +259 -> +236",
+        "detail": {
+          "home": "Braga",
+          "away": "Estoril",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+259",
+          "new_odds": "+236"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'braga' (from 'Braga' / 'Estoril'): first word of home team 'braga'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='braga' -> HTTP 200 (72886 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "braga",
+          "status": 200,
+          "response_bytes": 72886
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'RB Bragantino' vs 'Chapecoense'  <->  POD 'braga' vs 'estoril'  [token_set_h=56 | token_set_a=22 | partial_h=100 | partial_a=29 | threshold=60]",
+        "detail": {
+          "bck_home": "RB Bragantino",
+          "bck_away": "Chapecoense",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 56,
+            "token_set_a": 22,
+            "partial_h": 100,
+            "partial_a": 29,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'RB Bragantino 1H' vs 'Chapecoense 1H'  <->  POD 'braga' vs 'estoril'  [token_set_h=48 | token_set_a=19 | partial_h=100 | partial_a=29 | threshold=60]",
+        "detail": {
+          "bck_home": "RB Bragantino 1H",
+          "bck_away": "Chapecoense 1H",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 48,
+            "token_set_a": 19,
+            "partial_h": 100,
+            "partial_a": 29,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Estoril Praia' vs 'Sporting Braga'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Estoril Praia",
+          "bck_away": "Sporting Braga",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Estoril Praia' vs 'Sporting Braga'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Estoril Praia 1H' vs 'Sporting Braga 1H'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Estoril Praia 1H",
+          "bck_away": "Sporting Braga 1H",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Estoril Praia 1H' vs 'Sporting Braga 1H'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Sporting Braga' vs 'Freiburg'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=27 | partial_h=100 | partial_a=31 | threshold=60]",
+        "detail": {
+          "bck_home": "Sporting Braga",
+          "bck_away": "Freiburg",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 27,
+            "partial_h": 100,
+            "partial_a": 31,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=-145 | away_moneyline=+360 | home_spreads=[{'line': '-0.75', 'odds': '-120'}] | away_spreads=[{'line': '+0.75', 'odds': '-110'}]",
+        "detail": {
+          "home_moneyline": "-145",
+          "away_moneyline": "+360",
+          "home_spreads": [
+            {
+              "line": "-0.75",
+              "odds": "-120"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+0.75",
+              "odds": "-110"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 1.6897 (-145) / PIN_NVP 1.6711 (-149) => +1.18%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "-145",
+          "pin_nvp_american": "-149",
+          "bck_decimal": 1.6897,
+          "pin_nvp_decimal": 1.6711,
+          "ev_pct": 1.18
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 4.6000 (+360) / PIN_NVP 5.6700 (+467) => -18.91%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+360",
+          "pin_nvp_american": "+467",
+          "bck_decimal": 4.6,
+          "pin_nvp_decimal": 5.67,
+          "ev_pct": -18.91
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home -0.75: BCK 1.8333 (-120) / PIN_NVP 1.8621 (-116) => -1.54%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "-0.75",
+          "betbck_american": "-120",
+          "pin_nvp_american": "-116",
+          "bck_decimal": 1.8333,
+          "pin_nvp_decimal": 1.8621,
+          "ev_pct": -1.54
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away 0.75: BCK 1.9091 (-110) / PIN_NVP 2.1600 (+116) => -11.62%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "0.75",
+          "betbck_american": "-110",
+          "pin_nvp_american": "+116",
+          "bck_decimal": 1.9091,
+          "pin_nvp_decimal": 2.16,
+          "ev_pct": -11.62
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 2.75: BCK 1.8000 (-125) / PIN_NVP 1.9434 (-106) => -7.41%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "2.75",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-106",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.9434,
+          "ev_pct": -7.41
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 2.75: BCK 1.8696 (-115) / PIN_NVP 2.0600 (+106) => -9.20%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "2.75",
+          "betbck_american": "-115",
+          "pin_nvp_american": "+106",
+          "bck_decimal": 1.8696,
+          "pin_nvp_decimal": 2.06,
+          "ev_pct": -9.2
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Home: BCK 2.2000 (+120) / PIN_NVP 2.2500 (+125) => -2.14%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+120",
+          "pin_nvp_american": "+125",
+          "bck_decimal": 2.2,
+          "pin_nvp_decimal": 2.25,
+          "ev_pct": -2.14
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Moneyline Away: BCK 4.8000 (+380) / PIN_NVP 5.7200 (+472) => -16.08%",
+        "detail": {
+          "market": "1H Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+380",
+          "pin_nvp_american": "+472",
+          "bck_decimal": 4.8,
+          "pin_nvp_decimal": 5.72,
+          "ev_pct": -16.08
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Home -0.25: BCK 1.7692 (-130) / PIN_NVP 1.8130 (-123) => -2.58%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Home",
+          "line": "-0.25",
+          "betbck_american": "-130",
+          "pin_nvp_american": "-123",
+          "bck_decimal": 1.7692,
+          "pin_nvp_decimal": 1.813,
+          "ev_pct": -2.58
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Spread Away 0.25: BCK 2.0000 (+100) / PIN_NVP 2.2300 (+123) => -10.15%",
+        "detail": {
+          "market": "1H Spread",
+          "selection": "Away",
+          "line": "0.25",
+          "betbck_american": "+100",
+          "pin_nvp_american": "+123",
+          "bck_decimal": 2.0,
+          "pin_nvp_decimal": 2.23,
+          "ev_pct": -10.15
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Over 1.25: BCK 2.0000 (+100) / PIN_NVP 2.1700 (+117) => -8.05%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Over",
+          "line": "1.25",
+          "betbck_american": "+100",
+          "pin_nvp_american": "+117",
+          "bck_decimal": 2.0,
+          "pin_nvp_decimal": 2.17,
+          "ev_pct": -8.05
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "1H Total Under 1.25: BCK 1.7143 (-140) / PIN_NVP 1.8475 (-118) => -7.39%",
+        "detail": {
+          "market": "1H Total",
+          "selection": "Under",
+          "line": "1.25",
+          "betbck_american": "-140",
+          "pin_nvp_american": "-118",
+          "bck_decimal": 1.7143,
+          "pin_nvp_decimal": 1.8475,
+          "ev_pct": -7.39
+        }
+      }
+    ],
+    "result": "ev_found",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "-145",
+        "pinnacle_nvp": "-149",
+        "betbck_decimal": 1.6897,
+        "pin_nvp_decimal": 1.6711,
+        "ev_pct": 1.18
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+360",
+        "pinnacle_nvp": "+467",
+        "betbck_decimal": 4.6,
+        "pin_nvp_decimal": 5.67,
+        "ev_pct": -18.91
+      },
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "-0.75",
+        "betbck_odds": "-120",
+        "pinnacle_nvp": "-116",
+        "betbck_decimal": 1.8333,
+        "pin_nvp_decimal": 1.8621,
+        "ev_pct": -1.54
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "0.75",
+        "betbck_odds": "-110",
+        "pinnacle_nvp": "+116",
+        "betbck_decimal": 1.9091,
+        "pin_nvp_decimal": 2.16,
+        "ev_pct": -11.62
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "2.75",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-106",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.9434,
+        "ev_pct": -7.41
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "2.75",
+        "betbck_odds": "-115",
+        "pinnacle_nvp": "+106",
+        "betbck_decimal": 1.8696,
+        "pin_nvp_decimal": 2.06,
+        "ev_pct": -9.2
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+120",
+        "pinnacle_nvp": "+125",
+        "betbck_decimal": 2.2,
+        "pin_nvp_decimal": 2.25,
+        "ev_pct": -2.14
+      },
+      {
+        "market": "1H Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+380",
+        "pinnacle_nvp": "+472",
+        "betbck_decimal": 4.8,
+        "pin_nvp_decimal": 5.72,
+        "ev_pct": -16.08
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Home",
+        "line": "-0.25",
+        "betbck_odds": "-130",
+        "pinnacle_nvp": "-123",
+        "betbck_decimal": 1.7692,
+        "pin_nvp_decimal": 1.813,
+        "ev_pct": -2.58
+      },
+      {
+        "market": "1H Spread",
+        "selection": "Away",
+        "line": "0.25",
+        "betbck_odds": "+100",
+        "pinnacle_nvp": "+123",
+        "betbck_decimal": 2.0,
+        "pin_nvp_decimal": 2.23,
+        "ev_pct": -10.15
+      },
+      {
+        "market": "1H Total",
+        "selection": "Over",
+        "line": "1.25",
+        "betbck_odds": "+100",
+        "pinnacle_nvp": "+117",
+        "betbck_decimal": 2.0,
+        "pin_nvp_decimal": 2.17,
+        "ev_pct": -8.05
+      },
+      {
+        "market": "1H Total",
+        "selection": "Under",
+        "line": "1.25",
+        "betbck_odds": "-140",
+        "pinnacle_nvp": "-118",
+        "betbck_decimal": 1.7143,
+        "pin_nvp_decimal": 1.8475,
+        "ev_pct": -7.39
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T15:47:49.631881Z",
+    "event_id": "1777823260940",
+    "timestamp": "2026-05-03T15:47:47.399965Z",
+    "teams": {
+      "home": "Braga",
+      "away": "Estoril",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Estoril @ Braga | ? | market=Moneyline | -143 -> -177",
+        "detail": {
+          "home": "Braga",
+          "away": "Estoril",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "-143",
+          "new_odds": "-177"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'braga' (from 'Braga' / 'Estoril'): first word of home team 'braga'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='braga' -> HTTP 200 (72886 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "braga",
+          "status": 200,
+          "response_bytes": 72886
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'RB Bragantino' vs 'Chapecoense'  <->  POD 'braga' vs 'estoril'  [token_set_h=56 | token_set_a=22 | partial_h=100 | partial_a=29 | threshold=60]",
+        "detail": {
+          "bck_home": "RB Bragantino",
+          "bck_away": "Chapecoense",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 56,
+            "token_set_a": 22,
+            "partial_h": 100,
+            "partial_a": 29,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'RB Bragantino 1H' vs 'Chapecoense 1H'  <->  POD 'braga' vs 'estoril'  [token_set_h=48 | token_set_a=19 | partial_h=100 | partial_a=29 | threshold=60]",
+        "detail": {
+          "bck_home": "RB Bragantino 1H",
+          "bck_away": "Chapecoense 1H",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 48,
+            "token_set_a": 19,
+            "partial_h": 100,
+            "partial_a": 29,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Estoril Praia' vs 'Sporting Braga'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Estoril Praia",
+          "bck_away": "Sporting Braga",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Estoril Praia' vs 'Sporting Braga'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Estoril Praia 1H' vs 'Sporting Braga 1H'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Estoril Praia 1H",
+          "bck_away": "Sporting Braga 1H",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Estoril Praia 1H' vs 'Sporting Braga 1H'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Sporting Braga' vs 'Freiburg'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=27 | partial_h=100 | partial_a=31 | threshold=60]",
+        "detail": {
+          "bck_home": "Sporting Braga",
+          "bck_away": "Freiburg",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 27,
+            "partial_h": 100,
+            "partial_a": 31,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=-145 | away_moneyline=+360 | home_spreads=[{'line': '-0.75', 'odds': '-120'}] | away_spreads=[{'line': '+0.75', 'odds': '-110'}]",
+        "detail": {
+          "home_moneyline": "-145",
+          "away_moneyline": "+360",
+          "home_spreads": [
+            {
+              "line": "-0.75",
+              "odds": "-120"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+0.75",
+              "odds": "-110"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T15:47:52.049837Z",
+    "event_id": "1777823263025",
+    "timestamp": "2026-05-03T15:47:49.904940Z",
+    "teams": {
+      "home": "Braga",
+      "away": "Estoril",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Estoril @ Braga | ? | market=Moneyline | +125 -> +108",
+        "detail": {
+          "home": "Braga",
+          "away": "Estoril",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+125",
+          "new_odds": "+108"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'braga' (from 'Braga' / 'Estoril'): first word of home team 'braga'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='braga' -> HTTP 200 (72886 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "braga",
+          "status": 200,
+          "response_bytes": 72886
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'RB Bragantino' vs 'Chapecoense'  <->  POD 'braga' vs 'estoril'  [token_set_h=56 | token_set_a=22 | partial_h=100 | partial_a=29 | threshold=60]",
+        "detail": {
+          "bck_home": "RB Bragantino",
+          "bck_away": "Chapecoense",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 56,
+            "token_set_a": 22,
+            "partial_h": 100,
+            "partial_a": 29,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'RB Bragantino 1H' vs 'Chapecoense 1H'  <->  POD 'braga' vs 'estoril'  [token_set_h=48 | token_set_a=19 | partial_h=100 | partial_a=29 | threshold=60]",
+        "detail": {
+          "bck_home": "RB Bragantino 1H",
+          "bck_away": "Chapecoense 1H",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 48,
+            "token_set_a": 19,
+            "partial_h": 100,
+            "partial_a": 29,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Estoril Praia' vs 'Sporting Braga'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Estoril Praia",
+          "bck_away": "Sporting Braga",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Estoril Praia' vs 'Sporting Braga'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Estoril Praia 1H' vs 'Sporting Braga 1H'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Estoril Praia 1H",
+          "bck_away": "Sporting Braga 1H",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Estoril Praia 1H' vs 'Sporting Braga 1H'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Sporting Braga' vs 'Freiburg'  <->  POD 'braga' vs 'estoril'  [token_set_h=100 | token_set_a=27 | partial_h=100 | partial_a=31 | threshold=60]",
+        "detail": {
+          "bck_home": "Sporting Braga",
+          "bck_away": "Freiburg",
+          "pod_home": "braga",
+          "pod_away": "estoril",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 27,
+            "partial_h": 100,
+            "partial_a": 31,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=-145 | away_moneyline=+360 | home_spreads=[{'line': '-0.75', 'odds': '-120'}] | away_spreads=[{'line': '+0.75', 'odds': '-110'}]",
+        "detail": {
+          "home_moneyline": "-145",
+          "away_moneyline": "+360",
+          "home_spreads": [
+            {
+              "line": "-0.75",
+              "odds": "-120"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+0.75",
+              "odds": "-110"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T15:49:59.110310Z",
+    "event_id": "1629488662",
+    "timestamp": "2026-05-03T15:49:57.702178Z",
+    "teams": {
+      "home": "CA Atlanta",
+      "away": "Tristan Suarez",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Tristan Suarez @ CA Atlanta | ? | market=Moneyline | +375 -> +331",
+        "detail": {
+          "home": "CA Atlanta",
+          "away": "Tristan Suarez",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+375",
+          "new_odds": "+331"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'atlanta' (from 'CA Atlanta' / 'Tristan Suarez'): first word of home team 'atlanta'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='atlanta' -> HTTP 200 (70757 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "atlanta",
+          "status": 200,
+          "response_bytes": 70757
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Tristan Suarez' vs 'Atletico Atlanta'  <->  POD 'atlanta' vs 'tristan suarez'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Tristan Suarez",
+          "bck_away": "Atletico Atlanta",
+          "pod_home": "atlanta",
+          "pod_away": "tristan suarez",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Tristan Suarez' vs 'Atletico Atlanta'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Atlanta Braves' vs 'Colorado Rockies'  <->  POD 'atlanta' vs 'tristan suarez'  [token_set_h=100 | token_set_a=10 | partial_h=100 | partial_a=43 | threshold=60]",
+        "detail": {
+          "bck_home": "Atlanta Braves",
+          "bck_away": "Colorado Rockies",
+          "pod_home": "atlanta",
+          "pod_away": "tristan suarez",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 10,
+            "partial_h": 100,
+            "partial_a": 43,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Atlanta Braves 1st 5' vs 'Colorado Rockies 1st 5'  <->  POD 'atlanta' vs 'tristan suarez'  [token_set_h=100 | token_set_a=17 | partial_h=100 | partial_a=36 | threshold=60]",
+        "detail": {
+          "bck_home": "Atlanta Braves 1st 5",
+          "bck_away": "Colorado Rockies 1st 5",
+          "pod_home": "atlanta",
+          "pod_away": "tristan suarez",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 17,
+            "partial_h": 100,
+            "partial_a": 36,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Washington Mystics' vs 'Atlanta Dream'  <->  POD 'atlanta' vs 'tristan suarez'  [token_set_h=100 | token_set_a=25 | partial_h=100 | partial_a=32 | threshold=60]",
+        "detail": {
+          "bck_home": "Washington Mystics",
+          "bck_away": "Atlanta Dream",
+          "pod_home": "atlanta",
+          "pod_away": "tristan suarez",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 25,
+            "partial_h": 100,
+            "partial_a": 32,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+110 | away_moneyline=+340 | home_spreads=[{'line': '-0.25', 'odds': '-135'}] | away_spreads=[{'line': '+0.25', 'odds': '+105'}]",
+        "detail": {
+          "home_moneyline": "+110",
+          "away_moneyline": "+340",
+          "home_spreads": [
+            {
+              "line": "-0.25",
+              "odds": "-135"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+0.25",
+              "odds": "+105"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Home: BCK 2.1000 (+110) / PIN_NVP 2.4200 (+142) => -13.12%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Home",
+          "line": "",
+          "betbck_american": "+110",
+          "pin_nvp_american": "+142",
+          "bck_decimal": 2.1,
+          "pin_nvp_decimal": 2.42,
+          "ev_pct": -13.12
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Moneyline Away: BCK 4.4000 (+340) / PIN_NVP 4.6300 (+363) => -4.91%",
+        "detail": {
+          "market": "Moneyline",
+          "selection": "Away",
+          "line": "",
+          "betbck_american": "+340",
+          "pin_nvp_american": "+363",
+          "bck_decimal": 4.4,
+          "pin_nvp_decimal": 4.63,
+          "ev_pct": -4.91
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home -0.25: BCK 1.7407 (-135) / PIN_NVP 1.9709 (-103) => -11.73%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "-0.25",
+          "betbck_american": "-135",
+          "pin_nvp_american": "-103",
+          "bck_decimal": 1.7407,
+          "pin_nvp_decimal": 1.9709,
+          "ev_pct": -11.73
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away 0.25: BCK 2.0500 (+105) / PIN_NVP 2.0300 (+103) => +1.03%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "0.25",
+          "betbck_american": "+105",
+          "pin_nvp_american": "+103",
+          "bck_decimal": 2.05,
+          "pin_nvp_decimal": 2.03,
+          "ev_pct": 1.03
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 1.5: BCK 1.6250 (-160) / PIN_NVP 1.7937 (-126) => -9.37%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "1.5",
+          "betbck_american": "-160",
+          "pin_nvp_american": "-126",
+          "bck_decimal": 1.625,
+          "pin_nvp_decimal": 1.7937,
+          "ev_pct": -9.37
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 1.5: BCK 2.2000 (+120) / PIN_NVP 2.2600 (+126) => -2.70%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "1.5",
+          "betbck_american": "+120",
+          "pin_nvp_american": "+126",
+          "bck_decimal": 2.2,
+          "pin_nvp_decimal": 2.26,
+          "ev_pct": -2.7
+        }
+      }
+    ],
+    "result": "ev_found",
+    "ev_summary": [
+      {
+        "market": "Moneyline",
+        "selection": "Home",
+        "line": "",
+        "betbck_odds": "+110",
+        "pinnacle_nvp": "+142",
+        "betbck_decimal": 2.1,
+        "pin_nvp_decimal": 2.42,
+        "ev_pct": -13.12
+      },
+      {
+        "market": "Moneyline",
+        "selection": "Away",
+        "line": "",
+        "betbck_odds": "+340",
+        "pinnacle_nvp": "+363",
+        "betbck_decimal": 4.4,
+        "pin_nvp_decimal": 4.63,
+        "ev_pct": -4.91
+      },
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "-0.25",
+        "betbck_odds": "-135",
+        "pinnacle_nvp": "-103",
+        "betbck_decimal": 1.7407,
+        "pin_nvp_decimal": 1.9709,
+        "ev_pct": -11.73
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "0.25",
+        "betbck_odds": "+105",
+        "pinnacle_nvp": "+103",
+        "betbck_decimal": 2.05,
+        "pin_nvp_decimal": 2.03,
+        "ev_pct": 1.03
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "1.5",
+        "betbck_odds": "-160",
+        "pinnacle_nvp": "-126",
+        "betbck_decimal": 1.625,
+        "pin_nvp_decimal": 1.7937,
+        "ev_pct": -9.37
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "1.5",
+        "betbck_odds": "+120",
+        "pinnacle_nvp": "+126",
+        "betbck_decimal": 2.2,
+        "pin_nvp_decimal": 2.26,
+        "ev_pct": -2.7
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T15:50:06.119463Z",
+    "event_id": "1777823395956",
+    "timestamp": "2026-05-03T15:50:04.757359Z",
+    "teams": {
+      "home": "CA Atlanta",
+      "away": "Tristan Suarez",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Tristan Suarez @ CA Atlanta | ? | market=Spread | +289 -> +254",
+        "detail": {
+          "home": "CA Atlanta",
+          "away": "Tristan Suarez",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+289",
+          "new_odds": "+254"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'atlanta' (from 'CA Atlanta' / 'Tristan Suarez'): first word of home team 'atlanta'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='atlanta' -> HTTP 200 (70757 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "atlanta",
+          "status": 200,
+          "response_bytes": 70757
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Tristan Suarez' vs 'Atletico Atlanta'  <->  POD 'atlanta' vs 'tristan suarez'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Tristan Suarez",
+          "bck_away": "Atletico Atlanta",
+          "pod_home": "atlanta",
+          "pod_away": "tristan suarez",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Tristan Suarez' vs 'Atletico Atlanta'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Atlanta Braves' vs 'Colorado Rockies'  <->  POD 'atlanta' vs 'tristan suarez'  [token_set_h=100 | token_set_a=10 | partial_h=100 | partial_a=43 | threshold=60]",
+        "detail": {
+          "bck_home": "Atlanta Braves",
+          "bck_away": "Colorado Rockies",
+          "pod_home": "atlanta",
+          "pod_away": "tristan suarez",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 10,
+            "partial_h": 100,
+            "partial_a": 43,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Atlanta Braves 1st 5' vs 'Colorado Rockies 1st 5'  <->  POD 'atlanta' vs 'tristan suarez'  [token_set_h=100 | token_set_a=17 | partial_h=100 | partial_a=36 | threshold=60]",
+        "detail": {
+          "bck_home": "Atlanta Braves 1st 5",
+          "bck_away": "Colorado Rockies 1st 5",
+          "pod_home": "atlanta",
+          "pod_away": "tristan suarez",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 17,
+            "partial_h": 100,
+            "partial_a": 36,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Washington Mystics' vs 'Atlanta Dream'  <->  POD 'atlanta' vs 'tristan suarez'  [token_set_h=100 | token_set_a=25 | partial_h=100 | partial_a=32 | threshold=60]",
+        "detail": {
+          "bck_home": "Washington Mystics",
+          "bck_away": "Atlanta Dream",
+          "pod_home": "atlanta",
+          "pod_away": "tristan suarez",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 25,
+            "partial_h": 100,
+            "partial_a": 32,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_moneyline=+110 | away_moneyline=+340 | home_spreads=[{'line': '-0.25', 'odds': '-135'}] | away_spreads=[{'line': '+0.25', 'odds': '+105'}]",
+        "detail": {
+          "home_moneyline": "+110",
+          "away_moneyline": "+340",
+          "home_spreads": [
+            {
+              "line": "-0.25",
+              "odds": "-135"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+0.25",
+              "odds": "+105"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T15:50:35.346812Z",
+    "event_id": "1629596412",
+    "timestamp": "2026-05-03T15:50:32.151554Z",
+    "teams": {
+      "home": "Concon National",
+      "away": "Brujas de Salamanca",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Brujas de Salamanca @ Concon National | ? | market=Spread | -130 -> -164",
+        "detail": {
+          "home": "Concon National",
+          "away": "Brujas de Salamanca",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "-130",
+          "new_odds": "-164"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'national' (from 'Concon National' / 'Brujas de Salamanca'): last word of home team 'concon national'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='national' -> HTTP 200 (76361 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "national",
+          "status": 200,
+          "response_bytes": 76361
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Future FC' vs 'National Bank Egypt'  <->  POD 'concon national' vs 'brujas de salamanca'  [token_set_h=70 | token_set_a=16 | partial_h=53 | partial_a=17 | threshold=60]",
+        "detail": {
+          "bck_home": "Future FC",
+          "bck_away": "National Bank Egypt",
+          "pod_home": "concon national",
+          "pod_away": "brujas de salamanca",
+          "scores": {
+            "token_set_h": 70,
+            "token_set_a": 16,
+            "partial_h": 53,
+            "partial_a": 17,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Milwaukee Brewers' vs 'Washington Nationals'  <->  POD 'concon national' vs 'brujas de salamanca'  [token_set_h=67 | token_set_a=28 | partial_h=94 | partial_a=24 | threshold=60]",
+        "detail": {
+          "bck_home": "Milwaukee Brewers",
+          "bck_away": "Washington Nationals",
+          "pod_home": "concon national",
+          "pod_away": "brujas de salamanca",
+          "scores": {
+            "token_set_h": 67,
+            "token_set_a": 28,
+            "partial_h": 94,
+            "partial_a": 24,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Milwaukee Brewers 1st 5' vs 'Washington Nationals 1st 5'  <->  POD 'concon national' vs 'brujas de salamanca'  [token_set_h=44 | token_set_a=24 | partial_h=80 | partial_a=31 | threshold=60]",
+        "detail": {
+          "bck_home": "Milwaukee Brewers 1st 5",
+          "bck_away": "Washington Nationals 1st 5",
+          "pod_home": "concon national",
+          "pod_away": "brujas de salamanca",
+          "scores": {
+            "token_set_h": 44,
+            "token_set_a": 24,
+            "partial_h": 80,
+            "partial_a": 31,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Brewers Alt RL' vs 'Nationals Alt RL'  <->  POD 'concon national' vs 'brujas de salamanca'  [token_set_h=58 | token_set_a=30 | partial_h=53 | partial_a=43 | threshold=60]",
+        "detail": {
+          "bck_home": "Brewers Alt RL",
+          "bck_away": "Nationals Alt RL",
+          "pod_home": "concon national",
+          "pod_away": "brujas de salamanca",
+          "scores": {
+            "token_set_h": 58,
+            "token_set_a": 30,
+            "partial_h": 53,
+            "partial_a": 43,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Brewers Alt RL' vs 'Nationals Alt RL'  <->  POD 'concon national' vs 'brujas de salamanca'  [token_set_h=58 | token_set_a=30 | partial_h=53 | partial_a=43 | threshold=60]",
+        "detail": {
+          "bck_home": "Brewers Alt RL",
+          "bck_away": "Nationals Alt RL",
+          "pod_home": "concon national",
+          "pod_away": "brujas de salamanca",
+          "scores": {
+            "token_set_h": 58,
+            "token_set_a": 30,
+            "partial_h": 53,
+            "partial_a": 43,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Milwaukee Brewers' vs 'Washington Nationals' | home=67/60, away=28/60 (combined=95, needed \u2265120)",
+        "detail": {
+          "bck_home": "Milwaukee Brewers",
+          "bck_away": "Washington Nationals",
+          "best_score": 95,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 67,
+          "token_set_a": 28,
+          "scores": {
+            "token_set_h": 67,
+            "token_set_a": 28,
+            "partial_h": 94,
+            "partial_a": 24,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for brujas de salamanca @ concon national ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for brujas de salamanca @ concon national (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]

@@ -1356,7 +1356,14 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
     #    against Pinnacle num_0 (full-game) — exactly the cross-period contamination
     #    we must prevent.  In that case every row is handled safely by step 2 below.
     if "full_game" in row_data:
-        all_bets.extend(analyze_markets_for_ev(bet_data, pinnacle_data))
+        step1_bets = analyze_markets_for_ev(bet_data, pinnacle_data)
+        for bet in step1_bets:
+            mkt = bet.get("market", "")
+            if mkt.startswith("1H ") or mkt in ("1H Moneyline", "1H Spread", "1H Total"):
+                bet["pinnacle_period"] = "num_1"
+            else:
+                bet["pinnacle_period"] = "num_0"
+        all_bets.extend(step1_bets)
         logger.debug("[MultiRow] Step 1: full_game row processed via analyze_markets_for_ev")
     else:
         logger.warning(
@@ -1367,9 +1374,11 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
 
     # 2. Additional row types — wrap the target Pinnacle period as "num_0" and re-run
     SKIP_TYPES = {"full_game"}  # full_game already handled in step 1 above
-    # half_1 is handled via the existing 1H_data path inside analyze_markets_for_ev;
-    # skip it here to avoid duplicates — but only when 1H_data is present on primary.
-    if bet_data.get("1H_data"):
+    # half_1 is handled inside analyze_markets_for_ev (via _analyze_1h_markets_for_ev)
+    # ONLY when full_game was also present in row_data (step 1 ran).
+    # If full_game is absent, half_1 was never processed — do NOT skip it here or the
+    # 1H data is silently discarded.  Let step 2 compare it against Pinnacle num_1.
+    if "full_game" in row_data and bet_data.get("1H_data"):
         SKIP_TYPES = SKIP_TYPES | {"half_1"}
 
     for row_type, row_bet_data in row_data.items():
@@ -1416,8 +1425,9 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
                 if label:
                     bet["market"] = f"{label}{bet['market']}"
                 bet["row_type"] = row_type
+                bet["pinnacle_period"] = period_key
             if period_bets:
-                logger.info(f"[MultiRow] {row_type}: +{len(period_bets)} markets")
+                logger.info(f"[MultiRow] {row_type}: +{len(period_bets)} markets (Pinnacle period: {period_key})")
             all_bets.extend(period_bets)
         except Exception as exc:
             logger.error(f"[MultiRow] Error analyzing {row_type}: {exc}")
