@@ -408,28 +408,55 @@ const PODAlerts: React.FC<PODAlertsProps> = ({ minEv, maxEv, onMinEvChange, onMa
           </Button>
         </Box>
         {/* EV Range filter — shared with Auto-Bettor */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 180 }}>
-            <Typography variant="caption" sx={{ color: '#B0B0B0', whiteSpace: 'nowrap', width: 50 }}>
-              Min EV: <Box component="span" sx={{ color: '#4caf50', fontWeight: 600 }}>{minEv === 0 ? 'Off' : `+${minEv}%`}</Box>
-            </Typography>
+        <Box sx={{
+          display: 'flex', flexDirection: 'column', gap: 1.2,
+          px: 2, py: 1.5, minWidth: 260, maxWidth: 340,
+          bgcolor: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 2,
+        }}>
+          <Typography sx={{ fontSize: '0.68rem', color: '#666', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', mb: 0.25 }}>
+            EV Filter
+          </Typography>
+          {/* Min EV row */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Typography sx={{ fontSize: '0.72rem', color: '#888', width: 26, flexShrink: 0 }}>Min</Typography>
             <Slider
               value={minEv}
               onChange={(_, val) => onMinEvChange(val as number)}
               min={0} max={20} step={0.5} size="small"
-              sx={{ color: '#4caf50', width: 110, '& .MuiSlider-thumb': { width: 13, height: 13 } }}
+              valueLabelDisplay="auto"
+              valueLabelFormat={v => `${v}%`}
+              sx={{
+                color: '#4caf50', flexGrow: 1,
+                '& .MuiSlider-thumb': { width: 14, height: 14 },
+                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
+                '& .MuiSlider-valueLabel': { bgcolor: '#1a2a1a', border: '1px solid rgba(76,175,80,0.5)', fontSize: '0.7rem', color: '#4caf50' },
+              }}
             />
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 180 }}>
-            <Typography variant="caption" sx={{ color: '#B0B0B0', whiteSpace: 'nowrap', width: 50 }}>
-              Max EV: <Box component="span" sx={{ color: maxEv >= 20 ? '#555' : '#4caf50', fontWeight: 600 }}>{maxEv >= 20 ? '∞' : `${maxEv}%`}</Box>
+            <Typography sx={{ fontSize: '0.78rem', color: '#4caf50', width: 34, textAlign: 'right', flexShrink: 0, fontWeight: 700, fontFamily: 'monospace' }}>
+              {minEv === 0 ? 'Off' : `+${minEv}%`}
             </Typography>
+          </Box>
+          {/* Max EV row */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Typography sx={{ fontSize: '0.72rem', color: '#888', width: 26, flexShrink: 0 }}>Max</Typography>
             <Slider
               value={maxEv}
               onChange={(_, val) => onMaxEvChange(val as number)}
               min={0} max={20} step={0.5} size="small"
-              sx={{ color: '#4caf50', width: 110, '& .MuiSlider-thumb': { width: 13, height: 13 } }}
+              valueLabelDisplay="auto"
+              valueLabelFormat={v => v >= 20 ? '∞' : `${v}%`}
+              sx={{
+                color: '#4caf50', flexGrow: 1,
+                '& .MuiSlider-thumb': { width: 14, height: 14 },
+                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
+                '& .MuiSlider-valueLabel': { bgcolor: '#1a2a1a', border: '1px solid rgba(76,175,80,0.5)', fontSize: '0.7rem', color: '#4caf50' },
+              }}
             />
+            <Typography sx={{ fontSize: '0.78rem', color: maxEv >= 20 ? '#555' : '#4caf50', width: 34, textAlign: 'right', flexShrink: 0, fontWeight: 700, fontFamily: 'monospace' }}>
+              {maxEv >= 20 ? '∞' : `${maxEv}%`}
+            </Typography>
           </Box>
         </Box>
       </Box>

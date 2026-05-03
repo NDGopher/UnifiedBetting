@@ -209,6 +209,9 @@ function AutoBetPlacementPanel({ minEv, maxEv, onMinEvChange, onMaxEvChange }: A
   const [unitSize, setUnitSize] = useState('50');
   const [maxPerEvent, setMaxPerEvent] = useState('200');
   const [kelly, setKelly] = useState('fixed');
+  const [kellyCap, setKellyCap] = useState('150');
+  const [minOdds, setMinOdds] = useState('-300');
+  const [maxOdds, setMaxOdds] = useState('+400');
 
   const kellyDesc: Record<string, string> = {
     fixed: `Flat $${unitSize} per qualifying bet.`,
@@ -281,40 +284,82 @@ function AutoBetPlacementPanel({ minEv, maxEv, onMinEvChange, onMaxEvChange }: A
           </Typography>
         </Box>
 
-        {/* Right: Stake Settings */}
-        <Box>
-          <Typography sx={{ color: '#B0B0B0', fontSize: '0.75rem', fontWeight: 600, mb: 2, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            Stake Settings
-          </Typography>
-          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
-            <TextField
-              label="Unit Size" value={unitSize} onChange={e => setUnitSize(e.target.value)} size="small"
-              InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
-              sx={inputSx}
-            />
-            <TextField
-              label="Max / Event" value={maxPerEvent} onChange={e => setMaxPerEvent(e.target.value)} size="small"
-              InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
-              sx={inputSx}
-            />
+        {/* Right: Stake + Odds Settings */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+
+          {/* Stake Settings */}
+          <Box>
+            <Typography sx={{ color: '#B0B0B0', fontSize: '0.75rem', fontWeight: 600, mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Stake Settings
+            </Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
+              <TextField
+                label="Unit Size" value={unitSize} onChange={e => setUnitSize(e.target.value)} size="small"
+                InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
+                sx={inputSx}
+              />
+              <TextField
+                label="Max / Event" value={maxPerEvent} onChange={e => setMaxPerEvent(e.target.value)} size="small"
+                InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
+                sx={inputSx}
+              />
+            </Box>
+            <Box sx={{ display: 'grid', gridTemplateColumns: kelly === 'fixed' ? '1fr' : '1fr 1fr', gap: 2 }}>
+              <FormControl size="small" fullWidth>
+                <InputLabel sx={{ color: '#777', fontSize: '0.8rem', '&.Mui-focused': { color: '#2E7D32' } }}>Sizing Method</InputLabel>
+                <Select value={kelly} onChange={e => setKelly(e.target.value)} label="Sizing Method"
+                  sx={{ bgcolor: 'rgba(255,255,255,0.04)', color: '#fff', fontSize: '0.85rem',
+                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' },
+                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(46,125,50,0.5)' },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#2E7D32' },
+                    '& .MuiSvgIcon-root': { color: '#777' } }}>
+                  <MenuItem value="fixed">Fixed Unit Size</MenuItem>
+                  <MenuItem value="quarter_kelly">Quarter Kelly</MenuItem>
+                  <MenuItem value="half_kelly">Half Kelly</MenuItem>
+                  <MenuItem value="full_kelly">Full Kelly</MenuItem>
+                </Select>
+              </FormControl>
+              {kelly !== 'fixed' && (
+                <TextField
+                  label="Kelly Cap" value={kellyCap} onChange={e => setKellyCap(e.target.value)} size="small"
+                  InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
+                  sx={inputSx}
+                  helperText="Max bet regardless of Kelly size"
+                  FormHelperTextProps={{ sx: { color: '#555', fontSize: '0.65rem' } }}
+                />
+              )}
+            </Box>
+            <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 1, lineHeight: 1.5 }}>
+              {kellyDesc[kelly]}
+            </Typography>
           </Box>
-          <FormControl size="small" fullWidth>
-            <InputLabel sx={{ color: '#777', fontSize: '0.8rem', '&.Mui-focused': { color: '#2E7D32' } }}>Sizing Method</InputLabel>
-            <Select value={kelly} onChange={e => setKelly(e.target.value)} label="Sizing Method"
-              sx={{ bgcolor: 'rgba(255,255,255,0.04)', color: '#fff', fontSize: '0.85rem',
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(46,125,50,0.5)' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#2E7D32' },
-                '& .MuiSvgIcon-root': { color: '#777' } }}>
-              <MenuItem value="fixed">Fixed Unit Size</MenuItem>
-              <MenuItem value="quarter_kelly">Quarter Kelly</MenuItem>
-              <MenuItem value="half_kelly">Half Kelly</MenuItem>
-              <MenuItem value="full_kelly">Full Kelly</MenuItem>
-            </Select>
-          </FormControl>
-          <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 1, lineHeight: 1.5 }}>
-            {kellyDesc[kelly]}
-          </Typography>
+
+          {/* Odds Range */}
+          <Box>
+            <Typography sx={{ color: '#B0B0B0', fontSize: '0.75rem', fontWeight: 600, mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Odds Range
+            </Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+              <TextField
+                label="Min Odds" value={minOdds} onChange={e => setMinOdds(e.target.value)} size="small"
+                placeholder="-300"
+                sx={inputSx}
+                helperText="Shortest (e.g. -300)"
+                FormHelperTextProps={{ sx: { color: '#555', fontSize: '0.65rem' } }}
+              />
+              <TextField
+                label="Max Odds" value={maxOdds} onChange={e => setMaxOdds(e.target.value)} size="small"
+                placeholder="+400"
+                sx={inputSx}
+                helperText="Longest (e.g. +400)"
+                FormHelperTextProps={{ sx: { color: '#555', fontSize: '0.65rem' } }}
+              />
+            </Box>
+            <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 0.5, lineHeight: 1.5 }}>
+              Skip bets with BetBCK odds outside this range. Avoids very short favourites and long shots.
+            </Typography>
+          </Box>
+
         </Box>
       </Box>
 
