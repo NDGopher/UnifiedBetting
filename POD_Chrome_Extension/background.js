@@ -53,14 +53,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     } else if (message.type === "forwardToPython") {
         function getPythonServerUrl(callback) {
-          // Default to Replit backend URL; override via Options page if needed
-          const REPLIT_BACKEND = 'https://3a14a61c-b8aa-4dab-93bc-09346a68d1f5-00-1xtj8e9x0sp06.spock.replit.dev:5000';
+          // Default to local backend; override via Options page for remote hosting
+          const LOCAL_BACKEND = 'http://localhost:8000';
           chrome.storage.sync.get({ backendPort: '8000', backendUrl: '' }, function(items) {
             const customUrl = (items.backendUrl || '').trim().replace(/\/$/, '');
             if (customUrl) {
               callback(`${customUrl}/pod_alert`);
             } else {
-              callback(`${REPLIT_BACKEND}/pod_alert`);
+              callback(`${LOCAL_BACKEND}/pod_alert`);
             }
           });
         }
