@@ -458,9 +458,10 @@ class PodEventManager:
                         print(f"[BackgroundRefresher] Error in event loop for {event_id}: {e}")
                         logger.error(f"[BackgroundRefresher] Error in event loop for {event_id}: {e}")
 
-                    # ── BetBCK periodic refresh (non-blocking, every 90 s) ──────────
+                    # ── BetBCK periodic refresh (30s for +EV, 90s otherwise) ─────────
                     last_bck = self._betbck_last_refresh.get(event_id, 0)
-                    if (current_time - last_bck >= self.BETBCK_REFRESH_INTERVAL_SECONDS
+                    bck_interval = 30 if not all_negative_ev else self.BETBCK_REFRESH_INTERVAL_SECONDS
+                    if (current_time - last_bck >= bck_interval
                             and event_id not in self._betbck_refresh_in_progress):
                         current_snap = self.get_active_events().get(event_id)
                         if current_snap:

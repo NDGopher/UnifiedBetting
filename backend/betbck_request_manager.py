@@ -302,7 +302,7 @@ class BetBCKRequestManager:
                 # Add 1H data if we found a game
                 if game_data:
                     logger.info(f"[BetBCK-Manager] Game data found, extracting 1H data...")
-                    game_data['1H_data'] = extract_1h_data_from_html(search_results_html, pod_home_clean, pod_away_clean)
+                    game_data['1H_data'] = extract_1h_data_from_html(search_results_html, pod_home_clean, pod_away_clean, game_data.get('bck_local_is_pod_home', True))
             else:
                 game_data = parse_game_data_from_html(search_results_html, search_term)
 

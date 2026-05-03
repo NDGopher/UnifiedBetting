@@ -454,6 +454,10 @@ def normalize_team_name_for_matching(name):
         'sierra leone', 'liberia', 'mali', 'niger', 'chad', 'central african republic',
         'gabon', 'equatorial guinea', 'benin', 'togo', 'burkina faso', 'mauritania',
         'uruguay', 'colombia', 'peru', 'poland', 'austria',
+        'costa rica', 'venezuela', 'ecuador', 'paraguay', 'bolivia', 'chile',
+        'panama', 'honduras', 'guatemala', 'el salvador', 'nicaragua', 'cuba',
+        'dominican republic', 'puerto rico', 'jamaica', 'haiti', 'belize',
+        'guyana', 'suriname', 'trinidad and tobago', 'barbados',
         
         # Country abbreviations (3-letter codes)
         'den', 'isl', 'fin', 'rus', 'ger', 'fra', 'ita', 'esp', 'eng', 'sco', 'wal',

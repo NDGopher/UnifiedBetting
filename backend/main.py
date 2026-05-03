@@ -2005,158 +2005,24 @@ def build_event_object(event_id, entry):
     original_alert = entry.get('original_alert_details', {})
     display_home = original_alert.get('homeTeam', '')
     display_away = original_alert.get('awayTeam', '')
-    
-    # Clean team names - remove any sport/league suffixes that might have been appended
-    if display_home:
-        # Remove common sport abbreviations and full league names
-        suffixes_to_remove = [
-            # Sports abbreviations
-            'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC', 'WNBA', 'AFL', 'CFL', 'MLS',
-            
-            # Full league names
-            'Nippon Professional Baseball', 'Japanese Professional Baseball',
-            'Major League Baseball', 'National Football League', 'National Basketball Association',
-            'National Hockey League', 'College Football', 'College Basketball',
-            'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'Major League Soccer',
-            'Championship', 'League One', 'League Two', 'National League', 'Conference',
-            'Eredivisie', 'Primeira Liga', 'Liga MX', 'A-League', 'J-League', 'K-League',
-            'Liga Profesional', 'Brasileirão', 'Ligue 2', 'Serie B', '2. Bundesliga',
-            'Scottish Premiership', 'Scottish Championship', 'Scottish League One',
-            'Welsh Premier League', 'Northern Ireland Football League',
-            'Belgian Pro League', 'Swiss Super League', 'Austrian Bundesliga',
-            'Danish Superliga', 'Norwegian Eliteserien', 'Swedish Allsvenskan',
-            'Finnish Veikkausliiga', 'Icelandic Úrvalsdeild', 'Russian Premier League',
-            'Ukrainian Premier League', 'Turkish Süper Lig', 'Greek Super League',
-            'Croatian First Football League', 'Serbian SuperLiga', 'Bulgarian First League',
-            'Romanian Liga I', 'Czech First League', 'Hungarian Nemzeti Bajnokság',
-            'Slovak Super Liga', 'Slovenian PrvaLiga', 'Polish Ekstraklasa',
-            'Portuguese Primeira Liga', 'Spanish La Liga', 'Italian Serie A',
-            'German Bundesliga', 'French Ligue 1', 'English Premier League',
-            'Dutch Eredivisie', 'Belgian First Division A', 'Tipico Bundesliga',
-            
-            # Countries (full names)
-            'Denmark', 'Iceland', 'Finland', 'Russia', 'Germany', 'France', 'Italy', 'Spain',
-            'England', 'Scotland', 'Wales', 'Northern Ireland', 'Ireland', 'Netherlands',
-            'Belgium', 'Switzerland', 'Austria', 'Norway', 'Sweden', 'Poland', 'Czech Republic',
-            'Slovakia', 'Slovenia', 'Croatia', 'Serbia', 'Bulgaria', 'Romania', 'Hungary',
-            'Ukraine', 'Turkey', 'Greece', 'Portugal', 'Brazil', 'Argentina', 'Mexico',
-            'United States', 'Canada', 'Australia', 'Japan', 'South Korea', 'China',
-            'India', 'South Africa', 'New Zealand', 'Egypt', 'Morocco', 'Algeria', 'Tunisia',
-            'Nigeria', 'Kenya', 'Ethiopia', 'Ghana', 'Senegal', 'Ivory Coast', 'Cameroon',
-            'Zambia', 'Zimbabwe', 'Uganda', 'Tanzania', 'Angola', 'Mozambique', 'Sudan',
-            'South Sudan', 'Democratic Republic of the Congo', 'Republic of the Congo',
-            'Madagascar', 'Botswana', 'Namibia', 'Lesotho', 'Eswatini', 'Malawi', 'Rwanda',
-            'Burundi', 'Somalia', 'Eritrea', 'Djibouti', 'Seychelles', 'Mauritius', 'Comoros',
-            'Cape Verde', 'Sao Tome and Principe', 'Gambia', 'Guinea', 'Guinea-Bissau',
-            'Sierra Leone', 'Liberia', 'Mali', 'Niger', 'Chad', 'Central African Republic',
-            'Gabon', 'Equatorial Guinea', 'Benin', 'Togo', 'Burkina Faso', 'Mauritania',
-            
-            # Country abbreviations (3-letter codes)
-            'DEN', 'ISL', 'FIN', 'RUS', 'GER', 'FRA', 'ITA', 'ESP', 'ENG', 'SCO', 'WAL',
-            'NIR', 'IRL', 'NED', 'BEL', 'SUI', 'AUT', 'NOR', 'SWE', 'POL', 'CZE', 'SVK',
-            'SLO', 'CRO', 'SRB', 'BUL', 'ROU', 'HUN', 'UKR', 'TUR', 'GRE', 'POR', 'BRA',
-            'ARG', 'MEX', 'USA', 'CAN', 'AUS', 'JPN', 'KOR', 'CHN', 'IND', 'ZAF', 'NZL',
-            'EGY', 'MAR', 'DZA', 'TUN', 'NGA', 'KEN', 'ETH', 'GHA', 'SEN', 'CIV', 'CMR',
-            'ZMB', 'ZWE', 'UGA', 'TZA', 'AGO', 'MOZ', 'SDN', 'SSD', 'COD', 'COG', 'MDG',
-            'BWA', 'NAM', 'LSO', 'SWZ', 'MWI', 'RWA', 'BDI', 'SOM', 'ERI', 'DJI', 'SYC',
-            'MUS', 'COM', 'CPV', 'STP', 'GMB', 'GIN', 'GNB', 'SLE', 'LBR', 'MLI', 'NER',
-            'TCD', 'CAF', 'GAB', 'GNQ', 'BEN', 'TGO', 'BFA', 'MRT',
-            
-            # Regional/League indicators
-            'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC', 'FIFA',
-            'UEFA Champions League', 'UEFA Europa League', 'UEFA Conference League',
-            'Copa Libertadores', 'Copa Sudamericana', 'CONCACAF Champions League',
-            'AFC Champions League', 'CAF Champions League', 'OFC Champions League',
-            'FIFA Club World Cup', 'UEFA Nations League', 'Copa América', 'Gold Cup',
-            'African Cup of Nations', 'Asian Cup', 'Oceania Nations Cup', 'European Championship',
-            'World Cup', 'Olympics', 'Olympic Games', 'Summer Olympics', 'Winter Olympics',
-            'Paralympics', 'Youth Olympics', 'Commonwealth Games', 'Pan American Games',
-            'Asian Games', 'African Games', 'Mediterranean Games', 'Baltic Games',
-            'Nordic Games', 'Balkan Games', 'Caribbean Games', 'Central American Games',
-            'South American Games', 'Pacific Games', 'Indian Ocean Games', 'Arctic Games',
-            'Island Games', 'Microstate Games', 'Small States Games'
-        ]
-        
-        for suffix in suffixes_to_remove:
-            if display_home.endswith(suffix):
-                display_home = display_home[:-len(suffix)]
-                break
-    
-    if display_away:
-        # Remove common sport abbreviations and full league names
-        suffixes_to_remove = [
-            # Sports abbreviations
-            'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC', 'WNBA', 'AFL', 'CFL', 'MLS',
-            
-            # Full league names
-            'Nippon Professional Baseball', 'Japanese Professional Baseball',
-            'Major League Baseball', 'National Football League', 'National Basketball Association',
-            'National Hockey League', 'College Football', 'College Basketball',
-            'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'Major League Soccer',
-            'Championship', 'League One', 'League Two', 'National League', 'Conference',
-            'Eredivisie', 'Primeira Liga', 'Liga MX', 'A-League', 'J-League', 'K-League',
-            'Liga Profesional', 'Brasileirão', 'Ligue 2', 'Serie B', '2. Bundesliga',
-            'Scottish Premiership', 'Scottish Championship', 'Scottish League One',
-            'Welsh Premier League', 'Northern Ireland Football League',
-            'Belgian Pro League', 'Swiss Super League', 'Austrian Bundesliga',
-            'Danish Superliga', 'Norwegian Eliteserien', 'Swedish Allsvenskan',
-            'Finnish Veikkausliiga', 'Icelandic Úrvalsdeild', 'Russian Premier League',
-            'Ukrainian Premier League', 'Turkish Süper Lig', 'Greek Super League',
-            'Croatian First Football League', 'Serbian SuperLiga', 'Bulgarian First League',
-            'Romanian Liga I', 'Czech First League', 'Hungarian Nemzeti Bajnokság',
-            'Slovak Super Liga', 'Slovenian PrvaLiga', 'Polish Ekstraklasa',
-            'Portuguese Primeira Liga', 'Spanish La Liga', 'Italian Serie A',
-            'German Bundesliga', 'French Ligue 1', 'English Premier League',
-            'Dutch Eredivisie', 'Belgian First Division A', 'Tipico Bundesliga',
-            
-            # Countries (full names)
-            'Denmark', 'Iceland', 'Finland', 'Russia', 'Germany', 'France', 'Italy', 'Spain',
-            'England', 'Scotland', 'Wales', 'Northern Ireland', 'Ireland', 'Netherlands',
-            'Belgium', 'Switzerland', 'Austria', 'Norway', 'Sweden', 'Poland', 'Czech Republic',
-            'Slovakia', 'Slovenia', 'Croatia', 'Serbia', 'Bulgaria', 'Romania', 'Hungary',
-            'Ukraine', 'Turkey', 'Greece', 'Portugal', 'Brazil', 'Argentina', 'Mexico',
-            'United States', 'Canada', 'Australia', 'Japan', 'South Korea', 'China',
-            'India', 'South Africa', 'New Zealand', 'Egypt', 'Morocco', 'Algeria', 'Tunisia',
-            'Nigeria', 'Kenya', 'Ethiopia', 'Ghana', 'Senegal', 'Ivory Coast', 'Cameroon',
-            'Zambia', 'Zimbabwe', 'Uganda', 'Tanzania', 'Angola', 'Mozambique', 'Sudan',
-            'South Sudan', 'Democratic Republic of the Congo', 'Republic of the Congo',
-            'Madagascar', 'Botswana', 'Namibia', 'Lesotho', 'Eswatini', 'Malawi', 'Rwanda',
-            'Burundi', 'Somalia', 'Eritrea', 'Djibouti', 'Seychelles', 'Mauritius', 'Comoros',
-            'Cape Verde', 'Sao Tome and Principe', 'Gambia', 'Guinea', 'Guinea-Bissau',
-            'Sierra Leone', 'Liberia', 'Mali', 'Niger', 'Chad', 'Central African Republic',
-            'Gabon', 'Equatorial Guinea', 'Benin', 'Togo', 'Burkina Faso', 'Mauritania',
-            
-            # Country abbreviations (3-letter codes)
-            'DEN', 'ISL', 'FIN', 'RUS', 'GER', 'FRA', 'ITA', 'ESP', 'ENG', 'SCO', 'WAL',
-            'NIR', 'IRL', 'NED', 'BEL', 'SUI', 'AUT', 'NOR', 'SWE', 'POL', 'CZE', 'SVK',
-            'SLO', 'CRO', 'SRB', 'BUL', 'ROU', 'HUN', 'UKR', 'TUR', 'GRE', 'POR', 'BRA',
-            'ARG', 'MEX', 'USA', 'CAN', 'AUS', 'JPN', 'KOR', 'CHN', 'IND', 'ZAF', 'NZL',
-            'EGY', 'MAR', 'DZA', 'TUN', 'NGA', 'KEN', 'ETH', 'GHA', 'SEN', 'CIV', 'CMR',
-            'ZMB', 'ZWE', 'UGA', 'TZA', 'AGO', 'MOZ', 'SDN', 'SSD', 'COD', 'COG', 'MDG',
-            'BWA', 'NAM', 'LSO', 'SWZ', 'MWI', 'RWA', 'BDI', 'SOM', 'ERI', 'DJI', 'SYC',
-            'MUS', 'COM', 'CPV', 'STP', 'GMB', 'GIN', 'GNB', 'SLE', 'LBR', 'MLI', 'NER',
-            'TCD', 'CAF', 'GAB', 'GNQ', 'BEN', 'TGO', 'BFA', 'MRT',
-            
-            # Regional/League indicators
-            'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC', 'FIFA',
-            'UEFA Champions League', 'UEFA Europa League', 'UEFA Conference League',
-            'Copa Libertadores', 'Copa Sudamericana', 'CONCACAF Champions League',
-            'AFC Champions League', 'CAF Champions League', 'OFC Champions League',
-            'FIFA Club World Cup', 'UEFA Nations League', 'Copa América', 'Gold Cup',
-            'African Cup of Nations', 'Asian Cup', 'Oceania Nations Cup', 'European Championship',
-            'World Cup', 'Olympics', 'Olympic Games', 'Summer Olympics', 'Winter Olympics',
-            'Paralympics', 'Youth Olympics', 'Commonwealth Games', 'Pan American Games',
-            'Asian Games', 'African Games', 'Mediterranean Games', 'Baltic Games',
-            'Nordic Games', 'Balkan Games', 'Caribbean Games', 'Central American Games',
-            'South American Games', 'Pacific Games', 'Indian Ocean Games', 'Arctic Games',
-            'Island Games', 'Microstate Games', 'Small States Games'
-        ]
-        
-        for suffix in suffixes_to_remove:
-            if display_away.endswith(suffix):
-                display_away = display_away[:-len(suffix)]
-                break
-    
+
+    # Strip country/league suffixes while preserving original casing.
+    # normalize_team_name_for_matching handles both spaced ("Herediano Costa Rica")
+    # and concatenated ("HeredianoCosta Rica") cases via regex suffix matching.
+    def _clean_display_name(raw: str) -> str:
+        if not raw:
+            return raw
+        stripped_lower = normalize_team_name_for_matching(raw)
+        if not stripped_lower:
+            return raw.strip()
+        raw_lower = raw.lower()
+        if raw_lower.startswith(stripped_lower):
+            return raw[:len(stripped_lower)].strip()
+        return raw.strip()
+
+    display_home = _clean_display_name(display_home)
+    display_away = _clean_display_name(display_away)
+
     # Fallback to Pinnacle data if original alert doesn't have team names
     if not display_home or display_home == 'Unknown':
         display_home = pinnacle_data.get('home', 'Unknown')

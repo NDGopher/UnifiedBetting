@@ -716,7 +716,7 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         odds_table = game_wrapper_table.find('table', class_='new_tb_cont')
         if not odds_table: print(f"[BetbckParser] No 'new_tb_cont' odds table for game {idx}. (Event ID: {event_id})"); continue
         
-        output_data = {"source":"betbck.com","betbck_displayed_local":raw_bck_l,"betbck_displayed_visitor":raw_bck_v,"pod_home_team":target_home_team_pod,"pod_away_team":target_away_team_pod,"home_moneyline_american":None,"away_moneyline_american":None,"draw_moneyline_american":None,"home_spreads":[],"away_spreads":[],"game_total_line":None,"game_total_over_odds":None,"game_total_under_odds":None,"home_team_total_over_line":None, "home_team_total_over_odds":None,"home_team_total_under_line":None, "home_team_total_under_odds":None,"away_team_total_over_line":None, "away_team_total_over_odds":None,"away_team_total_under_line":None, "away_team_total_under_odds":None}
+        output_data = {"source":"betbck.com","betbck_displayed_local":raw_bck_l,"betbck_displayed_visitor":raw_bck_v,"pod_home_team":target_home_team_pod,"pod_away_team":target_away_team_pod,"home_moneyline_american":None,"away_moneyline_american":None,"draw_moneyline_american":None,"home_spreads":[],"away_spreads":[],"game_total_line":None,"game_total_over_odds":None,"game_total_under_odds":None,"home_team_total_over_line":None, "home_team_total_over_odds":None,"home_team_total_under_line":None, "home_team_total_under_odds":None,"away_team_total_over_line":None, "away_team_total_over_odds":None,"away_team_total_under_line":None, "away_team_total_under_odds":None,"bck_local_is_pod_home":bck_local_is_pod_home}
         
         data_rows_source = odds_table.find('tbody') or odds_table
         all_tr_in_odds_section = data_rows_source.find_all('tr', recursive=False) 
@@ -864,7 +864,7 @@ def parse_game_data_from_html(search_results_html, search_term):
     
     # If we found a game, also try to extract 1H data from the same HTML
     if result:
-        result['1H_data'] = extract_1h_data_from_html(search_results_html, home_team, away_team)
+        result['1H_data'] = extract_1h_data_from_html(search_results_html, home_team, away_team, result.get('bck_local_is_pod_home', True))
     
     return result
 
@@ -917,7 +917,7 @@ def scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck
     # Add 1H data if we found a game
     if parsed_game_data:
         print(f"[BetbckScraper-CORE] Scraper returned parsed game data.")
-        parsed_game_data['1H_data'] = extract_1h_data_from_html(search_results_html, pod_home_team, pod_away_team)
+        parsed_game_data['1H_data'] = extract_1h_data_from_html(search_results_html, pod_home_team, pod_away_team, parsed_game_data.get('bck_local_is_pod_home', True))
     else: 
         print(f"[BetbckScraper-CORE] Scraper did NOT find or parse specific game from HTML.")
     return parsed_game_data 
@@ -1174,7 +1174,7 @@ def _build_1h_data_dict(tds_home_row, tds_away_row):
     return result
 
 
-def extract_1h_data_from_html(html_content, home_team, away_team):
+def extract_1h_data_from_html(html_content, home_team, away_team, bck_local_is_pod_home=True):
     """Extract 1H data from HTML content that contains period information."""
     try:
         soup = BeautifulSoup(html_content, 'html.parser')
@@ -1211,6 +1211,9 @@ def extract_1h_data_from_html(html_content, home_team, away_team):
                         tds_home_row = data_rows[0].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
                         tds_away_row = data_rows[1].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
                         
+                        if not bck_local_is_pod_home:
+                            print(f"[BetbckParser] 1H site1: swapping home/away rows (bck_local_is_pod_home=False)")
+                            tds_home_row, tds_away_row = tds_away_row, tds_home_row
                         return _build_1h_data_dict(tds_home_row, tds_away_row)
             else:
                 # Also check for any text that might indicate 1H data
@@ -1270,6 +1273,10 @@ def extract_1h_data_from_html(html_content, home_team, away_team):
                         if len(data_rows) >= 2:
                             tds_home_row = data_rows[0].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
                             tds_away_row = data_rows[1].find_all('td', class_=lambda x: x and 'tbl_betAmount_td' in x)
+                            
+                            if not bck_local_is_pod_home:
+                                print(f"[BetbckParser] 1H site2: swapping home/away rows (bck_local_is_pod_home=False)")
+                                tds_home_row, tds_away_row = tds_away_row, tds_home_row
                             
                             print(f"[BetbckParser] Data rows found: {len(data_rows)}")
                             print(f"[BetbckParser] Home row cells: {len(tds_home_row)}")
@@ -1336,6 +1343,9 @@ def extract_1h_data_from_html(html_content, home_team, away_team):
                             
                             if home_has_spreads or home_has_ml:
                                 print(f"[BetbckParser] Found 1st 5 table with spreads/moneylines!")
+                                if not bck_local_is_pod_home:
+                                    print(f"[BetbckParser] 1H site3: swapping home/away rows (bck_local_is_pod_home=False)")
+                                    tds_home_row, tds_away_row = tds_away_row, tds_home_row
                                 return {
                                     "home_spreads": extract_all_spread_options_from_text(tds_home_row[0]) if len(tds_home_row)>0 else [],
                                     "away_spreads": extract_all_spread_options_from_text(tds_away_row[0]) if len(tds_away_row)>0 else [],
@@ -1403,6 +1413,9 @@ def extract_1h_data_from_html(html_content, home_team, away_team):
                                 print(f"[BetbckParser] Away cell {i}: '{cell_text}'")
                             
                             print(f"[BetbckParser] Successfully extracted 1st 5 innings data from separate table {table_idx}")
+                            if not bck_local_is_pod_home:
+                                print(f"[BetbckParser] 1H site4: swapping home/away rows (bck_local_is_pod_home=False)")
+                                tds_home_row, tds_away_row = tds_away_row, tds_home_row
                             return _build_1h_data_dict(tds_home_row, tds_away_row)
         
         # If we get here, we didn't find any F5 data, so return None
