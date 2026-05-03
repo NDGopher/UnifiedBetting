@@ -21,6 +21,7 @@ import {
   HelpOutline,
   Timeline,
   History,
+  DeleteSweep,
 } from "@mui/icons-material";
 import { API_BASE } from "../utils/apiConfig";
 
@@ -170,6 +171,7 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [panelOpen, setPanelOpen] = useState(true);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const [totalFetched, setTotalFetched] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   const addRecord = useCallback((rec: AlertRecord) => {
@@ -225,6 +227,18 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
     setVisibleCount(prev => prev + PAGE_SIZE);
   };
 
+  const handleClearLog = useCallback(async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!window.confirm('Clear the entire alert log? This cannot be undone.')) return;
+    setClearing(true);
+    try {
+      await fetch(`${API_BASE}/api/alert-log`, { method: 'DELETE' });
+      setAllRecords([]);
+      setVisibleCount(PAGE_SIZE);
+    } catch {}
+    finally { setClearing(false); }
+  }, []);
+
   return (
     <Paper
       sx={{
@@ -264,6 +278,28 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
         <Typography variant="caption" sx={{ color: "#555", fontSize: "0.7rem", mr: 0.5 }}>
           {allRecords.length === 0 ? "waiting for alerts..." : `${allRecords.length} alerts`}
         </Typography>
+        {allRecords.length > 0 && (
+          <Button
+            size="small"
+            startIcon={clearing ? <CircularProgress size={10} sx={{ color: "#F44336" }} /> : <DeleteSweep sx={{ fontSize: 14 }} />}
+            onClick={handleClearLog}
+            disabled={clearing}
+            sx={{
+              fontSize: "0.65rem",
+              color: "#555",
+              textTransform: "none",
+              minWidth: "auto",
+              px: 0.75,
+              py: 0.25,
+              mr: 0.5,
+              border: "1px solid rgba(244,67,54,0.2)",
+              borderRadius: 1,
+              "&:hover": { color: "#F44336", borderColor: "rgba(244,67,54,0.5)", bgcolor: "rgba(244,67,54,0.06)" },
+            }}
+          >
+            Clear
+          </Button>
+        )}
         <IconButton size="small" sx={{ p: 0, color: "#555" }}>
           {panelOpen ? <ExpandLess sx={{ fontSize: 16 }} /> : <ExpandMore sx={{ fontSize: 16 }} />}
         </IconButton>

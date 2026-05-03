@@ -39,6 +39,11 @@ def get_alert_log_ring_buffer() -> List[Dict]:
         return list(_ring_buffer)
 
 
+def clear_ring_buffer() -> None:
+    with _buffer_lock:
+        _ring_buffer.clear()
+
+
 def start_alert_log(event_id: str) -> "AlertLogger":
     logger = AlertLogger(str(event_id))
     with _loggers_lock:

@@ -33,7 +33,8 @@ from betbck_request_manager import betbck_manager
 from ace_scraper import AceScraper
 from database_models import get_session, HighEVAlert, get_alert_log_from_db
 from config import setup_logging
-from alert_logger import start_alert_log, finalize_alert_log, get_alert_log_ring_buffer, get_logger_for_event
+from alert_logger import start_alert_log, finalize_alert_log, get_alert_log_ring_buffer, get_logger_for_event, clear_ring_buffer
+from alert_history import get_history, clear_history
 
 # Setup proper logging configuration (suppresses Selenium spam)
 setup_logging()
@@ -1643,15 +1644,27 @@ async def run_streaming_pipeline_background(sport_filters=None):
 
 @app.get("/api/alert-log")
 async def get_alert_log():
-    """Return up to 200 per-alert processing records: memory ring buffer first, then DB for older ones."""
+    """Return up to 500 per-alert processing records. JSON file is primary (persists across restarts),
+    topped up with any in-memory ring buffer records not yet flushed to disk."""
+    # JSON file is source-of-truth
+    file_records = get_history()
+    file_records_reversed = list(reversed(file_records))  # newest first
+
+    # Ring buffer may contain records not yet written to file (race window is tiny but possible)
     memory_records = get_alert_log_ring_buffer()
-    total_limit = 200
-    if len(memory_records) >= total_limit:
-        return memory_records[:total_limit]
-    # Fetch older records from DB, excluding event_ids already in memory
-    memory_event_ids = {r["event_id"] for r in memory_records}
-    db_records = get_alert_log_from_db(limit=total_limit - len(memory_records), exclude_event_ids=memory_event_ids)
-    return memory_records + db_records
+    file_event_ts = {(r.get("event_id"), r.get("timestamp")) for r in file_records_reversed}
+    extra = [r for r in memory_records if (r.get("event_id"), r.get("timestamp")) not in file_event_ts]
+
+    combined = extra + file_records_reversed
+    return combined[:500]
+
+
+@app.delete("/api/alert-log")
+async def clear_alert_log():
+    """Wipe the persisted JSON alert log and the in-memory ring buffer."""
+    clear_history()
+    clear_ring_buffer()
+    return {"status": "ok", "message": "Alert log cleared."}
 
 @app.post("/api/run-pipeline")
 async def run_pipeline():
