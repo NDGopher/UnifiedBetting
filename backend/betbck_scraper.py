@@ -773,11 +773,31 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         print(f"[BetbckParser] Single match: {m['bck_home']} vs {m['bck_away']} (Event ID: {event_id})")
         return m["data"]
 
-    # Multiple wrappers matched by team name — use event_date to pick the right one
-    print(f"[BetbckParser] {len(matches)} wrappers matched by team name (Event ID: {event_id}) — applying date tiebreaker")
+    # Multiple wrappers matched by team name.
+    # Step 1: prefer plain full-game rows (no alt-line / period / reg-time suffixes).
+    _PERIOD_SUFFIXES = re.compile(
+        r'\b(Alt\s+Line|Alt\.?\s*Line|\d[PH]|1st\s+Half|2nd\s+Half|Reg(?:ular)?\s+Time|OT|ET)\b',
+        re.IGNORECASE
+    )
+    plain_matches = [
+        m for m in matches
+        if not _PERIOD_SUFFIXES.search(m["bck_home"]) and not _PERIOD_SUFFIXES.search(m["bck_away"])
+    ]
+    candidate_pool = plain_matches if plain_matches else matches
+    if len(plain_matches) < len(matches):
+        dropped = [f"{m['bck_home']} vs {m['bck_away']}" for m in matches if m not in candidate_pool]
+        print(f"[BetbckParser] Plain-name filter: kept {len(candidate_pool)}/{len(matches)}, dropped: {dropped} (Event ID: {event_id})")
+
+    if len(candidate_pool) == 1:
+        m = candidate_pool[0]
+        print(f"[BetbckParser] Plain-name filter chose: {m['bck_home']} vs {m['bck_away']} (Event ID: {event_id})")
+        return m["data"]
+
+    # Step 2: date tiebreaker within remaining candidates
+    print(f"[BetbckParser] {len(candidate_pool)} candidates after plain-name filter (Event ID: {event_id}) — applying date tiebreaker")
     if event_date is not None:
         dated = []
-        for m in matches:
+        for m in candidate_pool:
             diff = abs((m["bck_date"] - event_date).total_seconds()) if m["bck_date"] else float("inf")
             dated.append((m, diff))
         dated.sort(key=lambda x: x[1])
@@ -787,8 +807,8 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
             print(f"[BetbckParser] WARNING: closest date match is {best_diff/3600:.1f}h from Pinnacle start — may be wrong game (Event ID: {event_id})")
         return best["data"]
 
-    print(f"[BetbckParser] No event_date supplied — returning first of {len(matches)} matches (Event ID: {event_id})")
-    return matches[0]["data"]
+    print(f"[BetbckParser] No event_date supplied — returning first of {len(candidate_pool)} candidates (Event ID: {event_id})")
+    return candidate_pool[0]["data"]
 
 def parse_game_data_from_html(search_results_html, search_term):
     """

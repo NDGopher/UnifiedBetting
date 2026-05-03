@@ -1303,5 +1303,382 @@
     ],
     "result": "not_found",
     "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:11:17.261773Z",
+    "event_id": "1629325558",
+    "timestamp": "2026-05-03T00:11:15.700590Z",
+    "teams": {
+      "home": "Alianza Lima",
+      "away": "UCV MoqueguaPeru",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "UCV MoqueguaPeru @ Alianza Lima | ? | market=Total | +189 -> +170",
+        "detail": {
+          "home": "Alianza Lima",
+          "away": "UCV MoqueguaPeru",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+189",
+          "new_odds": "+170"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lima' (from 'Alianza Lima' / 'UCV MoqueguaPeru'): last word of home team 'alianza lima'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lima' -> HTTP 200 (55255 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lima",
+          "status": 200,
+          "response_bytes": 55255
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Moquegua' vs 'Alianza Lima'  <->  POD 'alianza lima' vs 'ucv moquegua'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Moquegua",
+          "bck_away": "Alianza Lima",
+          "pod_home": "alianza lima",
+          "pod_away": "ucv moquegua",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Moquegua' vs 'Alianza Lima'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Deportivo Cali' vs 'Deportes Tolima'  <->  POD 'alianza lima' vs 'ucv moquegua'  [token_set_h=38 | token_set_a=15 | partial_h=40 | partial_a=27 | threshold=60]",
+        "detail": {
+          "bck_home": "Deportivo Cali",
+          "bck_away": "Deportes Tolima",
+          "pod_home": "alianza lima",
+          "pod_away": "ucv moquegua",
+          "scores": {
+            "token_set_h": 38,
+            "token_set_a": 15,
+            "partial_h": 40,
+            "partial_a": 27,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_spreads=[{'line': '-2.25', 'odds': '-110'}] | away_spreads=[{'line': '+2.25', 'odds': '-120'}]",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [
+            {
+              "line": "-2.25",
+              "odds": "-110"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+2.25",
+              "odds": "-120"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home -2.25: BCK 1.9091 (-110) / PIN_NVP 2.1600 (+116) => -11.82%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "-2.25",
+          "betbck_american": "-110",
+          "pin_nvp_american": "+116",
+          "bck_decimal": 1.9091,
+          "pin_nvp_decimal": 2.16,
+          "ev_pct": -11.82
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away 2.25: BCK 1.8333 (-120) / PIN_NVP 1.8547 (-117) => -1.33%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "2.25",
+          "betbck_american": "-120",
+          "pin_nvp_american": "-117",
+          "bck_decimal": 1.8333,
+          "pin_nvp_decimal": 1.8547,
+          "ev_pct": -1.33
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 3.0: BCK 1.7143 (-140) / PIN_NVP 2.0900 (+109) => -17.94%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "3.0",
+          "betbck_american": "-140",
+          "pin_nvp_american": "+109",
+          "bck_decimal": 1.7143,
+          "pin_nvp_decimal": 2.09,
+          "ev_pct": -17.94
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 3.0: BCK 2.0000 (+100) / PIN_NVP 1.9174 (-109) => +4.28%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "3.0",
+          "betbck_american": "+100",
+          "pin_nvp_american": "-109",
+          "bck_decimal": 2.0,
+          "pin_nvp_decimal": 1.9174,
+          "ev_pct": 4.28
+        }
+      }
+    ],
+    "result": "ev_found",
+    "ev_summary": [
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "-2.25",
+        "betbck_odds": "-110",
+        "pinnacle_nvp": "+116",
+        "betbck_decimal": 1.9091,
+        "pin_nvp_decimal": 2.16,
+        "ev_pct": -11.82
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "2.25",
+        "betbck_odds": "-120",
+        "pinnacle_nvp": "-117",
+        "betbck_decimal": 1.8333,
+        "pin_nvp_decimal": 1.8547,
+        "ev_pct": -1.33
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "3.0",
+        "betbck_odds": "-140",
+        "pinnacle_nvp": "+109",
+        "betbck_decimal": 1.7143,
+        "pin_nvp_decimal": 2.09,
+        "ev_pct": -17.94
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "3.0",
+        "betbck_odds": "+100",
+        "pinnacle_nvp": "-109",
+        "betbck_decimal": 2.0,
+        "pin_nvp_decimal": 1.9174,
+        "ev_pct": 4.28
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T00:14:08.598636Z",
+    "event_id": "1777767238688",
+    "timestamp": "2026-05-03T00:14:06.950406Z",
+    "teams": {
+      "home": "Alianza Lima",
+      "away": "UCV MoqueguaPeru",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "UCV MoqueguaPeru @ Alianza Lima | ? | market=Spread | +160 -> +142",
+        "detail": {
+          "home": "Alianza Lima",
+          "away": "UCV MoqueguaPeru",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+160",
+          "new_odds": "+142"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lima' (from 'Alianza Lima' / 'UCV MoqueguaPeru'): last word of home team 'alianza lima'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lima' -> HTTP 200 (55255 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lima",
+          "status": 200,
+          "response_bytes": 55255
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Moquegua' vs 'Alianza Lima'  <->  POD 'alianza lima' vs 'ucv moquegua'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Moquegua",
+          "bck_away": "Alianza Lima",
+          "pod_home": "alianza lima",
+          "pod_away": "ucv moquegua",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Moquegua' vs 'Alianza Lima'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Deportivo Cali' vs 'Deportes Tolima'  <->  POD 'alianza lima' vs 'ucv moquegua'  [token_set_h=38 | token_set_a=15 | partial_h=40 | partial_a=27 | threshold=60]",
+        "detail": {
+          "bck_home": "Deportivo Cali",
+          "bck_away": "Deportes Tolima",
+          "pod_home": "alianza lima",
+          "pod_away": "ucv moquegua",
+          "scores": {
+            "token_set_h": 38,
+            "token_set_a": 15,
+            "partial_h": 40,
+            "partial_a": 27,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_spreads=[{'line': '-2.25', 'odds': '-110'}] | away_spreads=[{'line': '+2.25', 'odds': '-120'}]",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [
+            {
+              "line": "-2.25",
+              "odds": "-110"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+2.25",
+              "odds": "-120"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:15:00.779308Z",
+    "event_id": "1629500288",
+    "timestamp": "2026-05-03T00:15:00.158904Z",
+    "teams": {
+      "home": "Qihui Yan",
+      "away": "Taila SantosPFL",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Taila SantosPFL @ Qihui Yan | ? | market=Total | +185 -> +144",
+        "detail": {
+          "home": "Qihui Yan",
+          "away": "Taila SantosPFL",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+185",
+          "new_odds": "+144"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'qihui' (from 'Qihui Yan' / 'Taila SantosPFL'): first word of home team 'qihui yan'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='qihui' -> HTTP 200 (48197 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "qihui",
+          "status": 200,
+          "response_bytes": 48197
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Qihui Yan' vs 'Taila Santos'  <->  POD 'qihui yan' vs 'taila santos'  [exact_order1=100]",
+        "detail": {
+          "bck_home": "Qihui Yan",
+          "bck_away": "Taila Santos",
+          "pod_home": "qihui yan",
+          "pod_away": "taila santos",
+          "scores": {
+            "exact_order1": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Qihui Yan' vs 'Taila Santos'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "No odds extracted",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
   }
 ]
