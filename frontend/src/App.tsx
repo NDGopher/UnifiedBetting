@@ -1,4 +1,4 @@
-import React, { createContext, useRef } from "react";
+import React, { createContext, useRef, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Toolbar, Slider, Switch, TextField, Divider, InputAdornment, Select, MenuItem, FormControl, InputLabel, Chip } from "@mui/material";
 import { 
   Analytics, 
   Calculate, 
@@ -172,6 +172,161 @@ const modernTheme = createTheme({
     },
   },
 });
+
+// ─── Auto Bet Placement Panel ────────────────────────────────────────────────
+const sliderSx = {
+  color: '#2E7D32',
+  '& .MuiSlider-thumb': { width: 14, height: 14, bgcolor: '#2E7D32' },
+  '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
+  '& .MuiSlider-track': { bgcolor: '#2E7D32', border: 'none' },
+  '& .MuiSlider-valueLabel': {
+    bgcolor: '#1a1a1a', border: '1px solid rgba(46,125,50,0.5)',
+    fontSize: '0.75rem', color: '#2E7D32',
+  },
+};
+
+const inputSx = {
+  '& .MuiOutlinedInput-root': {
+    bgcolor: 'rgba(255,255,255,0.04)',
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
+    '&:hover fieldset': { borderColor: 'rgba(46,125,50,0.5)' },
+    '&.Mui-focused fieldset': { borderColor: '#2E7D32' },
+  },
+  '& .MuiInputLabel-root': { color: '#777', fontSize: '0.8rem' },
+  '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' },
+  '& input': { color: '#fff', fontSize: '0.85rem' },
+};
+
+function AutoBetPlacementPanel() {
+  const [enabled, setEnabled] = useState(false);
+  const [minEv, setMinEv] = useState(2);
+  const [maxEv, setMaxEv] = useState(20);
+  const [unitSize, setUnitSize] = useState('50');
+  const [maxPerEvent, setMaxPerEvent] = useState('200');
+  const [kelly, setKelly] = useState('fixed');
+
+  const kellyDesc: Record<string, string> = {
+    fixed: `Flat $${unitSize} per qualifying bet.`,
+    quarter_kelly: 'Quarter Kelly — conservative, recommended for live use.',
+    half_kelly: 'Half Kelly — moderate risk.',
+    full_kelly: 'Full Kelly — aggressive, higher variance.',
+  };
+
+  return (
+    <Paper
+      sx={{
+        p: 4,
+        display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden',
+        border: enabled ? '1px solid rgba(76,175,80,0.25)' : '1px solid rgba(255,255,255,0.08)',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        '&:hover': { boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)', transform: 'translateY(-2px)' },
+      }}
+    >
+      {/* Header */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+        <AutoMode sx={{ fontSize: 24, color: enabled ? '#4CAF50' : '#2E7D32' }} />
+        <Typography component="h2" variant="h6" sx={{ color: '#FFFFFF', fontWeight: 500, letterSpacing: '-0.01em' }}>
+          Auto Bet Placement
+        </Typography>
+        {enabled && (
+          <Chip label="ACTIVE" size="small" sx={{ bgcolor: 'rgba(76,175,80,0.15)', color: '#4CAF50', border: '1px solid rgba(76,175,80,0.35)', fontSize: '0.65rem', height: 20, fontWeight: 700, letterSpacing: '0.05em',
+            '& .MuiChip-label': { px: 1 } }} />
+        )}
+        <Box sx={{ flexGrow: 1 }} />
+        <Typography sx={{ fontSize: '0.8rem', color: enabled ? '#4CAF50' : '#777' }}>
+          {enabled ? 'Enabled' : 'Disabled'}
+        </Typography>
+        <Switch
+          checked={enabled}
+          onChange={e => setEnabled(e.target.checked)}
+          sx={{
+            '& .MuiSwitch-switchBase.Mui-checked': { color: '#4CAF50' },
+            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { bgcolor: '#4CAF50' },
+            '& .MuiSwitch-track': { bgcolor: 'rgba(255,255,255,0.15)' },
+          }}
+        />
+      </Box>
+
+      <Divider sx={{ mb: 3 }} />
+
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+        {/* Left: EV Range */}
+        <Box>
+          <Typography sx={{ color: '#B0B0B0', fontSize: '0.75rem', fontWeight: 600, mb: 2, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            EV Range to Bet
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+            <Typography sx={{ fontSize: '0.75rem', color: '#777', width: 30, flexShrink: 0 }}>Min</Typography>
+            <Slider value={minEv} onChange={(_, v) => setMinEv(v as number)}
+              min={0} max={20} step={0.5} valueLabelDisplay="auto" valueLabelFormat={v => `${v}%`} sx={sliderSx} />
+            <Typography sx={{ fontSize: '0.8rem', color: '#2E7D32', width: 36, textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>
+              {minEv}%
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Typography sx={{ fontSize: '0.75rem', color: '#777', width: 30, flexShrink: 0 }}>Max</Typography>
+            <Slider value={maxEv} onChange={(_, v) => setMaxEv(v as number)}
+              min={0} max={20} step={0.5} valueLabelDisplay="auto" valueLabelFormat={v => v >= 20 ? '∞' : `${v}%`} sx={sliderSx} />
+            <Typography sx={{ fontSize: '0.8rem', color: maxEv >= 20 ? '#555' : '#2E7D32', width: 36, textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>
+              {maxEv >= 20 ? '∞' : `${maxEv}%`}
+            </Typography>
+          </Box>
+          <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 1.5, lineHeight: 1.5 }}>
+            Only bets with EV between {minEv}% and {maxEv >= 20 ? '∞' : `${maxEv}%`} will be placed automatically when a POD alert fires.
+          </Typography>
+        </Box>
+
+        {/* Right: Stake Settings */}
+        <Box>
+          <Typography sx={{ color: '#B0B0B0', fontSize: '0.75rem', fontWeight: 600, mb: 2, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Stake Settings
+          </Typography>
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
+            <TextField
+              label="Unit Size" value={unitSize} onChange={e => setUnitSize(e.target.value)} size="small"
+              InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
+              sx={inputSx}
+            />
+            <TextField
+              label="Max / Event" value={maxPerEvent} onChange={e => setMaxPerEvent(e.target.value)} size="small"
+              InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
+              sx={inputSx}
+            />
+          </Box>
+          <FormControl size="small" fullWidth>
+            <InputLabel sx={{ color: '#777', fontSize: '0.8rem', '&.Mui-focused': { color: '#2E7D32' } }}>Sizing Method</InputLabel>
+            <Select value={kelly} onChange={e => setKelly(e.target.value)} label="Sizing Method"
+              sx={{ bgcolor: 'rgba(255,255,255,0.04)', color: '#fff', fontSize: '0.85rem',
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' },
+                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(46,125,50,0.5)' },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#2E7D32' },
+                '& .MuiSvgIcon-root': { color: '#777' } }}>
+              <MenuItem value="fixed">Fixed Unit Size</MenuItem>
+              <MenuItem value="quarter_kelly">Quarter Kelly</MenuItem>
+              <MenuItem value="half_kelly">Half Kelly</MenuItem>
+              <MenuItem value="full_kelly">Full Kelly</MenuItem>
+            </Select>
+          </FormControl>
+          <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 1, lineHeight: 1.5 }}>
+            {kellyDesc[kelly]}
+          </Typography>
+        </Box>
+      </Box>
+
+      <Divider sx={{ mt: 3, mb: 2 }} />
+
+      {/* Status footer */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
+        <Typography sx={{ fontSize: '0.72rem', color: '#555' }}>
+          ⚑ Duplicate protection is always on — each game/market combination is only bet once per session.
+        </Typography>
+        <Typography sx={{ fontSize: '0.72rem', color: '#444', fontStyle: 'italic' }}>
+          Wager POST endpoint pending — configure once BetBCK form selectors are confirmed.
+        </Typography>
+      </Box>
+    </Paper>
+  );
+}
 
 // Context for BetBCK tab reference
 export const BetbckTabContext = createContext<{ betbckTabRef: React.MutableRefObject<Window | null> }>({ betbckTabRef: { current: null } });
@@ -383,100 +538,7 @@ function App() {
               </Grid>
               {/* Auto Bet Placement Section */}
               <Grid item xs={12}>
-                <Paper
-                  sx={{
-                    p: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    overflow: "hidden",
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
-                      transform: 'translateY(-2px)',
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      mb: 3,
-                    }}
-                  >
-                    <AutoMode sx={{ fontSize: 24, color: "#2E7D32" }} />
-                    <Typography
-                      component="h2"
-                      variant="h6"
-                      sx={{ 
-                        color: '#FFFFFF', 
-                        fontWeight: 500,
-                        letterSpacing: "-0.01em"
-                      }}
-                    >
-                      Auto Bet Placement
-                    </Typography>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box
-                      sx={{
-                        px: 2,
-                        py: 0.5,
-                        borderRadius: '8px',
-                        background: 'rgba(255, 152, 0, 0.1)',
-                        border: '1px solid rgba(255, 152, 0, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 0.5,
-                        fontSize: '0.75rem',
-                        color: '#FF9800',
-                        fontWeight: 500,
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: 6,
-                          height: 6,
-                          borderRadius: '50%',
-                          backgroundColor: '#FF9800',
-                        }}
-                      />
-                      COMING SOON
-                    </Box>
-                  </Box>
-                  
-                  <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    py: 6,
-                    textAlign: 'center'
-                  }}>
-                    <AutoMode sx={{ 
-                      fontSize: 64, 
-                      color: 'rgba(46, 125, 50, 0.3)', 
-                      mb: 3 
-                    }} />
-                    <Typography variant="h6" sx={{ 
-                      color: '#B0B0B0', 
-                      mb: 2,
-                      fontWeight: 500
-                    }}>
-                      Automated Bet Placement
-                    </Typography>
-                    <Typography variant="body2" sx={{ 
-                      color: '#9E9E9E',
-                      maxWidth: 400,
-                      lineHeight: 1.6
-                    }}>
-                      This feature will automatically place bets on high EV opportunities 
-                      based on your configured parameters and risk management settings.
-                    </Typography>
-                  </Box>
-                </Paper>
+                <AutoBetPlacementPanel />
               </Grid>
               
               {/* EV Calculator at the bottom, centered */}

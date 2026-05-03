@@ -556,6 +556,13 @@ async def handle_pod_alert(request: Request):
                 "message": f"Duplicate alert for {event_id_str} rejected (processed {time_since_last:.1f}s ago)"
             })
 
+        # RACE-CONDITION FIX: stamp _last_processed_times immediately on acceptance
+        # (before queuing) so that any subsequent rapid alerts for the same event_id
+        # that arrive before the worker thread actually runs will be correctly rejected
+        # by the 120s check above.  The worker will overwrite this with its own stamp
+        # when it actually processes the payload.
+        _last_processed_times[event_id_str] = now
+
         logger.info(f"[PerEventQueue][DIAG] Queuing alert for Event ID: {event_id_str}")
         
         # Save high EV alerts to database (>3% EV) - ULTRA SAFE MODE
