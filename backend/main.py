@@ -256,13 +256,13 @@ async def event_alert_worker(event_id):
                                 betbck_data = betbck_result.get("data", {})
                                 potential_bets = betbck_data.get("potential_bets_analyzed", [])
 
-                                # Filter out unrealistic EVs (outside ±30% range)
+                                # Filter out unrealistic EVs (outside ±15% range)
                                 realistic_bets = []
                                 for bet in potential_bets:
                                     try:
                                         ev_str = bet.get("ev", "0")
                                         ev_value = float(ev_str.replace('%', ''))
-                                        if -30 <= ev_value <= 30:
+                                        if -15 <= ev_value <= 15:
                                             realistic_bets.append(bet)
                                         else:
                                             logger.warning(f"[PerEventQueue] Filtering out unrealistic EV: {ev_str} for {bet.get('market', 'N/A')} {bet.get('selection', 'N/A')}")
@@ -1433,9 +1433,9 @@ async def run_streaming_pipeline_background(sport_filters=None):
                             logger.error(f"[STREAMING] Error writing results: {e}")
                             print(f"[STREAMING] ERROR writing results: {e}")
                         
-                        # Broadcast update via WebSocket
+                        # Broadcast update via WebSocket + SSE
                         try:
-                            await manager.broadcast({
+                            _upd_payload = {
                                 "type": "buckeye_update",
                                 "data": {
                                     "events": streaming_results,
@@ -1445,7 +1445,9 @@ async def run_streaming_pipeline_background(sport_filters=None):
                                     "batch_completed": 1,
                                     "total_batches": 1
                                 }
-                            })
+                            }
+                            await manager.broadcast(_upd_payload)
+                            await sse_manager.broadcast(_upd_payload)
                             logger.info(f"[STREAMING] Broadcasted update: {len(streaming_results)} events")
                             print(f"[STREAMING] Broadcasted update: {len(streaming_results)} events")
                         except Exception as e:
@@ -1476,36 +1478,37 @@ async def run_streaming_pipeline_background(sport_filters=None):
             
             total_processed = len(betbck_games)
         else:
-            # Normal path: process in batches for streaming
-            # Use smaller batches for large selections to show results faster
-            streaming_batch_size = min(batch_size, 10) if len(betbck_games) > 50 else batch_size
-            for i in range(0, len(betbck_games), streaming_batch_size):
-                batch = betbck_games[i:i + streaming_batch_size]
-                logger.info(f"[STREAMING] Processing batch {i//streaming_batch_size + 1}/{(len(betbck_games) + streaming_batch_size - 1)//streaming_batch_size} ({len(batch)} games)")
-                
-                # Match this batch
-                batch_matched = match_pinnacle_to_betbck(event_dicts, {"games": batch})
-                
-                if batch_matched:
-                    total_matched += len(batch_matched)
-                    logger.info(f"[STREAMING] Batch matched {len(batch_matched)} games (total: {total_matched})")
-                    
-                    # Calculate EV for this batch immediately (using async version for speed)
+            # Normal path: match ALL games once, then batch only the EV calculations
+            # Matching was previously done per-batch which wasted ~25s × N_batches on repeated fuzzy matching
+            logger.info(f"[STREAMING] Matching all {len(betbck_games)} BetBCK games against {len(event_dicts)} Pinnacle events (once)...")
+            match_start = time.time()
+            all_matched = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
+            match_time = time.time() - match_start
+            total_matched = len(all_matched) if all_matched else 0
+            total_processed = len(betbck_games)
+            logger.info(f"[STREAMING] Matching completed in {match_time:.2f}s: {total_matched}/{len(betbck_games)} games matched")
+
+            if not all_matched:
+                logger.warning(f"[STREAMING] No games matched — skipping EV calculation")
+            else:
+                # Now batch the MATCHED games for EV calculation (fast: ~0.5s per batch)
+                ev_batch_size = 25
+                total_batches = (len(all_matched) + ev_batch_size - 1) // ev_batch_size
+                from calculate_ev_table import calculate_ev_table_async
+                for i in range(0, len(all_matched), ev_batch_size):
+                    batch_matched = all_matched[i:i + ev_batch_size]
+                    batch_num = i // ev_batch_size + 1
+                    logger.info(f"[STREAMING] EV batch {batch_num}/{total_batches} ({len(batch_matched)} matched games)")
+
                     try:
-                        from calculate_ev_table import calculate_ev_table_async
                         batch_ev_table = await calculate_ev_table_async(batch_matched)
                         if batch_ev_table:
                             batch_formatted = format_ev_table_for_display(batch_ev_table)
                             streaming_results.extend(batch_formatted)
-                            
-                            # Re-sort the entire results by EV (high to low)
                             streaming_results.sort(key=lambda x: x.get('ev_val', 0), reverse=True)
-                            
-                            # Update global results
                             current_results = streaming_results
                             last_run_time = datetime.now().isoformat()
-                            
-                            # Save to file
+
                             try:
                                 os.makedirs(os.path.dirname(BUCKEYE_RESULTS_FILE), exist_ok=True)
                                 with open(BUCKEYE_RESULTS_FILE, 'w', encoding='utf-8') as f:
@@ -1516,34 +1519,32 @@ async def run_streaming_pipeline_background(sport_filters=None):
                                     }, f, indent=2)
                             except Exception as e:
                                 logger.error(f"[STREAMING] Error writing results: {e}")
-                            
-                            # Broadcast update via WebSocket
+
                             try:
-                                await manager.broadcast({
+                                _batch_payload = {
                                     "type": "buckeye_update",
                                     "data": {
                                         "events": streaming_results,
                                         "total_events": len(streaming_results),
                                         "last_run": last_run_time,
                                         "streaming": True,
-                                        "batch_completed": i//batch_size + 1,
-                                        "total_batches": (len(betbck_games) + batch_size - 1)//batch_size
+                                        "batch_completed": batch_num,
+                                        "total_batches": total_batches
                                     }
-                                })
-                                logger.info(f"[STREAMING] Broadcasted update: {len(streaming_results)} events")
+                                }
+                                await manager.broadcast(_batch_payload)
+                                await sse_manager.broadcast(_batch_payload)
+                                logger.info(f"[STREAMING] Broadcasted update: {len(streaming_results)} events after batch {batch_num}/{total_batches}")
                             except Exception as e:
                                 logger.error(f"[STREAMING] Error broadcasting update: {e}")
-                            
-                            logger.info(f"[STREAMING] Batch EV calculation completed: {len(batch_formatted)} events added to table")
+
+                            logger.info(f"[STREAMING] EV batch {batch_num} done: {len(batch_formatted)} events added")
                         else:
-                            logger.info(f"[STREAMING] No EV opportunities found in batch")
+                            logger.info(f"[STREAMING] No EV opportunities in batch {batch_num}")
                     except Exception as e:
-                        logger.error(f"[STREAMING] Error calculating EV for batch: {e}")
-                
-                total_processed += len(batch)
-                
-                # Yield control to event loop between batches (reduced delay for faster processing)
-                await asyncio.sleep(0.05)  # Reduced from 0.1s to 0.05s for faster streaming
+                        logger.error(f"[STREAMING] Error in EV batch {batch_num}: {e}")
+
+                    await asyncio.sleep(0.05)
         
         step3_time = time.time() - step3_start
         total_pipeline_time = time.time() - pipeline_start_time
@@ -1563,7 +1564,7 @@ async def run_streaming_pipeline_background(sport_filters=None):
         
         # Final broadcast - always send, even if no events
         try:
-            await manager.broadcast({
+            _final_payload = {
                 "type": "buckeye_complete",
                 "data": {
                     "events": streaming_results,
@@ -1573,7 +1574,9 @@ async def run_streaming_pipeline_background(sport_filters=None):
                     "total_processed": total_processed,
                     "total_matched": total_matched
                 }
-            })
+            }
+            await manager.broadcast(_final_payload)
+            await sse_manager.broadcast(_final_payload)
             logger.info(f"[STREAMING] Final broadcast sent: {len(streaming_results)} events")
             print(f"[STREAMING] Final broadcast sent: {len(streaming_results)} events, {total_processed} processed, {total_matched} matched")
         except Exception as e:
