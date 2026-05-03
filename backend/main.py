@@ -2183,18 +2183,14 @@ def broadcast_new_alert(event_id, event_data):
     print(f"[Broadcast] Broadcasting new alert for event {event_id}")
     logger.info(f"[Broadcast] Broadcasting new alert for event {event_id}")
     
+    payload = {"type": "pod_alert", "eventId": event_id, "event": event_obj}
+
     # Use run_coroutine_threadsafe to bridge from threading to async context
     if main_event_loop and main_event_loop.is_running():
         try:
-            print(f"[Broadcast] Sending WebSocket message: type='pod_alert', eventId={event_id}")
-            asyncio.run_coroutine_threadsafe(
-                manager.broadcast({
-                    "type": "pod_alert",
-                    "eventId": event_id,
-                    "event": event_obj
-                }),
-                main_event_loop
-            )
+            print(f"[Broadcast] Sending to WebSocket + SSE: type='pod_alert', eventId={event_id}")
+            asyncio.run_coroutine_threadsafe(manager.broadcast(payload), main_event_loop)
+            asyncio.run_coroutine_threadsafe(sse_manager.broadcast(payload), main_event_loop)
             print(f"[Broadcast] Successfully queued broadcast for event {event_id}")
             logger.info(f"[Broadcast] Successfully queued broadcast for event {event_id}")
         except Exception as e:
@@ -2206,29 +2202,22 @@ def broadcast_new_alert(event_id, event_data):
 
 # Create a global broadcast function that can be imported without circular dependencies
 async def async_broadcast_pod_alert(event_id, event_data):
-    """Async function to broadcast POD alerts - can be called from other modules"""
+    """Async function to broadcast POD alerts - sends to both WebSocket and SSE clients."""
     try:
-        # Check if this is a removal message
         if isinstance(event_data, dict) and event_data.get("removed"):
-            # Send removal notification
-            await manager.broadcast({
-                "type": "pod_alert_removed",
-                "eventId": event_id
-            })
+            payload = {"type": "pod_alert_removed", "eventId": event_id}
+            await manager.broadcast(payload)
+            await sse_manager.broadcast(payload)
             logger.info(f"[AsyncBroadcast] Successfully broadcast removal for event {event_id}")
         else:
-            # Send normal alert update
             event_obj = build_event_object(event_id, event_data)
             if event_obj is None:
                 logger.error(f"[AsyncBroadcast] Cannot broadcast event {event_id} - build_event_object returned None")
                 return
-            
-            await manager.broadcast({
-                "type": "pod_alert",
-                "eventId": event_id,
-                "event": event_obj
-            })
-            logger.info(f"[AsyncBroadcast] Successfully broadcast event {event_id}")
+            payload = {"type": "pod_alert", "eventId": event_id, "event": event_obj}
+            await manager.broadcast(payload)
+            await sse_manager.broadcast(payload)
+            logger.info(f"[AsyncBroadcast] Successfully broadcast event {event_id} to WS+SSE")
     except Exception as e:
         logger.error(f"[AsyncBroadcast] Error broadcasting event {event_id}: {e}")
 

@@ -103,5 +103,1205 @@
         "ev_pct": -7.35
       }
     ]
+  },
+  {
+    "logged_at": "2026-05-03T00:00:05.279505Z",
+    "event_id": "1629500287",
+    "timestamp": "2026-05-03T00:00:02.810737Z",
+    "teams": {
+      "home": "Bryce Logan",
+      "away": "Angel AlvarezPFL",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Angel AlvarezPFL @ Bryce Logan | ? | market=Total | -222 -> -280",
+        "detail": {
+          "home": "Bryce Logan",
+          "away": "Angel AlvarezPFL",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "-222",
+          "new_odds": "-280"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'logan' (from 'Bryce Logan' / 'Angel AlvarezPFL'): last word of home team 'bryce logan'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='logan' -> HTTP 200 (48980 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "logan",
+          "status": 200,
+          "response_bytes": 48980
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Florim Zendeli' vs 'Logan Storley'  <->  POD 'bryce logan' vs 'angel alvarez'  [token_set_h=67 | token_set_a=44 | partial_h=45 | partial_a=32 | threshold=60]",
+        "detail": {
+          "bck_home": "Florim Zendeli",
+          "bck_away": "Logan Storley",
+          "pod_home": "bryce logan",
+          "pod_away": "angel alvarez",
+          "scores": {
+            "token_set_h": 67,
+            "token_set_a": 44,
+            "partial_h": 45,
+            "partial_a": 32,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Florim Zendeli' vs 'Logan Storley' | home=67/60, away=44/60 (combined=111, needed \u2265120)",
+        "detail": {
+          "bck_home": "Florim Zendeli",
+          "bck_away": "Logan Storley",
+          "best_score": 111,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 67,
+          "token_set_a": 44,
+          "scores": {
+            "token_set_h": 67,
+            "token_set_a": 44,
+            "partial_h": 45,
+            "partial_a": 32,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for angel alvarez @ bryce logan ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for angel alvarez @ bryce logan (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:00:15.996310Z",
+    "event_id": "1629301923",
+    "timestamp": "2026-05-03T00:00:15.288975Z",
+    "teams": {
+      "home": "San Antonio",
+      "away": "Colorado Springs SwitchbacksUSA",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Colorado Springs SwitchbacksUSA @ San Antonio | ? | market=Moneyline | +232 -> +198",
+        "detail": {
+          "home": "San Antonio",
+          "away": "Colorado Springs SwitchbacksUSA",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+232",
+          "new_odds": "+198"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'antonio' (from 'San Antonio' / 'Colorado Springs SwitchbacksUSA'): last word of home team 'san antonio'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='antonio' -> HTTP 200 (58700 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "antonio",
+          "status": 200,
+          "response_bytes": 58700
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=15 | partial_h=100 | partial_a=25 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves 1H' vs 'San Antonio Spurs 1H'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=11 | partial_h=100 | partial_a=24 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves 1H",
+          "bck_away": "San Antonio Spurs 1H",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 11,
+            "partial_h": 100,
+            "partial_a": 24,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs' | home=100/60, away=15/60 (combined=115, needed \u2265120)",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "best_score": 115,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 15,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:00:17.677548Z",
+    "event_id": "1629423202",
+    "timestamp": "2026-05-03T00:00:17.288474Z",
+    "teams": {
+      "home": "Corpus Christi",
+      "away": "Spokane VelocityUSA",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Spokane VelocityUSA @ Corpus Christi | ? | market=Moneyline | +242 -> +173",
+        "detail": {
+          "home": "Corpus Christi",
+          "away": "Spokane VelocityUSA",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+242",
+          "new_odds": "+173"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'christi' (from 'Corpus Christi' / 'Spokane VelocityUSA'): last word of home team 'corpus christi'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='christi' -> HTTP 200 (42952 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "christi",
+          "status": 200,
+          "response_bytes": 42952
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for spokane velocity @ corpus christi (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:04:36.767292Z",
+    "event_id": "1629325558",
+    "timestamp": "2026-05-03T00:04:35.129257Z",
+    "teams": {
+      "home": "Alianza Lima",
+      "away": "UCV MoqueguaPeru",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "UCV MoqueguaPeru @ Alianza Lima | ? | market=Spread | +235 -> +212",
+        "detail": {
+          "home": "Alianza Lima",
+          "away": "UCV MoqueguaPeru",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+235",
+          "new_odds": "+212"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lima' (from 'Alianza Lima' / 'UCV MoqueguaPeru'): last word of home team 'alianza lima'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lima' -> HTTP 200 (55237 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lima",
+          "status": 200,
+          "response_bytes": 55237
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Moquegua' vs 'Alianza Lima'  <->  POD 'alianza lima' vs 'ucv moquegua'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Moquegua",
+          "bck_away": "Alianza Lima",
+          "pod_home": "alianza lima",
+          "pod_away": "ucv moquegua",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Moquegua' vs 'Alianza Lima'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Deportivo Cali' vs 'Deportes Tolima'  <->  POD 'alianza lima' vs 'ucv moquegua'  [token_set_h=38 | token_set_a=15 | partial_h=40 | partial_a=27 | threshold=60]",
+        "detail": {
+          "bck_home": "Deportivo Cali",
+          "bck_away": "Deportes Tolima",
+          "pod_home": "alianza lima",
+          "pod_away": "ucv moquegua",
+          "scores": {
+            "token_set_h": 38,
+            "token_set_a": 15,
+            "partial_h": 40,
+            "partial_a": 27,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_spreads=[{'line': '-2', 'odds': '-135'}] | away_spreads=[{'line': '+2', 'odds': '+105'}]",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [
+            {
+              "line": "-2",
+              "odds": "-135"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+2",
+              "odds": "+105"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home -2: BCK 1.7407 (-135) / PIN_NVP 1.8000 (-125) => -3.24%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "-2",
+          "betbck_american": "-135",
+          "pin_nvp_american": "-125",
+          "bck_decimal": 1.7407,
+          "pin_nvp_decimal": 1.8,
+          "ev_pct": -3.24
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away 2: BCK 2.0500 (+105) / PIN_NVP 2.2500 (+125) => -8.93%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "2",
+          "betbck_american": "+105",
+          "pin_nvp_american": "+125",
+          "bck_decimal": 2.05,
+          "pin_nvp_decimal": 2.25,
+          "ev_pct": -8.93
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 3.0: BCK 1.8696 (-115) / PIN_NVP 2.0100 (+101) => -6.94%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "3.0",
+          "betbck_american": "-115",
+          "pin_nvp_american": "+101",
+          "bck_decimal": 1.8696,
+          "pin_nvp_decimal": 2.01,
+          "ev_pct": -6.94
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 3.0: BCK 1.8000 (-125) / PIN_NVP 1.9901 (-101) => -9.59%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "3.0",
+          "betbck_american": "-125",
+          "pin_nvp_american": "-101",
+          "bck_decimal": 1.8,
+          "pin_nvp_decimal": 1.9901,
+          "ev_pct": -9.59
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "-2",
+        "betbck_odds": "-135",
+        "pinnacle_nvp": "-125",
+        "betbck_decimal": 1.7407,
+        "pin_nvp_decimal": 1.8,
+        "ev_pct": -3.24
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "2",
+        "betbck_odds": "+105",
+        "pinnacle_nvp": "+125",
+        "betbck_decimal": 2.05,
+        "pin_nvp_decimal": 2.25,
+        "ev_pct": -8.93
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "3.0",
+        "betbck_odds": "-115",
+        "pinnacle_nvp": "+101",
+        "betbck_decimal": 1.8696,
+        "pin_nvp_decimal": 2.01,
+        "ev_pct": -6.94
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "3.0",
+        "betbck_odds": "-125",
+        "pinnacle_nvp": "-101",
+        "betbck_decimal": 1.8,
+        "pin_nvp_decimal": 1.9901,
+        "ev_pct": -9.59
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T00:04:53.056331Z",
+    "event_id": "1777766682660",
+    "timestamp": "2026-05-03T00:04:51.620955Z",
+    "teams": {
+      "home": "Alianza Lima",
+      "away": "UCV MoqueguaPeru",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "UCV MoqueguaPeru @ Alianza Lima | ? | market=Total | +188 -> +169",
+        "detail": {
+          "home": "Alianza Lima",
+          "away": "UCV MoqueguaPeru",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+188",
+          "new_odds": "+169"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'lima' (from 'Alianza Lima' / 'UCV MoqueguaPeru'): last word of home team 'alianza lima'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lima' -> HTTP 200 (55237 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "lima",
+          "status": 200,
+          "response_bytes": 55237
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Moquegua' vs 'Alianza Lima'  <->  POD 'alianza lima' vs 'ucv moquegua'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Moquegua",
+          "bck_away": "Alianza Lima",
+          "pod_home": "alianza lima",
+          "pod_away": "ucv moquegua",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Moquegua' vs 'Alianza Lima'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Deportivo Cali' vs 'Deportes Tolima'  <->  POD 'alianza lima' vs 'ucv moquegua'  [token_set_h=38 | token_set_a=15 | partial_h=40 | partial_a=27 | threshold=60]",
+        "detail": {
+          "bck_home": "Deportivo Cali",
+          "bck_away": "Deportes Tolima",
+          "pod_home": "alianza lima",
+          "pod_away": "ucv moquegua",
+          "scores": {
+            "token_set_h": 38,
+            "token_set_a": 15,
+            "partial_h": 40,
+            "partial_a": 27,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_spreads=[{'line': '-2', 'odds': '-135'}] | away_spreads=[{'line': '+2', 'odds': '+105'}]",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [
+            {
+              "line": "-2",
+              "odds": "-135"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "+2",
+              "odds": "+105"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:04:56.541503Z",
+    "event_id": "1629780963",
+    "timestamp": "2026-05-03T00:04:54.789384Z",
+    "teams": {
+      "home": "Carolina Hurricanes",
+      "away": "Philadelphia FlyersNHL",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Philadelphia FlyersNHL @ Carolina Hurricanes | ? | market=Spread | +116 -> +106",
+        "detail": {
+          "home": "Carolina Hurricanes",
+          "away": "Philadelphia FlyersNHL",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+116",
+          "new_odds": "+106"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'Hurricanes' (from 'Carolina Hurricanes' / 'Philadelphia FlyersNHL'): known_term map for 'carolina hurricanes'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='Hurricanes' -> HTTP 200 (95766 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "Hurricanes",
+          "status": 200,
+          "response_bytes": 95766
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Flyers Alt Line' vs 'Hurricanes Alt Line'  <->  POD 'carolina hurricanes' vs 'philadelphia flyers'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Flyers Alt Line",
+          "bck_away": "Hurricanes Alt Line",
+          "pod_home": "carolina hurricanes",
+          "pod_away": "philadelphia flyers",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Flyers Alt Line' vs 'Hurricanes Alt Line'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Flyers Alt Line' vs 'Hurricanes Alt Line'  <->  POD 'carolina hurricanes' vs 'philadelphia flyers'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Flyers Alt Line",
+          "bck_away": "Hurricanes Alt Line",
+          "pod_home": "carolina hurricanes",
+          "pod_away": "philadelphia flyers",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Flyers Alt Line' vs 'Hurricanes Alt Line'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Philadelphia Flyers' vs 'Carolina Hurricanes'  <->  POD 'carolina hurricanes' vs 'philadelphia flyers'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "Philadelphia Flyers",
+          "bck_away": "Carolina Hurricanes",
+          "pod_home": "carolina hurricanes",
+          "pod_away": "philadelphia flyers",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Philadelphia Flyers' vs 'Carolina Hurricanes'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Philadelphia Flyers 1P' vs 'Carolina Hurricanes 1P'  <->  POD 'carolina hurricanes' vs 'philadelphia flyers'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Philadelphia Flyers 1P",
+          "bck_away": "Carolina Hurricanes 1P",
+          "pod_home": "carolina hurricanes",
+          "pod_away": "philadelphia flyers",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Philadelphia Flyers 1P' vs 'Carolina Hurricanes 1P'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Philadelphia Flyers 2P' vs 'Carolina Hurricanes 2P'  <->  POD 'carolina hurricanes' vs 'philadelphia flyers'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Philadelphia Flyers 2P",
+          "bck_away": "Carolina Hurricanes 2P",
+          "pod_home": "carolina hurricanes",
+          "pod_away": "philadelphia flyers",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Philadelphia Flyers 2P' vs 'Carolina Hurricanes 2P'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Philadelphia Flyers 3P' vs 'Carolina Hurricanes 3P'  <->  POD 'carolina hurricanes' vs 'philadelphia flyers'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Philadelphia Flyers 3P",
+          "bck_away": "Carolina Hurricanes 3P",
+          "pod_home": "carolina hurricanes",
+          "pod_away": "philadelphia flyers",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 100,
+            "partial_h": 100,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Philadelphia Flyers 3P' vs 'Carolina Hurricanes 3P'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Flyers (Reg Time)' vs 'Hurricanes (Reg Time)'  <->  POD 'carolina hurricanes' vs 'philadelphia flyers'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "Flyers (Reg Time)",
+          "bck_away": "Hurricanes (Reg Time)",
+          "pod_home": "carolina hurricanes",
+          "pod_away": "philadelphia flyers",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Flyers (Reg Time)' vs 'Hurricanes (Reg Time)'",
+        "detail": null
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Flyers (Reg Time)' vs 'Hurricanes (Reg Time)'  <->  POD 'carolina hurricanes' vs 'philadelphia flyers'  [exact_order2=100]",
+        "detail": {
+          "bck_home": "Flyers (Reg Time)",
+          "bck_away": "Hurricanes (Reg Time)",
+          "pod_home": "carolina hurricanes",
+          "pod_away": "philadelphia flyers",
+          "scores": {
+            "exact_order2": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Flyers (Reg Time)' vs 'Hurricanes (Reg Time)'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "home_spreads=[{'line': '+1.5', 'odds': '-700'}] | away_spreads=[{'line': '-1.5', 'odds': '+450'}]",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [
+            {
+              "line": "+1.5",
+              "odds": "-700"
+            }
+          ],
+          "away_spreads": [
+            {
+              "line": "-1.5",
+              "odds": "+450"
+            }
+          ],
+          "home_totals": [],
+          "away_totals": []
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Home 1.5: BCK 1.1429 (-700) / PIN_NVP 1.1520 (-658) => -0.79%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Home",
+          "line": "1.5",
+          "betbck_american": "-700",
+          "pin_nvp_american": "-658",
+          "bck_decimal": 1.1429,
+          "pin_nvp_decimal": 1.152,
+          "ev_pct": -0.79
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Spread Away -1.5: BCK 5.5000 (+450) / PIN_NVP 7.5700 (+657) => -27.32%",
+        "detail": {
+          "market": "Spread",
+          "selection": "Away",
+          "line": "-1.5",
+          "betbck_american": "+450",
+          "pin_nvp_american": "+657",
+          "bck_decimal": 5.5,
+          "pin_nvp_decimal": 7.57,
+          "ev_pct": -27.32
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Over 8.5: BCK 5.7500 (+475) / PIN_NVP 7.9100 (+691) => -27.28%",
+        "detail": {
+          "market": "Total",
+          "selection": "Over",
+          "line": "8.5",
+          "betbck_american": "+475",
+          "pin_nvp_american": "+691",
+          "bck_decimal": 5.75,
+          "pin_nvp_decimal": 7.91,
+          "ev_pct": -27.28
+        }
+      },
+      {
+        "tag": "EV",
+        "message": "Total Under 8.5: BCK 1.1290 (-775) / PIN_NVP 1.1449 (-690) => -1.39%",
+        "detail": {
+          "market": "Total",
+          "selection": "Under",
+          "line": "8.5",
+          "betbck_american": "-775",
+          "pin_nvp_american": "-690",
+          "bck_decimal": 1.129,
+          "pin_nvp_decimal": 1.1449,
+          "ev_pct": -1.39
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": [
+      {
+        "market": "Spread",
+        "selection": "Home",
+        "line": "1.5",
+        "betbck_odds": "-700",
+        "pinnacle_nvp": "-658",
+        "betbck_decimal": 1.1429,
+        "pin_nvp_decimal": 1.152,
+        "ev_pct": -0.79
+      },
+      {
+        "market": "Spread",
+        "selection": "Away",
+        "line": "-1.5",
+        "betbck_odds": "+450",
+        "pinnacle_nvp": "+657",
+        "betbck_decimal": 5.5,
+        "pin_nvp_decimal": 7.57,
+        "ev_pct": -27.32
+      },
+      {
+        "market": "Total",
+        "selection": "Over",
+        "line": "8.5",
+        "betbck_odds": "+475",
+        "pinnacle_nvp": "+691",
+        "betbck_decimal": 5.75,
+        "pin_nvp_decimal": 7.91,
+        "ev_pct": -27.28
+      },
+      {
+        "market": "Total",
+        "selection": "Under",
+        "line": "8.5",
+        "betbck_odds": "-775",
+        "pinnacle_nvp": "-690",
+        "betbck_decimal": 1.129,
+        "pin_nvp_decimal": 1.1449,
+        "ev_pct": -1.39
+      }
+    ]
+  },
+  {
+    "logged_at": "2026-05-03T00:07:43.505819Z",
+    "event_id": "1629500288",
+    "timestamp": "2026-05-03T00:07:42.831320Z",
+    "teams": {
+      "home": "Qihui Yan",
+      "away": "Taila SantosPFL",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Taila SantosPFL @ Qihui Yan | ? | market=Total | +185 -> +166",
+        "detail": {
+          "home": "Qihui Yan",
+          "away": "Taila SantosPFL",
+          "league": "?",
+          "market": "Total",
+          "old_odds": "+185",
+          "new_odds": "+166"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'qihui' (from 'Qihui Yan' / 'Taila SantosPFL'): first word of home team 'qihui yan'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='qihui' -> HTTP 200 (48197 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "qihui",
+          "status": 200,
+          "response_bytes": 48197
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[PASS] BCK 'Qihui Yan' vs 'Taila Santos'  <->  POD 'qihui yan' vs 'taila santos'  [exact_order1=100]",
+        "detail": {
+          "bck_home": "Qihui Yan",
+          "bck_away": "Taila Santos",
+          "pod_home": "qihui yan",
+          "pod_away": "taila santos",
+          "scores": {
+            "exact_order1": 100
+          },
+          "passed": true
+        }
+      },
+      {
+        "tag": "FOUND",
+        "message": "Matched BetBCK: 'Qihui Yan' vs 'Taila Santos'",
+        "detail": null
+      },
+      {
+        "tag": "ODDS",
+        "message": "No odds extracted",
+        "detail": {
+          "home_moneyline": null,
+          "away_moneyline": null,
+          "home_spreads": [],
+          "away_spreads": [],
+          "home_totals": [],
+          "away_totals": []
+        }
+      }
+    ],
+    "result": "found_no_ev",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:10:34.317282Z",
+    "event_id": "1629426380",
+    "timestamp": "2026-05-03T00:10:31.427777Z",
+    "teams": {
+      "home": "San Antonio",
+      "away": "Colorado Springs SwitchbacksUSA",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Colorado Springs SwitchbacksUSA @ San Antonio | ? | market=Moneyline | +241 -> +216",
+        "detail": {
+          "home": "San Antonio",
+          "away": "Colorado Springs SwitchbacksUSA",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+241",
+          "new_odds": "+216"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'antonio' (from 'San Antonio' / 'Colorado Springs SwitchbacksUSA'): last word of home team 'san antonio'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='antonio' -> HTTP 200 (58700 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "antonio",
+          "status": 200,
+          "response_bytes": 58700
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=15 | partial_h=100 | partial_a=25 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves 1H' vs 'San Antonio Spurs 1H'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=11 | partial_h=100 | partial_a=24 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves 1H",
+          "bck_away": "San Antonio Spurs 1H",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 11,
+            "partial_h": 100,
+            "partial_a": 24,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs' | home=100/60, away=15/60 (combined=115, needed \u2265120)",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "best_score": 115,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 15,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-03T00:10:41.494176Z",
+    "event_id": "1777767028260",
+    "timestamp": "2026-05-03T00:10:40.906664Z",
+    "teams": {
+      "home": "San Antonio",
+      "away": "Colorado Springs SwitchbacksUSA",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Colorado Springs SwitchbacksUSA @ San Antonio | ? | market=Spread | +336 -> +299",
+        "detail": {
+          "home": "San Antonio",
+          "away": "Colorado Springs SwitchbacksUSA",
+          "league": "?",
+          "market": "Spread",
+          "old_odds": "+336",
+          "new_odds": "+299"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'antonio' (from 'San Antonio' / 'Colorado Springs SwitchbacksUSA'): last word of home team 'san antonio'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='antonio' -> HTTP 200 (58700 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "antonio",
+          "status": 200,
+          "response_bytes": 58700
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=15 | partial_h=100 | partial_a=25 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Minnesota Timberwolves 1H' vs 'San Antonio Spurs 1H'  <->  POD 'san antonio' vs 'colorado springs switchbacks'  [token_set_h=100 | token_set_a=11 | partial_h=100 | partial_a=24 | threshold=60]",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves 1H",
+          "bck_away": "San Antonio Spurs 1H",
+          "pod_home": "san antonio",
+          "pod_away": "colorado springs switchbacks",
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 11,
+            "partial_h": 100,
+            "partial_a": 24,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Minnesota Timberwolves' vs 'San Antonio Spurs' | home=100/60, away=15/60 (combined=115, needed \u2265120)",
+        "detail": {
+          "bck_home": "Minnesota Timberwolves",
+          "bck_away": "San Antonio Spurs",
+          "best_score": 115,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 100,
+          "token_set_a": 15,
+          "scores": {
+            "token_set_h": 100,
+            "token_set_a": 15,
+            "partial_h": 100,
+            "partial_a": 25,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for colorado springs switchbacks @ san antonio (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]
