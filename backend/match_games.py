@@ -39,6 +39,16 @@ TEAM_NAME_MAP = {
     "benfica": "sl benfica",
     "sevilla": "fc sevilla",
     "betis": "real betis",
+    # Scottish clubs
+    "heart of midlothian": "hearts",
+    "heart of midlothian fc": "hearts",
+    "hearts fc": "hearts",
+    "hibernian": "hibs",
+    "hibernian fc": "hibs",
+    "glasgow rangers": "rangers",
+    "rangers fc": "rangers",
+    "celtic fc": "celtic",
+    "dundee utd": "dundee united",
     # Add more as needed
 }
 
