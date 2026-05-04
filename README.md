@@ -1,236 +1,150 @@
-# 🚀 UnifiedBetting3 - Real-Time Sports Betting Alert System
+# UnifiedBetting — POD EV Alert System
 
-A comprehensive, real-time sports betting alert system that monitors POD (Pick of the Day) alerts, compares odds across multiple sportsbooks, and provides live EV (Expected Value) calculations.
-
-## 🎯 Key Features
-
-### ✅ **Real-Time Alert Processing**
-- **Live POD alerts** from Chrome extension
-- **Real-time odds updates** every 3 seconds
-- **Instant EV calculations** across multiple sportsbooks
-- **WebSocket-based frontend** for live updates
-
-### ✅ **Smart Alert Management**
-- **Intelligent expiration**: Negative EV alerts expire in 60s, positive EV in 3 minutes
-- **Automatic cleanup**: Expired alerts removed from UI automatically
-- **Efficient API usage**: Stops updating negative EV alerts to save resources
-- **Deduplication**: Prevents duplicate processing of the same alert
-
-### ✅ **Database Integration**
-- **High EV alert storage**: Alerts with >3% EV automatically saved to database
-- **Historical tracking**: Query past high-value opportunities
-- **Safe operations**: Database failures won't crash the system
-- **Lazy initialization**: Database only loads when needed
-
-### ✅ **Multi-Source Odds Comparison**
-- **Pinnacle Sports**: Current market odds via API
-- **BetBCK**: Odds scraping for comparison
-- **EV calculations**: Real-time expected value analysis
-- **Cross-book arbitrage**: Identify value opportunities
-
-## 🏗️ System Architecture
-
-### **Backend (FastAPI)**
-```
-backend/
-├── main.py                 # Main FastAPI application
-├── pod_event_manager.py    # Alert lifecycle management
-├── database_models.py      # SQLite database models
-├── betbck_request_manager.py # BetBCK API management
-├── ace_scraper.py         # Action23.ag scraper
-├── buckeye_scraper.py     # Buckeye scraper
-└── websocket_manager.py   # WebSocket broadcasting
-```
-
-### **Frontend (React + TypeScript)**
-```
-frontend/src/
-├── components/
-│   ├── PODAlerts.tsx      # Main alerts display
-│   ├── PropBuilder.tsx    # Prop builder interface
-│   └── BuckeyeScraper.tsx # Buckeye integration
-├── hooks/
-│   └── useWebSocket.ts    # WebSocket connection management
-└── utils/                 # Utility functions
-```
-
-### **Chrome Extension**
-- **POD alert detection** from pinnacleoddsdropper.com
-- **Real-time forwarding** to backend
-- **Automatic event ID sniffing**
-- **Duplicate prevention**
-
-## 🚀 Quick Start
-
-### **1. Backend Setup**
-```bash
-cd backend
-pip install -r requirements.txt
-python launch.py
-```
-
-### **2. Frontend Setup**
-```bash
-cd frontend
-npm install
-npm start
-```
-
-### **3. Chrome Extension**
-1. Load the extension from `chrome-extension/` directory
-2. Navigate to pinnacleoddsdropper.com
-3. Extension will automatically detect and forward alerts
-
-## 📊 System Flow
-
-### **Alert Processing Pipeline**
-1. **Chrome Extension** detects POD alert on pinnacleoddsdropper.com
-2. **Backend** receives alert via `/pod_alert` endpoint
-3. **Deduplication** prevents duplicate processing
-4. **BetBCK Scraping** fetches comparison odds
-5. **Pinnacle API** gets current market odds
-6. **EV Calculation** determines expected value
-7. **Real-time Broadcasting** sends updates to frontend
-8. **Smart Expiration** removes alerts based on EV value
-
-### **Real-Time Updates**
-- **Background refresher** runs every 3 seconds
-- **WebSocket broadcasting** to all connected clients
-- **Automatic UI updates** with NVP flash effects
-- **Expiration notifications** when alerts are removed
-
-## 🔧 Configuration
-
-### **Alert Expiration Times**
-```python
-# Negative EV alerts expire quickly
-NEGATIVE_EV_EXPIRY = 60  # seconds
-
-# Positive EV alerts stay longer
-POSITIVE_EV_EXPIRY = 180  # seconds (3 minutes)
-
-# Background refresh interval
-REFRESH_INTERVAL = 3  # seconds
-```
-
-### **Database Settings**
-```python
-# High EV threshold for database storage
-HIGH_EV_THRESHOLD = 3.0  # percentage
-
-# Database operation timeout
-DB_TIMEOUT = 5  # seconds
-```
-
-### **API Rate Limiting**
-```python
-# BetBCK rate limiting
-BETBCK_RATE_LIMIT = 120  # seconds between requests
-
-# Pinnacle API rate limiting
-PINNACLE_RATE_LIMIT = 3  # seconds between requests
-```
-
-## 📡 API Endpoints
-
-### **Alert Management**
-- `POST /pod_alert` - Receive new POD alerts
-- `GET /get_active_events_data` - Get current active alerts
-- `POST /test/remove-alert/{event_id}` - Manually remove alert
-
-### **System Status**
-- `GET /refresher-status` - Check background refresher status
-- `GET /test` - Test backend connectivity
-- `GET /api/betbck/status` - Check BetBCK API status
-
-### **Data Access**
-- `GET /high-ev-alerts` - Get database history of high EV alerts
-- `GET /buckeye/events` - Get Buckeye scraper results
-- `GET /ace/results` - Get Ace scraper results
-
-### **WebSocket**
-- `WS /ws` - Real-time updates
-  - `pod_alert` - Alert updates
-  - `pod_alert_removed` - Alert expiration
-  - `pto_prop_update` - Prop builder updates
-
-## 🔍 Monitoring & Debugging
-
-### **Console Logging**
-The system provides comprehensive logging:
-- **Pinnacle API calls** - Success/failure tracking
-- **Odds fetching** - Detailed odds values
-- **Expiration timing** - When alerts expire
-- **WebSocket status** - Connection health
-- **Database operations** - Storage activities
-
-### **WebSocket Messages**
-Monitor real-time activity in Chrome DevTools:
-- **Network tab** → **WS** filter
-- **Messages** show live data flow
-- **Response** tab shows actual data
-
-### **System Health Checks**
-```bash
-# Check backend status
-curl http://localhost:5001/refresher-status
-
-# Check frontend connectivity
-curl http://localhost:3000
-
-# Test WebSocket connection
-# Use Chrome DevTools Network tab
-```
-
-## 🎯 Performance Features
-
-### **Efficient Resource Usage**
-- **Smart API calls**: Only fetch odds when needed
-- **Memory management**: Automatic cleanup of expired alerts
-- **Network optimization**: WebSocket instead of polling
-- **Database efficiency**: Lazy loading and safe operations
-
-### **Error Recovery**
-- **Automatic reconnection**: WebSocket reconnects on failure
-- **Fallback polling**: HTTP polling when WebSocket fails
-- **Error isolation**: Database failures don't crash system
-- **Global exception handling**: Prevents unexpected crashes
-
-## 🔮 Future Enhancements
-
-### **Planned Features**
-- **Docker deployment** for easier management
-- **Enhanced filtering** and sorting options
-- **Additional data sources** for better odds comparison
-- **Advanced analytics** and reporting dashboard
-- **Mobile app** development
-
-### **Performance Improvements**
-- **Caching layer** for frequently accessed data
-- **Load balancing** for high-traffic scenarios
-- **Database optimization** for large datasets
-- **Real-time notifications** (email, SMS, push)
-
-## 🤝 Contributing
-
-1. **Fork the repository**
-2. **Create a feature branch**
-3. **Make your changes**
-4. **Test thoroughly**
-5. **Submit a pull request**
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-For issues and questions:
-1. **Check the console logs** for error messages
-2. **Review the WebSocket messages** in Chrome DevTools
-3. **Test individual components** using the API endpoints
-4. **Create an issue** with detailed error information
+Real-time EV alert system for sports betting. A Chrome extension monitors Pinnacle Odds Dropper (POD), sends alerts to a FastAPI backend that pulls Pinnacle NVP from the Swordfish API and scrapes BetBCK odds, calculates expected value, and streams everything live to a React dashboard.
 
 ---
 
-**UnifiedBetting3 - Making sports betting smarter, one alert at a time! 🚀** 
+## How It Works
+
+```
+POD page (Chrome)
+  → Chrome Extension (Odds Dropper)
+    → Backend API (FastAPI, port 8000)
+      ├── Swordfish API  → Pinnacle NVP
+      └── BetBCK scraper → comparison odds
+          → EV calculation
+            → Dashboard (React, port 5000)  ← WebSocket live updates
+```
+
+---
+
+## Quick Start — Local (Windows)
+
+### First-time setup
+```bat
+setup_dependencies.bat
+```
+Creates the Python venv and installs all packages.
+
+### Every run
+```bat
+start_local.bat
+```
+Starts the backend (port 8000) and frontend (port 5000) in separate console windows.
+**No browser opens automatically.**
+
+Then manually open in Chrome:
+1. **http://localhost:5000** — the alert dashboard
+2. **https://www.pinnacleoddsdropper.com** — with Odds Dropper extension active
+3. **https://betbck.com** — so the extension can auto-search games
+
+---
+
+## Quick Start — Replit
+
+Start both workflows from the Replit UI:
+
+| Workflow | Command |
+|---|---|
+| Backend API | `cd backend && python -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info` |
+| Start application | `cd frontend && PORT=5000 BROWSER=none HOST=0.0.0.0 WDS_SOCKET_PATH=/wds npm start` |
+
+Then set the extension's Backend URL to your Replit dev URL (e.g. `https://abc123.spock.replit.dev:8000`) via the extension Options page.
+
+---
+
+## Chrome Extension Setup
+
+1. Open Chrome → `chrome://extensions`
+2. Enable **Developer mode** (top-right toggle)
+3. Click **Load unpacked** → select the `POD_Chrome_Extension/` folder
+4. After loading, click **Extension options** link (or right-click icon → Options)
+
+| Setting | Value |
+|---|---|
+| **Backend URL** | Remote URL e.g. `https://abc123.replit.dev:8000`. Leave blank for localhost. |
+| **Port** | Only used when Backend URL is blank. Default: `8000`. |
+
+Click **Save**, then refresh the POD tab.
+
+**To switch between local and remote:** update Backend URL in Options and refresh POD.
+
+---
+
+## Project Structure
+
+```
+POD_Chrome_Extension/     Chrome extension — load this in Chrome
+  manifest.json           v1.3 — host permissions + options page declared
+  background.js           Forwards POD alerts to backend; reads Options URL
+  content.js              Detects alerts on POD page
+  options.html / .js      Backend URL config UI
+  betbck_auto_search.js   Auto-searches BetBCK when alert fires
+
+backend/                  FastAPI backend (Python 3.12)
+  main.py                 Entry point, API routes, WebSocket server
+  main_logic.py           Core alert processing pipeline
+  pod_event_manager.py    Alert lifecycle + background refresher loop
+  betbck_scraper.py       BetBCK odds scraper + team name aliases
+  match_games.py          Fuzzy game/team name matching
+  utils/pod_utils.py      Pinnacle NVP fetching + name normalisation
+  team_utils.py           Shared team alias maps
+  alert_logger.py         Per-event step-by-step alert logging
+  requirements.txt        Python dependencies
+
+frontend/                 React + TypeScript dashboard
+  src/components/
+    PODAlerts.tsx         Live alerts table with EV display
+  src/hooks/
+    useWebSocket.ts       WebSocket connection + reconnect logic
+
+auto_bettor/              Future: automated bet placement (not active)
+SharpScanner/             Future: sharp money / steam detection (not active)
+docs/                     Research notes and API findings
+```
+
+---
+
+## Adding Team Name Aliases
+
+BetBCK and Pinnacle sometimes use different names (e.g. "Heart of Midlothian" vs "Hearts").
+Add to **all four** of these files:
+
+| File | Dict name |
+|---|---|
+| `backend/betbck_scraper.py` | `TEAM_ALIASES` |
+| `backend/utils/pod_utils.py` | `TEAM_ALIASES` |
+| `backend/team_utils.py` | `TEAM_ALIASES` |
+| `backend/match_games.py` | `TEAM_NAME_MAP` |
+
+Format: `'canonical_name': ['alias1', 'alias2']`
+
+---
+
+## Key API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/pod_alert` | Receive alert from Chrome extension |
+| GET | `/get_active_events_data` | All currently active alerts |
+| GET | `/api/betbck/status` | BetBCK scraper health |
+| GET | `/high-ev-alerts` | Historical high-EV alerts (>3%) |
+| GET | `/refresher-status` | Background refresher loop status |
+| WS | `/ws` | WebSocket — live dashboard updates |
+
+---
+
+## Stopping Everything
+
+```bat
+kill_all.bat
+```
+Or just close the Backend and Frontend console windows.
+
+---
+
+## Future Components (not active yet)
+
+- **`auto_bettor/`** — automated bet placement research
+- **`SharpScanner/`** — sharp money / steam move detection
+- **`docs/`** — API research notes (Buckeye, PTO, BetMarket, etc.)

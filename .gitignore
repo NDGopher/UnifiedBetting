@@ -219,6 +219,25 @@ backend/high_ev_alerts.db
 backend/*.db
 backend/data/*.db
 
+# Debug HTML logs — generated during scraping, not needed in repo
+backend/betbck_html_logs/
+
+# BetBckScraper debug databases and artifacts
+BetBckScraper/*.db
+BetBckScraper/debug_*
+BetBckScraper/odds_history*.db
+BetBckScraper/smart_odds.db
+BetBckScraper/targeted_odds.db
+
+# Frontend build output — generated, not committed
+frontend/build/
+
+# Runtime data at project root
+data/
+
+# pip bootstrap (not part of project)
+get-pip.py
+
 # Keep config files but exclude any backup versions
 *.config.backup
 *.config.bak
