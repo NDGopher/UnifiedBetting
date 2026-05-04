@@ -22451,5 +22451,31 @@
     ],
     "result": "not_found",
     "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-04T15:30:22.533890Z",
+    "event_id": "None",
+    "timestamp": "2026-05-04T15:30:22.522098Z",
+    "teams": {
+      "home": "?",
+      "away": "?",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "? @ ? | ? | market=? | ? -> ?",
+        "detail": {
+          "home": "?",
+          "away": "?",
+          "league": "?",
+          "market": "?",
+          "old_odds": "?",
+          "new_odds": "?"
+        }
+      }
+    ],
+    "result": "completed",
+    "ev_summary": []
   }
 ]
