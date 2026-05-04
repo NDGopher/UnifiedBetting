@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Odds Dropper",
-  "version": "1.2",
+  "version": "1.3",
   "description": "Monitors POD for alerts.",
   "permissions": [
     "activeTab",
@@ -12,9 +12,13 @@
   ],
   "host_permissions": [
     "https://www.pinnacleoddsdropper.com/*",
-    "http://localhost:8000/*",
     "https://swordfish-production.up.railway.app/*",
-    "https://3a14a61c-b8aa-4dab-93bc-09346a68d1f5-00-1xtj8e9x0sp06.spock.replit.dev/*"
+    "http://localhost:*/*",
+    "http://127.0.0.1:*/*",
+    "https://*.spock.replit.dev/*",
+    "https://*.replit.dev/*",
+    "http://*/*",
+    "https://*/*"
   ],
   "content_scripts": [
     {
