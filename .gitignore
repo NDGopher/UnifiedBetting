@@ -213,11 +213,12 @@ Thumbs.db
 *.bak
 *.backup
 
-# Data files that might be large or sensitive (but keeping config files)
-# Uncomment if you want to exclude these:
-# backend/data/*.json
-# data/*.json
+# Runtime data — regenerated on startup, never commit
+backend/data/alert_history.json
+backend/high_ev_alerts.db
+backend/*.db
+backend/data/*.db
 
 # Keep config files but exclude any backup versions
 *.config.backup
-*.config.bak 
+*.config.bak

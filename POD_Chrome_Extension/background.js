@@ -54,9 +54,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (message.type === "forwardToPython") {
         function getPythonServerUrl(callback) {
           // ── BACKEND TARGET ──────────────────────────────────────────────────
-          // Change DEFAULT_BACKEND to switch targets without touching Options.
-          // Set to '' to fall back to localhost:8000.
-          const DEFAULT_BACKEND = 'https://3a14a61c-b8aa-4dab-93bc-09346a68d1f5-00-1xtj8e9x0sp06.spock.replit.dev:8000';
+          // Priority order:
+          //   1. Options page "Backend URL" field  (recommended — survives reloads)
+          //   2. DEFAULT_BACKEND below             (hardcode here as a quick override)
+          //   3. http://localhost:8000             (automatic fallback for local runs)
+          //
+          // To point at a remote server without using the Options page, set:
+          //   const DEFAULT_BACKEND = 'https://your-server.com:8000';
+          // Leave as '' for localhost / Options-page-only mode.
+          const DEFAULT_BACKEND = '';
           // ────────────────────────────────────────────────────────────────────
           const LOCAL_BACKEND = 'http://localhost:8000';
           chrome.storage.sync.get({ backendPort: '8000', backendUrl: '' }, function(items) {

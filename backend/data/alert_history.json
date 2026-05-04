@@ -25018,5 +25018,123 @@
     ],
     "result": "not_found",
     "ev_summary": []
+  },
+  {
+    "logged_at": "2026-05-04T16:15:51.896854Z",
+    "event_id": "1629521070",
+    "timestamp": "2026-05-04T16:15:48.340579Z",
+    "teams": {
+      "home": "Deportes Quindio",
+      "away": "Tigres",
+      "league": "?"
+    },
+    "steps": [
+      {
+        "tag": "ALERT IN",
+        "message": "Tigres @ Deportes Quindio | ? | market=Moneyline | +531 -> +483",
+        "detail": {
+          "home": "Deportes Quindio",
+          "away": "Tigres",
+          "league": "?",
+          "market": "Moneyline",
+          "old_odds": "+531",
+          "new_odds": "+483"
+        }
+      },
+      {
+        "tag": "SEARCH TERM",
+        "message": "Using 'quindio' (from 'Deportes Quindio' / 'Tigres'): last word of home team 'deportes quindio'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='quindio' -> HTTP 200 (42950 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "quindio",
+          "status": 200,
+          "response_bytes": 42950
+        }
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "INFO",
+        "message": "Retrying with away-team search term: 'tigres'",
+        "detail": null
+      },
+      {
+        "tag": "SEARCH",
+        "message": "POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='tigres' -> HTTP 200 (50012 bytes)",
+        "detail": {
+          "url": "https://betbck.com/Qubic/PlayerGameSelection.php",
+          "search_term": "tigres",
+          "status": 200,
+          "response_bytes": 50012
+        }
+      },
+      {
+        "tag": "MATCH",
+        "message": "[FAIL] BCK 'Nashville SC' vs 'UANL Tigres'  <->  POD 'deportes quindio' vs 'tigres'  [token_set_h=8 | token_set_a=100 | partial_h=31 | partial_a=100 | threshold=60]",
+        "detail": {
+          "bck_home": "Nashville SC",
+          "bck_away": "UANL Tigres",
+          "pod_home": "deportes quindio",
+          "pod_away": "tigres",
+          "scores": {
+            "token_set_h": 8,
+            "token_set_a": 100,
+            "partial_h": 31,
+            "partial_a": 100,
+            "threshold": 60
+          },
+          "passed": false
+        }
+      },
+      {
+        "tag": "CLOSEST",
+        "message": "Closest candidate: BCK 'Nashville SC' vs 'UANL Tigres' | home=8/60, away=100/60 (combined=108, needed \u2265120)",
+        "detail": {
+          "bck_home": "Nashville SC",
+          "bck_away": "UANL Tigres",
+          "best_score": 108,
+          "threshold_needed": 120,
+          "threshold_per_team": 60,
+          "token_set_h": 8,
+          "token_set_a": 100,
+          "scores": {
+            "token_set_h": 8,
+            "token_set_a": 100,
+            "partial_h": 31,
+            "partial_a": 100,
+            "threshold": 60
+          }
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for tigres @ deportes quindio ()",
+        "detail": null
+      },
+      {
+        "tag": "ERROR",
+        "message": "scrape_betbck_for_game_queued: No matching game found",
+        "detail": {
+          "traceback": "NoneType: None\n"
+        }
+      },
+      {
+        "tag": "NOT FOUND",
+        "message": "FAILED TO FIND MATCHING GAME on BetBCK for tigres @ deportes quindio (?)",
+        "detail": null
+      }
+    ],
+    "result": "not_found",
+    "ev_summary": []
   }
 ]
