@@ -1,0 +1,59 @@
+
+> unified-betting-app-frontend@0.1.0 start
+> react-scripts start
+
+(node:10812) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[HPM] Proxy created: /  -> http://localhost:8000
+(node:10812) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:10812) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+Compiled with warnings.
+
+[eslint]
+src\components\BetBCKStatusPopup.tsx
+  Line 14:3:  'CircularProgress' is defined but never used  @typescript-eslint/no-unused-vars
+  Line 19:3:  'CheckCircle' is defined but never used       @typescript-eslint/no-unused-vars
+  Line 20:3:  'Cancel' is defined but never used            @typescript-eslint/no-unused-vars
+  Line 21:3:  'Refresh' is defined but never used           @typescript-eslint/no-unused-vars
+
+src\components\BuckeyeScraper.tsx
+  Line 3:8:    'MatchingStats' is defined but never used                                                                            @typescript-eslint/no-unused-vars
+  Line 6:10:   'Analytics' is defined but never used                                                                                @typescript-eslint/no-unused-vars
+  Line 32:10:  'events' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+  Line 32:18:  'setEvents' is assigned a value but never used                                                                       @typescript-eslint/no-unused-vars
+  Line 37:10:  'stats' is assigned a value but never used                                                                           @typescript-eslint/no-unused-vars
+  Line 63:6:   React Hook useEffect has a missing dependency: 'connectWebSocket'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 328:9:  'fetchAceEvents' is assigned a value but never used                                                                  @typescript-eslint/no-unused-vars
+
+src\components\PODAlerts.tsx
+  Line 83:9:  'safeString' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint]
+src\components\BetBCKStatusPopup.tsx
+  Line 14:3:  'CircularProgress' is defined but never used  @typescript-eslint/no-unused-vars
+  Line 19:3:  'CheckCircle' is defined but never used       @typescript-eslint/no-unused-vars
+  Line 20:3:  'Cancel' is defined but never used            @typescript-eslint/no-unused-vars
+  Line 21:3:  'Refresh' is defined but never used           @typescript-eslint/no-unused-vars
+
+src\components\BuckeyeScraper.tsx
+  Line 3:8:    'MatchingStats' is defined but never used                                                                            @typescript-eslint/no-unused-vars
+  Line 6:10:   'Analytics' is defined but never used                                                                                @typescript-eslint/no-unused-vars
+  Line 32:10:  'events' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+  Line 32:18:  'setEvents' is assigned a value but never used                                                                       @typescript-eslint/no-unused-vars
+  Line 37:10:  'stats' is assigned a value but never used                                                                           @typescript-eslint/no-unused-vars
+  Line 63:6:   React Hook useEffect has a missing dependency: 'connectWebSocket'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 328:9:  'fetchAceEvents' is assigned a value but never used                                                                  @typescript-eslint/no-unused-vars
+
+src\components\PODAlerts.tsx
+  Line 83:9:  'safeString' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+No issues found.
+(node:10812) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
