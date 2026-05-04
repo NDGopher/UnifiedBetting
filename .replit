@@ -5,6 +5,7 @@ stack = "BEST_EFFORT_FALLBACK"
 
 [nix]
 channel = "stable-25_05"
+packages = ["cargo", "geckodriver", "glibcLocales", "libiconv", "libxcrypt", "rustc"]
 
 [workflows]
 runButton = "Project"
@@ -14,13 +15,41 @@ name = "Project"
 mode = "parallel"
 author = "agent"
 
-[[ports]]
-localPort = 5000
-externalPort = 5000
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Backend API"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Backend API"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && python -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info"
+waitForPort = 8000
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && PORT=5000 BROWSER=none HOST=0.0.0.0 WDS_SOCKET_PATH=/wds npm start"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
 
 [[ports]]
-localPort = 5001
-externalPort = 3000
+localPort = 5000
+externalPort = 80
 
 [[ports]]
 localPort = 8000
