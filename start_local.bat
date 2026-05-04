@@ -37,7 +37,7 @@ timeout /t 5 /nobreak >nul
 
 REM ---- Frontend (port 5000) — BROWSER=none prevents auto-open ----
 echo [3/3] Starting frontend on http://localhost:5000 ...
-start "UB Frontend" cmd /k "cd frontend && set PORT=5000 && set BROWSER=none && set HOST=0.0.0.0 && npm start"
+start "UB Frontend" cmd /k "cd frontend && set PORT=5000 && set BROWSER=none && npm start"
 
 echo.
 echo ==========================================
