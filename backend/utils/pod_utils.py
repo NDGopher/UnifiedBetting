@@ -473,6 +473,13 @@ def normalize_team_name_for_matching(name):
         'panama', 'honduras', 'guatemala', 'el salvador', 'nicaragua', 'cuba',
         'dominican republic', 'puerto rico', 'jamaica', 'haiti', 'belize',
         'guyana', 'suriname', 'trinidad and tobago', 'barbados',
+        # Middle East / Central Asia (these were missing — POD concatenates without space)
+        'qatar', 'israel', 'saudi arabia', 'uae', 'united arab emirates',
+        'jordan', 'kuwait', 'bahrain', 'oman', 'lebanon', 'syria', 'iraq', 'iran',
+        'palestine', 'west bank', 'gaza', 'yemen', 'libya', 'afghanistan', 'pakistan',
+        'cyprus', 'malta', 'luxembourg', 'andorra', 'monaco', 'liechtenstein',
+        'san marino', 'kosovo', 'north macedonia', 'albania', 'bosnia', 'bosnia and herzegovina',
+        'montenegro', 'moldova', 'north korea',
         
         # Country abbreviations (3-letter codes)
         'cyp', 'cyprus',

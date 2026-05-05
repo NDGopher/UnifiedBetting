@@ -177,6 +177,8 @@ main_event_loop = None
 
 # Track last processed time for each event ID to prevent duplicate processing within 2 minutes
 _last_processed_times = {}
+# Track last processed time by team-name pair to catch same game with different event IDs
+_last_processed_teams = {}
 
 async def event_alert_worker(event_id):
     """Background worker for a single event_id, processes alerts in order. Never exits on error."""
@@ -473,6 +475,13 @@ async def handle_pod_alert(request: Request):
                 'Cape Verde', 'Sao Tome and Principe', 'Gambia', 'Guinea', 'Guinea-Bissau',
                 'Sierra Leone', 'Liberia', 'Mali', 'Niger', 'Chad', 'Central African Republic',
                 'Gabon', 'Equatorial Guinea', 'Benin', 'Togo', 'Burkina Faso', 'Mauritania',
+                # Middle East / missing countries (POD concatenates these without a space)
+                'Qatar', 'Israel', 'Saudi Arabia', 'UAE', 'United Arab Emirates',
+                'Jordan', 'Kuwait', 'Bahrain', 'Oman', 'Lebanon', 'Syria', 'Iraq', 'Iran',
+                'Palestine', 'West Bank', 'Gaza', 'Yemen', 'Libya', 'Afghanistan', 'Pakistan',
+                'Cyprus', 'Malta', 'Luxembourg', 'Andorra', 'Monaco', 'Liechtenstein',
+                'San Marino', 'Kosovo', 'North Macedonia', 'Albania', 'Bosnia', 'Bosnia and Herzegovina',
+                'Montenegro', 'Moldova', 'North Korea',
                 
                 # Country abbreviations (3-letter codes)
                 'DEN', 'ISL', 'FIN', 'RUS', 'GER', 'FRA', 'ITA', 'ESP', 'ENG', 'SCO', 'WAL',
@@ -545,12 +554,27 @@ async def handle_pod_alert(request: Request):
                 "message": f"Duplicate alert for {event_id_str} rejected (processed {time_since_last:.1f}s ago)"
             })
 
+        # TEAM-NAME DEDUP: reject if same home+away pair was processed within 60s
+        # POD sometimes fires two different event IDs for the same game seconds apart
+        _home_key = normalize_team_name_for_matching(home_team)
+        _away_key = normalize_team_name_for_matching(away_team)
+        _team_key = f"{_home_key}|{_away_key}"
+        _last_team_time = _last_processed_teams.get(_team_key, 0)
+        _time_since_team = now - _last_team_time
+        if _time_since_team < 60:  # 60 seconds
+            logger.info(f"[PerEventQueue] REJECTING team-duplicate alert: {home_team} vs {away_team} - same matchup processed {_time_since_team:.1f}s ago")
+            return JSONResponse({
+                "status": "success",
+                "message": f"Duplicate matchup ({home_team} vs {away_team}) rejected - processed {_time_since_team:.1f}s ago"
+            })
+
         # RACE-CONDITION FIX: stamp _last_processed_times immediately on acceptance
         # (before queuing) so that any subsequent rapid alerts for the same event_id
         # that arrive before the worker thread actually runs will be correctly rejected
         # by the 120s check above.  The worker will overwrite this with its own stamp
         # when it actually processes the payload.
         _last_processed_times[event_id_str] = now
+        _last_processed_teams[_team_key] = now
 
         logger.info(f"[PerEventQueue][DIAG] Queuing alert for Event ID: {event_id_str}")
         
