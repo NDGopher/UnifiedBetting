@@ -421,6 +421,9 @@ def normalize_team_name_for_matching(name):
     norm_name = name.lower()
     norm_name = re.sub(r'\s*\((?:games|sets|match|hits\+runs\+errors|h\+r\+e|hre|corners)\)$', '', norm_name).strip()
     norm_name = re.sub(r'\s*\([^)]*\)', '', norm_name).strip()
+    # Strip trailing punctuation/dashes that POD sometimes appends (e.g. "ENPPIEgypt -" → "ENPPIEgypt")
+    # This must happen before country suffix stripping so the suffix appears at the true end of the string
+    norm_name = re.sub(r'[\s\-–—/\\|]+$', '', norm_name).strip()
     league_country_suffixes = [
         # Sports abbreviations
         'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'afl', 'cfl', 'mls', 'soccer', 'tennis', 'ufc', 'pfl', 'bellator', 'bkfc', 'lfa', 'rizin', 'one fc', 'one championship',

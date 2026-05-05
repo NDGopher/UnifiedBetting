@@ -1,0 +1,242 @@
+2026-05-05 09:33:25,130 - main - INFO - === [DEBUG] /pod_alert called ===
+2026-05-05 09:33:25,130 - main - INFO - [PerEventQueue][DIAG] Incoming alert payload: {'rowId': '1777991603063-0', 'eventIdFromRowAttribute': '1777991603063', 'eventId': '1629500873', 'timestamp': '2026-05-05T14:33:23.972Z', 'time': '12:00', 'date': '05/05', 'homeTeam': 'Al Ahly', 'awayTeam': 'ENPPIEgypt -', 'league': 'Premier League', 'alertType': 'Soccer - 1 Min', 'alertTime': '2026-05-05 14:33', 'period': 'Match', 'teamForBet': 'Over', 'lineValueForBet': '3', 'betDescription': 'Over 3', 'marketType': 'Total', 'oldOdds': '+176', 'newOdds': '+158', 'noVigPriceFromAlert': '+176'}
+2026-05-05 09:33:25,136 - main - INFO - [PerEventQueue][DIAG] Queuing alert for Event ID: 1629500873
+2026-05-05 09:33:25,136 - main - INFO - [PerEventQueue][DIAG] Alert put into queue for Event ID: 1629500873
+2026-05-05 09:33:25,137 - main - INFO - [PerEventQueue][DIAG] Starting new worker for Event ID: 1629500873
+INFO:     127.0.0.1:53799 - "POST /pod_alert HTTP/1.1" 200 OK
+2026-05-05 09:33:25,139 - main - INFO - [PerEventQueue] Worker started for Event ID: 1629500873
+2026-05-05 09:33:25,139 - main - INFO - [PerEventQueue] Got alert for Event ID: 1629500873 (homeTeam=Al Ahly)
+2026-05-05 09:33:25,140 - main - INFO - [PerEventQueue] Attempting to acquire lock for Event ID: 1629500873
+2026-05-05 09:33:25,140 - main - INFO - [PerEventQueue] Lock acquired for Event ID: 1629500873
+2026-05-05 09:33:25,141 - main - INFO - [PerEventQueue] Processing alert for Event ID: 1629500873 (Al Ahly)
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1629500873
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1629500873
+[DEBUG] clean_pod_team_name_for_search input: 'Al Ahly'
+[DEBUG] clean_pod_team_name_for_search output: 'al ahly'
+[DEBUG] clean_pod_team_name_for_search input: 'ENPPIEgypt -'
+[DEBUG] clean_pod_team_name_for_search output: 'enppiegypt'
+2026-05-05 09:33:26,012 - main - INFO - [PerEventQueue] New event 1629500873. Initiating scrape.
+2026-05-05 09:33:26,014 - main - INFO - [PerEventQueue] POD Teams: Home='Al Ahly', Away='ENPPIEgypt -'
+2026-05-05 09:33:26,014 - main - INFO - [PerEventQueue] Cleaned Teams: Home='al ahly', Away='enppiegypt'
+============================================================
+[ALERT IN][1629500873] ENPPIEgypt @ Al Ahly | ? | market=Total | +176 -> +158
+[DEBUG] clean_pod_team_name_for_search input: 'Al Ahly'
+[DEBUG] clean_pod_team_name_for_search output: 'al ahly'
+[DEBUG] clean_pod_team_name_for_search input: 'ENPPIEgypt -'
+[DEBUG] clean_pod_team_name_for_search output: 'enppiegypt'
+[DEBUG] clean_pod_team_name_for_search input: 'Al Ahly'
+[DEBUG] clean_pod_team_name_for_search output: 'al ahly'
+[DEBUG] clean_pod_team_name_for_search input: 'ENPPIEgypt -'
+[DEBUG] clean_pod_team_name_for_search output: 'enppiegypt'
+[DEBUG] determine_betbck_search_term - Raw: Home='Al Ahly', Away='ENPPIEgypt -'
+[DEBUG] determine_betbck_search_term - Cleaned: Home='al ahly', Away='enppiegypt'
+[DEBUG] Using last part of home team: 'ahly'
+[SEARCH TERM][1629500873] Using 'ahly' (from 'Al Ahly' / 'ENPPIEgypt'): last word of home team 'al ahly'
+2026-05-05 09:33:26,021 - betbck_request_manager - INFO - [BetBCK-Manager] Queued request for: ahly (Queue size: 1)
+2026-05-05 09:33:26,022 - betbck_request_manager - INFO - [BetBCK-Manager] Processing request for: ahly (Event: 1629500873)
+2026-05-05 09:33:26,022 - betbck_request_manager - INFO - [BetBCK-Manager] Session cookies: {'__cf_bm': '.vVmjbPxUDqlSJ9BJtjxXCAMBBHMrXFYAsy0oigFjxM-1777991379-1.0.1.1-7HDgzQ.AOQ1gkBtAj42t3PnsAELostrzJKgkZVtDymZ48RjGl.ECg86SFWD0Zb4Q8Z1MMJAyla8GxshRRV8EacaHXuMm.SkhJiRRwB2gP_E', 'ASPSESSIONIDSCTBBARQ': 'NNNHKLPAEAIGNCBBMHCHOBHI', 'SYSTEMID': 'SYSTEMID7'}
+2026-05-05 09:33:26,023 - betbck_request_manager - INFO - [BetBCK-Manager] Using existing session (no page navigation)
+[BetbckScraper] Searching BetBCK for 'ahly'...
+[BetbckScraper] Search POST successful (Status: 200). Response size: 55057 bytes.
+[SEARCH][1629500873] POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='ahly' -> HTTP 200 (55057 bytes)
+2026-05-05 09:33:27,585 - betbck_request_manager - INFO - [BetBCK-Manager] Response preview (first 200 chars):
+        <!DOCTYPE HTML PUBLIC "-/W3C/DTD XHTML 1.0 Transitional/EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html>
+    <HEAD>
+        <meta http-equiv="Content-Type" content="text/html; cha
+[DEBUG] clean_pod_team_name_for_search input: 'Al Ahly'
+[DEBUG] clean_pod_team_name_for_search output: 'al ahly'
+[DEBUG] clean_pod_team_name_for_search input: 'ENPPIEgypt -'
+[DEBUG] clean_pod_team_name_for_search output: 'enppiegypt'
+2026-05-05 09:33:27,588 - betbck_request_manager - INFO - [BetBCK-Manager] Using cleaned team names: Home='al ahly', Away='enppiegypt' (original: Home='Al Ahly', Away='ENPPIEgypt -')
+2026-05-05 09:33:27,588 - betbck_request_manager - INFO - [BetBCK-Manager] Search term being used: 'ahly'
+2026-05-05 09:33:27,589 - betbck_request_manager - INFO - [BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names
+[BetbckParser] Found 2 potential game wrapper tables. (Event ID: 1629500873)
+[BetbckParser] Normalized POD Targets: Home='al ahly', Away='enppiegypt' (Event ID: 1629500873)
+[BetbckParser] Comparing POD: H='al ahly' A='enppiegypt' WITH BCK 0: L='enppi' V='al ahly' (Raw: L='Enppi', V='Al Ahly') (Event ID: 1629500873)
+[DEBUG] Comparing normalized: POD H='al ahly', A='enppiegypt' with BCK H='enppi', A='al ahly' | token_set: (H-L 0 A-V 12) | partial: (H-L 0 A-V 14) (Event ID: 1629500873)
+[BetbckParser] Fuzzy Alias Match (Order 2 - Flipped) (Event ID: 1629500873)
+[MATCH][1629500873] [PASS] BCK 'Enppi' vs 'Al Ahly'  <->  POD 'al ahly' vs 'enppiegypt'  [token_set_h=100 | token_set_a=67 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND][1629500873] Matched BetBCK: 'Enppi' vs 'Al Ahly'
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1629500873)
+[BetbckParser] Game 0: Extracted 2 potential data rows from odds table. (Event ID: 1629500873)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1629500873)
+[BetbckParser] Match accepted: Enppi vs Al Ahly (BCK date: 2026-05-05 12:00) (Event ID: 1629500873)
+[BetbckParser] Comparing POD: H='al ahly' A='enppiegypt' WITH BCK 1: L='enppi 1h' V='al ahly 1h' (Raw: L='Enppi 1H', V='Al Ahly 1H') (Event ID: 1629500873)
+[DEBUG] Comparing normalized: POD H='al ahly', A='enppiegypt' with BCK H='enppi 1h', A='al ahly 1h' | token_set: (H-L 27 A-V 10) | partial: (H-L 33 A-V 10) (Event ID: 1629500873)
+[MATCH][1629500873] [FAIL] BCK 'Enppi 1H' vs 'Al Ahly 1H'  <->  POD 'al ahly' vs 'enppiegypt'  [token_set_h=100 | token_set_a=56 | partial_h=100 | partial_a=62 | threshold=60]
+[BetbckParser] row_data['full_game'] <- Enppi vs Al Ahly (Event ID: 1629500873)
+[BetbckParser] row_data keys: ['full_game'] (Event ID: 1629500873)
+2026-05-05 09:33:27,627 - betbck_request_manager - INFO - [BetBCK-Manager] Game data found, deriving 1H_data from row_data...
+2026-05-05 09:33:27,628 - betbck_request_manager - INFO - [BetBCK-Manager] No half_1/period_1 in row_data ['full_game'] — 1H_data=None
+2026-05-05 09:33:27,628 - betbck_request_manager - INFO - [BetBCK-Manager] Successfully scraped data for: ahly
+[ODDS][1629500873] home_spreads=[{'line': '-1.25', 'odds': '-135'}] | away_spreads=[{'line': '+1.25', 'odds': '+105'}]
+2026-05-05 09:33:27,629 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: False, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-05 09:33:27,631 - utils.pod_utils - INFO - [AnalyzeMarkets] No 1H BetBCK data found
+[EV][1629500873] Spread Home -1.25: BCK 1.7407 (-135) / PIN_NVP 1.8475 (-118) => -5.75%
+[EV][1629500873] Spread Away 1.25: BCK 2.0500 (+105) / PIN_NVP 2.1800 (+118) => -5.96%
+[EV][1629500873] Total Over 2.5: BCK 1.9524 (-105) / PIN_NVP 1.9804 (-102) => -1.49%
+[EV][1629500873] Total Under 2.5: BCK 1.7407 (-135) / PIN_NVP 2.0200 (+102) => -13.78%
+2026-05-05 09:33:27,632 - main - INFO - [PerEventQueue] Scrape successful. Storing event 1629500873 for display.
+2026-05-05 09:33:27,633 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+2026-05-05 09:33:27,634 - main - INFO - [SafeBroadcast] Queued broadcast for event 1629500873
+[ALERT DONE][1629500873] result=found_no_ev | EV markets=4 | positive_ev=0
+============================================================
+2026-05-05 09:33:27,637 - main - INFO - [PerEventQueue] Lock released for Event ID: 1629500873
+2026-05-05 09:33:27,642 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1629500873 to WS+SSE
+INFO:     127.0.0.1:56484 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #51 - sleeping for 5 seconds...
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1629500873
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1629500873
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1629500873
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-05 09:33:28,423 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: False, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-05 09:33:28,426 - utils.pod_utils - INFO - [AnalyzeMarkets] No 1H BetBCK data found
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1629500873
+[BackgroundRefresher] Updated EV analysis: 4 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 4 markets for 1629500873
+[BackgroundRefresher] Market 0: Spread Home NVP: -118 EV: -5.75%
+[BackgroundRefresher] Market 1: Spread Away NVP: +118 EV: -5.96%
+[BackgroundRefresher] Market 2: Total Over NVP: -102 EV: -1.49%
+[BackgroundRefresher] Comparing odds for 1629500873:
+  [CHANGE] NVP CHANGE: ('Spread', 'Home', '-1.25') None -> -118
+  [CHANGE] NVP CHANGE: ('Spread', 'Away', '1.25') None -> +118
+  [CHANGE] NVP CHANGE: ('Total', 'Over', '2.5') None -> -102
+  [CHANGE] NVP CHANGE: ('Total', 'Under', '2.5') None -> +102
+  [CHANGE] EV CHANGE: ('Spread', 'Home', '-1.25') None -> -5.75%
+  [CHANGE] EV CHANGE: ('Spread', 'Away', '1.25') None -> -5.96%
+  [CHANGE] EV CHANGE: ('Total', 'Over', '2.5') None -> -1.49%
+  [CHANGE] EV CHANGE: ('Total', 'Under', '2.5') None -> -13.78%
+[CHANGES] [BackgroundRefresher] ODDS CHANGES DETECTED for 1629500873:
+  [CHANGE] NVP ('Spread', 'Home', '-1.25'): None -> -118
+  [CHANGE] NVP ('Spread', 'Away', '1.25'): None -> +118
+  [CHANGE] NVP ('Total', 'Over', '2.5'): None -> -102
+  [CHANGE] NVP ('Total', 'Under', '2.5'): None -> +102
+  [CHANGE] EV ('Spread', 'Home', '-1.25'): None -> -5.75%
+  [CHANGE] EV ('Spread', 'Away', '1.25'): None -> -5.96%
+  [CHANGE] EV ('Total', 'Over', '2.5'): None -> -1.49%
+  [CHANGE] EV ('Total', 'Under', '2.5'): None -> -13.78%
+[BROADCAST] [BackgroundRefresher] Broadcasting changes to frontend...
+[BackgroundRefresher] Broadcasting update for event 1629500873
+[BackgroundRefresher] Sample odds: Spread Home NVP: -118 EV: -5.75%
+[BackgroundRefresher] Total markets to broadcast: 4
+[BackgroundRefresher] Broadcasting update for event 1629500873
+2026-05-05 09:33:28,431 - main - INFO - [SafeBroadcast] Queued broadcast for event 1629500873
+2026-05-05 09:33:28,435 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1629500873 to WS+SSE
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1629500873
+2026-05-05 09:33:28,436 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1629500873
+[BetBCKRefresh] Triggering refresh for 1629500873 (al ahly vs enppiegypt, 1777991608s since last refresh)
+[DEBUG] clean_pod_team_name_for_search input: 'al ahly'
+[DEBUG] clean_pod_team_name_for_search output: 'al ahly'
+[DEBUG] clean_pod_team_name_for_search input: 'enppiegypt'
+[DEBUG] clean_pod_team_name_for_search output: 'enppi'
+[DEBUG] determine_betbck_search_term - Raw: Home='al ahly', Away='enppiegypt'
+[DEBUG] determine_betbck_search_term - Cleaned: Home='al ahly', Away='enppi'
+[DEBUG] Using last part of home team: 'ahly'
+[BetBCKRefresh] Re-scraping BetBCK for 1629500873: 'al ahly' vs 'enppiegypt' (term: 'ahly')
+2026-05-05 09:33:28,442 - betbck_request_manager - INFO - [BetBCK-Manager] Queued request for: ahly (Queue size: 1)
+2026-05-05 09:33:28,442 - betbck_request_manager - INFO - [BetBCK-Manager] Processing request for: ahly (Event: 1629500873)
+2026-05-05 09:33:28,443 - betbck_request_manager - INFO - [BetBCK-Manager] Session cookies: {'__cf_bm': '.vVmjbPxUDqlSJ9BJtjxXCAMBBHMrXFYAsy0oigFjxM-1777991379-1.0.1.1-7HDgzQ.AOQ1gkBtAj42t3PnsAELostrzJKgkZVtDymZ48RjGl.ECg86SFWD0Zb4Q8Z1MMJAyla8GxshRRV8EacaHXuMm.SkhJiRRwB2gP_E', 'ASPSESSIONIDSCTBBARQ': 'NNNHKLPAEAIGNCBBMHCHOBHI', 'SYSTEMID': 'SYSTEMID7'}
+2026-05-05 09:33:28,443 - betbck_request_manager - INFO - [BetBCK-Manager] Using existing session (no page navigation)
+[BetbckScraper] Searching BetBCK for 'ahly'...
+[BetbckScraper] Search POST successful (Status: 200). Response size: 55057 bytes.
+2026-05-05 09:33:29,760 - betbck_request_manager - INFO - [BetBCK-Manager] Response preview (first 200 chars):
+        <!DOCTYPE HTML PUBLIC "-/W3C/DTD XHTML 1.0 Transitional/EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html>
+    <HEAD>
+        <meta http-equiv="Content-Type" content="text/html; cha
+[DEBUG] clean_pod_team_name_for_search input: 'al ahly'
+[DEBUG] clean_pod_team_name_for_search output: 'al ahly'
+[DEBUG] clean_pod_team_name_for_search input: 'enppiegypt'
+[DEBUG] clean_pod_team_name_for_search output: 'enppi'
+2026-05-05 09:33:29,764 - betbck_request_manager - INFO - [BetBCK-Manager] Using cleaned team names: Home='al ahly', Away='enppi' (original: Home='al ahly', Away='enppiegypt')
+2026-05-05 09:33:29,764 - betbck_request_manager - INFO - [BetBCK-Manager] Search term being used: 'ahly'
+2026-05-05 09:33:29,764 - betbck_request_manager - INFO - [BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names
+[BetbckParser] Found 2 potential game wrapper tables. (Event ID: 1629500873)
+[BetbckParser] Normalized POD Targets: Home='al ahly', Away='enppi' (Event ID: 1629500873)
+[BetbckParser] Comparing POD: H='al ahly' A='enppi' WITH BCK 0: L='enppi' V='al ahly' (Raw: L='Enppi', V='Al Ahly') (Event ID: 1629500873)
+[BetbckParser] Exact Match (Order 2 - Flipped) for Enppi vs Al Ahly (Event ID: 1629500873)
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1629500873)
+[BetbckParser] Game 0: Extracted 2 potential data rows from odds table. (Event ID: 1629500873)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1629500873)
+[BetbckParser] Match accepted: Enppi vs Al Ahly (BCK date: 2026-05-05 12:00) (Event ID: 1629500873)
+[BetbckParser] Comparing POD: H='al ahly' A='enppi' WITH BCK 1: L='enppi 1h' V='al ahly 1h' (Raw: L='Enppi 1H', V='Al Ahly 1H') (Event ID: 1629500873)
+[DEBUG] Comparing normalized: POD H='al ahly', A='enppi' with BCK H='enppi 1h', A='al ahly 1h' | token_set: (H-L 27 A-V 0) | partial: (H-L 33 A-V 0) (Event ID: 1629500873)
+[BetbckParser] Fuzzy Alias Match (Order 2 - Flipped) (Event ID: 1629500873)
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1629500873)
+[BetbckParser] Game 1: Extracted 3 potential data rows from odds table. (Event ID: 1629500873)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1629500873)
+[BetbckParser] Match accepted: Enppi 1H vs Al Ahly 1H (BCK date: 2026-05-05 12:00) (Event ID: 1629500873)
+[BetbckParser] row_data['full_game'] <- Enppi vs Al Ahly (Event ID: 1629500873)
+[BetbckParser] row_data['half_1'] <- Enppi 1H vs Al Ahly 1H (Event ID: 1629500873)
+[BetbckParser] row_data keys: ['full_game', 'half_1'] (Event ID: 1629500873)
+2026-05-05 09:33:29,777 - betbck_request_manager - INFO - [BetBCK-Manager] Game data found, deriving 1H_data from row_data...
+2026-05-05 09:33:29,778 - betbck_request_manager - INFO - [BetBCK-Manager] 1H_data set from row_data key: half_1
+2026-05-05 09:33:29,779 - betbck_request_manager - INFO - [BetBCK-Manager] Successfully scraped data for: ahly
+2026-05-05 09:33:29,781 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-05 09:33:29,787 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-05 09:33:29,788 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-05 09:33:29,788 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 6 1H EV opportunities
+[BetBCKRefresh] Updating event 1629500873 with fresh BetBCK data (10 markets)
+2026-05-05 09:33:29,789 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+2026-05-05 09:33:29,789 - main - INFO - [SafeBroadcast] Queued broadcast for event 1629500873
+[BetBCKRefresh] Broadcast sent for event 1629500873
+2026-05-05 09:33:29,794 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1629500873 to WS+SSE
+INFO:     127.0.0.1:51342 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #52 - sleeping for 5 seconds...
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1629500873
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1629500873
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1629500873
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-05 09:33:34,164 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-05 09:33:34,170 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-05 09:33:34,170 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-05 09:33:34,170 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 6 1H EV opportunities
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1629500873
+[BackgroundRefresher] Updated EV analysis: 10 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 10 markets for 1629500873
+[BackgroundRefresher] Market 0: Spread Home NVP: -118 EV: -5.75%
+[BackgroundRefresher] Market 1: Spread Away NVP: +118 EV: -5.96%
+[BackgroundRefresher] Market 2: Total Over NVP: -102 EV: -1.49%
+[BackgroundRefresher] Comparing odds for 1629500873:
+  [SAME] NVP SAME: ('Spread', 'Home', '-1.25') = -118
+  [SAME] NVP SAME: ('Spread', 'Away', '1.25') = +118
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = -102
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = +102
+  [CHANGE] NVP CHANGE: ('1H Moneyline', 'Home', '') -114 -> -116
+  [CHANGE] NVP CHANGE: ('1H Moneyline', 'Away', '') +1006 -> +1003
+  [CHANGE] NVP CHANGE: ('1H Spread', 'Home', '-0.5') -113 -> -116
+  [CHANGE] NVP CHANGE: ('1H Spread', 'Away', '0.5') +113 -> +116
+  [CHANGE] NVP CHANGE: ('1H Total', 'Over', '1.0') -105 -> -110
+  [CHANGE] NVP CHANGE: ('1H Total', 'Under', '1.0') +105 -> +110
+  [SAME] EV SAME: ('Spread', 'Home', '-1.25') = -5.75%
+  [SAME] EV SAME: ('Spread', 'Away', '1.25') = -5.96%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -1.49%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -13.78%
+  [CHANGE] EV CHANGE: ('1H Moneyline', 'Home', '') -2.53% -> -1.38%
+  [CHANGE] EV CHANGE: ('1H Moneyline', 'Away', '') -22.67% -> -22.46%
+  [CHANGE] EV CHANGE: ('1H Spread', 'Home', '-0.5') -7.70% -> -6.56%
+  [CHANGE] EV CHANGE: ('1H Spread', 'Away', '0.5') -3.67% -> -5.05%
+  [CHANGE] EV CHANGE: ('1H Total', 'Over', '1.0') -9.32% -> -7.22%
+  [CHANGE] EV CHANGE: ('1H Total', 'Under', '1.0') -6.96% -> -9.22%
+[CHANGES] [BackgroundRefresher] ODDS CHANGES DETECTED for 1629500873:
+  [CHANGE] NVP ('1H Moneyline', 'Home', ''): -114 -> -116
+  [CHANGE] NVP ('1H Moneyline', 'Away', ''): +1006 -> +1003
+  [CHANGE] NVP ('1H Spread', 'Home', '-0.5'): -113 -> -116
+  [CHANGE] NVP ('1H Spread', 'Away', '0.5'): +113 -> +116
+  [CHANGE] NVP ('1H Total', 'Over', '1.0'): -105 -> -110
+  [CHANGE] NVP ('1H Total', 'Under', '1.0'): +105 -> +110
+  [CHANGE] EV ('1H Moneyline', 'Home', ''): -2.53% -> -1.38%
+  [CHANGE] EV ('1H Moneyline', 'Away', ''): -22.67% -> -22.46%
+  [CHANGE] EV ('1H Spread', 'Home', '-0.5'): -7.70% -> -6.56%
+  [CHANGE] EV ('1H Spread', 'Away', '0.5'): -3.67% -> -5.05%
+  [CHANGE] EV ('1H Total', 'Over', '1.0'): -9.32% -> -7.22%
+  [CHANGE] EV ('1H Total', 'Under', '1.0'): -6.96% -> -9.22%
+[BROADCAST] [BackgroundRefresher] Broadcasting changes to frontend...
+[BackgroundRefresher] Broadcasting update for event 1629500873
+[BackgroundRefresher] Sample odds: Spread Home NVP: -118 EV: -5.75%
+[BackgroundRefresher] Total markets to broadcast: 10
+[BackgroundRefresher] Broadcasting update for event 1629500873
