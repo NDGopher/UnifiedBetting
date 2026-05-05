@@ -439,6 +439,7 @@ async def handle_pod_alert(request: Request):
                 'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC', 'WNBA', 'AFL', 'CFL', 'MLS',
                 
                 # Full league names
+                'Korea Professional Baseball', 'Korean Professional Baseball', 'KBO',
                 'Nippon Professional Baseball', 'Japanese Professional Baseball',
                 'Major League Baseball', 'National Football League', 'National Basketball Association',
                 'National Hockey League', 'College Football', 'College Basketball',

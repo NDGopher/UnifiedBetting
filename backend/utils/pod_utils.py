@@ -429,6 +429,7 @@ def normalize_team_name_for_matching(name):
         'mlb', 'nba', 'nfl', 'nhl', 'ncaaf', 'ncaab', 'wnba', 'afl', 'cfl', 'mls', 'soccer', 'tennis', 'ufc', 'pfl', 'bellator', 'bkfc', 'lfa', 'rizin', 'one fc', 'one championship',
         
         # Full league names
+        'korea professional baseball', 'korean professional baseball', 'kbo',
         'nippon professional baseball', 'japanese professional baseball',
         'major league baseball', 'national football league', 'national basketball association',
         'national hockey league', 'college football', 'college basketball',
