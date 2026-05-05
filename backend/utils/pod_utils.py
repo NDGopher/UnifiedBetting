@@ -498,7 +498,7 @@ def normalize_team_name_for_matching(name):
         'tcd', 'caf', 'gab', 'gnq', 'ben', 'tgo', 'bfa', 'mrt',
         
         # Regional/League indicators
-        'uefa', 'conmebol', 'concacaf', 'caf', 'afc', 'ofc', 'fifa',
+        'uefa', 'conmebol', 'concacaf', 'conca', 'caf', 'afc', 'ofc', 'fifa',
         'uefa champions league', 'uefa europa league', 'uefa conference league',
         'copa libertadores', 'copa sudamericana', 'concacaf champions league',
         'afc champions league', 'caf champions league', 'ofc champions league',

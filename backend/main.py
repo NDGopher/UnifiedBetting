@@ -496,7 +496,7 @@ async def handle_pod_alert(request: Request):
                 'TCD', 'CAF', 'GAB', 'GNQ', 'BEN', 'TGO', 'BFA', 'MRT',
                 
                 # Regional/League indicators
-                'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC', 'FIFA',
+                'UEFA', 'CONMEBOL', 'CONCACAF', 'CONCA', 'CAF', 'AFC', 'OFC', 'FIFA',
                 'UEFA Champions League', 'UEFA Europa League', 'UEFA Conference League',
                 'Copa Libertadores', 'Copa Sudamericana', 'CONCACAF Champions League',
                 'AFC Champions League', 'CAF Champions League', 'OFC Champions League',
