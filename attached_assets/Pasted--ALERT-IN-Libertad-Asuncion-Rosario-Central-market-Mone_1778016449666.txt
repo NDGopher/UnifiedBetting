@@ -1,0 +1,46 @@
+[ALERT IN]
+Libertad Asuncion @ Rosario Central | ? | market=Moneyline | +424 -> +386
+[SEARCH TERM]
+Using 'central' (from 'Rosario Central' / 'Libertad Asuncion'): last word of home team 'rosario central'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='central' -> HTTP 200 (75286 bytes)
+[MATCH]
+[PASS] BCK 'Olimpia Asuncion' vs 'Barracas Central' <-> POD 'rosario central' vs 'libertad asuncion' [token_set_h=65 | token_set_a=73 | partial_h=67 | partial_a=69 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Olimpia Asuncion' vs 'Barracas Central'
+[MATCH]
+[PASS] BCK 'Olimpia Asuncion 1H' vs 'Barracas Central 1H' <-> POD 'rosario central' vs 'libertad asuncion' [token_set_h=64 | token_set_a=67 | partial_h=67 | partial_a=71 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Olimpia Asuncion 1H' vs 'Barracas Central 1H'
+[MATCH]
+[PASS] BCK 'Libertad Asuncion' vs 'Rosario Central' <-> POD 'rosario central' vs 'libertad asuncion' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Libertad Asuncion' vs 'Rosario Central'
+[MATCH]
+[PASS] BCK 'Libertad Asuncion 1H' vs 'Rosario Central 1H' <-> POD 'rosario central' vs 'libertad asuncion' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Libertad Asuncion 1H' vs 'Rosario Central 1H'
+[MATCH]
+[FAIL] BCK 'Central Florida' vs 'Florida Atlantic' <-> POD 'rosario central' vs 'libertad asuncion' [token_set_h=73 | token_set_a=30 | partial_h=47 | partial_a=44 | threshold=60]
+[ODDS]
+home_moneyline=+170 | away_moneyline=+180 | home_spreads=[{'line': '0', 'odds': '-120'}] | away_spreads=[{'line': '0', 'odds': '-110'}]
+[EV]
+Moneyline Home: BCK 2.7000 (+170) / PIN_NVP 1.4292 (-233) => +88.81%
+[EV]
+Moneyline Away: BCK 2.8000 (+180) / PIN_NVP 8.8700 (+787) => -68.44%
+[EV]
+Total Over 2.0: BCK 2.1500 (+115) / PIN_NVP 1.4926 (-203) => +44.01%
+[EV]
+Total Under 2.0: BCK 1.6452 (-155) / PIN_NVP 3.0300 (+203) => -45.65%
+[EV]
+1H Moneyline Home: BCK 3.5500 (+255) / PIN_NVP 1.9434 (-106) => +83.08%
+[EV]
+1H Moneyline Away: BCK 3.7000 (+270) / PIN_NVP 9.4600 (+846) => -60.90%
+[EV]
+1H Spread Home 0: BCK 1.8333 (-120) / PIN_NVP 1.1799 (-556) => +55.37%
+[EV]
+1H Spread Away 0: BCK 1.9091 (-110) / PIN_NVP 6.5500 (+555) => -70.85%
+[EV]
+1H Total Over 0.5: BCK 1.6250 (-160) / PIN_NVP 1.3953 (-253) => +16.49%
+[EV]
+1H Total Under 0.5: BCK 2.2000 (+120) / PIN_NVP 3.5300 (+253) => -37.68%

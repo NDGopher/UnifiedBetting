@@ -797,8 +797,13 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                 except Exception:
                     pass
         _date_log = bck_game_date.strftime('%Y-%m-%d %H:%M') if bck_game_date else "unknown"
-        print(f"[BetbckParser] Match accepted: {raw_bck_l} vs {raw_bck_v} (BCK date: {_date_log}) (Event ID: {event_id})")
-        matches.append({"data": output_data, "bck_date": bck_game_date, "bck_home": raw_bck_l, "bck_away": raw_bck_v})
+        # Compute match quality score so the BEST match wins (not the first HTML-order match)
+        if "exact_order1" in _cand_scores or "exact_order2" in _cand_scores:
+            _match_score = 300  # exact name match always beats fuzzy
+        else:
+            _match_score = _cand_scores.get("token_set_h", 0) + _cand_scores.get("token_set_a", 0)
+        print(f"[BetbckParser] Match accepted: {raw_bck_l} vs {raw_bck_v} (BCK date: {_date_log}, score={_match_score}) (Event ID: {event_id})")
+        matches.append({"data": output_data, "bck_date": bck_game_date, "bck_home": raw_bck_l, "bck_away": raw_bck_v, "score": _match_score})
 
     # --- Pick best match after scanning all wrappers ---
     if not matches:
@@ -816,12 +821,14 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         return None
 
     # --- Build row_data dict: collect ALL matched wrappers, keyed by row type ---
+    # Sort by score descending so the BEST-matching game wins per type (not first HTML-order)
+    matches_sorted = sorted(matches, key=lambda m: m.get("score", 0), reverse=True)
     row_data = {}
-    for m in matches:
+    for m in matches_sorted:
         rtype = _classify_bck_row_type(m["bck_home"], m["bck_away"])
-        if rtype not in row_data:  # first match per type wins (keeps the closest-to-date order)
+        if rtype not in row_data:  # highest-score match per type wins
             row_data[rtype] = m["data"]
-            print(f"[BetbckParser] row_data['{rtype}'] <- {m['bck_home']} vs {m['bck_away']} (Event ID: {event_id})")
+            print(f"[BetbckParser] row_data['{rtype}'] <- {m['bck_home']} vs {m['bck_away']} (score={m.get('score', 0)}) (Event ID: {event_id})")
 
     print(f"[BetbckParser] row_data keys: {list(row_data.keys())} (Event ID: {event_id})")
 
