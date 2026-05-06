@@ -821,8 +821,16 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         return None
 
     # --- Build row_data dict: collect ALL matched wrappers, keyed by row type ---
-    # Sort by score descending so the BEST-matching game wins per type (not first HTML-order)
-    matches_sorted = sorted(matches, key=lambda m: m.get("score", 0), reverse=True)
+    # Sort: primary = highest score desc, secondary = closest date to event_date (handles same
+    # team playing twice in a week, e.g. Inter vs Lazio Serie A 5/9 + Italy Cup 5/13).
+    def _match_sort_key(m):
+        score = -m.get("score", 0)  # negate so higher score sorts first
+        if event_date is not None and m.get("bck_date") is not None:
+            date_diff = abs((m["bck_date"] - event_date).total_seconds())
+        else:
+            date_diff = float("inf")
+        return (score, date_diff)
+    matches_sorted = sorted(matches, key=_match_sort_key)
     row_data = {}
     for m in matches_sorted:
         rtype = _classify_bck_row_type(m["bck_home"], m["bck_away"])
