@@ -105,6 +105,21 @@ def fetch_sports() -> List[Dict[str, Any]]:
     logger.info(f"Using {len(sports)} fallback sports")
     return sports
 
+def _build_event_dict(matchup: dict, sport_name: str) -> dict:
+    """Extract all useful fields from an Arcadia matchup object."""
+    home_team = next((p["name"] for p in matchup.get("participants", []) if p.get("alignment") == "home"), "Unknown")
+    away_team = next((p["name"] for p in matchup.get("participants", []) if p.get("alignment") == "away"), "Unknown")
+    league_obj = matchup.get("league") or matchup.get("leagueInfo") or {}
+    return {
+        "event_id": matchup["id"],
+        "home_team": home_team,
+        "away_team": away_team,
+        "starts": matchup.get("startTime", ""),      # ISO datetime string from Arcadia
+        "league": league_obj.get("name", "") if isinstance(league_obj, dict) else "",
+        "sport": sport_name,
+    }
+
+
 def fetch_arcadia_events() -> List[Dict[str, Any]]:
     """Fetch event IDs and teams from Arcadia API"""
     date = get_date()
@@ -148,19 +163,10 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
                     response.raise_for_status()
                     matchups = response.json()
                     for matchup in matchups:
-                        event_id = matchup["id"]
-                        home_team = next((p["name"] for p in matchup["participants"] if p["alignment"] == "home"), "Unknown")
-                        away_team = next((p["name"] for p in matchup["participants"] if p["alignment"] == "away"), "Unknown")
-                        
-                        # Skip prop markets
-                        if is_prop_market(home_team, away_team):
+                        ev = _build_event_dict(matchup, sport_name)
+                        if is_prop_market(ev["home_team"], ev["away_team"]):
                             continue
-                            
-                        events.append({
-                            "event_id": event_id,
-                            "home_team": home_team,
-                            "away_team": away_team
-                        })
+                        events.append(ev)
                 except Exception as e:
                     logger.error(f"Exception for {sport_name} (League {league_id}): {e}")
             # Also fetch from /matchups to get NFL games
@@ -172,21 +178,12 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
                 response.raise_for_status()
                 matchups = response.json()
                 for matchup in matchups:
-                    event_id = matchup["id"]
-                    home_team = next((p["name"] for p in matchup["participants"] if p["alignment"] == "home"), "Unknown")
-                    away_team = next((p["name"] for p in matchup["participants"] if p["alignment"] == "away"), "Unknown")
-                    
-                    # Skip prop markets
-                    if is_prop_market(home_team, away_team):
+                    ev = _build_event_dict(matchup, sport_name)
+                    if is_prop_market(ev["home_team"], ev["away_team"]):
                         continue
-                    
                     # Avoid duplicates if already fetched from league endpoints
-                    if not any(e["event_id"] == event_id for e in events):
-                        events.append({
-                            "event_id": event_id,
-                            "home_team": home_team,
-                            "away_team": away_team
-                        })
+                    if not any(e["event_id"] == ev["event_id"] for e in events):
+                        events.append(ev)
             except Exception as e:
                 logger.error(f"Exception for {sport_name} (/matchups): {e}")
         else:
@@ -199,19 +196,10 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
                 response.raise_for_status()
                 matchups = response.json()
                 for matchup in matchups:
-                    event_id = matchup["id"]
-                    home_team = next((p["name"] for p in matchup["participants"] if p["alignment"] == "home"), "Unknown")
-                    away_team = next((p["name"] for p in matchup["participants"] if p["alignment"] == "away"), "Unknown")
-                    
-                    # Skip prop markets
-                    if is_prop_market(home_team, away_team):
+                    ev = _build_event_dict(matchup, sport_name)
+                    if is_prop_market(ev["home_team"], ev["away_team"]):
                         continue
-                        
-                    events.append({
-                        "event_id": event_id,
-                        "home_team": home_team,
-                        "away_team": away_team
-                    })
+                    events.append(ev)
             except requests.exceptions.HTTPError as e:
                 if response.status_code == 401:
                     logger.warning(f"401 Unauthorized for {sport_name}. Trying fallback endpoint...")
@@ -222,19 +210,10 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
                         response.raise_for_status()
                         matchups = response.json()
                         for matchup in matchups:
-                            event_id = matchup["id"]
-                            home_team = next((p["name"] for p in matchup["participants"] if p["alignment"] == "home"), "Unknown")
-                            away_team = next((p["name"] for p in matchup["participants"] if p["alignment"] == "away"), "Unknown")
-                            
-                            # Skip prop markets
-                            if is_prop_market(home_team, away_team):
+                            ev = _build_event_dict(matchup, sport_name)
+                            if is_prop_market(ev["home_team"], ev["away_team"]):
                                 continue
-                                
-                            events.append({
-                                "event_id": event_id,
-                                "home_team": home_team,
-                                "away_team": away_team
-                            })
+                            events.append(ev)
                         logger.info(f"Fallback successful for {sport_name}: {len(events)} events")
                     except requests.exceptions.HTTPError as e2:
                         if response.status_code == 401:
@@ -263,7 +242,7 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
     return all_events
 
 def get_todays_event_ids() -> List[dict]:
-    """Get all event IDs for today's games, with team names."""
+    """Get all event IDs for today's games, with team names, times, and sport."""
     all_events = fetch_arcadia_events()
     event_dicts = []
     for sport_data in all_events:
@@ -271,7 +250,10 @@ def get_todays_event_ids() -> List[dict]:
             event_dicts.append({
                 "event_id": event["event_id"],
                 "home_team": event.get("home_team", f"Team_{event['event_id']}_Home"),
-                "away_team": event.get("away_team", f"Team_{event['event_id']}_Away")
+                "away_team": event.get("away_team", f"Team_{event['event_id']}_Away"),
+                "starts":  event.get("starts", ""),
+                "league":  event.get("league", ""),
+                "sport":   event.get("sport", sport_data.get("sport_name", "")),
             })
     if not event_dicts:
         logger.error("No event IDs found from Arcadia API. Returning empty list.")

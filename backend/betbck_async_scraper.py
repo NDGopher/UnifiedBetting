@@ -141,8 +141,20 @@ class BetBCKAsyncScraper:
             div_t1 = team_name_td.find('div', class_='team1_name_up')
             div_t2 = team_name_td.find('div', class_='team2_name_down')
             if not (div_t1 and div_t2): continue
-            home = div_t1.get_text(strip=True)
-            away = div_t2.get_text(strip=True)
+            def _clean_team(div):
+                # Use the span with data-language if available (same as betbck_scraper.py)
+                name_span = div.find('span', {'data-language': True})
+                raw = name_span.get_text(strip=True) if name_span else div.get_text(strip=True)
+                # Strip rotation numbers (e.g. "551Philadelphia" -> "Philadelphia")
+                raw = re.sub(r'^\d{3,7}\s*', '', raw).strip()
+                # Strip must-start pitcher info (e.g. "M Fried - L must start")
+                raw = re.sub(r'\s*-\s*[A-Za-z\s.]+\s*-\s*[RLrl]\s*(must\s*start|sta\.?)\s*$', '', raw, flags=re.IGNORECASE).strip()
+                raw = re.sub(r'\s*[A-Z]\.\s*[A-Za-z\s.]+\s*-\s*[RLrl]\s*(must\s*start|sta\.?)\s*$', '', raw, flags=re.IGNORECASE).strip()
+                # Strip H+R+E suffix
+                raw = re.sub(r'\s*\((hits\+runs\+errors|h\+r\+e|hre)\)$', '', raw, flags=re.IGNORECASE).strip()
+                return ' '.join(raw.split())
+            home = _clean_team(div_t1)
+            away = _clean_team(div_t2)
             if not home or not away: continue
             # Robust prop/corner/future filtering
             if is_prop_market_by_name(home, away):

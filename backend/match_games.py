@@ -24,21 +24,43 @@ MANUAL_EVENT_OVERRIDES = {
 
 # Expanded team name mapping for known quirks/aliases
 TEAM_NAME_MAP = {
+    # Italian Serie A
     "internazionale": "inter milan",
-    "manchester united": "man united",
-    "manchester city": "man city",
-    "bayern munich": "bayern",
-    "psg": "paris saint germain",
-    "athletic bilbao": "athletic club",
-    "real sociedad": "sociedad",
+    "inter": "inter milan",
     "juventus": "juve",
     "roma": "as roma",
     "napoli": "ssc napoli",
+    # Spanish La Liga
+    "athletic bilbao": "athletic club",
+    "real sociedad": "sociedad",
+    "betis": "real betis",
+    "sevilla": "fc sevilla",
+    # Portuguese
     "sporting": "sporting cp",
     "porto": "fc porto",
     "benfica": "sl benfica",
-    "sevilla": "fc sevilla",
-    "betis": "real betis",
+    # French Ligue 1
+    "psg": "paris saint germain",
+    "paris sg": "paris saint germain",
+    "paris saint-germain": "paris saint germain",
+    "olympique lyonnais": "lyon",
+    "olympique de marseille": "marseille",
+    "stade rennais": "rennes",
+    # German Bundesliga
+    "bayern munich": "bayern",
+    "fc bayern": "bayern",
+    "borussia dortmund": "dortmund",
+    "rb leipzig": "leipzig",
+    "bayer leverkusen": "leverkusen",
+    # English
+    "manchester united": "man united",
+    "manchester city": "man city",
+    "tottenham hotspur": "tottenham",
+    "spurs": "tottenham",
+    "newcastle united": "newcastle",
+    "west ham united": "west ham",
+    "wolverhampton wanderers": "wolves",
+    "nottingham forest": "forest",
     # Scottish clubs
     "heart of midlothian": "hearts",
     "heart of midlothian fc": "hearts",
@@ -49,7 +71,33 @@ TEAM_NAME_MAP = {
     "rangers fc": "rangers",
     "celtic fc": "celtic",
     "dundee utd": "dundee united",
-    # Add more as needed
+    # US Soccer / MLS
+    "la galaxy": "la galaxy",
+    "lafc": "los angeles fc",
+    "la fc": "los angeles fc",
+    "nycfc": "new york city fc",
+    "nyrb": "new york red bulls",
+    "new york red bull": "new york red bulls",
+    # NBA common short forms
+    "philadelphia 76ers": "76ers",
+    "76ers": "76ers",
+    "golden state warriors": "warriors",
+    "golden state": "warriors",
+    "los angeles lakers": "lakers",
+    "los angeles clippers": "clippers",
+    "los angeles rams": "rams",
+    "oklahoma city thunder": "thunder",
+    "new orleans pelicans": "pelicans",
+    "san antonio spurs": "spurs",
+    "memphis grizzlies": "grizzlies",
+    "minnesota timberwolves": "timberwolves",
+    "portland trail blazers": "trail blazers",
+    # MLB
+    "athletics": "oakland athletics",
+    "a's": "oakland athletics",
+    "white sox": "chicago white sox",
+    "red sox": "boston red sox",
+    "blue jays": "toronto blue jays",
 }
 
 # --- Aggressive normalization and prop filtering ---
@@ -317,8 +365,20 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             minor_events.append(event)
             continue
             
-        # Determine sport based on team names
-        sport = determine_sport_from_teams(home_team, away_team)
+        # Use sport field from Arcadia if available, fall back to team-name detection
+        raw_sport = event.get('sport', '').strip()
+        if raw_sport:
+            # Normalize Arcadia sport names to our internal buckets
+            _rs = raw_sport.lower()
+            if 'basketball' in _rs:            sport = 'basketball'
+            elif 'baseball' in _rs:            sport = 'mlb'
+            elif 'football' in _rs or 'american' in _rs: sport = 'football'
+            elif 'soccer' in _rs or 'football' in _rs:  sport = 'soccer'
+            elif 'hockey' in _rs or 'ice' in _rs:       sport = 'hockey'
+            elif 'ufc' in _rs or 'boxing' in _rs or 'martial' in _rs: sport = 'ufc_boxing'
+            else:                              sport = _rs  # keep original as-is for unknown
+        else:
+            sport = determine_sport_from_teams(home_team, away_team)
         if sport not in events_by_sport:
             events_by_sport[sport] = []
         events_by_sport[sport].append(event)
@@ -394,12 +454,24 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             
         logger.debug(f"[MATCH] Normalized BetBCK: '{norm_bck_home}' vs '{norm_bck_away}'")
         
-        # Determine sport of this BetBCK game
-        betbck_sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
+        # Determine sport of this BetBCK game — prefer explicit field, fall back to team-name detection
+        _raw_bck_sport = betbck_game.get('sport', '').strip().lower()
+        if _raw_bck_sport and _raw_bck_sport not in ('other', 'unknown', ''):
+            if 'basketball' in _raw_bck_sport:   betbck_sport = 'basketball'
+            elif 'baseball' in _raw_bck_sport:   betbck_sport = 'mlb'
+            elif 'football' in _raw_bck_sport or 'american' in _raw_bck_sport: betbck_sport = 'football'
+            elif 'soccer' in _raw_bck_sport:     betbck_sport = 'soccer'
+            elif 'hockey' in _raw_bck_sport or 'ice' in _raw_bck_sport: betbck_sport = 'hockey'
+            elif 'ufc' in _raw_bck_sport or 'boxing' in _raw_bck_sport: betbck_sport = 'ufc_boxing'
+            else:                                 betbck_sport = _raw_bck_sport
+        else:
+            betbck_sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
         logger.debug(f"[MATCH] BetBCK game sport: {betbck_sport}")
-        
-        # Only match against events from the same sport
+
+        # Only match against events from the same sport, plus "other" bucket as fallback
         relevant_events = events_by_sport.get(betbck_sport, [])
+        if not relevant_events and betbck_sport != 'other':
+            relevant_events = events_by_sport.get('other', [])
         logger.debug(f"[MATCH] Found {len(relevant_events)} {betbck_sport} events to match against")
 
         # Pre-compute betbck_sport_category once per BetBCK game (not per Pinnacle event)
@@ -477,16 +549,19 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             if not norm_pin_home or not norm_pin_away:
                 continue
                 
-            # Try both orientations - require BOTH teams to match, not just token overlap
-            # Direct orientation: BetBCK home vs Pinnacle home, BetBCK away vs Pinnacle away
-            home_match_score = fuzz.ratio(norm_bck_home, norm_pin_home)
-            away_match_score = fuzz.ratio(norm_bck_away, norm_pin_away)
-            score_direct = (home_match_score + away_match_score) / 2 if home_match_score >= 60 and away_match_score >= 60 else 0
-            
+            # Try both orientations using token_set_ratio which handles:
+            #  - extra tokens ("Philadelphia 76ers" vs "76ers")
+            #  - word reordering ("Inter Milan" vs "Milan Inter")
+            #  - common abbreviation differences
+            _tsr = fuzz.token_set_ratio
+            home_match_score  = _tsr(norm_bck_home, norm_pin_home)
+            away_match_score  = _tsr(norm_bck_away, norm_pin_away)
+            score_direct = (home_match_score + away_match_score) / 2 if home_match_score >= 55 and away_match_score >= 55 else 0
+
             # Flipped orientation: BetBCK home vs Pinnacle away, BetBCK away vs Pinnacle home
-            home_flipped_score = fuzz.ratio(norm_bck_home, norm_pin_away)
-            away_flipped_score = fuzz.ratio(norm_bck_away, norm_pin_home)
-            score_flipped = (home_flipped_score + away_flipped_score) / 2 if home_flipped_score >= 60 and away_flipped_score >= 60 else 0
+            home_flipped_score = _tsr(norm_bck_home, norm_pin_away)
+            away_flipped_score = _tsr(norm_bck_away, norm_pin_home)
+            score_flipped = (home_flipped_score + away_flipped_score) / 2 if home_flipped_score >= 55 and away_flipped_score >= 55 else 0
             
             logger.debug(f"[MATCH] Comparing: '{norm_bck_home} {norm_bck_away}' vs '{norm_pin_home} {norm_pin_away}' (direct: {score_direct}, flipped: {score_flipped})")
             
