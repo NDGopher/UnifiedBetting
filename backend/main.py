@@ -1040,8 +1040,28 @@ async def run_pipeline_background():
             with open(event_ids_path, 'r') as f:
                 events_data = json.load(f)
             event_dicts = events_data.get('event_ids', [])
+
+            # Add event_datetime to Pinnacle events so the 24h date filter in match_games.py works.
+            # Without this, the filter is bypassed and e.g. BetBCK's 5/9 Inter vs Lazio
+            # incorrectly matches the 5/13 Pinnacle event, producing fake EV.
+            for _ev in event_dicts:
+                if 'starts' in _ev and not _ev.get('event_datetime'):
+                    try:
+                        _st = _ev['starts']
+                        if isinstance(_st, (int, float)):
+                            if _st > 1e10:
+                                _st = _st / 1000
+                            _ev['event_datetime'] = datetime.fromtimestamp(_st).strftime('%Y-%m-%dT%H:%M')
+                        elif isinstance(_st, str):
+                            try:
+                                _ev['event_datetime'] = datetime.fromisoformat(_st.replace('Z', '+00:00')).strftime('%Y-%m-%dT%H:%M')
+                            except Exception:
+                                _ev['event_datetime'] = _st
+                    except Exception as _e:
+                        logger.warning(f"[PIPELINE] Could not set event_datetime for event {_ev.get('event_id', '?')}: {_e}")
+
             step1_time = time.time() - step1_start
-            
+
             # Data validation for Step 1
             if not event_dicts:
                 logger.error("[VALIDATION] No event IDs found in file")
