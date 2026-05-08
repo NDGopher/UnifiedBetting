@@ -238,59 +238,102 @@ async def event_alert_worker(event_id):
                     start_time = live_pinnacle_odds_processed.get("starts", payload.get("startTime", "N/A"))
 
                     # ── Swordfish identity check ──────────────────────────────────────────
-                    # Log what game Swordfish actually returned so mismatches are visible,
-                    # then cross-validate the extension's reported Pinnacle price (newOdds)
-                    # against Swordfish's Moneyline NVP.  A >40 % relative divergence on the
-                    # closest side means the eventId likely points to a DIFFERENT game between
-                    # the same two teams (e.g. league vs cup) and the EV will be fabricated.
+                    # Two-layer defence against a wrong Pinnacle eventId (e.g. league game
+                    # vs cup game with the same two teams).
+                    #
+                    # Layer 1 (definitive): compare Swordfish's 'starts' timestamp to the
+                    #   extension's reported startTime.  If they are >6 hours apart the
+                    #   eventId is for a different fixture — drop the alert.
+                    #
+                    # Layer 2 (fallback when startTime absent): compare the extension's
+                    #   newOdds (Pinnacle's own live price at alert time) to Swordfish's
+                    #   Moneyline NVP.  Vig-removal changes odds by <15%; a >40% relative
+                    #   divergence on the closest side means a different game is behind the
+                    #   eventId.
                     _sw_pin_data  = live_pinnacle_odds_processed.get('data') or {}
                     _sw_home_name = _sw_pin_data.get('home', '?')
                     _sw_away_name = _sw_pin_data.get('away', '?')
                     _sw_starts    = _sw_pin_data.get('starts', '?')
                     logger.info(
                         f"[SwordfishID] Event {event_id}: "
-                        f"'{_sw_home_name}' vs '{_sw_away_name}' | starts={_sw_starts}"
+                        f"'{_sw_home_name}' vs '{_sw_away_name}' | starts={_sw_starts} | "
+                        f"ext startTime={payload.get('startTime', 'N/A')}"
                     )
 
                     _event_id_suspect = False
-                    _ext_new_odds = payload.get("newOdds")
-                    if _ext_new_odds:
+
+                    # ── Layer 1: starts timestamp comparison ──────────────────────────────
+                    _ext_start_raw = payload.get("startTime")
+                    _starts_checked = False
+                    if _ext_start_raw and _sw_starts and _sw_starts != '?':
                         try:
-                            _ext_dec = american_to_decimal(str(_ext_new_odds))
-                            _sw_full = (
-                                _sw_pin_data.get('periods', {}).get('num_0') or
-                                _sw_pin_data.get('periods', {}).get('0') or {}
-                            )
-                            _sw_ml        = _sw_full.get('money_line') or {}
-                            _sw_home_nvp  = _sw_ml.get('nvp_home')
-                            _sw_away_nvp  = _sw_ml.get('nvp_away')
-                            if _ext_dec and (_sw_home_nvp or _sw_away_nvp):
-                                diffs = []
-                                if _sw_home_nvp:
-                                    diffs.append(abs(_sw_home_nvp - _ext_dec) / max(_sw_home_nvp, _ext_dec))
-                                if _sw_away_nvp:
-                                    diffs.append(abs(_sw_away_nvp - _ext_dec) / max(_sw_away_nvp, _ext_dec))
-                                _min_diff = min(diffs)
-                                _sw_h_am = decimal_to_american(_sw_home_nvp) if _sw_home_nvp else 'N/A'
-                                _sw_a_am = decimal_to_american(_sw_away_nvp) if _sw_away_nvp else 'N/A'
-                                if _min_diff > 0.40:
-                                    _event_id_suspect = True
-                                    logger.warning(
-                                        f"[SwordfishID] *** SUSPECT EVENT ID *** {event_id} | "
-                                        f"Extension Pinnacle price: {_ext_new_odds} | "
-                                        f"Swordfish NVP: home={_sw_h_am} / away={_sw_a_am} | "
-                                        f"Closest diff: {_min_diff*100:.0f}% — "
-                                        f"'{_sw_home_name}' vs '{_sw_away_name}' may be a different fixture. "
-                                        f"Dropping alert to prevent false EV."
-                                    )
-                                else:
-                                    logger.info(
-                                        f"[SwordfishID] OK — ext {_ext_new_odds} vs "
-                                        f"Swordfish NVP home={_sw_h_am}/away={_sw_a_am} "
-                                        f"(closest diff {_min_diff*100:.0f}%)"
-                                    )
-                        except Exception as _eic_exc:
-                            logger.debug(f"[SwordfishID] Validation skipped: {_eic_exc}")
+                            import datetime as _dt2
+                            # Parse extension startTime (ms epoch or ISO string)
+                            if isinstance(_ext_start_raw, (int, float)):
+                                _ts = _ext_start_raw / 1000 if _ext_start_raw > 1e10 else _ext_start_raw
+                                _ext_dt = _dt2.datetime.utcfromtimestamp(_ts)
+                            else:
+                                _ext_dt = _dt2.datetime.fromisoformat(str(_ext_start_raw).replace("Z", ""))
+                            # Parse Swordfish starts (ISO string)
+                            _sw_dt = _dt2.datetime.fromisoformat(str(_sw_starts).replace("Z", ""))
+                            _starts_diff_h = abs((_sw_dt - _ext_dt).total_seconds()) / 3600
+                            logger.info(f"[SwordfishID] starts diff = {_starts_diff_h:.1f}h "
+                                        f"(sw={_sw_dt.strftime('%Y-%m-%d %H:%M')} "
+                                        f"ext={_ext_dt.strftime('%Y-%m-%d %H:%M')})")
+                            if _starts_diff_h > 6:
+                                _event_id_suspect = True
+                                logger.warning(
+                                    f"[SwordfishID] *** WRONG FIXTURE — starts {_starts_diff_h:.1f}h apart *** "
+                                    f"Event {event_id}: Swordfish game starts "
+                                    f"{_sw_dt.strftime('%Y-%m-%d %H:%M')} UTC but extension "
+                                    f"reported {_ext_dt.strftime('%Y-%m-%d %H:%M')} UTC. "
+                                    f"eventId points to a different '{_sw_home_name}' vs "
+                                    f"'{_sw_away_name}' fixture. Dropping alert."
+                                )
+                            _starts_checked = True
+                        except Exception as _sc_exc:
+                            logger.debug(f"[SwordfishID] starts comparison failed: {_sc_exc}")
+
+                    # ── Layer 2: ML NVP vs extension odds (fallback) ──────────────────────
+                    if not _starts_checked and not _event_id_suspect:
+                        _ext_new_odds = payload.get("newOdds")
+                        if _ext_new_odds:
+                            try:
+                                _ext_dec = american_to_decimal(str(_ext_new_odds))
+                                _sw_full = (
+                                    _sw_pin_data.get('periods', {}).get('num_0') or
+                                    _sw_pin_data.get('periods', {}).get('0') or {}
+                                )
+                                _sw_ml       = _sw_full.get('money_line') or {}
+                                _sw_home_nvp = _sw_ml.get('nvp_home')
+                                _sw_away_nvp = _sw_ml.get('nvp_away')
+                                if _ext_dec and (_sw_home_nvp or _sw_away_nvp):
+                                    diffs = []
+                                    if _sw_home_nvp:
+                                        diffs.append(abs(_sw_home_nvp - _ext_dec) / max(_sw_home_nvp, _ext_dec))
+                                    if _sw_away_nvp:
+                                        diffs.append(abs(_sw_away_nvp - _ext_dec) / max(_sw_away_nvp, _ext_dec))
+                                    _min_diff = min(diffs)
+                                    _sw_h_am = decimal_to_american(_sw_home_nvp) if _sw_home_nvp else 'N/A'
+                                    _sw_a_am = decimal_to_american(_sw_away_nvp) if _sw_away_nvp else 'N/A'
+                                    if _min_diff > 0.40:
+                                        _event_id_suspect = True
+                                        logger.warning(
+                                            f"[SwordfishID] *** SUSPECT EVENT ID (ML check) *** {event_id} | "
+                                            f"Extension Pinnacle price: {_ext_new_odds} | "
+                                            f"Swordfish NVP: home={_sw_h_am} / away={_sw_a_am} | "
+                                            f"Closest diff: {_min_diff*100:.0f}% — "
+                                            f"'{_sw_home_name}' vs '{_sw_away_name}' may be a different fixture. "
+                                            f"Dropping alert to prevent false EV."
+                                        )
+                                    else:
+                                        logger.info(
+                                            f"[SwordfishID] OK (ML check) — ext {_ext_new_odds} vs "
+                                            f"Swordfish NVP home={_sw_h_am}/away={_sw_a_am} "
+                                            f"(closest diff {_min_diff*100:.0f}%)"
+                                        )
+                            except Exception as _eic_exc:
+                                logger.debug(f"[SwordfishID] ML validation skipped: {_eic_exc}")
                     # ─────────────────────────────────────────────────────────────────────
 
                     pod_home_clean = clean_pod_team_name_for_search(payload.get("homeTeam", ""))
