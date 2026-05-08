@@ -669,18 +669,25 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                                 _cand_scores.update({"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD, "_sum_best": fwd_sum, "_sum_fwd": fwd_sum})
                             if rev_sum > _cand_scores.get("_sum_best", 0):
                                 _cand_scores.update({"token_set_h": s_hv, "token_set_a": s_al, "partial_h": fuzz.partial_ratio(ph, bv), "partial_a": fuzz.partial_ratio(pa, bh), "threshold": FUZZY_MATCH_THRESHOLD, "_sum_best": rev_sum})
-                            if s_hl >= FUZZY_MATCH_THRESHOLD and s_av >= FUZZY_MATCH_THRESHOLD:
-                                matched, bck_local_is_pod_home = True, True
-                                _cand_scores = {"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD}
-                                print(f"[BetbckParser] Fuzzy Alias Match (Order 1) (Event ID: {event_id})")
-                                found_fuzzy = True
-                                break
-                            elif s_hv >= FUZZY_MATCH_THRESHOLD and s_al >= FUZZY_MATCH_THRESHOLD:
-                                p_hv = fuzz.partial_ratio(ph, bv)
-                                p_al = fuzz.partial_ratio(pa, bh)
-                                matched, bck_local_is_pod_home = True, False
-                                _cand_scores = {"token_set_h": s_hv, "token_set_a": s_al, "partial_h": p_hv, "partial_a": p_al, "threshold": FUZZY_MATCH_THRESHOLD}
-                                print(f"[BetbckParser] Fuzzy Alias Match (Order 2 - Flipped) (Event ID: {event_id})")
+                            fwd_passes = s_hl >= FUZZY_MATCH_THRESHOLD and s_av >= FUZZY_MATCH_THRESHOLD
+                            rev_passes = s_hv >= FUZZY_MATCH_THRESHOLD and s_al >= FUZZY_MATCH_THRESHOLD
+                            if fwd_passes or rev_passes:
+                                # When BOTH orientations clear the threshold, pick the one
+                                # with the higher total score — not just whichever was checked
+                                # first.  This prevents CSKA-style mismatches where the wrong
+                                # orientation barely passes (e.g. sum=162) while the correct
+                                # one would score perfectly (sum=200).
+                                use_reverse = rev_passes and (not fwd_passes or (s_hv + s_al) > (s_hl + s_av))
+                                if use_reverse:
+                                    p_hv = fuzz.partial_ratio(ph, bv)
+                                    p_al = fuzz.partial_ratio(pa, bh)
+                                    matched, bck_local_is_pod_home = True, False
+                                    _cand_scores = {"token_set_h": s_hv, "token_set_a": s_al, "partial_h": p_hv, "partial_a": p_al, "threshold": FUZZY_MATCH_THRESHOLD}
+                                    print(f"[BetbckParser] Fuzzy Match (Order 2 - Flipped, score {s_hv+s_al} > fwd {s_hl+s_av}) (Event ID: {event_id})")
+                                else:
+                                    matched, bck_local_is_pod_home = True, True
+                                    _cand_scores = {"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD}
+                                    print(f"[BetbckParser] Fuzzy Match (Order 1, score {s_hl+s_av}) (Event ID: {event_id})")
                                 found_fuzzy = True
                                 break
                         if found_fuzzy: break
