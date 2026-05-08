@@ -1035,7 +1035,15 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
         if not full_game:
             logger.error(f"[AnalyzeMarkets] No 'num_0' or '0' period found in periods: {periods}")
             return []
-        
+
+        # Log Swordfish game identity so mismatches are visible in the alert log
+        logger.info(
+            f"[AnalyzeMarkets] Swordfish game: '{pin_data.get('home', '?')}' vs "
+            f"'{pin_data.get('away', '?')}' | starts={pin_data.get('starts', '?')} | "
+            f"POD expected: home='{bet_data_copy.get('pod_home_team', '?')}' "
+            f"away='{bet_data_copy.get('pod_away_team', '?')}'"
+        )
+
         # --- Moneyline ---
         ml = full_game.get('money_line', {})
         meta_limits = full_game.get('meta') if isinstance(full_game.get('meta'), dict) else {}
