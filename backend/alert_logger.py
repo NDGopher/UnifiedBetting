@@ -118,16 +118,74 @@ class AlertLogger:
         market = payload.get("marketType", payload.get("bet_type", "?"))
         old_odds = payload.get("oldOdds", "?")
         new_odds = payload.get("newOdds", "?")
+        event_id_val = str(payload.get("eventId", "?"))
+        start_time_val = str(payload.get("startTime", "?"))
+        line_val = payload.get("line", payload.get("marketLine", ""))
+        no_vig_val = payload.get("noVigPriceFromAlert", "")
         home_display = self._strip_display_suffix(home)
         away_display = self._strip_display_suffix(away)
         self.teams = {"home": home_display, "away": away_display, "league": league}
         print(self._divider)
+        extras = []
+        if line_val:
+            extras.append(f"line={line_val}")
+        if no_vig_val:
+            extras.append(f"noVig={no_vig_val}")
+        extras.append(f"eventId={event_id_val}")
+        extras.append(f"startTime={start_time_val}")
         self._step(
             "ALERT IN",
-            f"{away_display} @ {home_display} | {league} | market={market} | {old_odds} -> {new_odds}",
+            f"{away_display} @ {home_display} | {league} | market={market} | {old_odds} -> {new_odds} | {' | '.join(extras)}",
             {"home": home_display, "away": away_display, "league": league, "market": market,
-             "old_odds": old_odds, "new_odds": new_odds},
+             "line": line_val, "old_odds": old_odds, "new_odds": new_odds,
+             "no_vig": no_vig_val, "event_id": event_id_val, "start_time": start_time_val},
         )
+
+    def log_swordfish_id(self, sw_home: str, sw_away: str, sw_starts: str,
+                         ext_starts: str = None, diff_h: float = None,
+                         suspect: bool = False, check_type: str = None, **kwargs):
+        if suspect:
+            status = (f"*** WRONG FIXTURE — starts {diff_h:.1f}h apart ***"
+                      if diff_h is not None else "*** SUSPECT — ML odds mismatch ***")
+        else:
+            status = (f"OK — starts diff {diff_h:.1f}h"
+                      if diff_h is not None else "OK")
+        parts = [f"Swordfish: '{sw_home}' vs '{sw_away}'", f"starts={sw_starts}"]
+        if ext_starts:
+            parts.append(f"ext_start={ext_starts}")
+        parts.append(status)
+        self._step("SWORDFISH", " | ".join(parts), {
+            "sw_home": sw_home, "sw_away": sw_away,
+            "sw_starts": sw_starts, "ext_starts": ext_starts,
+            "diff_h": round(diff_h, 1) if diff_h is not None else None,
+            "suspect": suspect, "check_type": check_type,
+        })
+
+    def log_orientation(self, fwd_sum: int, rev_sum: int, use_reverse: bool,
+                        bck_local: str, bck_visitor: str):
+        direction = "REVERSE (flipped)" if use_reverse else "FORWARD"
+        chosen = rev_sum if use_reverse else fwd_sum
+        other = fwd_sum if use_reverse else rev_sum
+        pod_local_role = "POD away" if use_reverse else "POD home"
+        self._step("ORIENT",
+            f"Orientation: {direction} (score {chosen} vs alt {other}) | "
+            f"BCK local='{bck_local}' = {pod_local_role}",
+            {"direction": direction, "use_reverse": use_reverse,
+             "fwd_sum": fwd_sum, "rev_sum": rev_sum,
+             "bck_local": bck_local, "bck_visitor": bck_visitor})
+
+    def log_bck_date(self, bck_date_str: str, event_date_str: str = None, diff_h: float = None):
+        if event_date_str and diff_h is not None:
+            flag = f"WARNING — {diff_h:.1f}h gap" if diff_h > 3 else f"OK — diff {diff_h:.1f}h"
+            msg = f"BCK game date: {bck_date_str} | PIN expected: {event_date_str} | {flag}"
+        elif event_date_str:
+            msg = f"BCK game date: {bck_date_str} | PIN expected: {event_date_str}"
+        else:
+            msg = f"BCK game date: {bck_date_str} (PIN start unavailable)"
+        self._step("BCK DATE", msg, {
+            "bck_date": bck_date_str, "event_date": event_date_str,
+            "diff_h": round(diff_h, 1) if diff_h is not None else None,
+        })
 
     def log_prop_skip(self, home: str, away: str, reason: str):
         self.result = "skipped_prop"

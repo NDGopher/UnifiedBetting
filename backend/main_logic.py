@@ -205,6 +205,9 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
     try:
         if alog and original_alert_details:
             alog.log_raw_alert(original_alert_details)
+            _sw_id = original_alert_details.get('_swordfish_id_data')
+            if _sw_id:
+                alog.log_swordfish_id(**_sw_id)
 
         if not original_alert_details or not processed_pinnacle_data:
             if alog:

@@ -688,6 +688,14 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                                     matched, bck_local_is_pod_home = True, True
                                     _cand_scores = {"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD}
                                     print(f"[BetbckParser] Fuzzy Match (Order 1, score {s_hl+s_av}) (Event ID: {event_id})")
+                                if _alog:
+                                    _alog.log_orientation(
+                                        fwd_sum=(s_hl + s_av) if fwd_passes else 0,
+                                        rev_sum=(s_hv + s_al) if rev_passes else 0,
+                                        use_reverse=use_reverse,
+                                        bck_local=raw_bck_l,
+                                        bck_visitor=raw_bck_v,
+                                    )
                                 found_fuzzy = True
                                 break
                         if found_fuzzy: break
@@ -810,6 +818,10 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         else:
             _match_score = _cand_scores.get("token_set_h", 0) + _cand_scores.get("token_set_a", 0)
         print(f"[BetbckParser] Match accepted: {raw_bck_l} vs {raw_bck_v} (BCK date: {_date_log}, score={_match_score}) (Event ID: {event_id})")
+        if _alog and bck_game_date:
+            _event_date_str = event_date.strftime('%Y-%m-%d %H:%M') if event_date else None
+            _bck_diff_h = abs((bck_game_date - event_date).total_seconds()) / 3600 if event_date else None
+            _alog.log_bck_date(bck_date_str=_date_log, event_date_str=_event_date_str, diff_h=_bck_diff_h)
         matches.append({"data": output_data, "bck_date": bck_game_date, "bck_home": raw_bck_l, "bck_away": raw_bck_v, "score": _match_score})
 
     # --- Pick best match after scanning all wrappers ---

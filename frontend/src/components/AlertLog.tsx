@@ -47,26 +47,31 @@ interface AlertRecord {
 }
 
 const RESULT_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
-  ev_found:      { label: "EV Found",    color: "#2E7D32", icon: <CheckCircle sx={{ fontSize: 14 }} /> },
-  found_no_ev:   { label: "No EV",       color: "#FF9800", icon: <Search sx={{ fontSize: 14 }} /> },
-  not_found:     { label: "Not Found",   color: "#F44336", icon: <Error sx={{ fontSize: 14 }} /> },
-  error:         { label: "Error",       color: "#F44336", icon: <Error sx={{ fontSize: 14 }} /> },
-  skipped_prop:  { label: "Skipped",     color: "#9E9E9E", icon: <NotInterested sx={{ fontSize: 14 }} /> },
-  completed:     { label: "Completed",   color: "#2196F3", icon: <CheckCircle sx={{ fontSize: 14 }} /> },
-  pending:       { label: "Pending",     color: "#9E9E9E", icon: <HelpOutline sx={{ fontSize: 14 }} /> },
+  ev_found:                  { label: "EV Found",       color: "#2E7D32", icon: <CheckCircle sx={{ fontSize: 14 }} /> },
+  found_no_ev:               { label: "No EV",          color: "#FF9800", icon: <Search sx={{ fontSize: 14 }} /> },
+  not_found:                 { label: "Not Found",      color: "#F44336", icon: <Error sx={{ fontSize: 14 }} /> },
+  error:                     { label: "Error",          color: "#F44336", icon: <Error sx={{ fontSize: 14 }} /> },
+  skipped_prop:              { label: "Skipped",        color: "#9E9E9E", icon: <NotInterested sx={{ fontSize: 14 }} /> },
+  dropped_suspect_event_id:  { label: "Wrong Fixture",  color: "#FF5722", icon: <Error sx={{ fontSize: 14 }} /> },
+  completed:                 { label: "Completed",      color: "#2196F3", icon: <CheckCircle sx={{ fontSize: 14 }} /> },
+  pending:                   { label: "Pending",        color: "#9E9E9E", icon: <HelpOutline sx={{ fontSize: 14 }} /> },
 };
 
 const TAG_COLORS: Record<string, string> = {
   "ALERT IN":    "#2196F3",
+  "SWORDFISH":   "#00BCD4",
   "SEARCH TERM": "#9E9E9E",
   "SEARCH":      "#9E9E9E",
   "MATCH":       "#FF9800",
   "FOUND":       "#2E7D32",
+  "ORIENT":      "#FFB300",
+  "BCK DATE":    "#78909C",
   "NOT FOUND":   "#F44336",
   "CLOSEST":     "#FF6F00",
   "ODDS":        "#9E9E9E",
   "EV":          "#4CAF50",
   "ERROR":       "#F44336",
+  "WARNING":     "#FF5722",
   "SKIP":        "#9E9E9E",
   "INFO":        "#9E9E9E",
 };

@@ -261,6 +261,12 @@ async def event_alert_worker(event_id):
                     )
 
                     _event_id_suspect = False
+                    # Accumulated for the alert log's [SWORDFISH] step
+                    _sw_id_data = {
+                        "sw_home": _sw_home_name, "sw_away": _sw_away_name,
+                        "sw_starts": str(_sw_starts), "ext_starts": None,
+                        "diff_h": None, "suspect": False, "check_type": None,
+                    }
 
                     # ── Layer 1: starts timestamp comparison ──────────────────────────────
                     _ext_start_raw = payload.get("startTime")
@@ -268,20 +274,24 @@ async def event_alert_worker(event_id):
                     if _ext_start_raw and _sw_starts and _sw_starts != '?':
                         try:
                             import datetime as _dt2
-                            # Parse extension startTime (ms epoch or ISO string)
                             if isinstance(_ext_start_raw, (int, float)):
                                 _ts = _ext_start_raw / 1000 if _ext_start_raw > 1e10 else _ext_start_raw
                                 _ext_dt = _dt2.datetime.utcfromtimestamp(_ts)
                             else:
                                 _ext_dt = _dt2.datetime.fromisoformat(str(_ext_start_raw).replace("Z", ""))
-                            # Parse Swordfish starts (ISO string)
                             _sw_dt = _dt2.datetime.fromisoformat(str(_sw_starts).replace("Z", ""))
                             _starts_diff_h = abs((_sw_dt - _ext_dt).total_seconds()) / 3600
+                            _sw_id_data.update({
+                                "ext_starts": _ext_dt.strftime('%Y-%m-%d %H:%M'),
+                                "diff_h": _starts_diff_h,
+                                "check_type": "starts",
+                            })
                             logger.info(f"[SwordfishID] starts diff = {_starts_diff_h:.1f}h "
                                         f"(sw={_sw_dt.strftime('%Y-%m-%d %H:%M')} "
                                         f"ext={_ext_dt.strftime('%Y-%m-%d %H:%M')})")
                             if _starts_diff_h > 6:
                                 _event_id_suspect = True
+                                _sw_id_data["suspect"] = True
                                 logger.warning(
                                     f"[SwordfishID] *** WRONG FIXTURE — starts {_starts_diff_h:.1f}h apart *** "
                                     f"Event {event_id}: Swordfish game starts "
@@ -316,8 +326,13 @@ async def event_alert_worker(event_id):
                                     _min_diff = min(diffs)
                                     _sw_h_am = decimal_to_american(_sw_home_nvp) if _sw_home_nvp else 'N/A'
                                     _sw_a_am = decimal_to_american(_sw_away_nvp) if _sw_away_nvp else 'N/A'
+                                    _sw_id_data.update({
+                                        "ext_starts": str(_ext_new_odds),
+                                        "check_type": "ml_odds",
+                                    })
                                     if _min_diff > 0.40:
                                         _event_id_suspect = True
+                                        _sw_id_data["suspect"] = True
                                         logger.warning(
                                             f"[SwordfishID] *** SUSPECT EVENT ID (ML check) *** {event_id} | "
                                             f"Extension Pinnacle price: {_ext_new_odds} | "
@@ -353,7 +368,8 @@ async def event_alert_worker(event_id):
                             logger.info(f"[PerEventQueue] Cleaned Teams: Home='{pod_home_clean}', Away='{pod_away_clean}'")
                             start_alert_log(event_id)
                             try:
-                                betbck_result = process_alert_and_scrape_betbck(event_id, payload, live_pinnacle_odds_processed)
+                                _payload_with_sw = {**payload, '_swordfish_id_data': _sw_id_data}
+                                betbck_result = process_alert_and_scrape_betbck(event_id, _payload_with_sw, live_pinnacle_odds_processed)
 
                                 if not (betbck_result and betbck_result.get("status") == "success"):
                                     fail_reason = betbck_result.get("message", "Scraper returned None") if betbck_result else "Scraper returned None"
