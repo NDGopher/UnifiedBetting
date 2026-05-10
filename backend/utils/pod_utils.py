@@ -538,6 +538,38 @@ def normalize_team_name_for_matching(name):
     final_normalized_name = " ".join(norm_name.split()).strip() 
     return final_normalized_name if final_normalized_name else (original_name_for_debug.lower().strip() if original_name_for_debug else "")
 
+def strip_pod_league_suffix(name: str) -> str:
+    """Strip league abbreviations that POD concatenates directly onto team names.
+
+    POD appends the league abbreviation with no space:
+      'New York KnicksNBA'   → 'New York Knicks'
+      'Las Vegas AcesW'      → 'Las Vegas Aces'   (WNBA uses bare 'W')
+      'Chicago BearsNFL'     → 'Chicago Bears'
+      'Tampa Bay LightningNHL' → 'Tampa Bay Lightning'
+
+    Applied to raw team names early in the pipeline so all log entries,
+    search terms, and matching logic see the clean name.
+    """
+    if not name:
+        return name
+    # Multi-letter uppercase abbreviations concatenated directly (e.g. KnicksNBA)
+    _LEAGUE_ABBREVS = (
+        'WNBA', 'NBA', 'NFL', 'NHL', 'MLB', 'MLS', 'NWSL', 'PWHL',
+        'NCAAF', 'NCAAB', 'UFC', 'AFL', 'CFL', 'XFL', 'USFL',
+    )
+    for abbrev in _LEAGUE_ABBREVS:
+        if name.endswith(abbrev) and len(name) > len(abbrev):
+            # Make sure the char before the abbrev is a letter (not a space already)
+            if name[-len(abbrev)-1:-(len(abbrev))].rstrip() != '':
+                name = name[:-len(abbrev)].strip()
+                break
+    # Trailing uppercase 'W' (WNBA women's leagues, e.g. "AcesW" → "Aces")
+    # Only strip when preceded by a lowercase letter (not already a space)
+    import re as _re_ls
+    name = _re_ls.sub(r'([a-zA-Z])W$', r'\1', name)
+    return name.strip()
+
+
 def clean_pod_team_name_for_search(name: str) -> str:
     """Clean team name for search by removing common suffixes and normalizing."""
     print(f"[DEBUG] clean_pod_team_name_for_search input: '{name}'")

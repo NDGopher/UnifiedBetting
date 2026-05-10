@@ -11,7 +11,7 @@ except ImportError as e:
     print(f"[MainLogic] CRITICAL_ERROR: {e}")
     raise
 from utils import normalize_team_name_for_matching, process_event_odds_for_display
-from utils.pod_utils import analyze_markets_for_ev, analyze_markets_multi_row, clean_pod_team_name_for_search
+from utils.pod_utils import analyze_markets_for_ev, analyze_markets_multi_row, clean_pod_team_name_for_search, strip_pod_league_suffix
 from pinnacle_fetcher import fetch_live_pinnacle_event_odds
 try:
     from alert_logger import get_logger_for_event
@@ -203,6 +203,15 @@ def determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw):
 def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_pinnacle_data, scrape_betbck=True):
     alog = get_logger_for_event(event_id)
     try:
+        # Strip league suffixes from raw team names before anything is logged or processed.
+        # POD concatenates the league abbreviation directly onto the team name with no space:
+        #   "New York KnicksNBA" → "New York Knicks"
+        #   "Las Vegas AcesW"    → "Las Vegas Aces"
+        if original_alert_details:
+            for _k in ("homeTeam", "awayTeam"):
+                if _k in original_alert_details and original_alert_details[_k]:
+                    original_alert_details[_k] = strip_pod_league_suffix(original_alert_details[_k])
+
         if alog and original_alert_details:
             alog.log_raw_alert(original_alert_details)
             _sw_id = original_alert_details.get('_swordfish_id_data')

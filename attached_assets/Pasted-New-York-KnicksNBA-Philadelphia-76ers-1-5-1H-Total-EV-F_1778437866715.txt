@@ -1,0 +1,135 @@
+New York KnicksNBA @ Philadelphia 76ers
+
++1.5% 1H Total
+EV Found
+1:26:14 PM
+[ALERT IN]
+New York KnicksNBA @ Philadelphia 76ers | ? | market=Total | +114 -> -101 | noVig=+107 | eventId=1630267865 | startTime=?
+[SWORDFISH]
+Swordfish: 'Philadelphia 76ers' vs 'New York Knicks' | starts=2026-05-10 19:35 UTC | OK
+[SEARCH TERM]
+Using '76ers' (from 'Philadelphia 76ers' / 'New York KnicksNBA'): known_term map for 'philadelphia 76ers'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='76ers' -> HTTP 200 (112096 bytes)
+[MATCH]
+[PASS] BCK 'New York Knicks' vs 'Philadelphia 76ers' <-> POD 'philadelphia 76ers' vs 'ny knicks' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'New York Knicks' vs 'Philadelphia 76ers'
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'New York Knicks 1H' vs 'Philadelphia 76ers 1H' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'New York Knicks 1H' vs 'Philadelphia 76ers 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='New York Knicks 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'New York Knicks 1Q' vs 'Philadelphia 76ers 1Q' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'New York Knicks 1Q' vs 'Philadelphia 76ers 1Q'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='New York Knicks 1Q' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'New York Knicks 2Q' vs 'Philadelphia 76ers 2Q' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'New York Knicks 2Q' vs 'Philadelphia 76ers 2Q'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='New York Knicks 2Q' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'New York Knicks 3Q' vs 'Philadelphia 76ers 3Q' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'New York Knicks 3Q' vs 'Philadelphia 76ers 3Q'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='New York Knicks 3Q' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'New York Knicks 4Q' vs 'Philadelphia 76ers 4Q' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'New York Knicks 4Q' vs 'Philadelphia 76ers 4Q'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='New York Knicks 4Q' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Knicks Alt Line' vs '76ers Alt Line' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Knicks Alt Line' vs '76ers Alt Line'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Knicks Alt Line' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Knicks Alt Line' vs '76ers Alt Line' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Knicks Alt Line' vs '76ers Alt Line'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Knicks Alt Line' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Knicks score first' vs '76ers score first' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Knicks score first' vs '76ers score first'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Knicks score first' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:20 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Knicks 10 pts first' vs '76ers 10 pts first' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Knicks 10 pts first' vs '76ers 10 pts first'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Knicks 10 pts first' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Knicks 20 pts first' vs '76ers 20 pts first' <-> POD 'philadelphia 76ers' vs 'ny knicks' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Knicks 20 pts first' vs '76ers 20 pts first'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Knicks 20 pts first' = POD away
+[BCK DATE]
+BCK game date: 2026-05-10 14:30 (PIN start unavailable)
+[ODDS]
+home_moneyline=+105 | away_moneyline=-125 | home_spreads=[{'line': '+1.5', 'odds': '-105'}, {'line': '+2', 'odds': '-117'}, {'line': '+2.5', 'odds': '-129'}, {'line': '+3', 'odds': '-141'}, {'line': '+3.5', 'odds': '-153'}] | away_spreads=[{'line': '-1.5', 'odds': '-105'}, {'line': '-1', 'odds': '-117'}, {'line': '-0.5', 'odds': '-129'}, {'line': '0', 'odds': '-141'}, {'line': '+0.5', 'odds': '-153'}]
+[EV]
+Moneyline Home: BCK 2.0500 (+105) / PIN_NVP 2.1200 (+112) => -3.07%
+[EV]
+Moneyline Away: BCK 1.8000 (-125) / PIN_NVP 1.9009 (-111) => -5.11%
+[EV]
+Spread Home 2: BCK 1.8547 (-117) / PIN_NVP 1.9434 (-106) => -4.35%
+[EV]
+Spread Home 3.5: BCK 1.6536 (-153) / PIN_NVP 1.7353 (-136) => -4.75%
+[EV]
+Spread Home 3: BCK 1.7092 (-141) / PIN_NVP 1.7937 (-126) => -4.78%
+[EV]
+Spread Home 2.5: BCK 1.7752 (-129) / PIN_NVP 1.8621 (-116) => -4.66%
+[EV]
+Spread Home 1.5: BCK 1.9524 (-105) / PIN_NVP 2.0300 (+103) => -3.78%
+[EV]
+Spread Away -1.5: BCK 1.9524 (-105) / PIN_NVP 1.9709 (-103) => -0.99%
+[EV]
+Spread Away -1: BCK 1.8547 (-117) / PIN_NVP 1.9259 (-108) => -3.50%
+[EV]
+Total Over 214.5: BCK 1.9524 (-105) / PIN_NVP 2.0200 (+102) => -3.35%
+[EV]
+Total Under 214.5: BCK 1.9524 (-105) / PIN_NVP 1.9804 (-102) => -1.44%
+[EV]
+1H Moneyline Home: BCK 2.0000 (+100) / PIN_NVP 2.0900 (+109) => -4.49%
+[EV]
+1H Moneyline Away: BCK 1.8333 (-120) / PIN_NVP 1.9174 (-109) => -4.21%
+[EV]
+1H Spread Home 0.5: BCK 1.9091 (-110) / PIN_NVP 2.0000 (+100) => -4.55%
+[EV]
+1H Spread Away -0.5: BCK 2.0000 (+100) / PIN_NVP 2.0000 (+100) => +0.00%
+[EV]
+1H Total Over 110.0: BCK 1.9524 (-105) / PIN_NVP 1.9259 (-108) => +1.53%
+[EV]
+1H Total Under 110.0: BCK 1.9524 (-105) / PIN_NVP 2.0800 (+108) => -6.32%
