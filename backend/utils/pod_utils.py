@@ -541,6 +541,11 @@ def normalize_team_name_for_matching(name):
 def clean_pod_team_name_for_search(name: str) -> str:
     """Clean team name for search by removing common suffixes and normalizing."""
     print(f"[DEBUG] clean_pod_team_name_for_search input: '{name}'")
+    # Strip WNBA / women's-league 'W' suffix concatenated directly to the team name
+    # e.g. "Las Vegas AcesW" → "Las Vegas Aces", "Chicago SkyW" → "Chicago Sky"
+    # The W is always uppercase and follows a letter (no space before it).
+    import re as _re_w
+    name = _re_w.sub(r'([a-zA-Z])W$', r'\1', name)
     result = normalize_team_name_for_matching(name)
     print(f"[DEBUG] clean_pod_team_name_for_search output: '{result}'")
     return result

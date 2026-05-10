@@ -618,6 +618,12 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
     print(f"[BetbckParser] Found {len(game_wrappers)} potential game wrapper tables. (Event ID: {event_id})")
     if not game_wrappers: return None
 
+    # Strip WNBA / women's-league trailing 'W' before any matching
+    # e.g. "Las Vegas AcesW" → "Las Vegas Aces"
+    import re as _re_w_sc
+    target_home_team_pod = _re_w_sc.sub(r'([a-zA-Z])W$', r'\1', target_home_team_pod)
+    target_away_team_pod = _re_w_sc.sub(r'([a-zA-Z])W$', r'\1', target_away_team_pod)
+
     norm_pod_h = normalize_team_name_for_matching(target_home_team_pod)
     norm_pod_a = normalize_team_name_for_matching(target_away_team_pod)
     print(f"[BetbckParser] Normalized POD Targets: Home='{norm_pod_h}', Away='{norm_pod_a}' (Event ID: {event_id})")
@@ -632,8 +638,13 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         raw_bck_l, raw_bck_v = get_cleaned_team_name_from_div(div_t1), get_cleaned_team_name_from_div(div_t2)
         if not raw_bck_l or not raw_bck_v: print(f"[BetbckParser] Wrapper {idx}: Empty raw names. L='{raw_bck_l}', V='{raw_bck_v}' (Event ID: {event_id})"); continue
         
-        # Skip non-game props (H+R+E, 1st inning, corners, series, etc.) but allow 1H data and F5
-        skip_indicators = ["hits+runs+errors", "h+r+e", "hre", "corners", "series", "1st inning", "first inning"]
+        # Skip non-game props (H+R+E, corners, season win totals, etc.) but allow 1H data and F5
+        skip_indicators = [
+            "hits+runs+errors", "h+r+e", "hre", "corners",
+            "1st inning", "first inning",
+            "regular season", "season wins", "win total", "wins total",
+            "season total", "futures",
+        ]
         if any(ind.lower() in raw_bck_l.lower() for ind in skip_indicators) or \
            any(ind.lower() in raw_bck_v.lower() for ind in skip_indicators):
             print(f"[BetbckParser] Skipping non-game prop: {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})"); continue
@@ -642,6 +653,7 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         print(f"[BetbckParser] Comparing POD: H='{norm_pod_h}' A='{norm_pod_a}' WITH BCK {idx}: L='{norm_bck_l}' V='{norm_bck_v}' (Raw: L='{raw_bck_l}', V='{raw_bck_v}') (Event ID: {event_id})")
         matched, bck_local_is_pod_home = False, False
         _cand_scores = {}
+        _pending_orientation = None
 
         if norm_pod_h == norm_bck_l and norm_pod_a == norm_bck_v: matched, bck_local_is_pod_home = True, True; _cand_scores = {"exact_order1": 100}; print(f"[BetbckParser] Exact Match (Order 1) for {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})")
         elif norm_pod_h == norm_bck_v and norm_pod_a == norm_bck_l: matched, bck_local_is_pod_home = True, False; _cand_scores = {"exact_order2": 100}; print(f"[BetbckParser] Exact Match (Order 2 - Flipped) for {raw_bck_l} vs {raw_bck_v} (Event ID: {event_id})")
@@ -688,14 +700,13 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                                     matched, bck_local_is_pod_home = True, True
                                     _cand_scores = {"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD}
                                     print(f"[BetbckParser] Fuzzy Match (Order 1, score {s_hl+s_av}) (Event ID: {event_id})")
-                                if _alog:
-                                    _alog.log_orientation(
-                                        fwd_sum=(s_hl + s_av) if fwd_passes else 0,
-                                        rev_sum=(s_hv + s_al) if rev_passes else 0,
-                                        use_reverse=use_reverse,
-                                        bck_local=raw_bck_l,
-                                        bck_visitor=raw_bck_v,
-                                    )
+                                _pending_orientation = {
+                                    "fwd_sum": (s_hl + s_av) if fwd_passes else 0,
+                                    "rev_sum": (s_hv + s_al) if rev_passes else 0,
+                                    "use_reverse": use_reverse,
+                                    "bck_local": raw_bck_l,
+                                    "bck_visitor": raw_bck_v,
+                                }
                                 found_fuzzy = True
                                 break
                         if found_fuzzy: break
@@ -751,6 +762,8 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
             _cand_scores.pop("_sum_best", None)
             _alog.log_match_candidate(raw_bck_l, raw_bck_v, target_home_team_pod, target_away_team_pod, _cand_scores or {"result": "matched"}, True)
             _alog.log_found(raw_bck_l, raw_bck_v)
+            if _pending_orientation:
+                _alog.log_orientation(**_pending_orientation)
         print(f"[BetbckParser] Game Matched! BetBCK Local is POD Home: {bck_local_is_pod_home}. Parsing odds... (Event ID: {event_id})")
         odds_table = game_wrapper_table.find('table', class_='new_tb_cont')
         if not odds_table: print(f"[BetbckParser] No 'new_tb_cont' odds table for game {idx}. (Event ID: {event_id})"); continue
