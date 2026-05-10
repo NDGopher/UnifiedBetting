@@ -254,9 +254,32 @@ async def event_alert_worker(event_id):
                     _sw_home_name = _sw_pin_data.get('home', '?')
                     _sw_away_name = _sw_pin_data.get('away', '?')
                     _sw_starts    = _sw_pin_data.get('starts', '?')
+
+                    # Swordfish may return 'starts' as Unix epoch ms (int) or ISO string —
+                    # normalise to a human-readable string for logs and the alert record.
+                    import datetime as _dt2
+                    _sw_starts_display = str(_sw_starts)
+                    _sw_dt_parsed: "_dt2.datetime | None" = None
+                    if isinstance(_sw_starts, (int, float)) and _sw_starts > 1e9:
+                        try:
+                            _sw_dt_parsed = _dt2.datetime.utcfromtimestamp(
+                                _sw_starts / 1000 if _sw_starts > 1e10 else _sw_starts
+                            )
+                            _sw_starts_display = _sw_dt_parsed.strftime('%Y-%m-%d %H:%M UTC')
+                        except Exception:
+                            pass
+                    elif _sw_starts and _sw_starts != '?':
+                        try:
+                            _sw_dt_parsed = _dt2.datetime.fromisoformat(
+                                str(_sw_starts).replace("Z", "")
+                            )
+                            _sw_starts_display = _sw_dt_parsed.strftime('%Y-%m-%d %H:%M UTC')
+                        except Exception:
+                            pass
+
                     logger.info(
                         f"[SwordfishID] Event {event_id}: "
-                        f"'{_sw_home_name}' vs '{_sw_away_name}' | starts={_sw_starts} | "
+                        f"'{_sw_home_name}' vs '{_sw_away_name}' | starts={_sw_starts_display} | "
                         f"ext startTime={payload.get('startTime', 'N/A')}"
                     )
 
@@ -264,41 +287,81 @@ async def event_alert_worker(event_id):
                     # Accumulated for the alert log's [SWORDFISH] step
                     _sw_id_data = {
                         "sw_home": _sw_home_name, "sw_away": _sw_away_name,
-                        "sw_starts": str(_sw_starts), "ext_starts": None,
+                        "sw_starts": _sw_starts_display, "ext_starts": None,
                         "diff_h": None, "suspect": False, "check_type": None,
                     }
+
+                    # ── Layer 0: Swordfish team names vs POD team names ───────────────────
+                    # Most reliable check: completely different teams → wrong eventId.
+                    # A correct eventId may have minor spelling differences (e.g. accents,
+                    # abbreviations) so we allow up to 40/100 as the minimum passing score.
+                    try:
+                        from thefuzz import fuzz as _fz_l0
+                        _pod_home_l0 = payload.get("homeTeam", "").lower()
+                        _pod_away_l0 = payload.get("awayTeam", "").lower()
+                        _sw_home_l0  = _sw_home_name.lower()
+                        _sw_away_l0  = _sw_away_name.lower()
+                        if _sw_home_l0 and _sw_away_l0 and _pod_home_l0 and _pod_away_l0:
+                            _l0_best = max(
+                                _fz_l0.token_set_ratio(_sw_home_l0, _pod_home_l0),
+                                _fz_l0.token_set_ratio(_sw_home_l0, _pod_away_l0),
+                                _fz_l0.token_set_ratio(_sw_away_l0, _pod_home_l0),
+                                _fz_l0.token_set_ratio(_sw_away_l0, _pod_away_l0),
+                            )
+                            _sw_id_data["check_type"] = f"team_names(score={_l0_best})"
+                            if _l0_best < 40:
+                                _event_id_suspect = True
+                                _sw_id_data["suspect"] = True
+                                _sw_id_data["check_type"] = f"team_names_MISMATCH(score={_l0_best})"
+                                logger.warning(
+                                    f"[SwordfishID] *** WRONG TEAMS (Layer 0) *** Event {event_id}: "
+                                    f"Swordfish returned '{_sw_home_name}' vs '{_sw_away_name}' "
+                                    f"but POD sent '{payload.get('homeTeam','?')}' vs "
+                                    f"'{payload.get('awayTeam','?')}'. "
+                                    f"Best name match={_l0_best}/100. Dropping alert."
+                                )
+                            else:
+                                logger.info(
+                                    f"[SwordfishID] Layer 0 team names OK "
+                                    f"(best score={_l0_best}): "
+                                    f"Swordfish '{_sw_home_name}'/'{_sw_away_name}' vs "
+                                    f"POD '{payload.get('homeTeam','?')}'/'{payload.get('awayTeam','?')}'"
+                                )
+                    except Exception as _l0_exc:
+                        logger.debug(f"[SwordfishID] Layer 0 skipped: {_l0_exc}")
 
                     # ── Layer 1: starts timestamp comparison ──────────────────────────────
                     _ext_start_raw = payload.get("startTime")
                     _starts_checked = False
-                    if _ext_start_raw and _sw_starts and _sw_starts != '?':
+                    if not _event_id_suspect and _ext_start_raw and _sw_dt_parsed:
                         try:
-                            import datetime as _dt2
                             if isinstance(_ext_start_raw, (int, float)):
                                 _ts = _ext_start_raw / 1000 if _ext_start_raw > 1e10 else _ext_start_raw
                                 _ext_dt = _dt2.datetime.utcfromtimestamp(_ts)
                             else:
-                                _ext_dt = _dt2.datetime.fromisoformat(str(_ext_start_raw).replace("Z", ""))
-                            _sw_dt = _dt2.datetime.fromisoformat(str(_sw_starts).replace("Z", ""))
-                            _starts_diff_h = abs((_sw_dt - _ext_dt).total_seconds()) / 3600
+                                _ext_dt = _dt2.datetime.fromisoformat(
+                                    str(_ext_start_raw).replace("Z", "")
+                                )
+                            _starts_diff_h = abs((_sw_dt_parsed - _ext_dt).total_seconds()) / 3600
                             _sw_id_data.update({
                                 "ext_starts": _ext_dt.strftime('%Y-%m-%d %H:%M'),
                                 "diff_h": _starts_diff_h,
                                 "check_type": "starts",
                             })
-                            logger.info(f"[SwordfishID] starts diff = {_starts_diff_h:.1f}h "
-                                        f"(sw={_sw_dt.strftime('%Y-%m-%d %H:%M')} "
-                                        f"ext={_ext_dt.strftime('%Y-%m-%d %H:%M')})")
+                            logger.info(
+                                f"[SwordfishID] starts diff = {_starts_diff_h:.1f}h "
+                                f"(sw={_sw_dt_parsed.strftime('%Y-%m-%d %H:%M')} "
+                                f"ext={_ext_dt.strftime('%Y-%m-%d %H:%M')})"
+                            )
                             if _starts_diff_h > 6:
                                 _event_id_suspect = True
                                 _sw_id_data["suspect"] = True
                                 logger.warning(
-                                    f"[SwordfishID] *** WRONG FIXTURE — starts {_starts_diff_h:.1f}h apart *** "
-                                    f"Event {event_id}: Swordfish game starts "
-                                    f"{_sw_dt.strftime('%Y-%m-%d %H:%M')} UTC but extension "
-                                    f"reported {_ext_dt.strftime('%Y-%m-%d %H:%M')} UTC. "
-                                    f"eventId points to a different '{_sw_home_name}' vs "
-                                    f"'{_sw_away_name}' fixture. Dropping alert."
+                                    f"[SwordfishID] *** WRONG FIXTURE (Layer 1) — starts "
+                                    f"{_starts_diff_h:.1f}h apart *** Event {event_id}: "
+                                    f"Swordfish starts {_sw_dt_parsed.strftime('%Y-%m-%d %H:%M')} UTC "
+                                    f"but extension reported {_ext_dt.strftime('%Y-%m-%d %H:%M')} UTC. "
+                                    f"Dropping alert."
                                 )
                             _starts_checked = True
                         except Exception as _sc_exc:
@@ -326,15 +389,12 @@ async def event_alert_worker(event_id):
                                     _min_diff = min(diffs)
                                     _sw_h_am = decimal_to_american(_sw_home_nvp) if _sw_home_nvp else 'N/A'
                                     _sw_a_am = decimal_to_american(_sw_away_nvp) if _sw_away_nvp else 'N/A'
-                                    _sw_id_data.update({
-                                        "ext_starts": str(_ext_new_odds),
-                                        "check_type": "ml_odds",
-                                    })
+                                    _sw_id_data.update({"check_type": "ml_odds"})
                                     if _min_diff > 0.40:
                                         _event_id_suspect = True
                                         _sw_id_data["suspect"] = True
                                         logger.warning(
-                                            f"[SwordfishID] *** SUSPECT EVENT ID (ML check) *** {event_id} | "
+                                            f"[SwordfishID] *** SUSPECT EVENT ID (Layer 2 ML) *** {event_id} | "
                                             f"Extension Pinnacle price: {_ext_new_odds} | "
                                             f"Swordfish NVP: home={_sw_h_am} / away={_sw_a_am} | "
                                             f"Closest diff: {_min_diff*100:.0f}% — "
@@ -343,7 +403,7 @@ async def event_alert_worker(event_id):
                                         )
                                     else:
                                         logger.info(
-                                            f"[SwordfishID] OK (ML check) — ext {_ext_new_odds} vs "
+                                            f"[SwordfishID] OK (Layer 2 ML) — ext {_ext_new_odds} vs "
                                             f"Swordfish NVP home={_sw_h_am}/away={_sw_a_am} "
                                             f"(closest diff {_min_diff*100:.0f}%)"
                                         )
