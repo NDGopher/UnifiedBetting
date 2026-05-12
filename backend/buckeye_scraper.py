@@ -3,6 +3,7 @@ import json
 import os
 import time
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 from pathlib import Path
@@ -21,6 +22,90 @@ EXCLUDED_SPORTS = [
 ]
 
 BASE_DIR = Path(__file__).resolve().parent
+
+
+def _is_hre(name: str) -> bool:
+    n = name.lower()
+    return any(x in n for x in ["hits+runs+errors", "h+r+e", "hre"])
+
+
+def _parse_matchups(matchups: list, seen_ids: set = None) -> list:
+    """Extract event dicts from a raw Arcadia matchup list, skipping HRE/props and duplicates."""
+    result = []
+    for matchup in matchups:
+        event_id = matchup["id"]
+        if seen_ids and event_id in seen_ids:
+            continue
+        participants = matchup.get("participants", [])
+        home = next((p["name"] for p in participants if p["alignment"] == "home"), "Unknown")
+        away = next((p["name"] for p in participants if p["alignment"] == "away"), "Unknown")
+        if _is_hre(home) or _is_hre(away):
+            continue
+        result.append({"event_id": event_id, "home_team": home, "away_team": away})
+    return result
+
+
+def _fetch_sport_events(sport: dict) -> dict:
+    """Fetch matchups for a single sport from Arcadia. Thread-safe, no shared state."""
+    sport_name = sport["name"]
+    sport_id   = sport["sport_id"]
+    sport_url  = sport["url"]
+    matchup_count = sport["matchup_count"]
+    _log = logging.getLogger("buckeye")
+
+    if matchup_count == 0:
+        return {"sport_name": sport_name, "sport_url": sport_url,
+                "sport_id": sport_id, "events": [], "restricted": False}
+
+    events = []
+    restricted = False
+
+    if sport_name == "Football":
+        for league_id in [876, 220795]:
+            url = f"{ARCADIA_BASE_URL}/leagues/{league_id}/matchups"
+            try:
+                r = requests.get(url, params={"brandId": "0"}, timeout=10)
+                r.raise_for_status()
+                events.extend(_parse_matchups(r.json()))
+            except Exception as e:
+                _log.error(f"[ARCADIA] League {league_id}: {e}")
+        seen = {e["event_id"] for e in events}
+        try:
+            r = requests.get(f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups",
+                             params={"withSpecials": "false", "brandId": "0"}, timeout=10)
+            r.raise_for_status()
+            events.extend(_parse_matchups(r.json(), seen_ids=seen))
+        except Exception as e:
+            _log.error(f"[ARCADIA] Football /matchups: {e}")
+    else:
+        url = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups"
+        try:
+            r = requests.get(url, params={"withSpecials": "false", "brandId": "0"}, timeout=10)
+            r.raise_for_status()
+            events.extend(_parse_matchups(r.json()))
+        except requests.exceptions.HTTPError as e:
+            if r.status_code == 401:
+                url_fb = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups/highlighted"
+                try:
+                    r2 = requests.get(url_fb, params={"brandId": "0"}, timeout=10)
+                    r2.raise_for_status()
+                    events.extend(_parse_matchups(r2.json()))
+                except requests.exceptions.HTTPError as e2:
+                    if r2.status_code == 401:
+                        restricted = True
+                    else:
+                        _log.error(f"[ARCADIA] {sport_name} fallback: {e2}")
+                except Exception as e2:
+                    _log.error(f"[ARCADIA] {sport_name} fallback: {e2}")
+            else:
+                _log.error(f"[ARCADIA] {sport_name}: {e}")
+        except Exception as e:
+            _log.error(f"[ARCADIA] {sport_name}: {e}")
+
+    _log.info(f"{sport_name} (ID: {sport_id}): {len(events)} events")
+    return {"sport_name": sport_name, "sport_url": sport_url,
+            "sport_id": sport_id, "events": events, "restricted": restricted}
+
 
 class BuckeyeScraper:
     def __init__(self, config: Dict[str, Any]):
@@ -87,205 +172,29 @@ class BuckeyeScraper:
             return sports
     
     def fetch_arcadia_events(self) -> List[Dict[str, Any]]:
-        """Fetch event IDs and teams from Arcadia API"""
+        """Fetch event IDs and teams from Arcadia API (parallel, max 5 concurrent)."""
         date = self.get_date()
-        logger.info(f"Fetching Pinnacle events for {date}...")
+        logger.info(f"Fetching Pinnacle events for {date} (parallel, workers=5)...")
 
-        # Fetch sports list
         sports = self.fetch_sports()
+
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            results = list(executor.map(_fetch_sport_events, sports))
+
         all_events = []
-        total_requests = 0
         restricted_sports = []
-
-        for sport in sports:
-            sport_name = sport["name"]
-            sport_id = sport["sport_id"]
-            sport_url = sport["url"]
-            matchup_count = sport["matchup_count"]
-
-            # Skip sports with no matchups
-            if matchup_count == 0:
-                all_events.append({
-                    "sport_name": sport_name,
-                    "sport_url": sport_url,
-                    "sport_id": sport_id,
-                    "events": []
-                })
-                logger.info(f"{sport_name} (ID: {sport_id}): 0 events (skipped)")
-                continue
-
-            events = []
-
-            # Special case for American Football: Fetch from known leagues
-            if sport_name == "Football":  # American Football (sport_id: 15)
-                # Known leagues: CFL (876), UFL (220795)
-                league_ids = [876, 220795]
-                for league_id in league_ids:
-                    url = f"{ARCADIA_BASE_URL}/leagues/{league_id}/matchups"
-                    params = {"brandId": "0"}
-                    try:
-                        response = requests.get(url, params=params)
-                        total_requests += 1
-                        response.raise_for_status()
-                        matchups = response.json()
-                        logger.info(f"[ARCADIA] League {league_id}: Got {len(matchups)} matchups")
-                        
-                        # Log raw response for first few events to debug structure
-                        if len(matchups) > 0:
-                            logger.info(f"[ARCADIA] Raw response sample for League {league_id}:")
-                            for i, matchup in enumerate(matchups[:3]):  # First 3 events
-                                logger.info(f"[ARCADIA]   Event {i+1}: {matchup}")
-                        
-                        for matchup in matchups:
-                            event_id = matchup["id"]
-                            participants = matchup.get("participants", [])
-                            home_team = next((p["name"] for p in participants if p["alignment"] == "home"), "Unknown")
-                            away_team = next((p["name"] for p in participants if p["alignment"] == "away"), "Unknown")
-                            # Filter out HRE/prop events
-                            def is_hre_or_prop_team(name: str) -> bool:
-                                name = name.lower()
-                                return any(x in name for x in ["hits+runs+errors", "h+r+e", "hre"])
-                            if is_hre_or_prop_team(home_team) or is_hre_or_prop_team(away_team):
-                                logger.info(f"[SKIP] HRE/prop event: {home_team} vs {away_team}")
-                                continue
-                            logger.info(f"[ARCADIA] Event {event_id}: '{home_team}' vs '{away_team}'")
-                            events.append({
-                                "event_id": event_id,
-                                "home_team": home_team,
-                                "away_team": away_team
-                            })
-                    except Exception as e:
-                        logger.error(f"Exception for {sport_name} (League {league_id}): {e}")
-                # Also fetch from /matchups to get NFL games
-                url = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups"
-                params = {"withSpecials": "false", "brandId": "0"}
-                try:
-                    response = requests.get(url, params=params)
-                    total_requests += 1
-                    response.raise_for_status()
-                    matchups = response.json()
-                    logger.info(f"[ARCADIA] Sport {sport_id} /matchups: Got {len(matchups)} matchups")
-                    
-                    # Log raw response for first few events to debug structure
-                    if len(matchups) > 0:
-                        logger.info(f"[ARCADIA] Raw response sample for Sport {sport_id} /matchups:")
-                        for i, matchup in enumerate(matchups[:3]):  # First 3 events
-                            logger.info(f"[ARCADIA]   Event {i+1}: {matchup}")
-                    
-                    for matchup in matchups:
-                        event_id = matchup["id"]
-                        participants = matchup.get("participants", [])
-                        home_team = next((p["name"] for p in participants if p["alignment"] == "home"), "Unknown")
-                        away_team = next((p["name"] for p in participants if p["alignment"] == "away"), "Unknown")
-                        # Filter out HRE/prop events
-                        def is_hre_or_prop_team(name: str) -> bool:
-                            name = name.lower()
-                            return any(x in name for x in ["hits+runs+errors", "h+r+e", "hre"])
-                        if is_hre_or_prop_team(home_team) or is_hre_or_prop_team(away_team):
-                            logger.info(f"[SKIP] HRE/prop event: {home_team} vs {away_team}")
-                            continue
-                        # Avoid duplicates if already fetched from league endpoints
-                        if not any(e["event_id"] == event_id for e in events):
-                            logger.info(f"[ARCADIA] Event {event_id}: '{home_team}' vs '{away_team}'")
-                            events.append({
-                                "event_id": event_id,
-                                "home_team": home_team,
-                                "away_team": away_team
-                            })
-                except Exception as e:
-                    logger.error(f"Exception for {sport_name} (/matchups): {e}")
-            else:
-                # Try primary endpoint: /matchups
-                url = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups"
-                params = {"withSpecials": "false", "brandId": "0"}
-                try:
-                    response = requests.get(url, params=params)
-                    total_requests += 1
-                    response.raise_for_status()
-                    matchups = response.json()
-                    logger.info(f"[ARCADIA] Sport {sport_id}: Got {len(matchups)} matchups")
-                    
-                    # Log raw response for first few events to debug structure
-                    if len(matchups) > 0:
-                        logger.info(f"[ARCADIA] Raw response sample for Sport {sport_id}:")
-                        for i, matchup in enumerate(matchups[:3]):  # First 3 events
-                            logger.info(f"[ARCADIA]   Event {i+1}: {matchup}")
-                    
-                    for matchup in matchups:
-                        event_id = matchup["id"]
-                        participants = matchup.get("participants", [])
-                        home_team = next((p["name"] for p in participants if p["alignment"] == "home"), "Unknown")
-                        away_team = next((p["name"] for p in participants if p["alignment"] == "away"), "Unknown")
-                        # Filter out HRE/prop events
-                        def is_hre_or_prop_team(name: str) -> bool:
-                            name = name.lower()
-                            return any(x in name for x in ["hits+runs+errors", "h+r+e", "hre"])
-                        if is_hre_or_prop_team(home_team) or is_hre_or_prop_team(away_team):
-                            logger.info(f"[SKIP] HRE/prop event: {home_team} vs {away_team}")
-                            continue
-                        logger.info(f"[ARCADIA] Event {event_id}: '{home_team}' vs '{away_team}'")
-                        events.append({
-                            "event_id": event_id,
-                            "home_team": home_team,
-                            "away_team": away_team
-                        })
-                except requests.exceptions.HTTPError as e:
-                    if response.status_code == 401:
-                        logger.warning(f"401 Unauthorized for {sport_name}. Trying fallback endpoint...")
-                        url = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups/highlighted"
-                        try:
-                            response = requests.get(url, params={"brandId": "0"})
-                            total_requests += 1
-                            response.raise_for_status()
-                            matchups = response.json()
-                            logger.info(f"[ARCADIA] Fallback for {sport_name}: Got {len(matchups)} matchups")
-                            
-                            # Log raw response for first few events to debug structure
-                            if len(matchups) > 0:
-                                logger.info(f"[ARCADIA] Raw response sample for Fallback {sport_name}:")
-                                for i, matchup in enumerate(matchups[:3]):  # First 3 events
-                                    logger.info(f"[ARCADIA]   Event {i+1}: {matchup}")
-                            
-                            for matchup in matchups:
-                                event_id = matchup["id"]
-                                participants = matchup.get("participants", [])
-                                home_team = next((p["name"] for p in participants if p["alignment"] == "home"), "Unknown")
-                                away_team = next((p["name"] for p in participants if p["alignment"] == "away"), "Unknown")
-                                # Filter out HRE/prop events
-                                def is_hre_or_prop_team(name: str) -> bool:
-                                    name = name.lower()
-                                    return any(x in name for x in ["hits+runs+errors", "h+r+e", "hre"])
-                                if is_hre_or_prop_team(home_team) or is_hre_or_prop_team(away_team):
-                                    logger.info(f"[SKIP] HRE/prop event: {home_team} vs {away_team}")
-                                    continue
-                                logger.info(f"[ARCADIA] Event {event_id}: '{home_team}' vs '{away_team}'")
-                                events.append({
-                                    "event_id": event_id,
-                                    "home_team": home_team,
-                                    "away_team": away_team
-                                })
-                            logger.info(f"Fallback successful for {sport_name}: {len(events)} events")
-                        except requests.exceptions.HTTPError as e2:
-                            if response.status_code == 401:
-                                logger.warning(f"401 Unauthorized for {sport_name} on fallback endpoint.")
-                                restricted_sports.append(sport_name)
-                            else:
-                                logger.error(f"Exception for {sport_name} on fallback: {e2}")
-                    else:
-                        logger.error(f"Exception for {sport_name}: {e}")
-                except Exception as e:
-                    logger.error(f"Exception for {sport_name}: {e}")
-
+        for result in results:
+            if result.get("restricted"):
+                restricted_sports.append(result["sport_name"])
             all_events.append({
-                "sport_name": sport_name,
-                "sport_url": sport_url,
-                "sport_id": sport_id,
-                "events": events
+                "sport_name": result["sport_name"],
+                "sport_url": result["sport_url"],
+                "sport_id":  result["sport_id"],
+                "events":    result["events"],
             })
-            logger.info(f"{sport_name} (ID: {sport_id}): {len(events)} events")
-            time.sleep(1)  # Avoid rate limiting
 
-        logger.info(f"Total requests: {total_requests}")
+        total = sum(len(r["events"]) for r in results)
+        logger.info(f"Total events fetched: {total}")
         if restricted_sports:
             logger.warning(f"Restricted sports (401 Unauthorized): {restricted_sports}")
         return all_events

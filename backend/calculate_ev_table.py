@@ -26,8 +26,11 @@ if not logger.hasHandlers():
 
 # Swordfish API configuration
 SWORDFISH_API_BASE_URL = "https://swordfish-production.up.railway.app/events/"
-# Rate limiting: allow up to 15 concurrent requests to Swordfish API
-MAX_CONCURRENT_SWORDFISH_REQUESTS = 15
+# Rate limiting: max concurrent Swordfish requests (polite ceiling)
+MAX_CONCURRENT_SWORDFISH_REQUESTS = 8
+# Retry config for transient failures (429, timeout)
+_SW_MAX_RETRIES = 3
+_SW_RETRY_DELAYS = [2, 4, 8]
 
 def get_swordfish_odds(event_id: str, max_retries: int = 3) -> dict:
     """Fetch odds for an event from Swordfish API with retry logic. If fails, log error and return None."""
@@ -175,30 +178,41 @@ def calculate_ev_for_event(matched_event: Dict[str, Any]) -> List[Dict[str, Any]
         return []
 
 async def _fetch_swordfish_odds_async(session: aiohttp.ClientSession, sem: asyncio.Semaphore, event_id: str, event_data: Dict) -> Optional[Dict]:
-    """Async fetch single Swordfish odds with rate limiting"""
+    """Async fetch single Swordfish odds — semaphore-limited, with retry + exponential backoff."""
     url = f"{SWORDFISH_API_BASE_URL}{event_id}"
-    try:
-        async with sem:
-            async with session.get(url, timeout=aiohttp.ClientTimeout(total=15)) as response:
-                if response.status == 200:
-                    odds_data = await response.json()
-                    return {"event_id": event_id, "odds": odds_data, "event_data": event_data}
-                elif response.status == 404:
-                    logger.debug(f"[SWORDFISH-ASYNC] Event {event_id} not found (404)")
-                    return None
-                elif response.status == 429:
-                    logger.warning(f"[SWORDFISH-ASYNC] Rate limited for event {event_id}")
-                    await asyncio.sleep(1)  # Brief backoff on rate limit
-                    return None
-                else:
-                    logger.warning(f"[SWORDFISH-ASYNC] HTTP {response.status} for event {event_id}")
-                    return None
-    except asyncio.TimeoutError:
-        logger.debug(f"[SWORDFISH-ASYNC] Timeout for event {event_id}")
-        return None
-    except Exception as e:
-        logger.debug(f"[SWORDFISH-ASYNC] Error fetching event {event_id}: {e}")
-        return None
+    for attempt in range(_SW_MAX_RETRIES):
+        status_code = None
+        try:
+            async with sem:
+                async with session.get(url, timeout=aiohttp.ClientTimeout(total=12)) as response:
+                    status_code = response.status
+                    if response.status == 200:
+                        odds_data = await response.json()
+                        return {"event_id": event_id, "odds": odds_data, "event_data": event_data}
+                    elif response.status == 404:
+                        return None
+                    # 429 or other non-200: fall through (semaphore released before sleep)
+        except asyncio.TimeoutError:
+            status_code = "timeout"
+        except Exception as e:
+            logger.debug(f"[SWORDFISH-ASYNC] Error for {event_id}: {e}")
+            return None
+
+        if status_code == 429:
+            wait = _SW_RETRY_DELAYS[min(attempt, len(_SW_RETRY_DELAYS) - 1)]
+            logger.warning(f"[SWORDFISH-ASYNC] Rate limited {event_id} — retry {attempt + 1}/{_SW_MAX_RETRIES} in {wait}s")
+            await asyncio.sleep(wait)
+        elif status_code == "timeout":
+            if attempt < _SW_MAX_RETRIES - 1:
+                logger.debug(f"[SWORDFISH-ASYNC] Timeout {event_id} — retry {attempt + 1}/{_SW_MAX_RETRIES}")
+                await asyncio.sleep(1)
+            else:
+                logger.debug(f"[SWORDFISH-ASYNC] Timeout {event_id} after {_SW_MAX_RETRIES} attempts")
+                return None
+        else:
+            logger.warning(f"[SWORDFISH-ASYNC] HTTP {status_code} for {event_id} — not retrying")
+            return None
+    return None
 
 async def fetch_all_swordfish_odds_parallel(matched_games: List[Dict[str, Any]]) -> Dict[str, Dict]:
     """Fetch all Swordfish odds in parallel with rate limiting"""
