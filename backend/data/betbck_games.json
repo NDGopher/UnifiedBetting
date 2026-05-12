@@ -1,1 +1,5476 @@
-[]
+[
+  {
+    "betbck_game_id": "02fce764",
+    "betbck_site_home_team": "South Africa",
+    "betbck_site_away_team": "Mexico",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+600",
+      "site_bottom_team_moneyline_american": "-205",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.0,
+          "odds": "-110",
+          "raw": "+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.0,
+          "odds": "-120",
+          "raw": "-1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.338540",
+    "event_datetime": "2026-06-11T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f921b8ed",
+    "betbck_site_home_team": "Czech Republic",
+    "betbck_site_away_team": "South Korea",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+185",
+      "site_bottom_team_moneyline_american": "+165",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-110",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-120",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-155",
+      "game_total_under_odds": "+115"
+    },
+    "timestamp": "2026-05-12T15:54:56.342266",
+    "event_datetime": "2026-06-11T21:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f8fa124d",
+    "betbck_site_home_team": "Paraguay",
+    "betbck_site_away_team": "USA",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+260",
+      "site_bottom_team_moneyline_american": "+100",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-130",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "+100",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.346219",
+    "event_datetime": "2026-06-12T20:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "99c9aa6a",
+    "betbck_site_home_team": "Switzerland",
+    "betbck_site_away_team": "Qatar",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -1.5,
+          "odds": "-130",
+          "raw": "-1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 1.5,
+          "odds": "+100",
+          "raw": "+1½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.349560",
+    "event_datetime": "2026-06-13T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "95710a51",
+    "betbck_site_home_team": "Morocco",
+    "betbck_site_away_team": "Brazil",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+445",
+      "site_bottom_team_moneyline_american": "-160",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "+100",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-130",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.352915",
+    "event_datetime": "2026-06-13T17:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "0f41d0b2",
+    "betbck_site_home_team": "Scotland",
+    "betbck_site_away_team": "Haiti",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-240",
+      "site_bottom_team_moneyline_american": "+545",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "-110",
+          "raw": "-1,-1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-120",
+          "raw": "+1,+1½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.356372",
+    "event_datetime": "2026-06-13T20:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "31ad4f55",
+    "betbck_site_home_team": "Turkey",
+    "betbck_site_away_team": "Australia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-130",
+      "site_bottom_team_moneyline_american": "+345",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-115",
+          "raw": "-½,-1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-115",
+          "raw": "+½,+1"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.360995",
+    "event_datetime": "2026-06-13T23:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "9db116a4",
+    "betbck_site_home_team": "Curacao",
+    "betbck_site_away_team": "Germany",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 3.25,
+          "odds": "-105",
+          "raw": "+3,+3½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -3.25,
+          "odds": "-125",
+          "raw": "-3,-3½"
+        }
+      ],
+      "game_total_line": 4.0,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.366883",
+    "event_datetime": "2026-06-14T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "921caa3b",
+    "betbck_site_home_team": "Japan",
+    "betbck_site_away_team": "Netherlands",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+250",
+      "site_bottom_team_moneyline_american": "+105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-125",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-105",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.372707",
+    "event_datetime": "2026-06-14T15:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "643f6a56",
+    "betbck_site_home_team": "Ecuador",
+    "betbck_site_away_team": "Ivory Coast",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+140",
+      "site_bottom_team_moneyline_american": "+240",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+100",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-130",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-120",
+      "game_total_under_odds": "-120"
+    },
+    "timestamp": "2026-05-12T15:54:56.378614",
+    "event_datetime": "2026-06-14T18:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "e7eeff4f",
+    "betbck_site_home_team": "Cape Verde",
+    "betbck_site_away_team": "Spain",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 2.5,
+          "odds": "-105",
+          "raw": "+2½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -2.5,
+          "odds": "-125",
+          "raw": "-2½"
+        }
+      ],
+      "game_total_line": 3.5,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.384451",
+    "event_datetime": "2026-06-15T11:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "db2f9717",
+    "betbck_site_home_team": "Egypt",
+    "betbck_site_away_team": "Belgium",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+400",
+      "site_bottom_team_moneyline_american": "-150",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-110",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-120",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.390336",
+    "event_datetime": "2026-06-15T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f7651243",
+    "betbck_site_home_team": "Uruguay",
+    "betbck_site_away_team": "Saudi Arabia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-195",
+      "site_bottom_team_moneyline_american": "+505",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -1.0,
+          "odds": "-130",
+          "raw": "-1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 1.0,
+          "odds": "+100",
+          "raw": "+1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.396562",
+    "event_datetime": "2026-06-15T17:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "a5ea292e",
+    "betbck_site_home_team": "Senegal",
+    "betbck_site_away_team": "France",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+585",
+      "site_bottom_team_moneyline_american": "-225",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-130",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "+100",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.402108",
+    "event_datetime": "2026-06-16T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "5507e9d7",
+    "betbck_site_home_team": "Norway",
+    "betbck_site_away_team": "Iraq",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -1.75,
+          "odds": "-110",
+          "raw": "-1½,-2"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 1.75,
+          "odds": "-120",
+          "raw": "+1½,+2"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.407389",
+    "event_datetime": "2026-06-16T17:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "155a3eae",
+    "betbck_site_home_team": "Algeria",
+    "betbck_site_away_team": "Argentina",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+705",
+      "site_bottom_team_moneyline_american": "-245",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-120",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "-110",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-120",
+      "game_total_under_odds": "-120"
+    },
+    "timestamp": "2026-05-12T15:54:56.413142",
+    "event_datetime": "2026-06-16T20:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "35c8ddc1",
+    "betbck_site_home_team": "Jordan",
+    "betbck_site_away_team": "Austria",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+720",
+      "site_bottom_team_moneyline_american": "-290",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.5,
+          "odds": "-125",
+          "raw": "+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.5,
+          "odds": "-105",
+          "raw": "-1½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.418982",
+    "event_datetime": "2026-06-16T23:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "419f4ef7",
+    "betbck_site_home_team": "Congo DR",
+    "betbck_site_away_team": "Portugal",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.75,
+          "odds": "-125",
+          "raw": "+1½,+2"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.75,
+          "odds": "-105",
+          "raw": "-1½,-2"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.425067",
+    "event_datetime": "2026-06-17T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "811ab021",
+    "betbck_site_home_team": "Croatia",
+    "betbck_site_away_team": "England",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+350",
+      "site_bottom_team_moneyline_american": "-154",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-110",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-120",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.431155",
+    "event_datetime": "2026-06-17T15:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "3ea2c6d0",
+    "betbck_site_home_team": "Panama",
+    "betbck_site_away_team": "Ghana",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+265",
+      "site_bottom_team_moneyline_american": "-110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-110",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-120",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.437169",
+    "event_datetime": "2026-06-17T18:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "6871cdf3",
+    "betbck_site_home_team": "Colombia",
+    "betbck_site_away_team": "Uzbekistan",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-245",
+      "site_bottom_team_moneyline_american": "+655",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "-110",
+          "raw": "-1,-1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-120",
+          "raw": "+1,+1½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.443140",
+    "event_datetime": "2026-06-17T21:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "9946ba06",
+    "betbck_site_home_team": "South Africa",
+    "betbck_site_away_team": "Mexico",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+580",
+      "site_bottom_team_moneyline_american": "+105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-135",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "+105",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.448719",
+    "event_datetime": "2026-06-11T14:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "302989d7",
+    "betbck_site_home_team": "Inter Milan",
+    "betbck_site_away_team": "Lazio",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-155",
+      "site_bottom_team_moneyline_american": "+425",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-135",
+          "raw": "-½,-1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "+105",
+          "raw": "+½,+1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.452647",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "73bd00b7",
+    "betbck_site_home_team": "Inter Milan",
+    "betbck_site_away_team": "Lazio",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+125",
+      "site_bottom_team_moneyline_american": "+400",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-135",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+105",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.456318",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "7432c845",
+    "betbck_site_home_team": "Arsenal",
+    "betbck_site_away_team": "Paris Saint Germain",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+235",
+      "site_bottom_team_moneyline_american": "+120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-110",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-120",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.461310",
+    "event_datetime": "2026-05-30T11:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "02e7c40c",
+    "betbck_site_home_team": "Arsenal to win the Cup",
+    "betbck_site_away_team": "Paris Saint Germain to win the Cup",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+125",
+      "site_bottom_team_moneyline_american": "-155",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": null,
+      "game_total_over_odds": null,
+      "game_total_under_odds": null
+    },
+    "timestamp": "2026-05-12T15:54:56.465056",
+    "event_datetime": "2026-05-30T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "1830d4a5",
+    "betbck_site_home_team": "Aston Villa",
+    "betbck_site_away_team": "Freiburg",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-135",
+      "site_bottom_team_moneyline_american": "+385",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "+100",
+          "raw": "-½,-1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-130",
+          "raw": "+½,+1"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "-140",
+      "game_total_under_odds": "+100"
+    },
+    "timestamp": "2026-05-12T15:54:56.468682",
+    "event_datetime": "2026-05-20T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "c75d7e3f",
+    "betbck_site_home_team": "Rayo Vallecano",
+    "betbck_site_away_team": "Crystal Palace",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+310",
+      "site_bottom_team_moneyline_american": "-110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-115",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-115",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.472707",
+    "event_datetime": "2026-05-27T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "94ba7ea5",
+    "betbck_site_home_team": "Crystal Palace",
+    "betbck_site_away_team": "Manchester City",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 2.0,
+          "odds": "-110",
+          "raw": "+2"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -2.0,
+          "odds": "-120",
+          "raw": "-2"
+        }
+      ],
+      "game_total_line": 3.5,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.476492",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "2b13e933",
+    "betbck_site_home_team": "Crystal Palace",
+    "betbck_site_away_team": "Manchester City",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+875",
+      "site_bottom_team_moneyline_american": "-185",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "+110",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-140",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.480182",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "8b435208",
+    "betbck_site_home_team": "Stevenage",
+    "betbck_site_away_team": "Stockport County",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+315",
+      "site_bottom_team_moneyline_american": "-120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "+100",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-130",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+110",
+      "game_total_under_odds": "-150"
+    },
+    "timestamp": "2026-05-12T15:54:56.483974",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f72ede0f",
+    "betbck_site_home_team": "Middlesbrough",
+    "betbck_site_away_team": "Southampton",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+180",
+      "site_bottom_team_moneyline_american": "+140",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+105",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-135",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.487611",
+    "event_datetime": "2027-05-12T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "81b80a89",
+    "betbck_site_home_team": "Middlesbrough",
+    "betbck_site_away_team": "Southampton",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+225",
+      "site_bottom_team_moneyline_american": "+195",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+100",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-130",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "+110",
+      "game_total_under_odds": "-150"
+    },
+    "timestamp": "2026-05-12T15:54:56.493532",
+    "event_datetime": "2027-05-12T14:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "8c56aff7",
+    "betbck_site_home_team": "Levante",
+    "betbck_site_away_team": "Celta de Vigo",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+300",
+      "site_bottom_team_moneyline_american": "-110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-115",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-115",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.499231",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "7f43cef4",
+    "betbck_site_home_team": "Elche",
+    "betbck_site_away_team": "Betis",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+405",
+      "site_bottom_team_moneyline_american": "-155",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "+100",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-130",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.503300",
+    "event_datetime": "2027-05-12T13:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f1a303eb",
+    "betbck_site_home_team": "Atletico Madrid",
+    "betbck_site_away_team": "Osasuna",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+165",
+      "site_bottom_team_moneyline_american": "+155",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-110",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-120",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.507059",
+    "event_datetime": "2027-05-12T14:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "1e06838a",
+    "betbck_site_home_team": "Athletic Bilbao",
+    "betbck_site_away_team": "Espanyol",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+175",
+      "site_bottom_team_moneyline_american": "+165",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-110",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-120",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "-120",
+      "game_total_under_odds": "-120"
+    },
+    "timestamp": "2026-05-12T15:54:56.510747",
+    "event_datetime": "2026-05-13T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "64880e1b",
+    "betbck_site_home_team": "Sevilla",
+    "betbck_site_away_team": "Villarreal",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+280",
+      "site_bottom_team_moneyline_american": "+105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-125",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-105",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.514322",
+    "event_datetime": "2026-05-13T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "a9f34277",
+    "betbck_site_home_team": "Barcelona FC",
+    "betbck_site_away_team": "Alaves",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+110",
+      "site_bottom_team_moneyline_american": "+225",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-135",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+105",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 3.25,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.517966",
+    "event_datetime": "2026-05-13T14:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "ca843470",
+    "betbck_site_home_team": "Mallorca",
+    "betbck_site_away_team": "Getafe",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+255",
+      "site_bottom_team_moneyline_american": "+120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-110",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-120",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.522000",
+    "event_datetime": "2026-05-13T14:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "252e0e62",
+    "betbck_site_home_team": "Rayo Vallecano",
+    "betbck_site_away_team": "Valencia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+240",
+      "site_bottom_team_moneyline_american": "+120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-110",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-120",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.527338",
+    "event_datetime": "2026-05-14T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "74d5d331",
+    "betbck_site_home_team": "Real Sociedad",
+    "betbck_site_away_team": "Girona",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+250",
+      "site_bottom_team_moneyline_american": "+100",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-125",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-105",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.531653",
+    "event_datetime": "2026-05-14T13:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "9ca939b3",
+    "betbck_site_home_team": "Oviedo",
+    "betbck_site_away_team": "Real Madrid",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.75,
+          "odds": "-110",
+          "raw": "+1½,+2"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.75,
+          "odds": "-120",
+          "raw": "-1½,-2"
+        }
+      ],
+      "game_total_line": 3.25,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.536210",
+    "event_datetime": "2026-05-14T14:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "134e761b",
+    "betbck_site_home_team": "Levante",
+    "betbck_site_away_team": "Celta de Vigo",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+330",
+      "site_bottom_team_moneyline_american": "+150",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-130",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+100",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105"
+    },
+    "timestamp": "2026-05-12T15:54:56.540281",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "2cf6b589",
+    "betbck_site_home_team": "Elche",
+    "betbck_site_away_team": "Betis",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+405",
+      "site_bottom_team_moneyline_american": "+115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+105",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-135",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.544147",
+    "event_datetime": "2027-05-12T13:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "1ed7b363",
+    "betbck_site_home_team": "Atletico Madrid",
+    "betbck_site_away_team": "Osasuna",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+225",
+      "site_bottom_team_moneyline_american": "+210",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-110",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-120",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-150",
+      "game_total_under_odds": "+110"
+    },
+    "timestamp": "2026-05-12T15:54:56.548082",
+    "event_datetime": "2027-05-12T14:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "2a47df22",
+    "betbck_site_home_team": "Rayo Vallecano",
+    "betbck_site_away_team": "Valencia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+275",
+      "site_bottom_team_moneyline_american": "+180",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+125",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-155",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.551767",
+    "event_datetime": "2026-05-14T12:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "0c04c989",
+    "betbck_site_home_team": "Real Sociedad",
+    "betbck_site_away_team": "Girona",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+295",
+      "site_bottom_team_moneyline_american": "+155",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-140",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+110",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "+105",
+      "game_total_under_odds": "-145"
+    },
+    "timestamp": "2026-05-12T15:54:56.555608",
+    "event_datetime": "2026-05-14T13:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "9e056f92",
+    "betbck_site_home_team": "Oviedo",
+    "betbck_site_away_team": "Real Madrid",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+780",
+      "site_bottom_team_moneyline_american": "-165",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-105",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-125",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-140",
+      "game_total_under_odds": "+100"
+    },
+    "timestamp": "2026-05-12T15:54:56.559266",
+    "event_datetime": "2026-05-14T14:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "b17c926b",
+    "betbck_site_home_team": "Juve Stabia",
+    "betbck_site_away_team": "Modena",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+265",
+      "site_bottom_team_moneyline_american": "+120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-110",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-120",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.562877",
+    "event_datetime": "2027-05-12T11:45",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "9a8f9252",
+    "betbck_site_home_team": "Avellino",
+    "betbck_site_away_team": "Catanzaro",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+315",
+      "site_bottom_team_moneyline_american": "-110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-120",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-110",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.566914",
+    "event_datetime": "2027-05-12T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "549a8aa2",
+    "betbck_site_home_team": "Juve Stabia",
+    "betbck_site_away_team": "Modena",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+330",
+      "site_bottom_team_moneyline_american": "+185",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-160",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+130",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 0.75,
+      "game_total_over_odds": "-140",
+      "game_total_under_odds": "+100"
+    },
+    "timestamp": "2026-05-12T15:54:56.571449",
+    "event_datetime": "2027-05-12T11:45",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "fda3570f",
+    "betbck_site_home_team": "Avellino",
+    "betbck_site_away_team": "Catanzaro",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+350",
+      "site_bottom_team_moneyline_american": "+160",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-135",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+105",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "+105",
+      "game_total_under_odds": "-145"
+    },
+    "timestamp": "2026-05-12T15:54:56.575394",
+    "event_datetime": "2027-05-12T14:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "2821b875",
+    "betbck_site_home_team": "Strasbourg",
+    "betbck_site_away_team": "Brest",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+150",
+      "site_bottom_team_moneyline_american": "+175",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-130",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+100",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.579161",
+    "event_datetime": "2026-05-13T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "abe09dde",
+    "betbck_site_home_team": "Paris Saint Germain",
+    "betbck_site_away_team": "Lens",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-105",
+      "site_bottom_team_moneyline_american": "+245",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-110",
+          "raw": "-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-120",
+          "raw": "+½"
+        }
+      ],
+      "game_total_line": 3.25,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.583530",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "cf63eaac",
+    "betbck_site_home_team": "Guadalajara",
+    "betbck_site_away_team": "Cruz Azul",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+255",
+      "site_bottom_team_moneyline_american": "+105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-130",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "+100",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.587862",
+    "event_datetime": "2026-05-13T15:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "903b794d",
+    "betbck_site_home_team": "UNAM Pumas",
+    "betbck_site_away_team": "Pachuca",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+130",
+      "site_bottom_team_moneyline_american": "-160",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": null,
+      "game_total_over_odds": null,
+      "game_total_under_odds": null
+    },
+    "timestamp": "2026-05-12T15:54:56.591532",
+    "event_datetime": "2026-05-13T15:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "ee40267f",
+    "betbck_site_home_team": "New York City FC",
+    "betbck_site_away_team": "Charlotte FC",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+210",
+      "site_bottom_team_moneyline_american": "+120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-120",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-110",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-120",
+      "game_total_under_odds": "-120"
+    },
+    "timestamp": "2026-05-12T15:54:56.595292",
+    "event_datetime": "2026-05-13T18:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "c9f42a75",
+    "betbck_site_home_team": "Philadelphia Union",
+    "betbck_site_away_team": "Orlando City SC",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+120",
+      "site_bottom_team_moneyline_american": "+205",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-110",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-120",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.599223",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "ed68bea7",
+    "betbck_site_home_team": "Portland Timbers",
+    "betbck_site_away_team": "CF Montreal",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+255",
+      "site_bottom_team_moneyline_american": "-105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-120",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-110",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.602917",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "ede854f5",
+    "betbck_site_home_team": "Chicago Fire",
+    "betbck_site_away_team": "DC United",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+150",
+      "site_bottom_team_moneyline_american": "+175",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-125",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-105",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.606474",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "632e58d3",
+    "betbck_site_home_team": "Columbus Crew",
+    "betbck_site_away_team": "New York Red Bulls",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+125",
+      "site_bottom_team_moneyline_american": "+185",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-110",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-120",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 3.25,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.610232",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "893306b3",
+    "betbck_site_home_team": "Nashville SC",
+    "betbck_site_away_team": "New England Revolution",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+145",
+      "site_bottom_team_moneyline_american": "+185",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-135",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+105",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.614040",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "1496fe91",
+    "betbck_site_home_team": "Inter Miami",
+    "betbck_site_away_team": "FC Cincinnati",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+110",
+      "site_bottom_team_moneyline_american": "+205",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-125",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-105",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 3.5,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.617667",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "bbc29ee4",
+    "betbck_site_home_team": "Los Angeles Galaxy",
+    "betbck_site_away_team": "Sporting Kansas City",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-115",
+      "site_bottom_team_moneyline_american": "+275",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-120",
+          "raw": "-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-110",
+          "raw": "+½"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.621595",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "dfbbeb4b",
+    "betbck_site_home_team": "Vancouver Whitecaps",
+    "betbck_site_away_team": "FC Dallas",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+100",
+      "site_bottom_team_moneyline_american": "+270",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-110",
+          "raw": "-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-120",
+          "raw": "+½"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-120",
+      "game_total_under_odds": "-120"
+    },
+    "timestamp": "2026-05-12T15:54:56.625622",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "d80178d4",
+    "betbck_site_home_team": "Colorado Rapids",
+    "betbck_site_away_team": "Minnesota United",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+325",
+      "site_bottom_team_moneyline_american": "-130",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-125",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-105",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.629555",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f576ca45",
+    "betbck_site_home_team": "Los Angeles FC",
+    "betbck_site_away_team": "St Louis City SC",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+145",
+      "site_bottom_team_moneyline_american": "+170",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-130",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+100",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.633517",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "11d851eb",
+    "betbck_site_home_team": "San Jose Earthquakes",
+    "betbck_site_away_team": "Seattle Sounders",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+250",
+      "site_bottom_team_moneyline_american": "-105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-120",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-110",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.637822",
+    "event_datetime": "2026-05-13T20:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "d0a161c4",
+    "betbck_site_home_team": "Austin FC",
+    "betbck_site_away_team": "San Diego",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+340",
+      "site_bottom_team_moneyline_american": "-145",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-110",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-120",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 3.25,
+      "game_total_over_odds": "-120",
+      "game_total_under_odds": "-120"
+    },
+    "timestamp": "2026-05-12T15:54:56.641808",
+    "event_datetime": "2026-05-13T20:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "e578a84b",
+    "betbck_site_home_team": "Houston Dynamo",
+    "betbck_site_away_team": "Real Salt Lake",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+360",
+      "site_bottom_team_moneyline_american": "-135",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-120",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-110",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.645693",
+    "event_datetime": "2026-05-13T20:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "e8360ccd",
+    "betbck_site_home_team": "New York City FC",
+    "betbck_site_away_team": "Charlotte FC",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+255",
+      "site_bottom_team_moneyline_american": "+175",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-155",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+125",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "+105",
+      "game_total_under_odds": "-145"
+    },
+    "timestamp": "2026-05-12T15:54:56.649574",
+    "event_datetime": "2026-05-13T18:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "36cd7db4",
+    "betbck_site_home_team": "Philadelphia Union",
+    "betbck_site_away_team": "Orlando City SC",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+175",
+      "site_bottom_team_moneyline_american": "+250",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-150",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+120",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "+105",
+      "game_total_under_odds": "-145"
+    },
+    "timestamp": "2026-05-12T15:54:56.654757",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "3eee4f52",
+    "betbck_site_home_team": "Portland Timbers",
+    "betbck_site_away_team": "CF Montreal",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+285",
+      "site_bottom_team_moneyline_american": "+140",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-125",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-105",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.658619",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "f89c0b49",
+    "betbck_site_home_team": "Chicago Fire",
+    "betbck_site_away_team": "DC United",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+205",
+      "site_bottom_team_moneyline_american": "+220",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-120",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-110",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-150",
+      "game_total_under_odds": "+110"
+    },
+    "timestamp": "2026-05-12T15:54:56.662292",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "167b30e2",
+    "betbck_site_home_team": "Columbus Crew",
+    "betbck_site_away_team": "New York Red Bulls",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+170",
+      "site_bottom_team_moneyline_american": "+225",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-145",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+115",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.666173",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "6f2a24c9",
+    "betbck_site_home_team": "Nashville SC",
+    "betbck_site_away_team": "New England Revolution",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+195",
+      "site_bottom_team_moneyline_american": "+235",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-130",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+100",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-140",
+      "game_total_under_odds": "+100"
+    },
+    "timestamp": "2026-05-12T15:54:56.670308",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "ccdae407",
+    "betbck_site_home_team": "Inter Miami",
+    "betbck_site_away_team": "FC Cincinnati",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+150",
+      "site_bottom_team_moneyline_american": "+230",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+105",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-135",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.674234",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "745c2fa6",
+    "betbck_site_home_team": "Los Angeles Galaxy",
+    "betbck_site_away_team": "Sporting Kansas City",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+135",
+      "site_bottom_team_moneyline_american": "+295",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-110",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-120",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-115"
+    },
+    "timestamp": "2026-05-12T15:54:56.679520",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "64ee56f5",
+    "betbck_site_home_team": "Vancouver Whitecaps",
+    "betbck_site_away_team": "FC Dallas",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+150",
+      "site_bottom_team_moneyline_american": "+285",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-105",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-125",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.685886",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "cc17d19c",
+    "betbck_site_home_team": "Colorado Rapids",
+    "betbck_site_away_team": "Minnesota United",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+345",
+      "site_bottom_team_moneyline_american": "+130",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-105",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-125",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.692265",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "dd7bd9e3",
+    "betbck_site_home_team": "Los Angeles FC",
+    "betbck_site_away_team": "St Louis City SC",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+200",
+      "site_bottom_team_moneyline_american": "+215",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-125",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-105",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.698638",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "049be9e6",
+    "betbck_site_home_team": "San Jose Earthquakes",
+    "betbck_site_away_team": "Seattle Sounders",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+280",
+      "site_bottom_team_moneyline_american": "+150",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-125",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-105",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.705091",
+    "event_datetime": "2026-05-13T20:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "fb792c1c",
+    "betbck_site_home_team": "Austin FC",
+    "betbck_site_away_team": "San Diego",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+350",
+      "site_bottom_team_moneyline_american": "+115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+105",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-135",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.711217",
+    "event_datetime": "2026-05-13T20:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "d50c0e05",
+    "betbck_site_home_team": "Houston Dynamo",
+    "betbck_site_away_team": "Real Salt Lake",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+345",
+      "site_bottom_team_moneyline_american": "+120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+100",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-130",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.718269",
+    "event_datetime": "2026-05-13T20:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "816273f6",
+    "betbck_site_home_team": "Partick Thistle",
+    "betbck_site_away_team": "Dunfermline Athletic",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+160",
+      "site_bottom_team_moneyline_american": "+175",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-125",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-105",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.725032",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "4a43c1cf",
+    "betbck_site_home_team": "St Mirren",
+    "betbck_site_away_team": "Aberdeen",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+215",
+      "site_bottom_team_moneyline_american": "+120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-125",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-105",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.728747",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "dc0d1a43",
+    "betbck_site_home_team": "Livingston",
+    "betbck_site_away_team": "Dundee United",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+320",
+      "site_bottom_team_moneyline_american": "-145",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-105",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-125",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.732540",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "5afe96e0",
+    "betbck_site_home_team": "Dundee",
+    "betbck_site_away_team": "Kilmarnock",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+305",
+      "site_bottom_team_moneyline_american": "-125",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "+105",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-135",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:56.736425",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "ca972a98",
+    "betbck_site_home_team": "Stenhousemuir",
+    "betbck_site_away_team": "Alloa Athletic",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+160",
+      "site_bottom_team_moneyline_american": "+130",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+105",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-135",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-160",
+      "game_total_under_odds": "+120"
+    },
+    "timestamp": "2026-05-12T15:54:56.740260",
+    "event_datetime": "2026-05-13T13:45",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "a74e2787",
+    "betbck_site_home_team": "Celtic",
+    "betbck_site_away_team": "Motherwell",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-145",
+      "site_bottom_team_moneyline_american": "+320",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-115",
+          "raw": "-½,-1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-115",
+          "raw": "+½,+1"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.744006",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "3d2f10ad",
+    "betbck_site_home_team": "Falkirk",
+    "betbck_site_away_team": "Heart of Midlothian",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+550",
+      "site_bottom_team_moneyline_american": "-240",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-130",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "+100",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.748223",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "d50e2a5c",
+    "betbck_site_home_team": "Hibernian",
+    "betbck_site_away_team": "Rangers",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+425",
+      "site_bottom_team_moneyline_american": "-210",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.0,
+          "odds": "+105",
+          "raw": "+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.0,
+          "odds": "-135",
+          "raw": "-1"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.751799",
+    "event_datetime": "2026-05-13T14:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "d4210ff5",
+    "betbck_site_home_team": "St Mirren",
+    "betbck_site_away_team": "Aberdeen",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+245",
+      "site_bottom_team_moneyline_american": "+190",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+110",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-140",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.755960",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "a962f272",
+    "betbck_site_home_team": "Livingston",
+    "betbck_site_away_team": "Dundee United",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+345",
+      "site_bottom_team_moneyline_american": "+120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+105",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-135",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.759639",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "42c6920e",
+    "betbck_site_home_team": "Dundee",
+    "betbck_site_away_team": "Kilmarnock",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+335",
+      "site_bottom_team_moneyline_american": "+130",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-105",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-125",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "+110",
+      "game_total_under_odds": "-150"
+    },
+    "timestamp": "2026-05-12T15:54:56.763272",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "aefe94fa",
+    "betbck_site_home_team": "Zurich",
+    "betbck_site_away_team": "Luzern",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+475",
+      "site_bottom_team_moneyline_american": "-235",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-115",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "-115",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 3.5,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.767029",
+    "event_datetime": "2027-05-12T13:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "c0386cdd",
+    "betbck_site_home_team": "Winterthur",
+    "betbck_site_away_team": "Grasshopper",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+205",
+      "site_bottom_team_moneyline_american": "+115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-115",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-115",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.770827",
+    "event_datetime": "2027-05-12T13:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "ae7f6ae3",
+    "betbck_site_home_team": "Lausanne Sport",
+    "betbck_site_away_team": "Servette",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+260",
+      "site_bottom_team_moneyline_american": "-110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.774516",
+    "event_datetime": "2027-05-12T13:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "806b4284",
+    "betbck_site_home_team": "Zurich",
+    "betbck_site_away_team": "Luzern",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+445",
+      "site_bottom_team_moneyline_american": "-120",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "+100",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-130",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.778030",
+    "event_datetime": "2027-05-12T13:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "efd45d34",
+    "betbck_site_home_team": "Winterthur",
+    "betbck_site_away_team": "Grasshopper",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+250",
+      "site_bottom_team_moneyline_american": "+160",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-155",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+125",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.783069",
+    "event_datetime": "2027-05-12T13:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "0ea01112",
+    "betbck_site_home_team": "Lausanne Sport",
+    "betbck_site_away_team": "Servette",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+285",
+      "site_bottom_team_moneyline_american": "+140",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.786844",
+    "event_datetime": "2027-05-12T13:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "420432ba",
+    "betbck_site_home_team": "Gornik Zabrze",
+    "betbck_site_away_team": "Arka Gdynia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+105",
+      "site_bottom_team_moneyline_american": "+250",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-135",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+105",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.791043",
+    "event_datetime": "2026-05-13T11:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "ffc61361",
+    "betbck_site_home_team": "Jagiellonia Bialystok",
+    "betbck_site_away_team": "Rakow Czestochowa",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+230",
+      "site_bottom_team_moneyline_american": "+105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+100",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-130",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": null,
+      "game_total_over_odds": null,
+      "game_total_under_odds": null
+    },
+    "timestamp": "2026-05-12T15:54:56.795195",
+    "event_datetime": "2026-05-13T13:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "407e1a28",
+    "betbck_site_home_team": "Viktoria Plzen",
+    "betbck_site_away_team": "Sparta Praha",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+205",
+      "site_bottom_team_moneyline_american": "+115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-105",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-125",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105"
+    },
+    "timestamp": "2026-05-12T15:54:56.799040",
+    "event_datetime": "2027-05-12T13:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "3f29df12",
+    "betbck_site_home_team": "Viktoria Plzen",
+    "betbck_site_away_team": "Sparta Praha",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+260",
+      "site_bottom_team_moneyline_american": "+170",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-160",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+130",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "+170",
+      "game_total_under_odds": "-230"
+    },
+    "timestamp": "2026-05-12T15:54:56.803603",
+    "event_datetime": "2027-05-12T13:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "ef9e161b",
+    "betbck_site_home_team": "Orebro",
+    "betbck_site_away_team": "Varnamo",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+237",
+      "site_bottom_team_moneyline_american": "+105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.807513",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "22e311c2",
+    "betbck_site_home_team": "Norrby",
+    "betbck_site_away_team": "Landskrona",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+245",
+      "site_bottom_team_moneyline_american": "-110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-135",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "+105",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-140",
+      "game_total_under_odds": "+100"
+    },
+    "timestamp": "2026-05-12T15:54:56.811132",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "a4560d05",
+    "betbck_site_home_team": "Ostersunds FK",
+    "betbck_site_away_team": "Brage",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+220",
+      "site_bottom_team_moneyline_american": "+110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-110",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-120",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.815039",
+    "event_datetime": "2026-05-13T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "20b5f125",
+    "betbck_site_home_team": "Varberg",
+    "betbck_site_away_team": "Falkenberg",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+160",
+      "site_bottom_team_moneyline_american": "+145",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+105",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-135",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.818692",
+    "event_datetime": "2026-05-13T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f797af2f",
+    "betbck_site_home_team": "Orebro",
+    "betbck_site_away_team": "Varnamo",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+297",
+      "site_bottom_team_moneyline_american": "+165",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "+190",
+      "game_total_under_odds": "-275"
+    },
+    "timestamp": "2026-05-12T15:54:56.824173",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "95695257",
+    "betbck_site_home_team": "Norrby",
+    "betbck_site_away_team": "Landskrona",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+302",
+      "site_bottom_team_moneyline_american": "+150",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-145",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+115",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "+172",
+      "game_total_under_odds": "-247"
+    },
+    "timestamp": "2026-05-12T15:54:56.829784",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "ea19a9ba",
+    "betbck_site_home_team": "Kolos Kovalivka",
+    "betbck_site_away_team": "Dynamo Kyiv",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+670",
+      "site_bottom_team_moneyline_american": "-290",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105"
+    },
+    "timestamp": "2026-05-12T15:54:56.834148",
+    "event_datetime": "2026-05-13T07:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "a834d0e9",
+    "betbck_site_home_team": "SK Poltava",
+    "betbck_site_away_team": "LNZ Cherkasy",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.837975",
+    "event_datetime": "2026-05-13T07:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "a7156d0c",
+    "betbck_site_home_team": "Obolon Kyiv",
+    "betbck_site_away_team": "Shakhtar Donetsk",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.842347",
+    "event_datetime": "2026-05-13T10:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "7549455e",
+    "betbck_site_home_team": "Panserraikos",
+    "betbck_site_away_team": "Asteras Tripolis",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+370",
+      "site_bottom_team_moneyline_american": "-125",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-110",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-120",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.848569",
+    "event_datetime": "2027-05-12T11:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "126cbc62",
+    "betbck_site_home_team": "Atromitos",
+    "betbck_site_away_team": "Kifisia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+160",
+      "site_bottom_team_moneyline_american": "+175",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.854187",
+    "event_datetime": "2027-05-12T11:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "fb6315b1",
+    "betbck_site_home_team": "Larissa",
+    "betbck_site_away_team": "Panaitolikos",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+200",
+      "site_bottom_team_moneyline_american": "+135",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-140",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+110",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-155",
+      "game_total_under_odds": "+115"
+    },
+    "timestamp": "2026-05-12T15:54:56.859860",
+    "event_datetime": "2027-05-12T11:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "28bf360a",
+    "betbck_site_home_team": "OFI",
+    "betbck_site_away_team": "Levadiakos",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+360",
+      "site_bottom_team_moneyline_american": "-175",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "+105",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-135",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.863919",
+    "event_datetime": "2026-05-13T09:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "5e7e3423",
+    "betbck_site_home_team": "Aris",
+    "betbck_site_away_team": "Volos NFC",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-115",
+      "site_bottom_team_moneyline_american": "+265",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-115",
+          "raw": "-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-115",
+          "raw": "+½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.867502",
+    "event_datetime": "2026-05-13T09:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "619b096e",
+    "betbck_site_home_team": "AEK Athens",
+    "betbck_site_away_team": "Paok FC",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+365",
+      "site_bottom_team_moneyline_american": "-150",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-125",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-105",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:56.871541",
+    "event_datetime": "2026-05-13T11:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "62056714",
+    "betbck_site_home_team": "Panathinaikos",
+    "betbck_site_away_team": "Olympiacos",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+625",
+      "site_bottom_team_moneyline_american": "-250",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-135",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "+105",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.875275",
+    "event_datetime": "2026-05-13T11:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f9d10f87",
+    "betbck_site_home_team": "Panserraikos",
+    "betbck_site_away_team": "Asteras Tripolis",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+405",
+      "site_bottom_team_moneyline_american": "+145",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-130",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+100",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 0.75,
+      "game_total_over_odds": "-150",
+      "game_total_under_odds": "+110"
+    },
+    "timestamp": "2026-05-12T15:54:56.879458",
+    "event_datetime": "2027-05-12T11:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "a5becac5",
+    "betbck_site_home_team": "Atromitos",
+    "betbck_site_away_team": "Kifisia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+212",
+      "site_bottom_team_moneyline_american": "+230",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": null,
+      "game_total_over_odds": null,
+      "game_total_under_odds": null
+    },
+    "timestamp": "2026-05-12T15:54:56.882992",
+    "event_datetime": "2027-05-12T11:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "0358e10c",
+    "betbck_site_home_team": "Larissa",
+    "betbck_site_away_team": "Panaitolikos",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+270",
+      "site_bottom_team_moneyline_american": "+207",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+120",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-150",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "+115",
+      "game_total_under_odds": "-155"
+    },
+    "timestamp": "2026-05-12T15:54:56.886607",
+    "event_datetime": "2027-05-12T11:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "6e44e86f",
+    "betbck_site_home_team": "Ismaily",
+    "betbck_site_away_team": "Wadi Degla",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+355",
+      "site_bottom_team_moneyline_american": "-105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-130",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "+100",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.890238",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "ebfc491c",
+    "betbck_site_home_team": "Al Mokawloon",
+    "betbck_site_away_team": "Haras El Hodood",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+130",
+      "site_bottom_team_moneyline_american": "+265",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-105",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-125",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 1.75,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.894444",
+    "event_datetime": "2026-05-13T09:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "12f01092",
+    "betbck_site_home_team": "Ismaily",
+    "betbck_site_away_team": "Wadi Degla",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+420",
+      "site_bottom_team_moneyline_american": "+155",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-130",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+100",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 0.75,
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105"
+    },
+    "timestamp": "2026-05-12T15:54:56.898085",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "675a2ba6",
+    "betbck_site_home_team": "Al Okhdood",
+    "betbck_site_away_team": "Al Kholood",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+460",
+      "site_bottom_team_moneyline_american": "-210",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.0,
+          "odds": "+100",
+          "raw": "+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.0,
+          "odds": "-130",
+          "raw": "-1"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.901880",
+    "event_datetime": "2027-05-12T11:20",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "725a7886",
+    "betbck_site_home_team": "Al Hilal",
+    "betbck_site_away_team": "Al Nassr",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+175",
+      "site_bottom_team_moneyline_american": "+130",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-140",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+110",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 3.25,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.905556",
+    "event_datetime": "2027-05-12T13:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "a063a1db",
+    "betbck_site_home_team": "Tokyo Verdy",
+    "betbck_site_away_team": "Machida Zelvia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+325",
+      "site_bottom_team_moneyline_american": "-110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-105",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-125",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.910226",
+    "event_datetime": "2026-05-13T05:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "e23c272f",
+    "betbck_site_home_team": "Kyoto Sanga",
+    "betbck_site_away_team": "Vissel Kobe",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+355",
+      "site_bottom_team_moneyline_american": "-135",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-130",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "+100",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.913863",
+    "event_datetime": "2026-05-13T05:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "27afe514",
+    "betbck_site_home_team": "Jeju United",
+    "betbck_site_away_team": "Ulsan",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+300",
+      "site_bottom_team_moneyline_american": "-115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-115",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-115",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:56.917811",
+    "event_datetime": "2026-05-13T05:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "42c6c959",
+    "betbck_site_home_team": "Jeonbuk Motors",
+    "betbck_site_away_team": "Bucheon FC 1995",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-120",
+      "site_bottom_team_moneyline_american": "+330",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": null,
+      "game_total_over_odds": null,
+      "game_total_under_odds": null
+    },
+    "timestamp": "2026-05-12T15:54:56.921651",
+    "event_datetime": "2026-05-13T05:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "03881a37",
+    "betbck_site_home_team": "Al Okhdood",
+    "betbck_site_away_team": "Al Kholood",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+465",
+      "site_bottom_team_moneyline_american": "-105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-135",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "+105",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "+115",
+      "game_total_under_odds": "-155"
+    },
+    "timestamp": "2026-05-12T15:54:56.925255",
+    "event_datetime": "2027-05-12T11:20",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "d1f178c9",
+    "betbck_site_home_team": "Al Hilal",
+    "betbck_site_away_team": "Al Nassr",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+215",
+      "site_bottom_team_moneyline_american": "+170",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+110",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-140",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.25,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.929354",
+    "event_datetime": "2027-05-12T13:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "210b6f7e",
+    "betbck_site_home_team": "Athletic Club MG",
+    "betbck_site_away_team": "Internacional",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.5,
+          "odds": "-130",
+          "raw": "+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.5,
+          "odds": "+100",
+          "raw": "-1½"
+        }
+      ],
+      "game_total_line": 2.75,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.933289",
+    "event_datetime": "2026-05-12T17:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "2fb3c7f1",
+    "betbck_site_home_team": "Operario PR",
+    "betbck_site_away_team": "Fluminense",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+685",
+      "site_bottom_team_moneyline_american": "-285",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-105",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "-125",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.936882",
+    "event_datetime": "2026-05-12T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "5474e704",
+    "betbck_site_home_team": "Goias",
+    "betbck_site_away_team": "Cruzeiro",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+730",
+      "site_bottom_team_moneyline_american": "-275",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-125",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "-105",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.940494",
+    "event_datetime": "2026-05-12T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "c6da4dfd",
+    "betbck_site_home_team": "Paysandu",
+    "betbck_site_away_team": "Vasco da Gama",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.5,
+          "odds": "-125",
+          "raw": "+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.5,
+          "odds": "-105",
+          "raw": "-1½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:56.944273",
+    "event_datetime": "2026-05-13T17:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "de63ee95",
+    "betbck_site_home_team": "Sao Paulo",
+    "betbck_site_away_team": "Juventude",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+105",
+      "site_bottom_team_moneyline_american": "+260",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-140",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+110",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-155",
+      "game_total_under_odds": "+115"
+    },
+    "timestamp": "2026-05-12T15:54:56.948382",
+    "event_datetime": "2026-05-13T17:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "64b2b69f",
+    "betbck_site_home_team": "Santos FC",
+    "betbck_site_away_team": "Coritiba",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+190",
+      "site_bottom_team_moneyline_american": "+165",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+105",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-135",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-160",
+      "game_total_under_odds": "+120"
+    },
+    "timestamp": "2026-05-12T15:54:56.951955",
+    "event_datetime": "2026-05-13T17:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "7f7b7309",
+    "betbck_site_home_team": "Bahia",
+    "betbck_site_away_team": "Remo",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+110",
+      "site_bottom_team_moneyline_american": "+230",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-125",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-105",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+110",
+      "game_total_under_odds": "-150"
+    },
+    "timestamp": "2026-05-12T15:54:56.957382",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "36a33678",
+    "betbck_site_home_team": "Atletico MG",
+    "betbck_site_away_team": "Ceara",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+155",
+      "site_bottom_team_moneyline_american": "+175",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-130",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+100",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+120",
+      "game_total_under_odds": "-160"
+    },
+    "timestamp": "2026-05-12T15:54:56.963393",
+    "event_datetime": "2026-05-13T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "239aca87",
+    "betbck_site_home_team": "Botafogo",
+    "betbck_site_away_team": "Chapecoense",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+115",
+      "site_bottom_team_moneyline_american": "+230",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-125",
+          "raw": "pk,-½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-105",
+          "raw": "pk,+½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+125",
+      "game_total_under_odds": "-165"
+    },
+    "timestamp": "2026-05-12T15:54:56.969436",
+    "event_datetime": "2026-05-14T16:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "e5014cd1",
+    "betbck_site_home_team": "Gremio",
+    "betbck_site_away_team": "Confianca",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-160",
+      "site_bottom_team_moneyline_american": "+415",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-130",
+          "raw": "-½,-1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "+100",
+          "raw": "+½,+1"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-160",
+      "game_total_under_odds": "+120"
+    },
+    "timestamp": "2026-05-12T15:54:56.976409",
+    "event_datetime": "2026-05-14T17:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "c8fa5126",
+    "betbck_site_home_team": "Fortaleza",
+    "betbck_site_away_team": "CRB",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+255",
+      "site_bottom_team_moneyline_american": "+125",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-115",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-115",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110"
+    },
+    "timestamp": "2026-05-12T15:54:56.982348",
+    "event_datetime": "2026-05-14T18:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "969d53cc",
+    "betbck_site_home_team": "Flamengo",
+    "betbck_site_away_team": "Vitoria",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-145",
+      "site_bottom_team_moneyline_american": "+335",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-105",
+          "raw": "-½,-1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-125",
+          "raw": "+½,+1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:56.988112",
+    "event_datetime": "2026-05-14T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f9bec49d",
+    "betbck_site_home_team": "Athletic Club MG",
+    "betbck_site_away_team": "Internacional",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-105",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-125",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-150",
+      "game_total_under_odds": "+110"
+    },
+    "timestamp": "2026-05-12T15:54:56.994463",
+    "event_datetime": "2026-05-12T17:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "bda4b706",
+    "betbck_site_home_team": "Operario PR",
+    "betbck_site_away_team": "Fluminense",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+605",
+      "site_bottom_team_moneyline_american": "-115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-115",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-115",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-135",
+      "game_total_under_odds": "-105"
+    },
+    "timestamp": "2026-05-12T15:54:57.000710",
+    "event_datetime": "2026-05-12T19:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "97e559bf",
+    "betbck_site_home_team": "Goias",
+    "betbck_site_away_team": "Cruzeiro",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-120",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-110",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:57.006888",
+    "event_datetime": "2026-05-12T19:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "10263428",
+    "betbck_site_home_team": "Union de Santa Fe",
+    "betbck_site_away_team": "Belgrano",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+225",
+      "site_bottom_team_moneyline_american": "+140",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-125",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-105",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:57.013183",
+    "event_datetime": "2026-05-12T17:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "b962743a",
+    "betbck_site_home_team": "Gimnasia Jujuy",
+    "betbck_site_away_team": "San Martin Tucuman",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+325",
+      "site_bottom_team_moneyline_american": "+110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+110",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-140",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "-165",
+      "game_total_under_odds": "+125"
+    },
+    "timestamp": "2026-05-12T15:54:57.019766",
+    "event_datetime": "2026-05-12T19:10",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "78b7c6f7",
+    "betbck_site_home_team": "Huracan",
+    "betbck_site_away_team": "Argentinos Juniors",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+375",
+      "site_bottom_team_moneyline_american": "-115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-110",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-120",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "+110",
+      "game_total_under_odds": "-150"
+    },
+    "timestamp": "2026-05-12T15:54:57.026044",
+    "event_datetime": "2026-05-12T19:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "01d121dd",
+    "betbck_site_home_team": "Racing Club",
+    "betbck_site_away_team": "Rosario Central",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+250",
+      "site_bottom_team_moneyline_american": "+125",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-110",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-120",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-120",
+      "game_total_under_odds": "-120"
+    },
+    "timestamp": "2026-05-12T15:54:57.032303",
+    "event_datetime": "2026-05-13T17:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "d2fe96cc",
+    "betbck_site_home_team": "Gimnasia LP",
+    "betbck_site_away_team": "River Plate",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+590",
+      "site_bottom_team_moneyline_american": "-200",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.0,
+          "odds": "-110",
+          "raw": "+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.0,
+          "odds": "-120",
+          "raw": "-1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+110",
+      "game_total_under_odds": "-150"
+    },
+    "timestamp": "2026-05-12T15:54:57.037982",
+    "event_datetime": "2026-05-13T18:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "4edb6078",
+    "betbck_site_home_team": "Union de Santa Fe",
+    "betbck_site_away_team": "Belgrano",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+300",
+      "site_bottom_team_moneyline_american": "+220",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+120",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-150",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 0.5,
+      "game_total_over_odds": "-185",
+      "game_total_under_odds": "+145"
+    },
+    "timestamp": "2026-05-12T15:54:57.041864",
+    "event_datetime": "2026-05-12T17:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "bd09ec3a",
+    "betbck_site_home_team": "Gimnasia Jujuy",
+    "betbck_site_away_team": "San Martin Tucuman",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+415",
+      "site_bottom_team_moneyline_american": "+195",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-175",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+145",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 0.5,
+      "game_total_over_odds": "-155",
+      "game_total_under_odds": "+115"
+    },
+    "timestamp": "2026-05-12T15:54:57.046076",
+    "event_datetime": "2026-05-12T19:10",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "7664e843",
+    "betbck_site_home_team": "Huracan",
+    "betbck_site_away_team": "Argentinos Juniors",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+440",
+      "site_bottom_team_moneyline_american": "+160",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-130",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+100",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 0.5,
+      "game_total_over_odds": "-175",
+      "game_total_under_odds": "+135"
+    },
+    "timestamp": "2026-05-12T15:54:57.050813",
+    "event_datetime": "2026-05-12T19:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "d1c34661",
+    "betbck_site_home_team": "Hapoel Petah Tikva",
+    "betbck_site_away_team": "Hapoel Tel Aviv",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "+105",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "-135",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-125"
+    },
+    "timestamp": "2026-05-12T15:54:57.055002",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "dc8f03b1",
+    "betbck_site_home_team": "Arda",
+    "betbck_site_away_team": "Botev Plovdiv",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+185",
+      "site_bottom_team_moneyline_american": "+140",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+105",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-135",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:57.059170",
+    "event_datetime": "2027-05-12T12:15",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "13e67924",
+    "betbck_site_home_team": "Hapoel Beer Sheva",
+    "betbck_site_away_team": "Beitar Jerusalem",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+135",
+      "site_bottom_team_moneyline_american": "+155",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-135",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+105",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 3.5,
+      "game_total_over_odds": "+115",
+      "game_total_under_odds": "-155"
+    },
+    "timestamp": "2026-05-12T15:54:57.063283",
+    "event_datetime": "2027-05-12T12:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "e4d99cc3",
+    "betbck_site_home_team": "Dungannon Swifts",
+    "betbck_site_away_team": "Linfield",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+435",
+      "site_bottom_team_moneyline_american": "-225",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-130",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "+100",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105"
+    },
+    "timestamp": "2026-05-12T15:54:57.068696",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "73722d31",
+    "betbck_site_home_team": "Inter Bogota",
+    "betbck_site_away_team": "Atletico Nacional",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+555",
+      "site_bottom_team_moneyline_american": "-230",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-130",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "+100",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105"
+    },
+    "timestamp": "2026-05-12T15:54:57.074229",
+    "event_datetime": "2026-05-12T18:20",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "39527c5a",
+    "betbck_site_home_team": "America de Cali",
+    "betbck_site_away_team": "Santa Fe Bogota",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+240",
+      "site_bottom_team_moneyline_american": "+110",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+105",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-135",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-160",
+      "game_total_under_odds": "+120"
+    },
+    "timestamp": "2026-05-12T15:54:57.078158",
+    "event_datetime": "2026-05-12T20:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "66aac57d",
+    "betbck_site_home_team": "Dobrudzha",
+    "betbck_site_away_team": "Slavia Sofia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+120",
+      "site_bottom_team_moneyline_american": "+180",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": null,
+      "game_total_over_odds": null,
+      "game_total_under_odds": null
+    },
+    "timestamp": "2026-05-12T15:54:57.081778",
+    "event_datetime": "2026-05-13T07:15",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "3f6ce06e",
+    "betbck_site_home_team": "CSKA 1948 Sofia",
+    "betbck_site_away_team": "CSKA Sofia",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+250",
+      "site_bottom_team_moneyline_american": "+115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "+100",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-130",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-160",
+      "game_total_under_odds": "+120"
+    },
+    "timestamp": "2026-05-12T15:54:57.085577",
+    "event_datetime": "2026-05-13T09:45",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f31a2933",
+    "betbck_site_home_team": "Supra du Quebec",
+    "betbck_site_away_team": "Forge",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+300",
+      "site_bottom_team_moneyline_american": "-155",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": null,
+      "game_total_over_odds": null,
+      "game_total_under_odds": null
+    },
+    "timestamp": "2026-05-12T15:54:57.089180",
+    "event_datetime": "2026-05-13T10:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "72f0990e",
+    "betbck_site_home_team": "FC Slovan Liberec",
+    "betbck_site_away_team": "Hradec Kralove",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+190",
+      "site_bottom_team_moneyline_american": "+140",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-140",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+110",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:57.093176",
+    "event_datetime": "2026-05-13T10:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "29b07ee7",
+    "betbck_site_home_team": "Hapoel Haifa",
+    "betbck_site_away_team": "Maccabi Netanya",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+160",
+      "site_bottom_team_moneyline_american": "+135",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+100",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-130",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "+105",
+      "game_total_under_odds": "-145"
+    },
+    "timestamp": "2026-05-12T15:54:57.096999",
+    "event_datetime": "2026-05-13T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "7d08279d",
+    "betbck_site_home_team": "Ironi Kiryat Shmona",
+    "betbck_site_away_team": "Bnei Sakhnin",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+145",
+      "site_bottom_team_moneyline_american": "+185",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-140",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+110",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "+125",
+      "game_total_under_odds": "-165"
+    },
+    "timestamp": "2026-05-12T15:54:57.102401",
+    "event_datetime": "2026-05-13T12:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "cddda7ce",
+    "betbck_site_home_team": "Levski Sofia",
+    "betbck_site_away_team": "PFC Ludogorets Razgrad",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+425",
+      "site_bottom_team_moneyline_american": "-150",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.75,
+          "odds": "-125",
+          "raw": "+½,+1"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.75,
+          "odds": "-105",
+          "raw": "-½,-1"
+        }
+      ],
+      "game_total_line": 2.5,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-135"
+    },
+    "timestamp": "2026-05-12T15:54:57.106498",
+    "event_datetime": "2026-05-13T12:15",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "11d28ede",
+    "betbck_site_home_team": "Jablonec",
+    "betbck_site_away_team": "Slavia Praha",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+530",
+      "site_bottom_team_moneyline_american": "-250",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.25,
+          "odds": "-125",
+          "raw": "+1,+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.25,
+          "odds": "-105",
+          "raw": "-1,-1½"
+        }
+      ],
+      "game_total_line": 3.0,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-130"
+    },
+    "timestamp": "2026-05-12T15:54:57.110187",
+    "event_datetime": "2026-05-13T13:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "d9655ce5",
+    "betbck_site_home_team": "Deportes Tolima",
+    "betbck_site_away_team": "Deportivo Pasto",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+240",
+      "site_bottom_team_moneyline_american": "+115",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-105",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-125",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.0,
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105"
+    },
+    "timestamp": "2026-05-12T15:54:57.113998",
+    "event_datetime": "2026-05-13T18:00",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "eaf33fec",
+    "betbck_site_home_team": "Hapoel Petah Tikva",
+    "betbck_site_away_team": "Hapoel Tel Aviv",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+560",
+      "site_bottom_team_moneyline_american": "-125",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "+105",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-135",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "+145",
+      "game_total_under_odds": "-185"
+    },
+    "timestamp": "2026-05-12T15:54:57.117877",
+    "event_datetime": "2027-05-12T12:00",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "01aac234",
+    "betbck_site_home_team": "Arda",
+    "betbck_site_away_team": "Botev Plovdiv",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+245",
+      "site_bottom_team_moneyline_american": "+210",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+110",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-140",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 0.5,
+      "game_total_over_odds": "-250",
+      "game_total_under_odds": "+175"
+    },
+    "timestamp": "2026-05-12T15:54:57.122405",
+    "event_datetime": "2027-05-12T12:15",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "76c1d875",
+    "betbck_site_home_team": "Hapoel Beer Sheva",
+    "betbck_site_away_team": "Beitar Jerusalem",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+180",
+      "site_bottom_team_moneyline_american": "+200",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-130",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+100",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "+115",
+      "game_total_under_odds": "-155"
+    },
+    "timestamp": "2026-05-12T15:54:57.126540",
+    "event_datetime": "2027-05-12T12:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "f6953e24",
+    "betbck_site_home_team": "Dungannon Swifts",
+    "betbck_site_away_team": "Linfield",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-105",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-125",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.5,
+      "game_total_over_odds": "+120",
+      "game_total_under_odds": "-160"
+    },
+    "timestamp": "2026-05-12T15:54:57.130339",
+    "event_datetime": "2027-05-12T13:45",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "2ca9c333",
+    "betbck_site_home_team": "Inter Bogota",
+    "betbck_site_away_team": "Atletico Nacional",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+525",
+      "site_bottom_team_moneyline_american": "-105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.5,
+          "odds": "-125",
+          "raw": "+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.5,
+          "odds": "-105",
+          "raw": "-½"
+        }
+      ],
+      "game_total_line": 1.0,
+      "game_total_over_odds": "-150",
+      "game_total_under_odds": "+110"
+    },
+    "timestamp": "2026-05-12T15:54:57.134385",
+    "event_datetime": "2026-05-12T18:20",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "e3bbdff4",
+    "betbck_site_home_team": "America de Cali",
+    "betbck_site_away_team": "Santa Fe Bogota",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+305",
+      "site_bottom_team_moneyline_american": "+180",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-165",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "+135",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 0.75,
+      "game_total_over_odds": "-150",
+      "game_total_under_odds": "+110"
+    },
+    "timestamp": "2026-05-12T15:54:57.138207",
+    "event_datetime": "2026-05-12T20:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  },
+  {
+    "betbck_game_id": "663a5908",
+    "betbck_site_home_team": "Sao Bernardo",
+    "betbck_site_away_team": "Londrina",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+265",
+      "site_bottom_team_moneyline_american": "+130",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.25,
+          "odds": "-125",
+          "raw": "pk,+½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -0.25,
+          "odds": "-105",
+          "raw": "pk,-½"
+        }
+      ],
+      "game_total_line": 2.25,
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140"
+    },
+    "timestamp": "2026-05-12T15:54:57.141925",
+    "event_datetime": "2026-05-12T17:30",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "be3667bd",
+    "betbck_site_home_team": "Sao Bernardo",
+    "betbck_site_away_team": "Londrina",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": null,
+      "site_bottom_team_moneyline_american": null,
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "+140",
+          "raw": "pk"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 0.0,
+          "odds": "-170",
+          "raw": "pk"
+        }
+      ],
+      "game_total_line": 0.75,
+      "game_total_over_odds": "-150",
+      "game_total_under_odds": "+110"
+    },
+    "timestamp": "2026-05-12T15:54:57.145866",
+    "event_datetime": "2026-05-12T17:30",
+    "sport": "soccer",
+    "market_suffix": "1H"
+  }
+]
