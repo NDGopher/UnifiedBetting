@@ -279,8 +279,24 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
             swordfish_data = swordfish_odds.get('data', {})
             periods = swordfish_data.get('periods', {})
             period_0_data = periods.get('num_0') or periods.get('0')
-            if not period_0_data or not isinstance(period_0_data, dict):
-                continue
+            market_suffix = matched_event.get('market_suffix') or matched_event.get('betbck_game', {}).get('market_suffix')
+            # Select the correct Pinnacle period based on the BetBCK market type
+            if market_suffix == '1H':
+                period_data = periods.get('num_1') or periods.get('1')
+                if not period_data or not isinstance(period_data, dict):
+                    logger.debug(f"[EV] No Pinnacle 1H data for event {event_id}, skipping 1H lines")
+                    continue
+                period_label = "1H "
+            elif market_suffix == '2H':
+                period_data = periods.get('num_2') or periods.get('2')
+                if not period_data or not isinstance(period_data, dict):
+                    continue
+                period_label = "2H "
+            else:
+                period_data = period_0_data
+                if not period_data or not isinstance(period_data, dict):
+                    continue
+                period_label = ""
             # Start time extraction - convert from UTC to Central Time
             start_time = matched_event.get('start_time') or swordfish_data.get('starts') or '-'
             try:
@@ -338,8 +354,8 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
             event_name = f"{home_team} vs {away_team}" if home_team and away_team else home_team or away_team or "-"
             game_id = str(event_id)
             # --- Moneyline ---
-            ml = period_0_data.get('money_line', {})
-            meta_limits = (period_0_data.get('meta') or {}) if isinstance(period_0_data.get('meta'), dict) else {}
+            ml = period_data.get('money_line', {})
+            meta_limits = (period_data.get('meta') or {}) if isinstance(period_data.get('meta'), dict) else {}
             pin_ml_home_dec = ml.get('nvp_home')
             pin_ml_away_dec = ml.get('nvp_away')
             pin_ml_draw_dec = ml.get('nvp_draw')
@@ -358,7 +374,7 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                 all_bets_with_ev.append({
                     'sport': sport,
                     'matchup': event_name,
-                    'bet': f"ML - {home_team}",
+                    'bet': f"{period_label}ML - {home_team}",
                     'bet_type': 'Moneyline',
                     'betbck_odds': bck_ml_home_am,
                     'pinnacle_nvp': decimal_to_american(pin_ml_home_dec),
@@ -367,13 +383,14 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                     'start_time': start_time_fmt,
                     'league': league,
                     'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
-                    'event_id': event_id
+                    'event_id': event_id,
+                    'period': market_suffix or 'FG',
                 })
             if ev_ml_away is not None:
                 all_bets_with_ev.append({
                     'sport': sport,
                     'matchup': event_name,
-                    'bet': f"ML - {away_team}",
+                    'bet': f"{period_label}ML - {away_team}",
                     'bet_type': 'Moneyline',
                     'betbck_odds': bck_ml_away_am,
                     'pinnacle_nvp': decimal_to_american(pin_ml_away_dec),
@@ -382,13 +399,14 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                     'start_time': start_time_fmt,
                     'league': league,
                     'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
-                    'event_id': event_id
+                    'event_id': event_id,
+                    'period': market_suffix or 'FG',
                 })
             if ev_ml_draw is not None:
                 all_bets_with_ev.append({
                     'sport': sport,
                     'matchup': event_name,
-                    'bet': 'ML - Draw',
+                    'bet': f"{period_label}ML - Draw",
                     'bet_type': 'Moneyline',
                     'betbck_odds': bck_ml_draw_am,
                     'pinnacle_nvp': decimal_to_american(pin_ml_draw_dec),
@@ -397,10 +415,11 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                     'start_time': start_time_fmt,
                     'league': league,
                     'pinnacle_limit': ml.get('max_money_line') or meta_limits.get('max_money_line') or meta_limits.get('max_spread') or meta_limits.get('max_total'),
-                    'event_id': event_id
+                    'event_id': event_id,
+                    'period': market_suffix or 'FG',
                 })
             # --- Spreads ---
-            pin_spreads = period_0_data.get('spreads', {})
+            pin_spreads = period_data.get('spreads', {})
             if isinstance(pin_spreads, dict):
                 # Robust mapping for spreads
                 for bck_spread_info in betbck_odds_data.get('site_top_team_spreads', []):
@@ -441,7 +460,7 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                             all_bets_with_ev.append({
                                 'sport': sport,
                                 'matchup': event_name,
-                                'bet': f"{mapped_team} {bck_line}",
+                                'bet': f"{period_label}{mapped_team} {bck_line}",
                                 'bet_type': 'Spread',
                                 'betbck_odds': bck_odds_am,
                                 'pinnacle_nvp': decimal_to_american(nvp_pin_spread),
@@ -450,7 +469,8 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                                 'start_time': start_time_fmt,
                                 'league': league,
                                 'pinnacle_limit': (pin_spread_market.get('max') if pin_spread_market else None) or meta_limits.get('max_spread'),
-                                'event_id': event_id
+                                'event_id': event_id,
+                                'period': market_suffix or 'FG',
                             })
                     else:
                         logger.warning(f"[MAPPING-SPREAD] Skipping: Could not confidently map or missing/invalid NVP for BetBCK spread team '{bck_team_raw}' (norm: '{bck_team_norm}') line '{bck_line}' to event home/away: home='{matched_event.get('normalized_pinnacle_home')}', away='{matched_event.get('normalized_pinnacle_away')}', NVP={nvp_pin_spread}")
@@ -490,7 +510,7 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                             all_bets_with_ev.append({
                                 'sport': sport,
                                 'matchup': event_name,
-                                'bet': f"{mapped_team} {bck_line}",
+                                'bet': f"{period_label}{mapped_team} {bck_line}",
                                 'bet_type': 'Spread',
                                 'betbck_odds': bck_odds_am,
                                 'pinnacle_nvp': decimal_to_american(nvp_pin_spread),
@@ -499,12 +519,13 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                                 'start_time': start_time_fmt,
                                 'league': league,
                                 'pinnacle_limit': (pin_spread_market.get('max') if pin_spread_market else None) or meta_limits.get('max_spread'),
-                                'event_id': event_id
+                                'event_id': event_id,
+                                'period': market_suffix or 'FG',
                             })
                     else:
                         logger.warning(f"[MAPPING-SPREAD] Skipping: Could not confidently map or missing/invalid NVP for BetBCK spread team '{bck_team_raw}' (norm: '{bck_team_norm}') line '{bck_line}' to event home/away: home='{matched_event.get('normalized_pinnacle_home')}', away='{matched_event.get('normalized_pinnacle_away')}', NVP={nvp_pin_spread}")
             # --- Totals ---
-            pin_totals = period_0_data.get('totals', {})
+            pin_totals = period_data.get('totals', {})
             if isinstance(pin_totals, dict):
                 for pin_total_key, pin_total_market in pin_totals.items():
                     if not isinstance(pin_total_market, dict): continue
@@ -534,7 +555,7 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                             all_bets_with_ev.append({
                                 'sport': sport,
                                 'matchup': event_name,
-                                'bet': f"Over {pin_total_key}",
+                                'bet': f"{period_label}Over {pin_total_key}",
                                 'bet_type': 'Total',
                                 'betbck_odds': bck_over_am,
                                 'pinnacle_nvp': decimal_to_american(nvp_pin_over),
@@ -543,7 +564,8 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                                 'start_time': start_time_fmt,
                                 'league': league,
                                 'pinnacle_limit': pin_total_market.get('max') or meta_limits.get('max_total'),
-                                'event_id': event_id
+                                'event_id': event_id,
+                                'period': market_suffix or 'FG',
                             })
                     if bck_under_am is not None and nvp_pin_under is not None:
                         bck_under_dec = american_to_decimal(bck_under_am)
@@ -552,7 +574,7 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                             all_bets_with_ev.append({
                                 'sport': sport,
                                 'matchup': event_name,
-                                'bet': f"Under {pin_total_key}",
+                                'bet': f"{period_label}Under {pin_total_key}",
                                 'bet_type': 'Total',
                                 'betbck_odds': bck_under_am,
                                 'pinnacle_nvp': decimal_to_american(nvp_pin_under),
@@ -561,6 +583,7 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                                 'start_time': start_time_fmt,
                                 'league': league,
                                 'pinnacle_limit': pin_total_market.get('max') or meta_limits.get('max_total'),
+                                'period': market_suffix or 'FG',
                                 'event_id': event_id
                             })
         except Exception as e:

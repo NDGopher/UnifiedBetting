@@ -156,6 +156,15 @@ class BetBCKAsyncScraper:
             home = _clean_team(div_t1)
             away = _clean_team(div_t2)
             if not home or not away: continue
+            # Detect and strip period suffix so team names are clean for matching
+            # BetBCK shows e.g. "New York Knicks 1H" / "Philadelphia 76ers 1H"
+            _market_suffix = None
+            for _pfx in (' 1H', ' 2H', ' 1Q', ' 2Q', ' 3Q', ' 4Q'):
+                if home.endswith(_pfx) and away.endswith(_pfx):
+                    _market_suffix = _pfx.strip()
+                    home = home[:-len(_pfx)].strip()
+                    away = away[:-len(_pfx)].strip()
+                    break
             # Robust prop/corner/future filtering
             if is_prop_market_by_name(home, away):
                 continue
@@ -244,7 +253,7 @@ class BetBCKAsyncScraper:
                 sport = 'hockey'
                 logger.debug(f"[BetBCK] Detected hockey from class names for {home} vs {away}")
             teams = sorted([norm_home, norm_away])
-            game_id = hashlib.md5(f"{teams[0]}_{teams[1]}_{sport}_{norm_date}".encode()).hexdigest()[:8]
+            game_id = hashlib.md5(f"{teams[0]}_{teams[1]}_{sport}_{norm_date}_{_market_suffix or ''}".encode()).hexdigest()[:8]
             found_games_data.append({
                 "betbck_game_id": game_id,
                 "betbck_site_home_team": home,
@@ -252,7 +261,8 @@ class BetBCKAsyncScraper:
                 "betbck_site_odds": odds,
                 "timestamp": datetime.now().isoformat(),
                 "event_datetime": norm_date,
-                "sport": sport
+                "sport": sport,
+                "market_suffix": _market_suffix,
             })
         return found_games_data
 

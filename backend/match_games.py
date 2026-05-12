@@ -139,6 +139,7 @@ def strip_extra_info(name: str) -> str:
         r'\([^)]*\)',  # Anything in parentheses
         r'hits\+runs\+errors', r'corners', r'bookings', r'games', r'sets', r'cards',
         r'1st half', r'2nd half', r'1st quarter', r'2nd quarter', r'3rd quarter', r'4th quarter',
+        r'\b1H\b', r'\b2H\b', r'\b1Q\b', r'\b2Q\b', r'\b3Q\b', r'\b4Q\b',
         r'overtime', r'extra time', r'penalties', r'\btotal\b', r'\bover\b', r'\bunder\b',
         r'\bspread\b', r'\bml\b', r'\bpk\b', r'\bdraw\b', r'\bto win\b', r'\bto advance\b',
         r'\bhandicap\b', r'\bdouble chance\b', r'\bclean sheet\b', r'\bboth teams to score\b',
@@ -334,7 +335,8 @@ def determine_sport_from_teams(home_team: str, away_team: str) -> str:
 def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data: Dict[str, Any]) -> List[Dict[str, Any]]:
     betbck_games = betbck_data.get("games", [])
     matched_events = []
-    processed_pinnacle_event_ids = set()
+    processed_pinnacle_event_ids = set()  # event_ids — used for unmatched Pinnacle logging
+    processed_pinnacle_keys = set()      # (event_id, market_suffix) — allows main + 1H to both match the same Pinnacle event
     matched_betbck_ids: set = set()   # LOCAL — reset every call, never persists across runs
     unmatched_betbck = []
     unmatched_pinnacle = []
@@ -485,7 +487,8 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
         best_pinnacle_event = None
         
         for pinnacle_event in relevant_events:
-            if pinnacle_event.get("event_id") in processed_pinnacle_event_ids:
+            _cur_mk = betbck_game.get('market_suffix')
+            if (pinnacle_event.get("event_id"), _cur_mk) in processed_pinnacle_keys:
                 continue
                 
             pin_home_raw = pinnacle_event.get("home_team", "")
@@ -584,6 +587,7 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 
         if best_match and best_score >= FUZZY_MATCH_THRESHOLD:
             processed_pinnacle_event_ids.add(best_match["event_id"])
+            processed_pinnacle_keys.add((best_match["event_id"], betbck_game.get('market_suffix')))
             logger.info(f"[MATCHED] SUCCESS: '{betbck_home_raw}' vs '{betbck_away_raw}' <-> '{best_match['home_team']}' vs '{best_match['away_team']}' | Score: {best_score} | Orientation: {'direct' if best_orientation else 'flipped'}")
             
             # Track this BetBCK game as matched within this run (local set, never persists)
@@ -636,7 +640,8 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 "orientation": "direct" if best_orientation else "flipped",
                 "betbck_home_odds": betbck_home_odds,
                 "betbck_away_odds": betbck_away_odds,
-                "sport": sport
+                "sport": sport,
+                "market_suffix": betbck_game.get('market_suffix'),
             })
         else:
             best_score_str = f" (best score: {best_score})" if best_match else " (no candidates)"
