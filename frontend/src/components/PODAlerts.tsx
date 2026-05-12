@@ -96,6 +96,12 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
           // Replace the entire event list with the latest from backend
           console.log('[PODAlerts] Received pod_alerts_full with', Object.keys(data.events).length, 'events');
           setEvents(data.events);
+          // Un-dismiss any events that are actively in the backend payload
+          setDismissed(prev => {
+            const next = new Set(prev);
+            Object.keys(data.events).forEach(id => next.delete(id));
+            return next;
+          });
           setLastUpdate(new Date());
         } else if (data.type === 'pod_alert' && (data.eventId || data.eventid) && data.event) {
           // Fallback: update the specific event
@@ -108,6 +114,12 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
             const newEvents = { ...prev, [eventId]: data.event };
             console.log('[PODAlerts] Updated events state:', Object.keys(newEvents));
             return newEvents;
+          });
+          // A fresh alert arrived — un-dismiss so the card reappears
+          setDismissed(prev => {
+            const next = new Set(prev);
+            next.delete(eventId);
+            return next;
           });
           setLastUpdate(new Date());
           
@@ -150,6 +162,12 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
       if (res.ok) {
         const data = await res.json() as { [eventId: string]: EventData };
         setEvents(data);
+        // Un-dismiss events that the backend still considers active
+        setDismissed(prev => {
+          const next = new Set(prev);
+          Object.keys(data).forEach(id => next.delete(id));
+          return next;
+        });
         setLastUpdate(new Date());
         setRetryCount(0);
         setLoading(false);
