@@ -1,0 +1,57 @@
+Teplice @ Zlin
+
++27.9% Moneyline
++29.1% Spread
++0.3% Total
++21.3% 1H Moneyline
++23.7% 1H Spread
+EV Found
+9:31:49 AM
+[ALERT IN]
+Teplice @ Zlin | ? | market=Spread | +441 -> +402 | noVig=+488 | eventId=1630053783 | startTime=?
+[SWORDFISH]
+Swordfish: 'Wadi Degla' vs 'Ismaily' | starts=2026-05-12 17:00 UTC | OK
+[SEARCH TERM]
+Using 'zlin' (from 'Zlin' / 'Teplice'): first word of home team 'zlin'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='zlin' -> HTTP 200 (56416 bytes)
+[MATCH]
+[PASS] BCK 'Teplice' vs 'Zlin' <-> POD 'zlin' vs 'teplice' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Teplice' vs 'Zlin'
+[BCK DATE]
+BCK game date: 2026-05-12 10:30 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Teplice 1H' vs 'Zlin 1H' <-> POD 'zlin' vs 'teplice' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Teplice 1H' vs 'Zlin 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Teplice 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-12 10:30 (PIN start unavailable)
+[ODDS]
+home_moneyline=+160 | away_moneyline=+175 | home_spreads=[{'line': '0', 'odds': '-130'}] | away_spreads=[{'line': '0', 'odds': '+100'}]
+[EV]
+Moneyline Home: BCK 2.6000 (+160) / PIN_NVP 2.0300 (+103) => +27.95%
+[EV]
+Moneyline Away: BCK 2.7500 (+175) / PIN_NVP 5.2400 (+424) => -47.56%
+[EV]
+Spread Home 0: BCK 1.7692 (-130) / PIN_NVP 1.3704 (-270) => +29.05%
+[EV]
+Spread Away 0: BCK 2.0000 (+100) / PIN_NVP 3.6900 (+269) => -45.86%
+[EV]
+Total Over 2.0: BCK 1.6667 (-150) / PIN_NVP 1.9174 (-109) => -12.92%
+[EV]
+Total Under 2.0: BCK 2.1000 (+110) / PIN_NVP 2.0900 (+109) => +0.29%
+[EV]
+1H Moneyline Home: BCK 3.3000 (+230) / PIN_NVP 2.7200 (+172) => +21.32%
+[EV]
+1H Moneyline Away: BCK 3.5000 (+250) / PIN_NVP 5.9900 (+499) => -41.58%
+[EV]
+1H Spread Home 0: BCK 1.7692 (-130) / PIN_NVP 1.4292 (-233) => +23.72%
+[EV]
+1H Spread Away 0: BCK 2.0000 (+100) / PIN_NVP 3.3300 (+233) => -39.89%
+[EV]
+1H Total Over 0.5: BCK 1.4545 (-220) / PIN_NVP 1.5814 (-172) => -8.00%
+[EV]
+1H Total Under 0.5: BCK 2.6000 (+160) / PIN_NVP 2.7200 (+172) => -4.48%

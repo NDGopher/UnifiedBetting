@@ -296,7 +296,7 @@ async def event_alert_worker(event_id):
                     # A correct eventId may have minor spelling differences (e.g. accents,
                     # abbreviations) so we allow up to 40/100 as the minimum passing score.
                     try:
-                        from thefuzz import fuzz as _fz_l0
+                        from fuzzywuzzy import fuzz as _fz_l0
                         _pod_home_l0 = payload.get("homeTeam", "").lower()
                         _pod_away_l0 = payload.get("awayTeam", "").lower()
                         _sw_home_l0  = _sw_home_name.lower()
