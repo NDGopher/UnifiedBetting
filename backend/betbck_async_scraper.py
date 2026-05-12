@@ -31,25 +31,31 @@ class BetBCKAsyncScraper:
             'most threes made in series', 'margin of victory', 'exact outcome'
         ]
         # Sport mapping: maps sport keys to checkbox name patterns
+        # Each key lists BOTH the _Game_ and _1st@20;Half_ variants so BetBCK returns
+        # full-game AND first-half lines in the same POST response.
         self.sport_checkbox_mapping = {
             'nfl': ['FOOTBALL_NFL_Game_'],
             'ncaa_football': ['FOOTBALL_COLLEGE_Game_'],
-            'nba': ['BASKETBALL_NBA_Game_'],
+            'nba': ['BASKETBALL_NBA_Game_', 'BASKETBALL_NBA_1st@20;Half_'],
             'ncaa_basketball': ['BASKETBALL_NCAA_Game_', 'BASKETBALL_NCAA@20;EXTRA_Game_'],
             'nhl': ['HOCKEY_NHL_Game_'],
             'mlb': ['BASEBALL_MLB_Game_'],
-            'soccer': ['SOCCER_.*?_Game_'],  # All soccer
-            'soccer_major': [  # Major soccer leagues (all except EPL)
+            'wnba': ['BASKETBALL_WNBA_Game_', 'BASKETBALL_WNBA_1st@20;Half_'],
+            'soccer': ['SOCCER_.*?_Game_', 'SOCCER_.*?_1st@20;Half_'],  # All soccer + 1H
+            'soccer_major': [  # Major soccer leagues + their 1H lines
                 'SOCCER_UEFA@20;CH@20;LEA_Game_',
                 'SOCCER_UEFA@20;EU@20;LEA_Game_',
+                'SOCCER_ENG@20;PREM_Game_', 'SOCCER_ENG@20;PREM_1st@20;Half_',
                 'SOCCER_ENG@20;LEA1_Game_',
-                'SOCCER_ENG@20;CHAMPI_Game_',
-                'SOCCER_SPA@20;LA@20;LIGA_Game_',
+                'SOCCER_ENG@20;CHAMPI_Game_', 'SOCCER_ENG@20;CHAMPI_1st@20;Half_',
+                'SOCCER_SPA@20;LA@20;LIGA_Game_', 'SOCCER_SPA@20;LA@20;LIGA_1st@20;Half_',
                 'SOCCER_ITA@20;SER@20;A_Game_',
                 'SOCCER_GER@20;BUNDE_Game_',
-                'SOCCER_FRE@20;LIGUE1_Game_',
+                'SOCCER_FRE@20;LIGUE1_Game_', 'SOCCER_FRE@20;LIGUE1_1st@20;Half_',
                 'SOCCER_MEX@20;-@20;PR@20;DIV_Game_',
-                'SOCCER_USA@20;MLS_Game_'
+                'SOCCER_USA@20;MLS_Game_', 'SOCCER_USA@20;MLS_1st@20;Half_',
+                'SOCCER_BRA@20;-@20;SER@20;A_Game_', 'SOCCER_BRA@20;-@20;SER@20;A_1st@20;Half_',
+                'SOCCER_ARG@20;PRI@20;DIV_Game_', 'SOCCER_ARG@20;PRI@20;DIV_1st@20;Half_',
             ]
         }
         # Priority order for "all sports" mode - highest priority first
@@ -61,9 +67,12 @@ class BetBCKAsyncScraper:
         ]
         self.checkbox_patterns = [
             re.compile(r"SOCCER_.*?_Game_"),
+            re.compile(r"SOCCER_.*?_1st@20;Half_"),   # soccer first-half lines
             re.compile(r"BASKETBALL_NBA_Game_"),
+            re.compile(r"BASKETBALL_NBA_1st@20;Half_"),  # NBA first-half lines
             re.compile(r"BASKETBALL_NCAAB_Game_"),
             re.compile(r"BASKETBALL_WNBA_Game_"),
+            re.compile(r"BASKETBALL_WNBA_1st@20;Half_"),  # WNBA first-half lines
             re.compile(r"FOOTBALL_NFL_Game_"),
             re.compile(r"FOOTBALL_NCAAF_Game_"),
             re.compile(r"FOOTBALL_COLLEGE_Game_"),
@@ -321,7 +330,8 @@ class BetBCKAsyncScraper:
         seen = set()
         deduped = []
         for g in games:
-            key = (g['betbck_site_home_team'], g['betbck_site_away_team'])
+            # Include market_suffix in key so "Arsenal FG" and "Arsenal 1H" are NOT treated as dupes
+            key = (g['betbck_site_home_team'], g['betbck_site_away_team'], g.get('market_suffix'))
             if key not in seen:
                 deduped.append(g)
                 seen.add(key)
