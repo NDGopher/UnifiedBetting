@@ -591,9 +591,14 @@ def strip_team_name_for_display(name: str) -> str:
       'Orange CountyUSA - USL Championship'  → 'Orange County'
       'CeutaSpain - Segunda Division'        → 'Ceuta'
       'Taila SantosPFL'                      → 'Taila Santos'
+      'Minnesota LynxW'                      → 'Minnesota Lynx'
+      'FC ZurichSwitzerland'                 → 'FC Zurich'
     """
     if not name or name == "?":
         return name
+    # Step 0: strip WNBA 'W' and multi-letter league abbreviations (NBA, NFL…)
+    # that POD concatenates directly — must happen before country-suffix logic.
+    name = strip_pod_league_suffix(name)
     # Step 1: strip " - League/competition" trailer
     cleaned = re.sub(r'\s+-\s+.+$', '', name).strip()
     # Step 2: get the normalised (lowercase, suffix-stripped) version

@@ -22,7 +22,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from database_models import save_alert_log_record
 from alert_history import append_alert_to_history
-from utils.pod_utils import normalize_team_name_for_matching
+from utils.pod_utils import normalize_team_name_for_matching, strip_team_name_for_display
 
 # ── Ring buffer (last 50 alerts) ──────────────────────────────────────────────
 _RING_BUFFER_SIZE = 50
@@ -93,23 +93,8 @@ class AlertLogger:
 
     @staticmethod
     def _strip_display_suffix(name: str) -> str:
-        """Strip trailing league/country suffixes for clean display (preserves casing).
-
-        Handles all POD patterns:
-          'HeredianoCosta Rica', 'Orange CountyUSA - USL Championship',
-          'CeutaSpain - Segunda Division', 'Taila SantosPFL', etc.
-        """
-        if not name or name == "?":
-            return name
-        # Step 1: strip any " - League/competition" trailer
-        cleaned = re.sub(r'\s+-\s+.+$', '', name).strip()
-        # Step 2: strip remaining country/code suffix via the authoritative list
-        stripped_lower = normalize_team_name_for_matching(cleaned)
-        if not stripped_lower:
-            return cleaned
-        if cleaned.lower().startswith(stripped_lower):
-            return cleaned[:len(stripped_lower)].strip()
-        return cleaned
+        """Strip trailing league/country suffixes for clean display (preserves casing)."""
+        return strip_team_name_for_display(name)
 
     def log_raw_alert(self, payload: Dict):
         home = payload.get("homeTeam", "?")
