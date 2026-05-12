@@ -207,7 +207,13 @@ async def fetch_all_swordfish_odds_parallel(matched_games: List[Dict[str, Any]])
     sem = asyncio.Semaphore(MAX_CONCURRENT_SWORDFISH_REQUESTS)
     conn = aiohttp.TCPConnector(limit=MAX_CONCURRENT_SWORDFISH_REQUESTS, limit_per_host=MAX_CONCURRENT_SWORDFISH_REQUESTS)
     
-    async with aiohttp.ClientSession(connector=conn) as session:
+    pod_headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+        "Accept": "*/*",
+        "Origin": "https://www.pinnacleoddsdropper.com",
+        "Referer": "https://www.pinnacleoddsdropper.com/",
+    }
+    async with aiohttp.ClientSession(connector=conn, headers=pod_headers) as session:
         tasks = []
         for matched_event in matched_games:
             event_id = matched_event.get('pinnacle_event_id')
