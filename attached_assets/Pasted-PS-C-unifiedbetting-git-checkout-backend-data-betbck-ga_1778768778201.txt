@@ -1,0 +1,48 @@
+PS C:\unifiedbetting> git checkout -- backend/data/betbck_games.json
+PS C:\unifiedbetting> git pull origin main
+From https://github.com/NDGopher/UnifiedBetting
+ * branch            main       -> FETCH_HEAD
+Auto-merging backend/alert_logger.py
+Auto-merging backend/utils/pod_utils.py
+hint: Waiting for your editor to close the file... unix2dos: converting file C:/UnifiedBetting/.git/MERGE_MSG to DOS format...
+dos2unix: converting file C:/UnifiedBetting/.git/MERGE_MSG to Unix format...
+Merge made by the 'ort' strategy.
+ .replit                                            |   32 +
+ ...n-Rosario-Central-market-Mone_1778016449666.txt |   46 +
+ ...end-0-1-0-start-react-scripts_1777920770682.txt |   59 +
+ ...in-INFO-DEBUG-pod-alert-calle_1777991640741.txt |  242 +
+ ...env-Lib-site-packages-fuzzywu_1777920290622.txt |   53 +
+ ...env-Lib-site-packages-fuzzywu_1777920760471.txt |   81 +
+ ...lphia-76ers-1-5-1H-Total-EV-F_1778437866715.txt |  135 +
+ ...e-29-1-Spread-0-3-Total-21-3-_1778596355373.txt |   57 +
+ ...netWagerNumber-0-481814680205_1778598397391.txt |  118 +
+ attached_assets/image_1777990281927.png            |  Bin 0 -> 123670 bytes
+ attached_assets/image_1777999839264.png            |  Bin 0 -> 80055 bytes
+ attached_assets/image_1778009415051.png            |  Bin 0 -> 186839 bytes
+ attached_assets/image_1778080029102.png            |  Bin 0 -> 116117 bytes
+ attached_assets/image_1778080666574.png            |  Bin 0 -> 131746 bytes
+ attached_assets/image_1778607198063.png            |  Bin 0 -> 175819 bytes
+ attached_assets/image_1778615097042.png            |  Bin 0 -> 154809 bytes
+ attached_assets/image_1778767779791.png            |  Bin 0 -> 89001 bytes
+ backend/alert_logger.py                            |   21 +-
+ backend/data/betbck_games.json                     | 5810 ++++++++++++++------
+ backend/utils/pod_utils.py                         |   19 +-
+ frontend/src/components/PODAlerts.tsx              |   18 +
+ 21 files changed, 4915 insertions(+), 1776 deletions(-)
+ create mode 100644 attached_assets/Pasted--ALERT-IN-Libertad-Asuncion-Rosario-Central-market-Mone_1778016449666.txt
+ create mode 100644 attached_assets/Pasted--unified-betting-app-frontend-0-1-0-start-react-scripts_1777920770682.txt
+ create mode 100644 attached_assets/Pasted-2026-05-05-09-33-25-130-main-INFO-DEBUG-pod-alert-calle_1777991640741.txt
+ create mode 100644 attached_assets/Pasted-C-UnifiedBetting-backend-venv-Lib-site-packages-fuzzywu_1777920290622.txt
+ create mode 100644 attached_assets/Pasted-C-UnifiedBetting-backend-venv-Lib-site-packages-fuzzywu_1777920760471.txt
+ create mode 100644 attached_assets/Pasted-New-York-KnicksNBA-Philadelphia-76ers-1-5-1H-Total-EV-F_1778437866715.txt
+ create mode 100644 attached_assets/Pasted-Teplice-Zlin-27-9-Moneyline-29-1-Spread-0-3-Total-21-3-_1778596355373.txt
+ create mode 100644 attached_assets/Pasted-x-108-y-8-keyword-search-inetWagerNumber-0-481814680205_1778598397391.txt
+ create mode 100644 attached_assets/image_1777990281927.png
+ create mode 100644 attached_assets/image_1777999839264.png
+ create mode 100644 attached_assets/image_1778009415051.png
+ create mode 100644 attached_assets/image_1778080029102.png
+ create mode 100644 attached_assets/image_1778080666574.png
+ create mode 100644 attached_assets/image_1778607198063.png
+ create mode 100644 attached_assets/image_1778615097042.png
+ create mode 100644 attached_assets/image_1778767779791.png
+PS C:\unifiedbetting>
