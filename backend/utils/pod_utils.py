@@ -515,7 +515,19 @@ def normalize_team_name_for_matching(name):
         'liga 1', 'epl'
     ]
     for suffix in league_country_suffixes:
-        pattern = r'(\s+' + re.escape(suffix) + r'|' + re.escape(suffix) + r')$'
+        if len(suffix) <= 4:
+            # Short codes (e.g. 'hun', 'slo', 'cro', 'sui'): require whitespace so we
+            # don't accidentally eat part of a real team name (e.g. 'hun' must not
+            # consume the 'hun' in 'thun' → 't').
+            # Edge case: if the whole name IS the code, strip it regardless.
+            if norm_name.lower() == suffix.lower():
+                norm_name = ''
+                break
+            pattern = r'\s+' + re.escape(suffix) + r'$'
+        else:
+            # Long country/league names: allow no-space suffix since POD concatenates
+            # without a space (e.g. 'FC ZurichSwitzerland').
+            pattern = r'(\s+' + re.escape(suffix) + r'|' + re.escape(suffix) + r')$'
         if re.search(pattern, norm_name, flags=re.IGNORECASE):
             temp_name = re.sub(pattern, '', norm_name, flags=re.IGNORECASE, count=1).strip()
             if temp_name or len(norm_name) == len(suffix): 
