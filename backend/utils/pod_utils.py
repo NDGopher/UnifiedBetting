@@ -398,6 +398,10 @@ def alias_normalize(name):
 def normalize_team_name_for_matching(name):
     original_name_for_debug = name
     if not name: return ""
+    # Strip league abbreviations and short country names that POD concatenates
+    # directly (e.g. "UnidosPeru" → "Unidos", "TeamNBA" → "Team").
+    # Must happen before any other processing so downstream patterns see clean text.
+    name = strip_pod_league_suffix(name)
     # Strip leading numbers and spaces
     name = re.sub(r'^\d+\s*', '', name).strip()
     
@@ -575,9 +579,28 @@ def strip_pod_league_suffix(name: str) -> str:
             if name[-len(abbrev)-1:-(len(abbrev))].rstrip() != '':
                 name = name[:-len(abbrev)].strip()
                 break
+
+    # Country names that are ≤4 chars — these are too short for the whitespace-
+    # required pattern in normalize_team_name_for_matching so we handle them
+    # here where we can check for direct concatenation explicitly.
+    # e.g. "Comerciantes UnidosPeru" → "Comerciantes Unidos"
+    _SHORT_COUNTRY_NAMES = (
+        'Peru', 'Iran', 'Iraq', 'Cuba', 'Oman', 'Mali', 'Chad', 'Laos',
+        'Togo', 'Fiji', 'Niue',
+    )
+    import re as _re_ls
+    for country in _SHORT_COUNTRY_NAMES:
+        if name.endswith(country) and len(name) > len(country):
+            # Only strip when preceded by a lowercase or uppercase letter
+            # (i.e. directly concatenated, not space-separated — space-separated
+            # case is already handled by normalize_team_name_for_matching)
+            preceding = name[-(len(country) + 1):-(len(country))]
+            if preceding.isalpha():
+                name = name[:-len(country)].strip()
+                break
+
     # Trailing uppercase 'W' (WNBA women's leagues, e.g. "AcesW" → "Aces")
     # Only strip when preceded by a lowercase letter (not already a space)
-    import re as _re_ls
     name = _re_ls.sub(r'([a-zA-Z])W$', r'\1', name)
     return name.strip()
 
