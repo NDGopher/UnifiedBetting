@@ -302,14 +302,21 @@ async def event_alert_worker(event_id):
                         _sw_home_l0  = _sw_home_name.lower()
                         _sw_away_l0  = _sw_away_name.lower()
                         if _sw_home_l0 and _sw_away_l0 and _pod_home_l0 and _pod_away_l0:
-                            _l0_best = max(
+                            # Each Swordfish team must match at least one POD team.
+                            # Using min() of per-team bests prevents a single lucky
+                            # partial overlap (e.g. 'huachipato' ~ 'valencia' = 44)
+                            # from masking a completely wrong fixture.
+                            _sw_home_best = max(
                                 _fz_l0.token_set_ratio(_sw_home_l0, _pod_home_l0),
                                 _fz_l0.token_set_ratio(_sw_home_l0, _pod_away_l0),
+                            )
+                            _sw_away_best = max(
                                 _fz_l0.token_set_ratio(_sw_away_l0, _pod_home_l0),
                                 _fz_l0.token_set_ratio(_sw_away_l0, _pod_away_l0),
                             )
+                            _l0_best = min(_sw_home_best, _sw_away_best)
                             _sw_id_data["check_type"] = f"team_names(score={_l0_best})"
-                            if _l0_best < 40:
+                            if _l0_best < 50:
                                 _event_id_suspect = True
                                 _sw_id_data["suspect"] = True
                                 _sw_id_data["check_type"] = f"team_names_MISMATCH(score={_l0_best})"
@@ -318,12 +325,13 @@ async def event_alert_worker(event_id):
                                     f"Swordfish returned '{_sw_home_name}' vs '{_sw_away_name}' "
                                     f"but POD sent '{payload.get('homeTeam','?')}' vs "
                                     f"'{payload.get('awayTeam','?')}'. "
-                                    f"Best name match={_l0_best}/100. Dropping alert."
+                                    f"home_best={_sw_home_best} away_best={_sw_away_best} "
+                                    f"min={_l0_best}/100. Dropping alert."
                                 )
                             else:
                                 logger.info(
                                     f"[SwordfishID] Layer 0 team names OK "
-                                    f"(best score={_l0_best}): "
+                                    f"(home_best={_sw_home_best} away_best={_sw_away_best} min={_l0_best}): "
                                     f"Swordfish '{_sw_home_name}'/'{_sw_away_name}' vs "
                                     f"POD '{payload.get('homeTeam','?')}'/'{payload.get('awayTeam','?')}'"
                                 )

@@ -1,0 +1,55 @@
+Valencia @ Real Sociedad
+
++5.0% Total
++1.9% 1H Spread
++2.0% 1H Total
+EV Found
+10:56:22 AM
+[ALERT IN]
+Valencia @ Real Sociedad | ? | market=Moneyline | +294 -> +266 | noVig=+281 | eventId=1630436319 | startTime=?
+[SWORDFISH]
+Swordfish: 'Huachipato' vs 'Union La Calera' | starts=2026-05-17 16:30 UTC | OK
+[SEARCH TERM]
+Using 'sociedad' (from 'Real Sociedad' / 'Valencia'): last word of home team 'real sociedad'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='sociedad' -> HTTP 200 (58048 bytes)
+[MATCH]
+[PASS] BCK 'Valencia' vs 'Real Sociedad' <-> POD 'real sociedad' vs 'valencia' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Valencia' vs 'Real Sociedad'
+[BCK DATE]
+BCK game date: 2026-05-17 12:00 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Valencia 1H' vs 'Real Sociedad 1H' <-> POD 'real sociedad' vs 'valencia' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Valencia 1H' vs 'Real Sociedad 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Valencia 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-17 12:00 (PIN start unavailable)
+[ODDS]
+home_moneyline=+130 | away_moneyline=+215 | home_spreads=[{'line': '-0.25', 'odds': '+100'}] | away_spreads=[{'line': '+0.25', 'odds': '-130'}]
+[EV]
+Moneyline Home: BCK 2.3000 (+130) / PIN_NVP 2.6200 (+162) => -12.05%
+[EV]
+Moneyline Away: BCK 3.1500 (+215) / PIN_NVP 3.2300 (+223) => -2.42%
+[EV]
+Spread Home -0.25: BCK 2.0000 (+100) / PIN_NVP 2.2300 (+123) => -10.15%
+[EV]
+Spread Away 0.25: BCK 1.7692 (-130) / PIN_NVP 1.8130 (-123) => -2.58%
+[EV]
+Total Over 2.5: BCK 1.8000 (-125) / PIN_NVP 2.2800 (+128) => -21.12%
+[EV]
+Total Under 2.5: BCK 1.8696 (-115) / PIN_NVP 1.7812 (-128) => +5.03%
+[EV]
+1H Moneyline Home: BCK 2.9000 (+190) / PIN_NVP 3.3900 (+239) => -14.43%
+[EV]
+1H Moneyline Away: BCK 3.6500 (+265) / PIN_NVP 3.9200 (+292) => -6.84%
+[EV]
+1H Spread Home 0: BCK 1.6667 (-150) / PIN_NVP 1.8621 (-116) => -10.54%
+[EV]
+1H Spread Away 0: BCK 2.2000 (+120) / PIN_NVP 2.1600 (+116) => +1.90%
+[EV]
+1H Total Over 1.0: BCK 1.7692 (-130) / PIN_NVP 2.1500 (+115) => -17.63%
+[EV]
+1H Total Under 1.0: BCK 1.9091 (-110) / PIN_NVP 1.8696 (-115) => +2.04%
