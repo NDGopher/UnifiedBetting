@@ -1219,6 +1219,9 @@ last_run_time = None
 pipeline_running = False
 pipeline_task = None
 
+# Last completed Buckeye pipeline payload — replayed to new SSE connections
+_last_buckeye_payload: dict | None = None
+
 async def run_pipeline_background():
     """Background task to run the Buckeye pipeline"""
     global current_results, last_run_time, pipeline_running
@@ -1816,6 +1819,7 @@ async def run_streaming_pipeline_background(sport_filters=None):
         
         # Final broadcast - always send, even if no events
         try:
+            global _last_buckeye_payload
             _final_payload = {
                 "type": "buckeye_complete",
                 "data": {
@@ -1827,6 +1831,7 @@ async def run_streaming_pipeline_background(sport_filters=None):
                     "total_matched": total_matched
                 }
             }
+            _last_buckeye_payload = _final_payload
             await manager.broadcast(_final_payload)
             await sse_manager.broadcast(_final_payload)
             logger.info(f"[STREAMING] Final broadcast sent: {len(streaming_results)} events")
@@ -2049,7 +2054,7 @@ async def sse_events_stream(request: Request):
     queue: asyncio.Queue = asyncio.Queue(maxsize=50)
     await sse_manager.add_client(queue)
 
-    # Send current active events immediately on connect
+    # Send current state immediately on connect so reconnects don't miss data
     try:
         active_events = pod_event_manager.get_active_events()
         if active_events:
@@ -2057,6 +2062,11 @@ async def sse_events_stream(request: Request):
             for event_id, event_data in active_events.items():
                 events_payload[event_id] = build_event_object(event_id, event_data)
             await queue.put(json.dumps({"type": "pod_alerts_full", "events": events_payload}))
+        # Also replay the last completed Buckeye/EV pipeline results so
+        # a reconnecting client immediately sees them without waiting for
+        # the next pipeline run.
+        if _last_buckeye_payload:
+            await queue.put(json.dumps(_last_buckeye_payload))
     except Exception as e:
         logger.warning(f"[SSE] Error queuing initial events: {e}")
 

@@ -1,0 +1,476 @@
+2026-05-18 11:02:16,799 - betbck_request_manager - INFO - [BetBCK-Manager] Search term being used: 'beroe'
+2026-05-18 11:02:16,800 - betbck_request_manager - INFO - [BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names
+[BetbckParser] Found 2 potential game wrapper tables. (Event ID: 1630278964)
+[BetbckParser] Normalized POD Targets: Home='beroe', Away='septemvri sofia' (Event ID: 1630278964)
+[BetbckParser] Comparing POD: H='beroe' A='septemvri sofia' WITH BCK 0: L='septemvri sofia' V='beroe' (Raw: L='Septemvri Sofia', V='Beroe') (Event ID: 1630278964)
+[BetbckParser] Exact Match (Order 2 - Flipped) for Septemvri Sofia vs Beroe (Event ID: 1630278964)
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1630278964)
+[BetbckParser] Game 0: Extracted 3 potential data rows from odds table. (Event ID: 1630278964)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1630278964)
+[BetbckParser] Match accepted: Septemvri Sofia vs Beroe (BCK date: 2026-05-18 11:30, score=300) (Event ID: 1630278964)
+[BetbckParser] Comparing POD: H='beroe' A='septemvri sofia' WITH BCK 1: L='septemvri sofia 1h' V='beroe 1h' (Raw: L='Septemvri Sofia 1H', V='Beroe 1H') (Event ID: 1630278964)
+[DEBUG] Comparing normalized: POD H='beroe', A='septemvri sofia' with BCK H='septemvri sofia 1h', A='beroe 1h' | token_set: (H-L 26 A-V 17) | partial: (H-L 40 A-V 25) (Event ID: 1630278964)
+[BetbckParser] Fuzzy Match (Order 2 - Flipped, score 200 > fwd 43) (Event ID: 1630278964)
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1630278964)
+[BetbckParser] Game 1: Extracted 3 potential data rows from odds table. (Event ID: 1630278964)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1630278964)
+[BetbckParser] Match accepted: Septemvri Sofia 1H vs Beroe 1H (BCK date: 2026-05-18 11:30, score=200) (Event ID: 1630278964)
+[BetbckParser] row_data['full_game'] <- Septemvri Sofia vs Beroe (score=300) (Event ID: 1630278964)
+[BetbckParser] row_data['half_1'] <- Septemvri Sofia 1H vs Beroe 1H (score=200) (Event ID: 1630278964)
+[BetbckParser] row_data keys: ['full_game', 'half_1'] (Event ID: 1630278964)
+2026-05-18 11:02:16,854 - betbck_request_manager - INFO - [BetBCK-Manager] Game data found, deriving 1H_data from row_data...
+2026-05-18 11:02:16,854 - betbck_request_manager - INFO - [BetBCK-Manager] 1H_data set from row_data key: half_1
+2026-05-18 11:02:16,855 - betbck_request_manager - INFO - [BetBCK-Manager] Successfully scraped data for: beroe
+2026-05-18 11:02:16,856 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:16,857 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:16,863 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:16,864 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:16,864 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BetBCKRefresh] Updating event 1630278964 with fresh BetBCK data (6 markets)
+2026-05-18 11:02:16,865 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+2026-05-18 11:02:16,865 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BetBCKRefresh] Broadcast sent for event 1630278964
+2026-05-18 11:02:16,868 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+[BackgroundRefresher] Loop #78 - sleeping for 5 seconds...
+[BackgroundRefresher] Event 1630268013 is negative EV and older than 60s, skipping updates (age: 119.0s)
+[BackgroundRefresher] Event 1630267897 is negative EV and older than 60s, skipping updates (age: 115.9s)
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630278964
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630278964
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630278964
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-18 11:02:21,281 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:21,281 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:21,291 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:21,291 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:21,292 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630278964
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630278964
+[BackgroundRefresher] Market 0: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +204 EV: -4.64%
+[BackgroundRefresher] Market 2: Spread Home NVP: +140 EV: -12.57%
+[BackgroundRefresher] Comparing odds for 1630278964:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = +181
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +204
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.25') = +140
+  [SAME] NVP SAME: ('Spread', 'Away', '0.25') = -140
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = +135
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = -135
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -10.94%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -4.64%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.25') = -12.57%
+  [SAME] EV SAME: ('Spread', 'Away', '0.25') = 0.08%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -4.13%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -7.86%
+[STABLE] [BackgroundRefresher] No odds changes for 1630278964 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630278964
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630278964
+2026-05-18 11:02:21,298 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630278964
+2026-05-18 11:02:21,300 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+2026-05-18 11:02:21,307 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630278964
+INFO:     127.0.0.1:54341 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #79 - sleeping for 5 seconds...
+[BackgroundRefresher] Event 1630268013 is negative EV and older than 60s, skipping updates (age: 125.0s)
+[BackgroundRefresher] Event 1630267897 is negative EV and older than 60s, skipping updates (age: 121.9s)
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630278964
+INFO:     127.0.0.1:62040 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630278964
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630278964
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-18 11:02:27,012 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:27,013 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:27,020 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:27,021 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:27,021 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630278964
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630278964
+[BackgroundRefresher] Market 0: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +204 EV: -4.64%
+[BackgroundRefresher] Market 2: Spread Home NVP: +140 EV: -12.57%
+[BackgroundRefresher] Comparing odds for 1630278964:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = +181
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +204
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.25') = +140
+  [SAME] NVP SAME: ('Spread', 'Away', '0.25') = -140
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = +135
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = -135
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -10.94%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -4.64%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.25') = -12.57%
+  [SAME] EV SAME: ('Spread', 'Away', '0.25') = 0.08%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -4.13%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -7.86%
+[STABLE] [BackgroundRefresher] No odds changes for 1630278964 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630278964
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630278964
+2026-05-18 11:02:27,027 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630278964
+2026-05-18 11:02:27,031 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+2026-05-18 11:02:27,031 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630278964
+INFO:     127.0.0.1:53254 - "GET /api/betbck/status HTTP/1.1" 200 OK
+2026-05-18 11:02:31,184 - sse_manager - INFO - [SSE] Client removed. Total: 2
+2026-05-18 11:02:31,196 - sse_manager - INFO - [SSE] Client removed. Total: 1
+2026-05-18 11:02:31,197 - sse_manager - INFO - [SSE] Client removed. Total: 0
+INFO:     127.0.0.1:54684 - "GET /api/alert-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59461 - "GET /api/betbck/status HTTP/1.1" 200 OK
+2026-05-18 11:02:32,037 - pod_event_manager - INFO - [BackgroundRefresher] Loop #80 - Processing 3 active events
+[BackgroundRefresher] Loop #80 - Processing 3 active events
+[BackgroundRefresher] FORCED CLEANUP: Event 1630268013 is 130.8s old (limit: 60s), removing...
+[BackgroundRefresher] FORCED CLEANUP: Event 1630267897 is 127.6s old (limit: 60s), removing...
+2026-05-18 11:02:32,038 - pod_event_manager - INFO - [PodEventManager] Removing active event: 1630268013
+2026-05-18 11:02:32,038 - main - WARNING - [SafeBroadcast] Event 1630268013 missing pinnacle_data_processed - may be processed object
+2026-05-18 11:02:32,038 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630268013
+2026-05-18 11:02:32,039 - main - INFO - [AsyncBroadcast] Successfully broadcast removal for event 1630268013
+[PodEventManager] Sent removal notification for event 1630268013
+2026-05-18 11:02:32,039 - pod_event_manager - INFO - [PodEventManager] Removing active event: 1630267897
+2026-05-18 11:02:32,039 - main - WARNING - [SafeBroadcast] Event 1630267897 missing pinnacle_data_processed - may be processed object
+2026-05-18 11:02:32,040 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630267897
+[PodEventManager] Sent removal notification for event 1630267897
+2026-05-18 11:02:32,040 - main - INFO - [AsyncBroadcast] Successfully broadcast removal for event 1630267897
+2026-05-18 11:02:32,044 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+2026-05-18 11:02:32,040 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BackgroundRefresher] Broadcasted 1 active events to frontend
+[BackgroundRefresher] Event 1630268013 is negative EV and older than 60s, skipping updates (age: 130.8s)
+[BackgroundRefresher] Event 1630267897 is negative EV and older than 60s, skipping updates (age: 127.6s)
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630278964
+INFO:     127.0.0.1:54267 - "GET /get_active_events_data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65449 - "GET /api/alert-log HTTP/1.1" 200 OK
+2026-05-18 11:02:32,276 - sse_manager - INFO - [SSE] Client added. Total: 1
+INFO:     127.0.0.1:60750 - "GET /api/events/stream HTTP/1.1" 200 OK
+2026-05-18 11:02:32,281 - sse_manager - INFO - [SSE] Client added. Total: 2
+INFO:     127.0.0.1:60751 - "GET /api/events/stream HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60753 - "GET /api/betbck/status HTTP/1.1" 200 OK
+2026-05-18 11:02:32,284 - sse_manager - INFO - [SSE] Client added. Total: 3
+INFO:     127.0.0.1:60754 - "GET /api/events/stream HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54235 - "GET /get_active_events_data HTTP/1.1" 200 OK
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630278964
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630278964
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-18 11:02:32,987 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:32,987 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:32,990 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:32,991 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:32,991 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630278964
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630278964
+[BackgroundRefresher] Market 0: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +204 EV: -4.64%
+[BackgroundRefresher] Market 2: Spread Home NVP: +140 EV: -12.57%
+[BackgroundRefresher] Comparing odds for 1630278964:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = +181
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +204
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.25') = +140
+  [SAME] NVP SAME: ('Spread', 'Away', '0.25') = -140
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = +135
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = -135
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -10.94%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -4.64%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.25') = -12.57%
+  [SAME] EV SAME: ('Spread', 'Away', '0.25') = 0.08%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -4.13%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -7.86%
+[STABLE] [BackgroundRefresher] No odds changes for 1630278964 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630278964
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630278964
+2026-05-18 11:02:32,994 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630278964
+2026-05-18 11:02:32,998 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+2026-05-18 11:02:32,998 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630278964
+INFO:     127.0.0.1:59703 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #81 - sleeping for 5 seconds...
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630278964
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630278964
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630278964
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-18 11:02:38,764 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:38,765 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:38,768 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:38,768 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:38,769 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630278964
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630278964
+[BackgroundRefresher] Market 0: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +204 EV: -4.64%
+[BackgroundRefresher] Market 2: Spread Home NVP: +140 EV: -12.57%
+[BackgroundRefresher] Comparing odds for 1630278964:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = +181
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +204
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.25') = +140
+  [SAME] NVP SAME: ('Spread', 'Away', '0.25') = -140
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = +135
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = -135
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -10.94%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -4.64%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.25') = -12.57%
+  [SAME] EV SAME: ('Spread', 'Away', '0.25') = 0.08%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -4.13%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -7.86%
+[STABLE] [BackgroundRefresher] No odds changes for 1630278964 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630278964
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630278964
+2026-05-18 11:02:38,772 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630278964
+2026-05-18 11:02:38,774 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+2026-05-18 11:02:38,774 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630278964
+2026-05-18 11:02:42,345 - main - INFO - === [DEBUG] /pod_alert called ===
+2026-05-18 11:02:42,346 - main - INFO - [PerEventQueue][DIAG] Incoming alert payload: {'rowId': '1779120112634-0', 'eventIdFromRowAttribute': '1779120112634', 'eventId': '1630267895', 'timestamp': '2026-05-18T16:02:41.223Z', 'time': '11:30', 'date': '18/05', 'homeTeam': 'Baskets Bonn', 'awayTeam': 'Baskets WurzburgGermany -', 'league': 'Bundesliga', 'alertType': 'Basketball - 1 Minute', 'alertTime': '2026-05-18 16:01', 'period': '1st Half', 'teamForBet': 'Baskets Bonn', 'lineValueForBet': '', 'betDescription': 'Baskets Bonn', 'marketType': 'Moneyline', 'oldOdds': '-126', 'newOdds': '-146', 'noVigPriceFromAlert': '-133'}
+2026-05-18 11:02:42,350 - main - INFO - [PerEventQueue][DIAG] Queuing alert for Event ID: 1630267895
+2026-05-18 11:02:42,350 - main - INFO - [PerEventQueue][DIAG] Alert put into queue for Event ID: 1630267895
+INFO:     127.0.0.1:53494 - "POST /pod_alert HTTP/1.1" 200 OK
+2026-05-18 11:02:42,351 - main - INFO - [PerEventQueue] Got alert for Event ID: 1630267895 (homeTeam=Baskets Bonn)
+2026-05-18 11:02:42,352 - main - INFO - [PerEventQueue] Attempting to acquire lock for Event ID: 1630267895
+2026-05-18 11:02:42,352 - main - INFO - [PerEventQueue] Lock acquired for Event ID: 1630267895
+2026-05-18 11:02:42,353 - main - INFO - [PerEventQueue] Processing alert for Event ID: 1630267895 (Baskets Bonn)
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630267895
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630267895
+2026-05-18 11:02:43,451 - main - INFO - [SwordfishID] Event 1630267895: 'Montana' vs 'Spartak Varna' | starts=2026-05-18 16:30 UTC | ext startTime=N/A
+2026-05-18 11:02:43,451 - main - WARNING - [SwordfishID] *** WRONG TEAMS (Layer 0) *** Event 1630267895: Swordfish returned 'Montana' vs 'Spartak Varna' but POD sent 'Baskets Bonn' vs 'Baskets WurzburgGermany -'. Best name match=32/100. Dropping alert.
+[DEBUG] clean_pod_team_name_for_search input: 'Baskets Bonn'
+[DEBUG] clean_pod_team_name_for_search output: 'baskets bonn'
+[DEBUG] clean_pod_team_name_for_search input: 'Baskets WurzburgGermany -'
+[DEBUG] clean_pod_team_name_for_search output: 'baskets wurzburg'
+2026-05-18 11:02:43,455 - main - WARNING - [PerEventQueue] Dropping new event 1630267895 — Swordfish event ID mismatch detected (see [SwordfishID] warning above). No alert will be shown to prevent false EV.
+2026-05-18 11:02:43,455 - main - INFO - [PerEventQueue] Lock released for Event ID: 1630267895
+INFO:     127.0.0.1:50078 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #82 - sleeping for 5 seconds...
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630278964
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630278964
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630278964
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-18 11:02:44,693 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:44,694 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:44,705 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:44,706 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:44,706 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630278964
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630278964
+[BackgroundRefresher] Market 0: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +204 EV: -4.64%
+[BackgroundRefresher] Market 2: Spread Home NVP: +140 EV: -12.57%
+[BackgroundRefresher] Comparing odds for 1630278964:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = +181
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +204
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.25') = +140
+  [SAME] NVP SAME: ('Spread', 'Away', '0.25') = -140
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = +135
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = -135
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -10.94%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -4.64%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.25') = -12.57%
+  [SAME] EV SAME: ('Spread', 'Away', '0.25') = 0.08%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -4.13%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -7.86%
+[STABLE] [BackgroundRefresher] No odds changes for 1630278964 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630278964
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630278964
+2026-05-18 11:02:44,709 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630278964
+2026-05-18 11:02:44,718 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+2026-05-18 11:02:44,719 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630278964
+INFO:     127.0.0.1:61536 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #83 - sleeping for 5 seconds...
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630278964
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630278964
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630278964
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-18 11:02:50,509 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:50,509 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:50,511 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:50,512 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:50,512 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630278964
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630278964
+[BackgroundRefresher] Market 0: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +204 EV: -4.64%
+[BackgroundRefresher] Market 2: Spread Home NVP: +140 EV: -12.57%
+[BackgroundRefresher] Comparing odds for 1630278964:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = +181
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +204
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.25') = +140
+  [SAME] NVP SAME: ('Spread', 'Away', '0.25') = -140
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = +135
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = -135
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -10.94%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -4.64%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.25') = -12.57%
+  [SAME] EV SAME: ('Spread', 'Away', '0.25') = 0.08%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -4.13%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -7.86%
+[STABLE] [BackgroundRefresher] No odds changes for 1630278964 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630278964
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630278964
+2026-05-18 11:02:50,515 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630278964
+2026-05-18 11:02:50,517 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+2026-05-18 11:02:50,517 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630278964
+[BetBCKRefresh] Triggering refresh for 1630278964 (beroe vs septemvri sofia, 35s since last refresh)
+[DEBUG] clean_pod_team_name_for_search input: 'beroe'
+[DEBUG] clean_pod_team_name_for_search output: 'beroe'
+[DEBUG] clean_pod_team_name_for_search input: 'septemvri sofia'
+[DEBUG] clean_pod_team_name_for_search output: 'septemvri sofia'
+[DEBUG] determine_betbck_search_term - Raw: Home='beroe', Away='septemvri sofia'
+[DEBUG] determine_betbck_search_term - Cleaned: Home='beroe', Away='septemvri sofia'
+[DEBUG] Using first part of home team: 'beroe'
+[BetBCKRefresh] Re-scraping BetBCK for 1630278964: 'beroe' vs 'septemvri sofia' (term: 'beroe')
+2026-05-18 11:02:50,521 - betbck_request_manager - INFO - [BetBCK-Manager] Queued request for: beroe (Queue size: 1)
+2026-05-18 11:02:50,521 - betbck_request_manager - INFO - [BetBCK-Manager] Processing request for: beroe (Event: 1630278964)
+2026-05-18 11:02:50,522 - betbck_request_manager - INFO - [BetBCK-Manager] Session cookies: {'__cf_bm': '06XaJC8LTbKE5YIeCU7iYgsPtE0.S0QjCsBcFcJaSwo-1779119811-1.0.1.1-2ctuZtXAburts3AeqcSVgHx3gdWW00CK0uQjxZS.05b4s6Q3qSOrbAGGECO2pTOldBHo4ulzv5mjqlj_kQDXu9g7psZM7NomlnaoqEXEi2M', 'ASPSESSIONIDQATCDBST': 'EJMDBCIBCFPGMKELPJJELDCK', 'SYSTEMID': 'SYSTEMID6'}
+2026-05-18 11:02:50,522 - betbck_request_manager - INFO - [BetBCK-Manager] Using existing session (no page navigation)
+[BetbckScraper] Searching BetBCK for 'beroe'...
+[BetbckScraper] Search POST successful (Status: 200). Response size: 56511 bytes.
+2026-05-18 11:02:51,963 - betbck_request_manager - INFO - [BetBCK-Manager] Response preview (first 200 chars):
+        <!DOCTYPE HTML PUBLIC "-/W3C/DTD XHTML 1.0 Transitional/EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html>
+    <HEAD>
+        <meta http-equiv="Content-Type" content="text/html; cha
+[DEBUG] clean_pod_team_name_for_search input: 'beroe'
+[DEBUG] clean_pod_team_name_for_search output: 'beroe'
+[DEBUG] clean_pod_team_name_for_search input: 'septemvri sofia'
+[DEBUG] clean_pod_team_name_for_search output: 'septemvri sofia'
+2026-05-18 11:02:51,972 - betbck_request_manager - INFO - [BetBCK-Manager] Using cleaned team names: Home='beroe', Away='septemvri sofia' (original: Home='beroe', Away='septemvri sofia')
+2026-05-18 11:02:51,974 - betbck_request_manager - INFO - [BetBCK-Manager] Search term being used: 'beroe'
+2026-05-18 11:02:51,976 - betbck_request_manager - INFO - [BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names
+[BetbckParser] Found 2 potential game wrapper tables. (Event ID: 1630278964)
+[BetbckParser] Normalized POD Targets: Home='beroe', Away='septemvri sofia' (Event ID: 1630278964)
+[BetbckParser] Comparing POD: H='beroe' A='septemvri sofia' WITH BCK 0: L='septemvri sofia' V='beroe' (Raw: L='Septemvri Sofia', V='Beroe') (Event ID: 1630278964)
+[BetbckParser] Exact Match (Order 2 - Flipped) for Septemvri Sofia vs Beroe (Event ID: 1630278964)
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1630278964)
+[BetbckParser] Game 0: Extracted 3 potential data rows from odds table. (Event ID: 1630278964)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1630278964)
+[BetbckParser] Match accepted: Septemvri Sofia vs Beroe (BCK date: 2026-05-18 11:30, score=300) (Event ID: 1630278964)
+[BetbckParser] Comparing POD: H='beroe' A='septemvri sofia' WITH BCK 1: L='septemvri sofia 1h' V='beroe 1h' (Raw: L='Septemvri Sofia 1H', V='Beroe 1H') (Event ID: 1630278964)
+[DEBUG] Comparing normalized: POD H='beroe', A='septemvri sofia' with BCK H='septemvri sofia 1h', A='beroe 1h' | token_set: (H-L 26 A-V 17) | partial: (H-L 40 A-V 25) (Event ID: 1630278964)
+[BetbckParser] Fuzzy Match (Order 2 - Flipped, score 200 > fwd 43) (Event ID: 1630278964)
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1630278964)
+[BetbckParser] Game 1: Extracted 3 potential data rows from odds table. (Event ID: 1630278964)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1630278964)
+[BetbckParser] Match accepted: Septemvri Sofia 1H vs Beroe 1H (BCK date: 2026-05-18 11:30, score=200) (Event ID: 1630278964)
+[BetbckParser] row_data['full_game'] <- Septemvri Sofia vs Beroe (score=300) (Event ID: 1630278964)
+[BetbckParser] row_data['half_1'] <- Septemvri Sofia 1H vs Beroe 1H (score=200) (Event ID: 1630278964)
+[BetbckParser] row_data keys: ['full_game', 'half_1'] (Event ID: 1630278964)
+2026-05-18 11:02:51,989 - betbck_request_manager - INFO - [BetBCK-Manager] Game data found, deriving 1H_data from row_data...
+2026-05-18 11:02:51,989 - betbck_request_manager - INFO - [BetBCK-Manager] 1H_data set from row_data key: half_1
+2026-05-18 11:02:51,989 - betbck_request_manager - INFO - [BetBCK-Manager] Successfully scraped data for: beroe
+2026-05-18 11:02:51,990 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:51,990 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:51,992 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:51,992 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:51,992 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BetBCKRefresh] Updating event 1630278964 with fresh BetBCK data (6 markets)
+2026-05-18 11:02:51,992 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+2026-05-18 11:02:51,993 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BetBCKRefresh] Broadcast sent for event 1630278964
+2026-05-18 11:02:51,995 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+INFO:     127.0.0.1:60164 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #84 - sleeping for 5 seconds...
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630278964
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630278964
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630278964
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-18 11:02:56,517 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:02:56,517 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:02:56,521 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:02:56,521 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:02:56,521 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630278964
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630278964
+[BackgroundRefresher] Market 0: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +204 EV: -4.64%
+[BackgroundRefresher] Market 2: Spread Home NVP: +140 EV: -12.57%
+[BackgroundRefresher] Comparing odds for 1630278964:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = +181
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +204
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.25') = +140
+  [SAME] NVP SAME: ('Spread', 'Away', '0.25') = -140
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = +135
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = -135
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -10.94%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -4.64%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.25') = -12.57%
+  [SAME] EV SAME: ('Spread', 'Away', '0.25') = 0.08%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -4.13%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -7.86%
+[STABLE] [BackgroundRefresher] No odds changes for 1630278964 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630278964
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630278964
+2026-05-18 11:02:56,524 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630278964
+2026-05-18 11:02:56,527 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+2026-05-18 11:02:56,527 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630278964
+INFO:     127.0.0.1:60217 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #85 - sleeping for 5 seconds...
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630278964
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630278964
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630278964
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-18 11:03:02,223 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-18 11:03:02,224 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Beroe' vs 'Septemvri Sofia' | starts=1779121800000 | POD expected: home='beroe' away='septemvri sofia'
+2026-05-18 11:03:02,232 - utils.pod_utils - INFO - [AnalyzeMarkets] Processing 1H data separately from full game data
+2026-05-18 11:03:02,233 - utils.pod_utils - INFO - [AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data
+2026-05-18 11:03:02,233 - utils.pod_utils - ERROR - [AnalyzeMarkets] Error analyzing 1H markets: 'NoneType' object has no attribute 'get'
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630278964
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630278964
+[BackgroundRefresher] Market 0: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +204 EV: -4.64%
+[BackgroundRefresher] Market 2: Spread Home NVP: +140 EV: -12.57%
+[BackgroundRefresher] Comparing odds for 1630278964:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = +181
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +204
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.25') = +140
+  [SAME] NVP SAME: ('Spread', 'Away', '0.25') = -140
+  [SAME] NVP SAME: ('Total', 'Over', '2.5') = +135
+  [SAME] NVP SAME: ('Total', 'Under', '2.5') = -135
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -10.94%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -4.64%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.25') = -12.57%
+  [SAME] EV SAME: ('Spread', 'Away', '0.25') = 0.08%
+  [SAME] EV SAME: ('Total', 'Over', '2.5') = -4.13%
+  [SAME] EV SAME: ('Total', 'Under', '2.5') = -7.86%
+[STABLE] [BackgroundRefresher] No odds changes for 1630278964 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630278964
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: +181 EV: -10.94%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630278964
+2026-05-18 11:03:02,238 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630278964
+2026-05-18 11:03:02,243 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630278964 to WS+SSE
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630278964
+2026-05-18 11:03:02,244 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630278964
+INFO:     127.0.0.1:59106 - "GET /api/betbck/status HTTP/1.1" 200 OK

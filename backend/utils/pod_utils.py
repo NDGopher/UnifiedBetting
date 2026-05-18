@@ -790,8 +790,8 @@ def _analyze_1h_markets_for_ev(bet_1h_data: Dict, pinnacle_1h_data: Dict, pin_da
         away_team = pin_data.get('away', '')
         
         # --- 1H Moneyline ---
-        pin_ml = pinnacle_1h_data.get('money_line', {})
-        meta_limits = pinnacle_1h_data.get('meta', {})
+        pin_ml = pinnacle_1h_data.get('money_line') or {}
+        meta_limits = pinnacle_1h_data.get('meta') or {}
         
         if bet_1h_data.get('home_moneyline_american') and pin_ml.get('nvp_american_home'):
             bet_odds = american_to_decimal(bet_1h_data['home_moneyline_american'])

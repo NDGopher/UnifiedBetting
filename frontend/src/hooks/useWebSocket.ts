@@ -34,7 +34,7 @@ export const useWebSocket = (_url: string): WebSocketHook => {
         setIsConnected(false);
         es.close();
         if (!closed) {
-          setTimeout(connect, 3000);
+          setTimeout(connect, 1000);
         }
       };
     };
