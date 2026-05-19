@@ -585,8 +585,16 @@ def strip_pod_league_suffix(name: str) -> str:
     # here where we can check for direct concatenation explicitly.
     # e.g. "Comerciantes UnidosPeru" → "Comerciantes Unidos"
     _SHORT_COUNTRY_NAMES = (
+        # ≤4-char country names (written out)
         'Peru', 'Iran', 'Iraq', 'Cuba', 'Oman', 'Mali', 'Chad', 'Laos',
         'Togo', 'Fiji', 'Niue',
+        # 3-letter uppercase country/federation codes that POD concatenates directly
+        # e.g. "Atlanta UnitedUSA" → "Atlanta United"
+        'USA', 'Eng', 'ENG', 'Ger', 'GER', 'Fra', 'FRA', 'Esp', 'ESP',
+        'Ita', 'ITA', 'Bra', 'BRA', 'Arg', 'ARG', 'Mex', 'MEX', 'Can', 'CAN',
+        'Aus', 'AUS', 'Jpn', 'JPN', 'Kor', 'KOR', 'Chn', 'CHN', 'Sco', 'SCO',
+        'Wal', 'WAL', 'Irl', 'IRL', 'Ned', 'NED', 'Bel', 'BEL', 'Sui', 'SUI',
+        'Por', 'POR', 'Tur', 'TUR', 'Rus', 'RUS', 'Pol', 'POL', 'Ukr', 'UKR',
     )
     import re as _re_ls
     for country in _SHORT_COUNTRY_NAMES:
