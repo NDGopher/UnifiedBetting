@@ -284,6 +284,7 @@ async def event_alert_worker(event_id):
                     )
 
                     _event_id_suspect = False
+                    _l0_confirmed = False  # set True when Layer 0 confirms correct teams
                     # Accumulated for the alert log's [SWORDFISH] step
                     _sw_id_data = {
                         "sw_home": _sw_home_name, "sw_away": _sw_away_name,
@@ -329,6 +330,7 @@ async def event_alert_worker(event_id):
                                     f"min={_l0_best}/100. Dropping alert."
                                 )
                             else:
+                                _l0_confirmed = True
                                 logger.info(
                                     f"[SwordfishID] Layer 0 team names OK "
                                     f"(home_best={_sw_home_best} away_best={_sw_away_best} min={_l0_best}): "
@@ -376,7 +378,11 @@ async def event_alert_worker(event_id):
                             logger.debug(f"[SwordfishID] starts comparison failed: {_sc_exc}")
 
                     # ── Layer 2: ML NVP vs extension odds (fallback) ──────────────────────
-                    if not _starts_checked and not _event_id_suspect:
+                    # Only runs when Layer 1 couldn't validate AND Layer 0 did NOT
+                    # confirm the correct teams. If Layer 0 already confirmed the teams,
+                    # trusting the ML odds diff would incorrectly block real EV alerts
+                    # for high-upside events where books have moved significantly.
+                    if not _starts_checked and not _event_id_suspect and not _l0_confirmed:
                         _ext_new_odds = payload.get("newOdds")
                         if _ext_new_odds:
                             try:

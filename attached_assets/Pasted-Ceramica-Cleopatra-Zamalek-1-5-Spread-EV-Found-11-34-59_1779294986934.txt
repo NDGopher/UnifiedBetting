@@ -1,0 +1,103 @@
+Ceramica Cleopatra @ Zamalek
+
++1.5% Spread
+EV Found
+11:34:59 AM
+[ALERT IN]
+Ceramica Cleopatra @ Zamalek | ? | market=Spread | +233 -> +206 | noVig=+231 | eventId=1630691200 | startTime=?
+[SWORDFISH]
+Swordfish: 'Zamalek' vs 'Ceramica Cleopatra' | starts=2026-05-20 17:00 UTC | OK
+[SEARCH TERM]
+Using 'zamalek' (from 'Zamalek' / 'Ceramica Cleopatra'): first word of home team 'zamalek'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='zamalek' -> HTTP 200 (56511 bytes)
+[MATCH]
+[PASS] BCK 'Ceramica Cleopatra' vs 'Zamalek' <-> POD 'zamalek' vs 'ceramica cleopatra' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Ceramica Cleopatra' vs 'Zamalek'
+[BCK DATE]
+BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Ceramica Cleopatra 1H' vs 'Zamalek 1H' <-> POD 'zamalek' vs 'ceramica cleopatra' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Ceramica Cleopatra 1H' vs 'Zamalek 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Ceramica Cleopatra 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[ODDS]
+home_moneyline=+105 | away_moneyline=+305 | home_spreads=[{'line': '-0.5', 'odds': '+110'}] | away_spreads=[{'line': '+0.5', 'odds': '-140'}]
+[EV]
+Moneyline Home: BCK 2.0500 (+105) / PIN_NVP 2.0500 (+105) => -0.10%
+[EV]
+Moneyline Away: BCK 4.0500 (+305) / PIN_NVP 4.8300 (+383) => -16.20%
+[EV]
+Spread Home -0.5: BCK 2.1000 (+110) / PIN_NVP 2.0700 (+107) => +1.50%
+[EV]
+Spread Away 0.5: BCK 1.7143 (-140) / PIN_NVP 1.9346 (-107) => -11.45%
+[EV]
+Total Over 2.0: BCK 1.7407 (-135) / PIN_NVP 1.9174 (-109) => -9.05%
+[EV]
+Total Under 2.0: BCK 1.9524 (-105) / PIN_NVP 2.0900 (+109) => -6.76%
+[EV]
+1H Moneyline Home: BCK 2.7000 (+170) / PIN_NVP 2.8600 (+186) => -5.69%
+[EV]
+1H Moneyline Away: BCK 4.7500 (+375) / PIN_NVP 5.4600 (+446) => -13.08%
+[EV]
+1H Spread Home -0.25: BCK 2.2000 (+120) / PIN_NVP 2.2000 (+120) => -0.23%
+[EV]
+1H Spread Away 0.25: BCK 1.6667 (-150) / PIN_NVP 1.8333 (-120) => -8.93%
+[EV]
+1H Total Over 0.75: BCK 1.6897 (-145) / PIN_NVP 1.8547 (-117) => -8.77%
+[EV]
+1H Total Under 0.75: BCK 2.0500 (+105) / PIN_NVP 2.1700 (+117) => -5.66%
+Lyn @ Egersunds
+
+Not Found
+11:32:20 AM
+[ALERT IN]
+Lyn @ Egersunds | ? | market=Moneyline | +306 -> +269 | noVig=+294 | eventId=1630687646 | startTime=?
+[SWORDFISH]
+Swordfish: 'Egersunds' vs 'Lyn' | starts=2026-05-20 17:00 UTC | *** SUSPECT — ML odds mismatch ***
+[SEARCH TERM]
+Using 'egersunds' (from 'Egersunds' / 'Lyn'): first word of home team 'egersunds'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='egersunds' -> HTTP 200 (42949 bytes)
+[ERROR]
+scrape_betbck_for_game_queued: No matching game found
+[INFO]
+Retrying with away-team search term: 'lyn'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='lyn' -> HTTP 200 (42949 bytes)
+[ERROR]
+scrape_betbck_for_game_queued: No matching game found
+[NOT FOUND]
+FAILED TO FIND MATCHING GAME on BetBCK for lyn @ egersunds (?)
+Casa Pia @ Torreense
+
+No EV
+11:32:08 AM
+[ALERT IN]
+Casa Pia @ Torreense | ? | market=Spread | +306 -> +278 | noVig=+318 | eventId=1630691199 | startTime=?
+[SWORDFISH]
+Swordfish: 'Raufoss' vs 'Bryne' | starts=2026-05-20 17:00 UTC | *** SUSPECT — ML odds mismatch ***
+[SEARCH TERM]
+Using 'torreense' (from 'Torreense' / 'Casa Pia'): first word of home team 'torreense'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='torreense' -> HTTP 200 (56447 bytes)
+[MATCH]
+[PASS] BCK 'Casa Pia' vs 'Torreense' <-> POD 'torreense' vs 'casa pia' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Casa Pia' vs 'Torreense'
+[BCK DATE]
+BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Casa Pia 1H' vs 'Torreense 1H' <-> POD 'torreense' vs 'casa pia' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Casa Pia 1H' vs 'Torreense 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Casa Pia 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[ODDS]
+home_moneyline=+150 | away_moneyline=+205 | home_spreads=[{'line': '-0.25', 'odds': '+110'}] | away_spreads=[{'line': '+0.25', 'odds': '-140'}]

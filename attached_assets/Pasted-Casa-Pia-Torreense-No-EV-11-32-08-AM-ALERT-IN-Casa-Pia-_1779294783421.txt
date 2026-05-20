@@ -1,0 +1,76 @@
+Casa Pia @ Torreense
+
+No EV
+11:32:08 AM
+[ALERT IN]
+Casa Pia @ Torreense | ? | market=Spread | +306 -> +278 | noVig=+318 | eventId=1630691199 | startTime=?
+[SWORDFISH]
+Swordfish: 'Raufoss' vs 'Bryne' | starts=2026-05-20 17:00 UTC | *** SUSPECT — ML odds mismatch ***
+[SEARCH TERM]
+Using 'torreense' (from 'Torreense' / 'Casa Pia'): first word of home team 'torreense'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='torreense' -> HTTP 200 (56447 bytes)
+[MATCH]
+[PASS] BCK 'Casa Pia' vs 'Torreense' <-> POD 'torreense' vs 'casa pia' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Casa Pia' vs 'Torreense'
+[BCK DATE]
+BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Casa Pia 1H' vs 'Torreense 1H' <-> POD 'torreense' vs 'casa pia' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Casa Pia 1H' vs 'Torreense 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Casa Pia 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[ODDS]
+home_moneyline=+150 | away_moneyline=+205 | home_spreads=[{'line': '-0.25', 'odds': '+110'}] | away_spreads=[{'line': '+0.25', 'odds': '-140'}]
+Hodd @ Ranheim
+
+No EV
+11:30:23 AM
+[ALERT IN]
+Hodd @ Ranheim | ? | market=Moneyline | +318 -> +279 | noVig=+305 | eventId=1630701639 | startTime=?
+[SWORDFISH]
+Swordfish: 'Ranheim' vs 'Hodd' | starts=2026-05-20 17:00 UTC | *** SUSPECT — ML odds mismatch ***
+[SEARCH TERM]
+Using 'ranheim' (from 'Ranheim' / 'Hodd'): first word of home team 'ranheim'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='ranheim' -> HTTP 200 (49954 bytes)
+[MATCH]
+[PASS] BCK 'Hodd' vs 'Ranheim' <-> POD 'ranheim' vs 'hodd' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Hodd' vs 'Ranheim'
+[BCK DATE]
+BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[ODDS]
+home_moneyline=-165 | away_moneyline=+325 | home_spreads=[{'line': '-0.75', 'odds': '-135'}] | away_spreads=[{'line': '+0.75', 'odds': '+105'}]
+Sandnes Ulf @ Asane Fotball
+
+No EV
+11:30:20 AM
+[ALERT IN]
+Sandnes Ulf @ Asane Fotball | ? | market=Spread | +238 -> +201 | noVig=+227 | eventId=1630701635 | startTime=?
+[SWORDFISH]
+Swordfish: 'Moss' vs 'Stromsgodset' | starts=2026-05-20 17:00 UTC | *** SUSPECT — ML odds mismatch ***
+[SEARCH TERM]
+Using 'fotball' (from 'Asane Fotball' / 'Sandnes Ulf'): last word of home team 'asane fotball'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='fotball' -> HTTP 200 (42949 bytes)
+[ERROR]
+scrape_betbck_for_game_queued: No matching game found
+[INFO]
+Retrying with away-team search term: 'sandnes'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='sandnes' -> HTTP 200 (49163 bytes)
+[MATCH]
+[PASS] BCK 'Sandnes ULF' vs 'Asane' <-> POD 'asane fotball' vs 'sandnes ulf' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Sandnes ULF' vs 'Asane'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Sandnes ULF' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[ODDS]
+home_moneyline=+185 | away_moneyline=+120

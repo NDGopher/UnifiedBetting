@@ -1,0 +1,60 @@
+Atletico Tucuman @ Talleres de Cordoba
+
++0.3% Moneyline
++5.1% Spread
++1.1% 1H Moneyline
++18.6% 1H Spread
+EV Found
+10:46:17 AM
+[ALERT IN]
+Atletico Tucuman @ Talleres de Cordoba | ? | market=Moneyline | +199 -> +171 | noVig=+199 | eventId=1630791717 | startTime=?
+[SWORDFISH]
+Swordfish: 'Talleres de Cordoba' vs 'Atletico Tucuman' | starts=2026-05-20 20:00 UTC | OK
+[SEARCH TERM]
+Using 'cordoba' (from 'Talleres de Cordoba' / 'Atletico Tucuman'): last word of home team 'talleres de cordoba'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='cordoba' -> HTTP 200 (62918 bytes)
+[MATCH]
+[PASS] BCK 'Atl. Tucuman' vs 'Talleres Cordoba' <-> POD 'talleres de cordoba' vs 'atletico tucuman' [token_set_h=100 | token_set_a=81 | partial_h=81 | partial_a=75 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Atl. Tucuman' vs 'Talleres Cordoba'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 181 vs alt 0) | BCK local='Atl. Tucuman' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 15:00 (PIN start unavailable)
+[MATCH]
+[FAIL] BCK 'Racing Cordoba' vs 'Los Andes' <-> POD 'talleres de cordoba' vs 'atletico tucuman' [token_set_h=67 | token_set_a=16 | partial_h=64 | partial_a=44 | threshold=60]
+[MATCH]
+[PASS] BCK 'Atl. Tucuman 1H' vs 'Talleres Cordoba 1H' <-> POD 'talleres de cordoba' vs 'atletico tucuman' [token_set_h=91 | token_set_a=73 | partial_h=84 | partial_a=67 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Atl. Tucuman 1H' vs 'Talleres Cordoba 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 164 vs alt 0) | BCK local='Atl. Tucuman 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 15:00 (PIN start unavailable)
+[ODDS]
+home_moneyline=+155 | away_moneyline=+200 | home_spreads=[{'line': '-0.25', 'odds': '+105'}] | away_spreads=[{'line': '+0.25', 'odds': '-135'}]
+[EV]
+Moneyline Home: BCK 2.5500 (+155) / PIN_NVP 2.9900 (+199) => -14.77%
+[EV]
+Moneyline Away: BCK 3.0000 (+200) / PIN_NVP 2.9900 (+199) => +0.27%
+[EV]
+Spread Home -0.25: BCK 2.0500 (+105) / PIN_NVP 2.5200 (+152) => -18.75%
+[EV]
+Spread Away 0.25: BCK 1.7407 (-135) / PIN_NVP 1.6579 (-152) => +5.12%
+[EV]
+Total Over 2.0: BCK 1.7407 (-135) / PIN_NVP 1.9259 (-108) => -9.67%
+[EV]
+Total Under 2.0: BCK 1.9524 (-105) / PIN_NVP 2.0800 (+108) => -6.09%
+[EV]
+1H Moneyline Home: BCK 3.1500 (+215) / PIN_NVP 3.8100 (+281) => -17.28%
+[EV]
+1H Moneyline Away: BCK 3.8000 (+280) / PIN_NVP 3.7600 (+276) => +1.14%
+[EV]
+1H Spread Home 0: BCK 1.6061 (-165) / PIN_NVP 2.0200 (+102) => -20.41%
+[EV]
+1H Spread Away 0: BCK 2.3500 (+135) / PIN_NVP 1.9804 (-102) => +18.57%
+[EV]
+1H Total Over 0.5: BCK 1.5405 (-185) / PIN_NVP 1.5917 (-169) => -3.17%
+[EV]
+1H Total Under 0.5: BCK 2.4500 (+145) / PIN_NVP 2.6900 (+169) => -8.96%

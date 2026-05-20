@@ -1,0 +1,262 @@
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-20 11:31:08,795 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: False, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-20 11:31:08,796 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Kongsvinger' vs 'Odd BK' | starts=1779296400000 | POD expected: home='kongsvinger' away='odd bk'
+2026-05-20 11:31:08,803 - utils.pod_utils - INFO - [AnalyzeMarkets] No 1H BetBCK data found
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630701637
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630701637
+[BackgroundRefresher] Market 0: Moneyline Home NVP: -107 EV: -9.85%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +307 EV: -10.34%
+[BackgroundRefresher] Market 2: Spread Home NVP: +119 EV: -6.61%
+[BackgroundRefresher] Comparing odds for 1630701637:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = -107
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +307
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.75') = +119
+  [SAME] NVP SAME: ('Spread', 'Away', '0.75') = -119
+  [SAME] NVP SAME: ('Total', 'Over', '3.5') = +113
+  [SAME] NVP SAME: ('Total', 'Under', '3.5') = -113
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -9.85%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -10.34%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.75') = -6.61%
+  [SAME] EV SAME: ('Spread', 'Away', '0.75') = -5.24%
+  [SAME] EV SAME: ('Total', 'Over', '3.5') = -6.02%
+  [SAME] EV SAME: ('Total', 'Under', '3.5') = -9.10%
+[STABLE] [BackgroundRefresher] No odds changes for 1630701637 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630701637
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: -107 EV: -9.85%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630701637
+2026-05-20 11:31:08,806 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630701637
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630701637
+2026-05-20 11:31:08,807 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+2026-05-20 11:31:08,810 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630701637 to WS+SSE
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630701637
+[BackgroundRefresher] Loop #34 - sleeping for 5 seconds...
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630701637
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630701637
+[BackgroundRefresher] [SUCCESS] Pinnacle API call successful for 1630701637
+[BackgroundRefresher] DEBUG: Swordfish returned 0 markets
+[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds
+2026-05-20 11:31:14,772 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: False, Pinnacle 1H: True, Pinnacle Full: True
+2026-05-20 11:31:14,772 - utils.pod_utils - INFO - [AnalyzeMarkets] Swordfish game: 'Kongsvinger' vs 'Odd BK' | starts=1779296400000 | POD expected: home='kongsvinger' away='odd bk'
+2026-05-20 11:31:14,777 - utils.pod_utils - INFO - [AnalyzeMarkets] No 1H BetBCK data found
+[BackgroundRefresher] Synced fresh markets to betbck_data for 1630701637
+[BackgroundRefresher] Updated EV analysis: 6 realistic bets found
+[BackgroundRefresher] DEBUG: Checking 6 markets for 1630701637
+[BackgroundRefresher] Market 0: Moneyline Home NVP: -107 EV: -9.85%
+[BackgroundRefresher] Market 1: Moneyline Away NVP: +307 EV: -10.34%
+[BackgroundRefresher] Market 2: Spread Home NVP: +119 EV: -6.61%
+[BackgroundRefresher] Comparing odds for 1630701637:
+  [SAME] NVP SAME: ('Moneyline', 'Home', '') = -107
+  [SAME] NVP SAME: ('Moneyline', 'Away', '') = +307
+  [SAME] NVP SAME: ('Spread', 'Home', '-0.75') = +119
+  [SAME] NVP SAME: ('Spread', 'Away', '0.75') = -119
+  [SAME] NVP SAME: ('Total', 'Over', '3.5') = +113
+  [SAME] NVP SAME: ('Total', 'Under', '3.5') = -113
+  [SAME] EV SAME: ('Moneyline', 'Home', '') = -9.85%
+  [SAME] EV SAME: ('Moneyline', 'Away', '') = -10.34%
+  [SAME] EV SAME: ('Spread', 'Home', '-0.75') = -6.61%
+  [SAME] EV SAME: ('Spread', 'Away', '0.75') = -5.24%
+  [SAME] EV SAME: ('Total', 'Over', '3.5') = -6.02%
+  [SAME] EV SAME: ('Total', 'Under', '3.5') = -9.10%
+[STABLE] [BackgroundRefresher] No odds changes for 1630701637 (all values stable)
+[BackgroundRefresher] Broadcasting update for event 1630701637
+[BackgroundRefresher] Sample odds: Moneyline Home NVP: -107 EV: -9.85%
+[BackgroundRefresher] Total markets to broadcast: 6
+[BackgroundRefresher] Broadcasting update for event 1630701637
+2026-05-20 11:31:14,780 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630701637
+[BackgroundRefresher] SUCCESS: Successfully broadcasted update for event 1630701637
+2026-05-20 11:31:14,780 - pod_event_manager - INFO - [PodEventManager] Need to broadcast all active events - will be handled by main.py
+[BackgroundRefresher] SUCCESS: Updated event data in manager for event 1630701637
+2026-05-20 11:31:14,783 - main - INFO - [AsyncBroadcast] Successfully broadcast event 1630701637 to WS+SSE
+[BackgroundRefresher] Loop #35 - sleeping for 5 seconds...
+[BackgroundRefresher] Event 1630701637 is negative EV and older than 60s, skipping updates (age: 62.0s)
+[BackgroundRefresher] Loop #36 - sleeping for 5 seconds...
+[BackgroundRefresher] Event 1630701637 is negative EV and older than 60s, skipping updates (age: 67.0s)
+[BackgroundRefresher] Loop #37 - sleeping for 5 seconds...
+[BackgroundRefresher] Event 1630701637 is negative EV and older than 60s, skipping updates (age: 72.0s)
+[BackgroundRefresher] Loop #38 - sleeping for 5 seconds...
+[BackgroundRefresher] Event 1630701637 is negative EV and older than 60s, skipping updates (age: 77.0s)
+[BackgroundRefresher] Loop #39 - sleeping for 5 seconds...
+[BackgroundRefresher] Event 1630701637 is negative EV and older than 60s, skipping updates (age: 82.0s)
+2026-05-20 11:31:44,824 - pod_event_manager - INFO - [BackgroundRefresher] Loop #40 - Processing 1 active events
+[BackgroundRefresher] Loop #40 - Processing 1 active events
+[BackgroundRefresher] FORCED CLEANUP: Event 1630701637 is 87.0s old (limit: 60s), removing...
+2026-05-20 11:31:44,825 - pod_event_manager - INFO - [PodEventManager] Removing active event: 1630701637
+2026-05-20 11:31:44,825 - main - WARNING - [SafeBroadcast] Event 1630701637 missing pinnacle_data_processed - may be processed object
+2026-05-20 11:31:44,826 - main - INFO - [SafeBroadcast] Queued broadcast for event 1630701637
+[PodEventManager] Sent removal notification for event 1630701637
+[BackgroundRefresher] No active events to broadcast (all are expired or too old)
+2026-05-20 11:31:44,827 - main - INFO - [AsyncBroadcast] Successfully broadcast removal for event 1630701637
+[BackgroundRefresher] Event 1630701637 is negative EV and older than 60s, skipping updates (age: 87.0s)
+[BackgroundRefresher] Loop #41 - sleeping for 5 seconds...
+[BackgroundRefresher] Loop #42 - sleeping for 5 seconds...
+[BackgroundRefresher] Loop #43 - sleeping for 5 seconds...
+[BackgroundRefresher] Loop #44 - sleeping for 5 seconds...
+INFO:     127.0.0.1:60352 - "GET /api/betbck/status HTTP/1.1" 200 OK
+2026-05-20 11:32:07,493 - main - INFO - === [DEBUG] /pod_alert called ===
+2026-05-20 11:32:07,493 - main - INFO - [PerEventQueue][DIAG] Incoming alert payload: {'rowId': '1779294620564-0', 'eventIdFromRowAttribute': '1779294620564', 'eventId': '1630691199', 'timestamp': '2026-05-20T16:30:31.744Z', 'time': '12:00', 'date': '20/05', 'homeTeam': 'Torreense', 'awayTeam': 'Casa PiaPortugal -', 'league': 'Primeira Liga', 'alertType': 'Soccer - 1 Min', 'alertTime': '2026-05-20 16:30', 'period': 'Match', 'teamForBet': 'Casa Pia', 'lineValueForBet': '-0.75', 'betDescription': 'Casa Pia -0.75', 'marketType': 'Spread', 'oldOdds': '+306', 'newOdds': '+278', 'noVigPriceFromAlert': '+318'}
+2026-05-20 11:32:07,496 - main - INFO - [PerEventQueue][DIAG] Queuing alert for Event ID: 1630691199
+2026-05-20 11:32:07,496 - main - INFO - [PerEventQueue][DIAG] Alert put into queue for Event ID: 1630691199
+2026-05-20 11:32:07,497 - main - INFO - [PerEventQueue][DIAG] Starting new worker for Event ID: 1630691199
+INFO:     127.0.0.1:52381 - "POST /pod_alert HTTP/1.1" 200 OK
+2026-05-20 11:32:07,497 - main - INFO - [PerEventQueue] Worker started for Event ID: 1630691199
+2026-05-20 11:32:07,498 - main - INFO - [PerEventQueue] Got alert for Event ID: 1630691199 (homeTeam=Torreense)
+2026-05-20 11:32:07,498 - main - INFO - [PerEventQueue] Attempting to acquire lock for Event ID: 1630691199
+2026-05-20 11:32:07,498 - main - INFO - [PerEventQueue] Lock acquired for Event ID: 1630691199
+2026-05-20 11:32:07,498 - main - INFO - [PerEventQueue] Processing alert for Event ID: 1630691199 (Torreense)
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630691199
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630691199
+2026-05-20 11:32:08,217 - main - INFO - [SwordfishID] Event 1630691199: 'Raufoss' vs 'Bryne' | starts=2026-05-20 17:00 UTC | ext startTime=N/A
+2026-05-20 11:32:08,217 - main - WARNING - [SwordfishID] *** WRONG TEAMS (Layer 0) *** Event 1630691199: Swordfish returned 'Raufoss' vs 'Bryne' but POD sent 'Torreense' vs 'Casa PiaPortugal -'. home_best=25 away_best=43 min=25/100. Dropping alert.
+[DEBUG] clean_pod_team_name_for_search input: 'Torreense'
+[DEBUG] clean_pod_team_name_for_search output: 'torreense'
+[DEBUG] clean_pod_team_name_for_search input: 'Casa PiaPortugal -'
+[DEBUG] clean_pod_team_name_for_search output: 'casa pia'
+2026-05-20 11:32:08,222 - main - WARNING - [PerEventQueue] Swordfish ID mismatch for event 1630691199 — proceeding with BetBCK scrape using team names only. Pinnacle NVP will be N/A (no EV shown) to prevent false EV.
+2026-05-20 11:32:08,223 - main - INFO - [PerEventQueue] New event 1630691199. Initiating scrape.
+2026-05-20 11:32:08,223 - main - INFO - [PerEventQueue] POD Teams: Home='Torreense', Away='Casa PiaPortugal -'
+2026-05-20 11:32:08,223 - main - INFO - [PerEventQueue] Cleaned Teams: Home='torreense', Away='casa pia'
+============================================================
+[ALERT IN][1630691199] Casa Pia @ Torreense | ? | market=Spread | +306 -> +278 | noVig=+318 | eventId=1630691199 | startTime=?
+[SWORDFISH][1630691199] Swordfish: 'Raufoss' vs 'Bryne' | starts=2026-05-20 17:00 UTC | *** SUSPECT — ML odds mismatch ***
+[DEBUG] clean_pod_team_name_for_search input: 'Torreense'
+[DEBUG] clean_pod_team_name_for_search output: 'torreense'
+[DEBUG] clean_pod_team_name_for_search input: 'Casa Pia'
+[DEBUG] clean_pod_team_name_for_search output: 'casa pia'
+[DEBUG] clean_pod_team_name_for_search input: 'Torreense'
+[DEBUG] clean_pod_team_name_for_search output: 'torreense'
+[DEBUG] clean_pod_team_name_for_search input: 'Casa Pia'
+[DEBUG] clean_pod_team_name_for_search output: 'casa pia'
+[DEBUG] determine_betbck_search_term - Raw: Home='Torreense', Away='Casa Pia'
+[DEBUG] determine_betbck_search_term - Cleaned: Home='torreense', Away='casa pia'
+[DEBUG] Using first part of home team: 'torreense'
+[SEARCH TERM][1630691199] Using 'torreense' (from 'Torreense' / 'Casa Pia'): first word of home team 'torreense'
+2026-05-20 11:32:08,234 - betbck_request_manager - INFO - [BetBCK-Manager] Queued request for: torreense (Queue size: 1)
+2026-05-20 11:32:08,235 - betbck_request_manager - INFO - [BetBCK-Manager] Processing request for: torreense (Event: 1630691199)
+2026-05-20 11:32:08,235 - betbck_request_manager - INFO - [BetBCK-Manager] Session cookies: {'__cf_bm': 'JQH5k5W0BrLcqjb.IjwQyT3kEEUcnm_0tPUao80dRNU-1779294508-1.0.1.1-wkRdwtVLxPvc8tunoFwBPBKjbecYKhJRjx6juocPybM1qVKzFVO2YRYtdzvgwzW.Cb19G7WQCGZWCmDrdQqiMclKSGULEurAB0xGmkI0Q3A', 'ASPSESSIONIDSCSCCDQT': 'DCCHEGOCLCCCEHCFLBCNNMOP', 'SYSTEMID': 'SYSTEMID6'}
+2026-05-20 11:32:08,236 - betbck_request_manager - INFO - [BetBCK-Manager] Using existing session (no page navigation)
+[BetbckScraper] Searching BetBCK for 'torreense'...
+[BackgroundRefresher] Loop #45 - sleeping for 5 seconds...
+[BetbckScraper] Search POST successful (Status: 200). Response size: 56447 bytes.
+[SEARCH][1630691199] POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='torreense' -> HTTP 200 (56447 bytes)
+2026-05-20 11:32:09,965 - betbck_request_manager - INFO - [BetBCK-Manager] Response preview (first 200 chars):
+        <!DOCTYPE HTML PUBLIC "-/W3C/DTD XHTML 1.0 Transitional/EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html>
+    <HEAD>
+        <meta http-equiv="Content-Type" content="text/html; cha
+[DEBUG] clean_pod_team_name_for_search input: 'Torreense'
+[DEBUG] clean_pod_team_name_for_search output: 'torreense'
+[DEBUG] clean_pod_team_name_for_search input: 'Casa Pia'
+[DEBUG] clean_pod_team_name_for_search output: 'casa pia'
+2026-05-20 11:32:09,969 - betbck_request_manager - INFO - [BetBCK-Manager] Using cleaned team names: Home='torreense', Away='casa pia' (original: Home='Torreense', Away='Casa Pia')
+2026-05-20 11:32:09,969 - betbck_request_manager - INFO - [BetBCK-Manager] Search term being used: 'torreense'
+2026-05-20 11:32:09,969 - betbck_request_manager - INFO - [BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names
+[BetbckParser] Found 2 potential game wrapper tables. (Event ID: 1630691199)
+[BetbckParser] Normalized POD Targets: Home='torreense', Away='casa pia' (Event ID: 1630691199)
+[BetbckParser] Comparing POD: H='torreense' A='casa pia' WITH BCK 0: L='casa pia' V='torreense' (Raw: L='Casa Pia', V='Torreense') (Event ID: 1630691199)
+[BetbckParser] Exact Match (Order 2 - Flipped) for Casa Pia vs Torreense (Event ID: 1630691199)
+[MATCH][1630691199] [PASS] BCK 'Casa Pia' vs 'Torreense'  <->  POD 'torreense' vs 'casa pia'  [exact_order2=100]
+[FOUND][1630691199] Matched BetBCK: 'Casa Pia' vs 'Torreense'
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1630691199)
+[BetbckParser] Game 0: Extracted 3 potential data rows from odds table. (Event ID: 1630691199)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1630691199)
+[BetbckParser] Match accepted: Casa Pia vs Torreense (BCK date: 2026-05-20 12:00, score=300) (Event ID: 1630691199)
+[BCK DATE][1630691199] BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[BetbckParser] Comparing POD: H='torreense' A='casa pia' WITH BCK 1: L='casa pia 1h' V='torreense 1h' (Raw: L='Casa Pia 1H', V='Torreense 1H') (Event ID: 1630691199)
+[DEBUG] Comparing normalized: POD H='torreense', A='casa pia' with BCK H='casa pia 1h', A='torreense 1h' | token_set: (H-L 10 A-V 10) | partial: (H-L 11 A-V 27) (Event ID: 1630691199)
+[BetbckParser] Fuzzy Match (Order 2 - Flipped, score 200 > fwd 20) (Event ID: 1630691199)
+[MATCH][1630691199] [PASS] BCK 'Casa Pia 1H' vs 'Torreense 1H'  <->  POD 'torreense' vs 'casa pia'  [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND][1630691199] Matched BetBCK: 'Casa Pia 1H' vs 'Torreense 1H'
+[ORIENT][1630691199] Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Casa Pia 1H' = POD away
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1630691199)
+[BetbckParser] Game 1: Extracted 3 potential data rows from odds table. (Event ID: 1630691199)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1630691199)
+[BetbckParser] Match accepted: Casa Pia 1H vs Torreense 1H (BCK date: 2026-05-20 12:00, score=200) (Event ID: 1630691199)
+[BCK DATE][1630691199] BCK game date: 2026-05-20 12:00 (PIN start unavailable)
+[BetbckParser] row_data['full_game'] <- Casa Pia vs Torreense (score=300) (Event ID: 1630691199)
+[BetbckParser] row_data['half_1'] <- Casa Pia 1H vs Torreense 1H (score=200) (Event ID: 1630691199)
+[BetbckParser] row_data keys: ['full_game', 'half_1'] (Event ID: 1630691199)
+2026-05-20 11:32:09,988 - betbck_request_manager - INFO - [BetBCK-Manager] Game data found, deriving 1H_data from row_data...
+2026-05-20 11:32:09,988 - betbck_request_manager - INFO - [BetBCK-Manager] 1H_data set from row_data key: half_1
+2026-05-20 11:32:09,988 - betbck_request_manager - INFO - [BetBCK-Manager] Successfully scraped data for: torreense
+[ODDS][1630691199] home_moneyline=+150 | away_moneyline=+205 | home_spreads=[{'line': '-0.25', 'odds': '+110'}] | away_spreads=[{'line': '+0.25', 'odds': '-140'}]
+2026-05-20 11:32:09,989 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: False, Pinnacle Full: False
+2026-05-20 11:32:09,989 - utils.pod_utils - ERROR - [PeriodValidation] ERROR: No full game Pinnacle data found - cannot proceed with EV calculation!
+2026-05-20 11:32:09,989 - utils.pod_utils - ERROR - [AnalyzeMarkets] Period separation validation failed - aborting EV calculation
+2026-05-20 11:32:09,990 - main - INFO - [PerEventQueue] Scrape successful. Storing event 1630691199 for display.
+2026-05-20 11:32:09,990 - main - WARNING - [PerEventQueue] No valid betting data for event 1630691199, skipping broadcast
+[ALERT DONE][1630691199] result=found_no_ev | EV markets=0 | positive_ev=0
+============================================================
+2026-05-20 11:32:09,992 - main - INFO - [PerEventQueue] Lock released for Event ID: 1630691199
+2026-05-20 11:32:09,992 - main - INFO - === [DEBUG] /pod_alert called ===
+2026-05-20 11:32:09,993 - main - INFO - [PerEventQueue][DIAG] Incoming alert payload: {'rowId': '1779294617604-1', 'eventIdFromRowAttribute': '1779294617604', 'eventId': '1630691199', 'timestamp': '2026-05-20T16:30:28.745Z', 'time': '12:00', 'date': '20/05', 'homeTeam': 'Raufoss', 'awayTeam': 'BryneNorway - 1st Division', 'league': 'Unknown', 'alertType': 'Soccer - 1 Min', 'alertTime': '2026-05-20 16:30', 'period': 'Match', 'teamForBet': 'Raufoss', 'lineValueForBet': '-0.75', 'betDescription': 'Raufoss -0.75', 'marketType': 'Spread', 'oldOdds': '+327', 'newOdds': '+290', 'noVigPriceFromAlert': '+339'}
+2026-05-20 11:32:09,993 - main - INFO - [PerEventQueue] REJECTING duplicate alert for Event ID: 1630691199 - processed 2.5s ago (< 2 minutes)
+INFO:     127.0.0.1:65043 - "POST /pod_alert HTTP/1.1" 200 OK
+2026-05-20 11:32:09,996 - main - INFO - === [DEBUG] /pod_alert called ===
+2026-05-20 11:32:09,996 - main - INFO - [PerEventQueue][DIAG] Incoming alert payload: {'rowId': '1779294619561-0', 'eventIdFromRowAttribute': '1779294619561', 'eventId': '1630691199', 'timestamp': '2026-05-20T16:30:33.751Z', 'time': '12:00', 'date': '20/05', 'homeTeam': 'Egersunds', 'awayTeam': 'LynNorway - 1st Division', 'league': 'Unknown', 'alertType': 'Soccer - 5 Min', 'alertTime': '2026-05-20 16:30', 'period': 'Match', 'teamForBet': 'Lyn', 'lineValueForBet': '+0.25', 'betDescription': 'Lyn +0.25', 'marketType': 'Spread', 'oldOdds': '+165', 'newOdds': '+145', 'noVigPriceFromAlert': '+159'}
+2026-05-20 11:32:09,996 - main - INFO - [PerEventQueue] REJECTING duplicate alert for Event ID: 1630691199 - processed 2.5s ago (< 2 minutes)
+INFO:     127.0.0.1:54273 - "POST /pod_alert HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52146 - "GET /api/betbck/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60185 - "GET /api/betbck/status HTTP/1.1" 200 OK
+[BackgroundRefresher] Loop #46 - sleeping for 5 seconds...
+INFO:     127.0.0.1:54911 - "GET /api/betbck/status HTTP/1.1" 200 OK
+2026-05-20 11:32:18,794 - main - INFO - === [DEBUG] /pod_alert called ===
+2026-05-20 11:32:18,794 - main - INFO - [PerEventQueue][DIAG] Incoming alert payload: {'rowId': '1779294617604-0', 'eventIdFromRowAttribute': '1779294617604', 'eventId': '1630691199', 'timestamp': '2026-05-20T16:31:06.985Z', 'time': '12:00', 'date': '20/05', 'homeTeam': 'Raufoss', 'awayTeam': 'BryneNorway - 1st Division', 'league': 'Unknown', 'alertType': 'Soccer - 1 Min', 'alertTime': '2026-05-20 16:30', 'period': 'Match', 'teamForBet': 'Raufoss', 'lineValueForBet': '', 'betDescription': 'Raufoss', 'marketType': 'Moneyline', 'oldOdds': '+238', 'newOdds': '+213', 'noVigPriceFromAlert': '+229'}
+2026-05-20 11:32:18,795 - main - INFO - [PerEventQueue] REJECTING duplicate alert for Event ID: 1630691199 - processed 11.3s ago (< 2 minutes)
+INFO:     127.0.0.1:50361 - "POST /pod_alert HTTP/1.1" 200 OK
+2026-05-20 11:32:19,010 - main - INFO - === [DEBUG] /pod_alert called ===
+2026-05-20 11:32:19,011 - main - INFO - [PerEventQueue][DIAG] Incoming alert payload: {'rowId': '1779294618133-0', 'eventIdFromRowAttribute': '1779294618133', 'eventId': '1630691199', 'timestamp': '2026-05-20T16:32:07.204Z', 'time': '12:00', 'date': '20/05', 'homeTeam': 'Moss', 'awayTeam': 'StromsgodsetNorway', 'league': '1st Division', 'alertType': 'Soccer - 1 Min', 'alertTime': '2026-05-20 16:30', 'period': 'Match', 'teamForBet': 'Moss', 'lineValueForBet': '', 'betDescription': 'Moss', 'marketType': 'Moneyline', 'oldOdds': '+261', 'newOdds': '+235', 'noVigPriceFromAlert': '+254'}
+2026-05-20 11:32:19,011 - main - INFO - [PerEventQueue] REJECTING duplicate alert for Event ID: 1630691199 - processed 11.5s ago (< 2 minutes)
+INFO:     127.0.0.1:50361 - "POST /pod_alert HTTP/1.1" 200 OK
+2026-05-20 11:32:19,617 - main - INFO - === [DEBUG] /pod_alert called ===
+2026-05-20 11:32:19,617 - main - INFO - [PerEventQueue][DIAG] Incoming alert payload: {'rowId': '1779294619560-0', 'eventIdFromRowAttribute': '1779294619560', 'eventId': '1630687646', 'timestamp': '2026-05-20T16:32:18.803Z', 'time': '12:00', 'date': '20/05', 'homeTeam': 'Egersunds', 'awayTeam': 'LynNorway - 1st Division', 'league': 'Unknown', 'alertType': 'Soccer - 5 Min', 'alertTime': '2026-05-20 16:30', 'period': 'Match', 'teamForBet': 'Draw', 'lineValueForBet': '', 'betDescription': 'Draw', 'marketType': 'Moneyline', 'oldOdds': '+306', 'newOdds': '+269', 'noVigPriceFromAlert': '+294'}
+2026-05-20 11:32:19,619 - main - INFO - [PerEventQueue][DIAG] Queuing alert for Event ID: 1630687646
+2026-05-20 11:32:19,620 - main - INFO - [PerEventQueue][DIAG] Alert put into queue for Event ID: 1630687646
+2026-05-20 11:32:19,620 - main - INFO - [PerEventQueue][DIAG] Starting new worker for Event ID: 1630687646
+INFO:     127.0.0.1:50361 - "POST /pod_alert HTTP/1.1" 200 OK
+2026-05-20 11:32:19,620 - main - INFO - [PerEventQueue] Worker started for Event ID: 1630687646
+2026-05-20 11:32:19,621 - main - INFO - [PerEventQueue] Got alert for Event ID: 1630687646 (homeTeam=Egersunds)
+2026-05-20 11:32:19,621 - main - INFO - [PerEventQueue] Attempting to acquire lock for Event ID: 1630687646
+2026-05-20 11:32:19,621 - main - INFO - [PerEventQueue] Lock acquired for Event ID: 1630687646
+2026-05-20 11:32:19,621 - main - INFO - [PerEventQueue] Processing alert for Event ID: 1630687646 (Egersunds)
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630687646
+[BackgroundRefresher] Loop #47 - sleeping for 5 seconds...
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630687646
+2026-05-20 11:32:20,306 - main - INFO - [SwordfishID] Event 1630687646: 'Egersunds' vs 'Lyn' | starts=2026-05-20 17:00 UTC | ext startTime=N/A
+2026-05-20 11:32:20,307 - main - WARNING - [SwordfishID] *** WRONG TEAMS (Layer 0) *** Event 1630687646: Swordfish returned 'Egersunds' vs 'Lyn' but POD sent 'Egersunds' vs 'LynNorway - 1st Division'. home_best=100 away_best=24 min=24/100. Dropping alert.
+[DEBUG] clean_pod_team_name_for_search input: 'Egersunds'
+[DEBUG] clean_pod_team_name_for_search output: 'egersunds'
+[DEBUG] clean_pod_team_name_for_search input: 'LynNorway - 1st Division'
+[DEBUG] clean_pod_team_name_for_search output: 'lyn'
+2026-05-20 11:32:20,313 - main - WARNING - [PerEventQueue] Swordfish ID mismatch for event 1630687646 — proceeding with BetBCK scrape using team names only. Pinnacle NVP will be N/A (no EV shown) to prevent false EV.
+2026-05-20 11:32:20,313 - main - INFO - [PerEventQueue] New event 1630687646. Initiating scrape.
+2026-05-20 11:32:20,313 - main - INFO - [PerEventQueue] POD Teams: Home='Egersunds', Away='LynNorway - 1st Division'
+2026-05-20 11:32:20,314 - main - INFO - [PerEventQueue] Cleaned Teams: Home='egersunds', Away='lyn'
+============================================================
+[ALERT IN][1630687646] Lyn @ Egersunds | ? | market=Moneyline | +306 -> +269 | noVig=+294 | eventId=1630687646 | startTime=?
+[SWORDFISH][1630687646] Swordfish: 'Egersunds' vs 'Lyn' | starts=2026-05-20 17:00 UTC | *** SUSPECT — ML odds mismatch ***
+[DEBUG] clean_pod_team_name_for_search input: 'Egersunds'
+[DEBUG] clean_pod_team_name_for_search output: 'egersunds'
+[DEBUG] clean_pod_team_name_for_search input: 'Lyn'
+[DEBUG] clean_pod_team_name_for_search output: 'lyn'
+[DEBUG] clean_pod_team_name_for_search input: 'Egersunds'
+[DEBUG] clean_pod_team_name_for_search output: 'egersunds'
+[DEBUG] clean_pod_team_name_for_search input: 'Lyn'
+[DEBUG] clean_pod_team_name_for_search output: 'lyn'
+[DEBUG] determine_betbck_search_term - Raw: Home='Egersunds', Away='Lyn'
+[DEBUG] determine_betbck_search_term - Cleaned: Home='egersunds', Away='lyn'
+[DEBUG] Using first part of home team: 'egersunds'
+[SEARCH TERM][1630687646] Using 'egersunds' (from 'Egersunds' / 'Lyn'): first word of home team 'egersunds'
+2026-05-20 11:32:20,331 - betbck_request_manager - INFO - [BetBCK-Manager] Queued request for: egersunds (Queue size: 1)
+2026-05-20 11:32:20,331 - betbck_request_manager - INFO - [BetBCK-Manager] Processing request for: egersunds (Event: 1630687646)
+2026-05-20 11:32:20,331 - betbck_request_manager - INFO - [BetBCK-Manager] Session cookies: {'__cf_bm': 'JQH5k5W0BrLcqjb.IjwQyT3kEEUcnm_0tPUao80dRNU-1779294508-1.0.1.1-wkRdwtVLxPvc8tunoFwBPBKjbecYKhJRjx6juocPybM1qVKzFVO2YRYtdzvgwzW.Cb19G7WQCGZWCmDrdQqiMclKSGULEurAB0xGmkI0Q3A', 'ASPSESSIONIDSCSCCDQT': 'DCCHEGOCLCCCEHCFLBCNNMOP', 'SYSTEMID': 'SYSTEMID6'}
+2026-05-20 11:32:20,331 - betbck_request_manager - INFO - [BetBCK-Manager] Using existing session (no page navigation)
+[BetbckScraper] Searching BetBCK for 'egersunds'...
+[BetbckScraper] Search POST successful (Status: 200). Response size: 42949 bytes.
+[SEARCH][1630687646] POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='egersunds' -> HTTP 200 (42949 bytes)
+2026-05-20 11:32:20,846 - betbck_request_manager - INFO - [BetBCK-Manager] Response preview (first 200 chars):
+        <!DOCTYPE HTML PUBLIC "-/W3C/DTD XHTML 1.0 Transitional/EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html>
+    <HEAD>
+        <meta http-equiv="Content-Type" content="text/html; cha
