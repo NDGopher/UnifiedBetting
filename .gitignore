@@ -215,7 +215,14 @@ Thumbs.db
 
 # Runtime data — regenerated on startup, never commit
 backend/data/betbck_games.json
+backend/data/betbck_games-*.json
 backend/data/alert_history.json
+backend/data/buckeye_event_ids.json
+backend/data/buckeye_event_ids-*.json
+backend/data/buckeye_results.json
+backend/data/buckeye_results-*.json
+backend/data/ev_table.json
+backend/data/ace_results.json
 backend/high_ev_alerts.db
 backend/*.db
 backend/data/*.db
