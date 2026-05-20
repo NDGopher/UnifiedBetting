@@ -1,0 +1,165 @@
+Vegas Golden Knights @ Colorado Avalanche
+
++0.2% Spread
+EV Found
+4:22:34 PM
+[ALERT IN]
+Vegas Golden Knights @ Colorado Avalanche | ? | market=Total | +261 -> +243 | noVig=+283 | eventId=1630781643 | startTime=?
+[SWORDFISH]
+Swordfish: 'Colorado Avalanche' vs 'Vegas Golden Knights' | starts=2026-05-21 00:05 UTC | OK
+[SEARCH TERM]
+Using 'Avalanche' (from 'Colorado Avalanche' / 'Vegas Golden Knights'): known_term map for 'colorado avalanche'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='Avalanche' -> HTTP 200 (104413 bytes)
+[MATCH]
+[PASS] BCK 'Golden Knights Alt Line' vs 'Avalanche Alt Line' <-> POD 'colorado avalanche' vs 'vegas golden knights' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Golden Knights Alt Line' vs 'Avalanche Alt Line'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Golden Knights Alt Line' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 19:10 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Golden Knights Alt Line' vs 'Avalanche Alt Line' <-> POD 'colorado avalanche' vs 'vegas golden knights' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Golden Knights Alt Line' vs 'Avalanche Alt Line'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Golden Knights Alt Line' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 19:10 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Vegas Golden Knights' vs 'Colorado Avalanche' <-> POD 'colorado avalanche' vs 'vegas golden knights' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Vegas Golden Knights' vs 'Colorado Avalanche'
+[BCK DATE]
+BCK game date: 2026-05-20 19:10 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Vegas Golden Knights 1P' vs 'Colorado Avalanche 1P' <-> POD 'colorado avalanche' vs 'vegas golden knights' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Vegas Golden Knights 1P' vs 'Colorado Avalanche 1P'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Vegas Golden Knights 1P' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 19:10 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Vegas Golden Knights 2P' vs 'Colorado Avalanche 2P' <-> POD 'colorado avalanche' vs 'vegas golden knights' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Vegas Golden Knights 2P' vs 'Colorado Avalanche 2P'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Vegas Golden Knights 2P' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 19:10 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Vegas Golden Knights 3P' vs 'Colorado Avalanche 3P' <-> POD 'colorado avalanche' vs 'vegas golden knights' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Vegas Golden Knights 3P' vs 'Colorado Avalanche 3P'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Vegas Golden Knights 3P' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 19:10 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Golden Knights win opening faceoff' vs 'Avalanche win opening faceoff' <-> POD 'colorado avalanche' vs 'vegas golden knights' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Golden Knights win opening faceoff' vs 'Avalanche win opening faceoff'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Golden Knights win opening faceoff' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 19:00 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Golden Knights score first' vs 'Avalanche score first' <-> POD 'colorado avalanche' vs 'vegas golden knights' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Golden Knights score first' vs 'Avalanche score first'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Golden Knights score first' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 19:00 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Golden Knights (Reg Time)' vs 'Avalanche (Reg Time)' <-> POD 'colorado avalanche' vs 'vegas golden knights' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Golden Knights (Reg Time)' vs 'Avalanche (Reg Time)'
+[BCK DATE]
+BCK game date: 2026-05-20 19:10 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Golden Knights (Reg Time)' vs 'Avalanche (Reg Time)' <-> POD 'colorado avalanche' vs 'vegas golden knights' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Golden Knights (Reg Time)' vs 'Avalanche (Reg Time)'
+[BCK DATE]
+BCK game date: 2026-05-20 19:10 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Golden Knights Series' vs 'Avalanche Series' <-> POD 'colorado avalanche' vs 'vegas golden knights' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Golden Knights Series' vs 'Avalanche Series'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Golden Knights Series' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 19:00 (PIN start unavailable)
+[ODDS]
+home_moneyline=-170 | away_moneyline=+150 | home_spreads=[{'line': '-1.5', 'odds': '+140'}] | away_spreads=[{'line': '+1.5', 'odds': '-160'}] | total_line=6 | total_over_odds=-125 | total_under_odds=+105
+[EV]
+Moneyline Home: BCK 1.5882 (-170) / PIN_NVP 1.6329 (-158) => -2.68%
+[EV]
+Moneyline Away: BCK 2.5000 (+150) / PIN_NVP 2.5800 (+158) => -3.18%
+[EV]
+Spread Home -1.5: BCK 2.4000 (+140) / PIN_NVP 2.6100 (+161) => -7.94%
+[EV]
+Spread Away 1.5: BCK 1.6250 (-160) / PIN_NVP 1.6211 (-161) => +0.18%
+[EV]
+Total Over 6.0: BCK 1.8000 (-125) / PIN_NVP 1.9259 (-108) => -6.54%
+[EV]
+Total Under 6.0: BCK 2.0500 (+105) / PIN_NVP 2.0800 (+108) => -1.39%
+[EV]
+1H Moneyline Home: BCK 1.6452 (-155) / PIN_NVP 1.7246 (-138) => -4.63%
+[EV]
+1H Moneyline Away: BCK 2.2500 (+125) / PIN_NVP 2.3800 (+138) => -5.42%
+[EV]
+1H Spread Home -0.5: BCK 2.5000 (+150) / PIN_NVP 2.5600 (+156) => -2.42%
+[EV]
+1H Spread Away 0.5: BCK 1.5556 (-180) / PIN_NVP 1.6410 (-156) => -5.15%
+[EV]
+1H Total Over 1.5: BCK 1.7692 (-130) / PIN_NVP 1.9174 (-109) => -7.56%
+[EV]
+1H Total Under 1.5: BCK 2.0000 (+100) / PIN_NVP 2.0900 (+109) => -4.49%
+[EV]
+RT Total Over 6.0: BCK 1.9091 (-110) / PIN_NVP 1.9259 (-108) => -0.88%
+[EV]
+RT Total Under 6.0: BCK 1.8333 (-120) / PIN_NVP 2.0800 (+108) => -11.82%
+[EV]
+Alt Spread Home 1.5: BCK 1.2000 (-500) / PIN_NVP 1.2370 (-422) => -2.99%
+[EV]
+Alt Spread Away -1.5: BCK 4.5000 (+350) / PIN_NVP 5.2100 (+421) => -13.69%
+[EV]
+1P Moneyline Home: BCK 1.6452 (-155) / PIN_NVP 1.7246 (-138) => -4.63%
+[EV]
+1P Moneyline Away: BCK 2.2500 (+125) / PIN_NVP 2.3800 (+138) => -5.42%
+[EV]
+1P Spread Home -0.5: BCK 2.5000 (+150) / PIN_NVP 2.5600 (+156) => -2.42%
+[EV]
+1P Spread Away 0.5: BCK 1.5556 (-180) / PIN_NVP 1.6410 (-156) => -5.15%
+[EV]
+1P Total Over 1.5: BCK 1.7692 (-130) / PIN_NVP 1.9174 (-109) => -7.56%
+[EV]
+1P Total Under 1.5: BCK 2.0000 (+100) / PIN_NVP 2.0900 (+109) => -4.49%
+[EV]
+2P Moneyline Home: BCK 1.6061 (-165) / PIN_NVP 1.6897 (-145) => -5.08%
+[EV]
+2P Moneyline Away: BCK 2.3500 (+135) / PIN_NVP 2.4400 (+144) => -3.89%
+[EV]
+2P Spread Home -0.5: BCK 2.3500 (+135) / PIN_NVP 2.4400 (+144) => -3.89%
+[EV]
+2P Spread Away 0.5: BCK 1.6061 (-165) / PIN_NVP 1.6897 (-145) => -5.08%
+[EV]
+2P Total Over 2.0: BCK 1.8696 (-115) / PIN_NVP 1.9901 (-101) => -6.10%
+[EV]
+2P Total Under 2.0: BCK 1.8696 (-115) / PIN_NVP 2.0100 (+101) => -6.94%
+[EV]
+3P Moneyline Home: BCK 1.5882 (-170) / PIN_NVP 1.6711 (-149) => -4.84%
+[EV]
+3P Moneyline Away: BCK 2.4000 (+140) / PIN_NVP 2.5000 (+150) => -3.85%
+[EV]
+3P Spread Home -0.5: BCK 2.1500 (+115) / PIN_NVP 2.2500 (+125) => -4.27%
+[EV]
+3P Spread Away 0.5: BCK 1.6897 (-145) / PIN_NVP 1.8000 (-125) => -6.23%
+[EV]
+3P Total Over 2.0: BCK 1.7407 (-135) / PIN_NVP 1.8547 (-117) => -6.16%
+[EV]
+3P Total Under 2.0: BCK 2.0500 (+105) / PIN_NVP 2.1700 (+117) => -5.53%

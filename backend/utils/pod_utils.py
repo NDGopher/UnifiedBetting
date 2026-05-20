@@ -1601,8 +1601,25 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
     # ONLY when full_game was also present in row_data (step 1 ran).
     # If full_game is absent, half_1 was never processed — do NOT skip it here or the
     # 1H data is silently discarded.  Let step 2 compare it against Pinnacle num_1.
+    _period1_already_handled = False
     if "full_game" in row_data and bet_data.get("1H_data"):
         SKIP_TYPES = SKIP_TYPES | {"half_1"}
+        # For sports with periods (hockey, basketball, etc.) the scraper populates
+        # 1H_data from row_data['period_1'] (no half_1 row exists).  If we let the
+        # loop below also process period_1, the same BCK data gets compared against
+        # Pinnacle num_1 twice — once labeled "1H " (from step 1's internal 1H path)
+        # and once labeled "1P " (from the loop).  Skip period_1 here and relabel the
+        # already-produced "1H " bets as "1P " so the output is sport-correct.
+        if "half_1" not in row_data and "period_1" in row_data:
+            SKIP_TYPES = SKIP_TYPES | {"period_1"}
+            _period1_already_handled = True
+
+    if _period1_already_handled:
+        # Relabel "1H " → "1P " on bets already added by step 1's internal 1H path.
+        for _b in all_bets:
+            mkt = _b.get("market", "")
+            if mkt.startswith("1H "):
+                _b["market"] = "1P " + mkt[3:]
 
     for row_type, row_bet_data in row_data.items():
         if row_type in SKIP_TYPES:
