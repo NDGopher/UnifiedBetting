@@ -6,6 +6,7 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, RootModel
 import json
 import asyncio
+import functools
 import re
 from datetime import datetime, timezone
 import logging
@@ -1376,13 +1377,18 @@ async def run_pipeline_background():
                 "data": {}
             }
         # Step 3: Match/normalize BetBCK games to event IDs
+        # Run in executor so the main event loop stays free for POD alert broadcasts
         step3_start = time.time()
         logger.info("[STEP] Step 3: Matching BetBCK games to event IDs...")
         try:
             from match_games import match_pinnacle_to_betbck
-            matched_games = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
+            loop = asyncio.get_event_loop()
+            matched_games = await loop.run_in_executor(
+                None,
+                functools.partial(match_pinnacle_to_betbck, event_dicts, {"games": betbck_games})
+            )
             step3_time = time.time() - step3_start
-            
+
             # Data validation for Step 3
             if not matched_games:
                 logger.error("[VALIDATION] No games matched successfully")
@@ -1391,13 +1397,13 @@ async def run_pipeline_background():
                     "message": "No games matched successfully",
                     "data": {}
                 }
-            
+
             # Validate matched games structure
             valid_matches = 0
             for game in matched_games:
                 if isinstance(game, dict) and 'pinnacle_event_id' in game and 'betbck_game' in game:
                     valid_matches += 1
-            
+
             logger.info(f"[PIPELINE] Step 3 completed in {step3_time:.2f}s: Matched {len(matched_games)} games ({valid_matches} valid).")
         except Exception as e:
             logger.error(f"[ERROR] Failed to match games: {e}")
@@ -1407,11 +1413,12 @@ async def run_pipeline_background():
                 "data": {}
             }
         # Step 4: Fetch Swordfish for matched games and calculate EV
+        # Uses calculate_ev_table_async (non-blocking) so POD alerts are never paused
         step4_start = time.time()
         logger.info("[STEP] Step 4: Fetching Swordfish odds and calculating EV for matched games...")
         try:
-            from calculate_ev_table import calculate_ev_table, format_ev_table_for_display
-            ev_table = calculate_ev_table(matched_games)
+            from calculate_ev_table import calculate_ev_table_async, format_ev_table_for_display
+            ev_table = await calculate_ev_table_async(matched_games)
             if not ev_table:
                 logger.error("[PIPELINE] No EV opportunities found")
                 return {
@@ -1419,7 +1426,9 @@ async def run_pipeline_background():
                     "message": "No EV opportunities found",
                     "data": {}
                 }
-            formatted_events = format_ev_table_for_display(ev_table)
+            formatted_events = await loop.run_in_executor(
+                None, functools.partial(format_ev_table_for_display, ev_table)
+            )
             total_opportunities = sum(event.get("total_ev_opportunities", 0) for event in ev_table)
             step4_time = time.time() - step4_start
             

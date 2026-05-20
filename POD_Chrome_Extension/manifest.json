@@ -14,7 +14,6 @@
     "https://www.pinnacleoddsdropper.com/*",
     "https://swordfish-production.up.railway.app/*",
     "http://localhost:8000/*",
-    "http://localhost:5001/*",
     "http://127.0.0.1:8000/*",
     "https://*.replit.dev/*",
     "https://*.replit.dev:8000/*",
