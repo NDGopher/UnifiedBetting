@@ -606,6 +606,57 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                                 'period': market_suffix or 'FG',
                                 'event_id': event_id
                             })
+            # --- Team Totals ---
+            pin_team_total = period_data.get('team_total') or {}
+            if isinstance(pin_team_total, dict) and pin_team_total:
+                bck_top_norm = matched_event.get('normalized_betbck_home')
+                pin_home_norm = matched_event.get('normalized_pinnacle_home')
+                bck_top_is_pin_home = (bck_top_norm == pin_home_norm)
+                if bck_top_is_pin_home:
+                    pin_top_tt = pin_team_total.get('home') or {}
+                    pin_bot_tt = pin_team_total.get('away') or {}
+                else:
+                    pin_top_tt = pin_team_total.get('away') or {}
+                    pin_bot_tt = pin_team_total.get('home') or {}
+                for bck_prefix, pin_tt, tt_team_name in [
+                    ('home', pin_top_tt, home_team),
+                    ('away', pin_bot_tt, away_team),
+                ]:
+                    pin_tt_line = pin_tt.get('points')
+                    if pin_tt_line is None or not isinstance(pin_tt, dict):
+                        continue
+                    for direction in ('over', 'under'):
+                        bck_tt_odds_am = betbck_odds_data.get(f'{bck_prefix}_team_total_{direction}_odds')
+                        bck_tt_line = betbck_odds_data.get(f'{bck_prefix}_team_total_{direction}_line')
+                        if not bck_tt_odds_am or bck_tt_line is None:
+                            continue
+                        try:
+                            if not math.isclose(float(bck_tt_line), float(pin_tt_line), abs_tol=0.26):
+                                continue
+                        except Exception:
+                            continue
+                        nvp_dec = pin_tt.get(f'nvp_{direction}')
+                        nvp_am = pin_tt.get(f'nvp_american_{direction}')
+                        if not nvp_dec or nvp_dec <= 1.0001:
+                            continue
+                        bck_tt_dec = american_to_decimal(bck_tt_odds_am)
+                        ev = (bck_tt_dec / nvp_dec - 1.0) if bck_tt_dec else None
+                        if ev is not None:
+                            all_bets_with_ev.append({
+                                'sport': sport,
+                                'matchup': event_name,
+                                'bet': f"TT {tt_team_name} {direction.capitalize()} {pin_tt_line}",
+                                'bet_type': 'Team Total',
+                                'betbck_odds': bck_tt_odds_am,
+                                'pinnacle_nvp': nvp_am or decimal_to_american(nvp_dec),
+                                'ev': f"{ev*100:.2f}%",
+                                'ev_val': ev,
+                                'start_time': start_time_fmt,
+                                'league': league,
+                                'pinnacle_limit': meta_limits.get('max_team_total') or 1000,
+                                'event_id': event_id,
+                                'period': market_suffix or 'FG',
+                            })
         except Exception as e:
             logger.error(f"[EV-PIPELINE] Error processing event {matched_event.get('pinnacle_event_id')}: {e}")
             import traceback

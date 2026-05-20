@@ -186,7 +186,15 @@ class BetBCKAsyncScraper:
                 "site_bottom_team_spreads": [],
                 "game_total_line": None,
                 "game_total_over_odds": None,
-                "game_total_under_odds": None
+                "game_total_under_odds": None,
+                "home_team_total_over_line": None,
+                "home_team_total_over_odds": None,
+                "home_team_total_under_line": None,
+                "home_team_total_under_odds": None,
+                "away_team_total_over_line": None,
+                "away_team_total_over_odds": None,
+                "away_team_total_under_line": None,
+                "away_team_total_under_odds": None,
             }
             if odds_table:
                 rows = odds_table.find_all('tr', recursive=False)
@@ -214,6 +222,27 @@ class BetBCKAsyncScraper:
                         if total_line is not None:
                             odds["game_total_line"] = total_line
                             odds["game_total_under_odds"] = under_odds
+                    # Team Totals (columns 3 and 4 for each row)
+                    if len(tds_top) > 3:
+                        tt_line, tt_odds = self.extract_total_from_td(tds_top[3], over=True)
+                        if tt_line is not None:
+                            odds["home_team_total_over_line"] = tt_line
+                            odds["home_team_total_over_odds"] = tt_odds
+                    if len(tds_top) > 4:
+                        tt_line, tt_odds = self.extract_total_from_td(tds_top[4], over=False)
+                        if tt_line is not None:
+                            odds["home_team_total_under_line"] = tt_line
+                            odds["home_team_total_under_odds"] = tt_odds
+                    if len(tds_bot) > 3:
+                        tt_line, tt_odds = self.extract_total_from_td(tds_bot[3], over=True)
+                        if tt_line is not None:
+                            odds["away_team_total_over_line"] = tt_line
+                            odds["away_team_total_over_odds"] = tt_odds
+                    if len(tds_bot) > 4:
+                        tt_line, tt_odds = self.extract_total_from_td(tds_bot[4], over=False)
+                        if tt_line is not None:
+                            odds["away_team_total_under_line"] = tt_line
+                            odds["away_team_total_under_odds"] = tt_odds
             # Normalize team names for ID and saving
             norm_home = normalize_team_name_for_matching(home)
             norm_away = normalize_team_name_for_matching(away)
