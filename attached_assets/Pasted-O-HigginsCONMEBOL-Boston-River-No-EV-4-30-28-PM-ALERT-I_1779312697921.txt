@@ -1,0 +1,56 @@
+O'HigginsCONMEBOL - @ Boston River
+
+No EV
+4:30:28 PM
+[ALERT IN]
+O'HigginsCONMEBOL - @ Boston River | ? | market=Moneyline | +111 -> -102 | noVig=+105 | eventId=1630633412 | startTime=?
+[SWORDFISH]
+Swordfish: 'Boston River' vs 'O'Higgins' | starts=2026-05-20 22:00 UTC | OK
+[SEARCH TERM]
+Using 'river' (from 'Boston River' / 'O'HigginsCONMEBOL -'): last word of home team 'boston river'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='river' -> HTTP 200 (69375 bytes)
+[MATCH]
+[PASS] BCK 'OHiggins' vs 'Boston River' <-> POD 'boston river' vs 'ohiggins' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'OHiggins' vs 'Boston River'
+[BCK DATE]
+BCK game date: 2026-05-20 17:00 (PIN start unavailable)
+[MATCH]
+[FAIL] BCK 'RB Bragantino' vs 'River Plate' <-> POD 'boston river' vs 'ohiggins' [token_set_h=100 | token_set_a=29 | partial_h=100 | partial_a=38 | threshold=60]
+[MATCH]
+[PASS] BCK 'OHiggins 1H' vs 'Boston River 1H' <-> POD 'boston river' vs 'ohiggins' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'OHiggins 1H' vs 'Boston River 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='OHiggins 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-20 17:00 (PIN start unavailable)
+[MATCH]
+[FAIL] BCK 'RB Bragantino 1H' vs 'River Plate 1H' <-> POD 'boston river' vs 'ohiggins' [token_set_h=59 | token_set_a=33 | partial_h=42 | partial_a=38 | threshold=60]
+[ODDS]
+home_moneyline=+290 | away_moneyline=+105 | home_spreads=[{'line': '+0.5', 'odds': '-130'}] | away_spreads=[{'line': '-0.5', 'odds': '+100'}] | total_line=2.5 | total_over_odds=+115 | total_under_odds=-155
+[EV]
+Moneyline Home: BCK 3.9000 (+290) / PIN_NVP 4.4400 (+344) => -12.14%
+[EV]
+Moneyline Away: BCK 2.0500 (+105) / PIN_NVP 2.0500 (+105) => +0.00%
+[EV]
+Spread Home 0.5: BCK 1.7692 (-130) / PIN_NVP 1.9346 (-107) => -8.42%
+[EV]
+Spread Away -0.5: BCK 2.0000 (+100) / PIN_NVP 2.0700 (+107) => -3.52%
+[EV]
+Total Over 2.5: BCK 2.1500 (+115) / PIN_NVP 2.2700 (+127) => -5.49%
+[EV]
+Total Under 2.5: BCK 1.6452 (-155) / PIN_NVP 1.7812 (-128) => -7.78%
+[EV]
+1H Moneyline Home: BCK 4.3500 (+335) / PIN_NVP 4.8800 (+388) => -10.77%
+[EV]
+1H Moneyline Away: BCK 2.6500 (+165) / PIN_NVP 2.8400 (+184) => -6.82%
+[EV]
+1H Spread Home 0.25: BCK 1.7143 (-140) / PIN_NVP 1.8130 (-123) => -5.44%
+[EV]
+1H Spread Away -0.25: BCK 2.1000 (+110) / PIN_NVP 2.2300 (+123) => -5.83%
+[EV]
+1H Total Over 1.0: BCK 2.0500 (+105) / PIN_NVP 2.1600 (+116) => -5.05%
+[EV]
+1H Total Under 1.0: BCK 1.6897 (-145) / PIN_NVP 1.8621 (-116) => -9.30%
