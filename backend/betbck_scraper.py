@@ -787,22 +787,44 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         print(f"[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: {event_id})")
         if len(h_cells)>0: output_data["home_spreads"]=extract_all_spread_options_from_text(h_cells[0])
         if len(a_cells)>0: output_data["away_spreads"]=extract_all_spread_options_from_text(a_cells[0])
-        if len(h_cells)>1: output_data["home_moneyline_american"]=extract_american_odds_from_text(h_cells[1])
-        if len(a_cells)>1: output_data["away_moneyline_american"]=extract_american_odds_from_text(a_cells[1])
 
-        if len(tds_bck_displayed_local_row)>2: 
-            total_cell_bck_local = tds_bck_displayed_local_row[2]
+        # Detect no-ML layout: some games (e.g. soccer with no moneyline offered) have
+        # only [Spread, Total] columns — cell[1] is a Total cell, not an ML cell.
+        # Detect by checking whether cell[1] text starts with 'o' or 'u' followed by a digit.
+        def _cell_is_total(td):
+            t = td.get_text(" ", strip=True).lower().lstrip()
+            return bool(re.search(r'^[ou]\s*[\d½¼¾,]', t))
+
+        _has_ml_col = True
+        if len(h_cells) > 1 and _cell_is_total(h_cells[1]):
+            _has_ml_col = False
+            print(f"[BetbckParser] No-ML layout detected for game {idx} (cell[1] looks like a total). (Event ID: {event_id})")
+
+        if _has_ml_col:
+            if len(h_cells)>1: output_data["home_moneyline_american"]=extract_american_odds_from_text(h_cells[1])
+            if len(a_cells)>1: output_data["away_moneyline_american"]=extract_american_odds_from_text(a_cells[1])
+            _total_col = 2
+            _tt_over_col, _tt_under_col = 3, 4
+        else:
+            # No ML — total is at column index 1, team totals at 2 and 3
+            _total_col = 1
+            _tt_over_col, _tt_under_col = 2, 3
+
+        _local_row = tds_bck_displayed_local_row
+        _visit_row = tds_bck_displayed_visitor_row
+        if len(_local_row) > _total_col:
+            total_cell_bck_local = _local_row[_total_col]
             if not output_data.get("game_total_line"): output_data["game_total_line"]=extract_line_value_from_text(total_cell_bck_local,"Total")
             if "o" in total_cell_bck_local.get_text(" ", strip=True).lower(): output_data["game_total_over_odds"]=extract_american_odds_from_text(total_cell_bck_local)
-        if len(tds_bck_displayed_visitor_row)>2: 
-            total_cell_bck_visitor = tds_bck_displayed_visitor_row[2]
+        if len(_visit_row) > _total_col:
+            total_cell_bck_visitor = _visit_row[_total_col]
             if not output_data.get("game_total_line"): output_data["game_total_line"]=extract_line_value_from_text(total_cell_bck_visitor,"Total")
             if "u" in total_cell_bck_visitor.get_text(" ", strip=True).lower(): output_data["game_total_under_odds"]=extract_american_odds_from_text(total_cell_bck_visitor)
-        
-        if len(h_cells)>3: txt_el=h_cells[3];_and_True = "o" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"home_team_total_over_line":extract_line_value_from_text(txt_el,"Total"), "home_team_total_over_odds":extract_american_odds_from_text(txt_el)}))
-        if len(h_cells)>4: txt_el=h_cells[4];_and_True = "u" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"home_team_total_under_line":extract_line_value_from_text(txt_el,"Total"), "home_team_total_under_odds":extract_american_odds_from_text(txt_el)}))
-        if len(a_cells)>3: txt_el=a_cells[3];_and_True = "o" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"away_team_total_over_line":extract_line_value_from_text(txt_el,"Total"), "away_team_total_over_odds":extract_american_odds_from_text(txt_el)}))
-        if len(a_cells)>4: txt_el=a_cells[4];_and_True = "u" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"away_team_total_under_line":extract_line_value_from_text(txt_el,"Total"), "away_team_total_under_odds":extract_american_odds_from_text(txt_el)}))
+
+        if len(h_cells)>_tt_over_col:  txt_el=h_cells[_tt_over_col];_and_True = "o" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"home_team_total_over_line":extract_line_value_from_text(txt_el,"Total"), "home_team_total_over_odds":extract_american_odds_from_text(txt_el)}))
+        if len(h_cells)>_tt_under_col: txt_el=h_cells[_tt_under_col];_and_True = "u" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"home_team_total_under_line":extract_line_value_from_text(txt_el,"Total"), "home_team_total_under_odds":extract_american_odds_from_text(txt_el)}))
+        if len(a_cells)>_tt_over_col:  txt_el=a_cells[_tt_over_col];_and_True = "o" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"away_team_total_over_line":extract_line_value_from_text(txt_el,"Total"), "away_team_total_over_odds":extract_american_odds_from_text(txt_el)}))
+        if len(a_cells)>_tt_under_col: txt_el=a_cells[_tt_under_col];_and_True = "u" in txt_el.get_text(" ",strip=True).lower() and (output_data.update({"away_team_total_under_line":extract_line_value_from_text(txt_el,"Total"), "away_team_total_under_odds":extract_american_odds_from_text(txt_el)}))
         
         _draw_row_text = data_rows[2].get_text(strip=True).lower() if len(data_rows) > 2 else ""
         if _draw_row_text and any(w in _draw_row_text for w in ("draw", "tie", "empate")):
