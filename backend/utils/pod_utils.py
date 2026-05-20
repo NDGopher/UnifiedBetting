@@ -185,6 +185,20 @@ def process_event_odds_for_display(pinnacle_event_json_data: Dict[str, Any]) -> 
                     total_details["nvp_american_over"] = decimal_to_american(total_details.get("nvp_over"))
                     total_details["nvp_american_under"] = decimal_to_american(total_details.get("nvp_under"))
 
+        # Team Totals (home/away each have their own over/under line)
+        if period_data.get("team_total") and isinstance(period_data["team_total"], dict):
+            for side in ("home", "away"):
+                side_data = period_data["team_total"].get(side)
+                if isinstance(side_data, dict):
+                    odds_dec = [side_data.get("over"), side_data.get("under")]
+                    nvps_dec = calculate_nvp_for_market(odds_dec)
+                    if len(nvps_dec) == 2:
+                        side_data["nvp_over"], side_data["nvp_under"] = nvps_dec[0], nvps_dec[1]
+                    side_data["american_over"] = decimal_to_american(side_data.get("over"))
+                    side_data["american_under"] = decimal_to_american(side_data.get("under"))
+                    side_data["nvp_american_over"] = decimal_to_american(side_data.get("nvp_over"))
+                    side_data["nvp_american_under"] = decimal_to_american(side_data.get("nvp_under"))
+
     return pinnacle_event_json_data
 
 # Team aliases for better matching
@@ -1402,9 +1416,70 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                 logger.warning("[AnalyzeMarkets] No 1H Pinnacle data found, skipping 1H BetBCK data")
         else:
             logger.info("[AnalyzeMarkets] No 1H BetBCK data found")
-        
+
+        # --- TEAM TOTALS (full-game period only) ---
+        pin_team_total = full_game.get('team_total') or {}
+        if isinstance(pin_team_total, dict) and pin_team_total:
+            # Work out which Pinnacle side corresponds to BetBCK's local ("home") row.
+            # BetBCK "home" row = local team = POD home when bck_local_is_pod_home=True.
+            # If POD home = Pinnacle away (_nvp_swapped=True), then BCK home = PIN away.
+            # XOR: bck_home_is_pin_home = (bck_local_is_pod_home != _nvp_swapped)
+            _bck_local_is_pod_home = bet_data_copy.get('bck_local_is_pod_home', True)
+            _bck_home_is_pin_home = (_bck_local_is_pod_home != _nvp_swapped)
+            if _bck_home_is_pin_home:
+                pin_bck_home_tt = pin_team_total.get('home') or {}
+                pin_bck_away_tt = pin_team_total.get('away') or {}
+            else:
+                pin_bck_home_tt = pin_team_total.get('away') or {}
+                pin_bck_away_tt = pin_team_total.get('home') or {}
+
+            _tt_home_team = pin_data.get('home', '')
+            _tt_away_team = pin_data.get('away', '')
+            _tt_meta_limit = meta_limits.get('max_team_total')
+
+            for _bck_side, _pin_tt, _mkt_label in [
+                ('home', pin_bck_home_tt, 'Team Total Home'),
+                ('away', pin_bck_away_tt, 'Team Total Away'),
+            ]:
+                _pin_line = normalize_total_line(_pin_tt.get('points'))
+                if _pin_line is None or not isinstance(_pin_tt, dict):
+                    continue
+                for _direction in ('over', 'under'):
+                    _odds_key = f'{_bck_side}_team_total_{_direction}_odds'
+                    _line_key = f'{_bck_side}_team_total_{_direction}_line'
+                    _bck_odds_raw = bet_data_copy.get(_odds_key)
+                    _bck_line_raw = bet_data_copy.get(_line_key)
+                    if not _bck_odds_raw or _bck_line_raw is None:
+                        continue
+                    _bck_line = normalize_total_line(_bck_line_raw)
+                    if _bck_line is None:
+                        continue
+                    if not math.isclose(_bck_line, _pin_line, abs_tol=0.26):
+                        continue
+                    _nvp_key = f'nvp_american_{_direction}'
+                    _nvp_dec_key = f'nvp_{_direction}'
+                    if not _pin_tt.get(_nvp_key):
+                        continue
+                    _bet_odds = american_to_decimal(_bck_odds_raw)
+                    _true_odds = _pin_tt.get(_nvp_dec_key)
+                    if not _bet_odds or not _true_odds:
+                        continue
+                    _ev = calculate_ev(_bet_odds, _true_odds)
+                    potential_bets.append({
+                        'market': _mkt_label,
+                        'selection': _direction.capitalize(),
+                        'line': str(_pin_line),
+                        'pinnacle_nvp': _pin_tt.get(_nvp_key, 'N/A'),
+                        'pinnacle_limit': _tt_meta_limit,
+                        'betbck_odds': _bck_odds_raw,
+                        'ev': f"{_ev*100:.2f}%" if _ev is not None else 'N/A',
+                        'home_team': _tt_home_team,
+                        'away_team': _tt_away_team,
+                        'bet': format_bet_description(_mkt_label, _direction.capitalize(), str(_pin_line), _tt_home_team, _tt_away_team)
+                    })
+
         return potential_bets
-    
+
     except Exception as e:
         logger.error(f"[AnalyzeMarkets] Error analyzing markets: {e}")
         return []
