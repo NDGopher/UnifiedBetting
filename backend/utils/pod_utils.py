@@ -621,6 +621,34 @@ def strip_pod_league_suffix(name: str) -> str:
                 name = name[:-len(country)].strip()
                 break
 
+    # Full country names concatenated directly (no space) with optional " - league" suffix.
+    # e.g. "BryneNorway - 1st Division" → "Bryne"
+    #      "VardagslagSweeden" → "Vardagslag"  (typo-tolerant via the list below)
+    _FULL_COUNTRY_NAMES = (
+        'Norway', 'Sweden', 'Denmark', 'Finland', 'Iceland', 'Scotland',
+        'England', 'Germany', 'France', 'Spain', 'Italy', 'Poland',
+        'Portugal', 'Turkey', 'Ukraine', 'Greece', 'Romania', 'Hungary',
+        'Croatia', 'Serbia', 'Slovenia', 'Slovakia', 'Austria', 'Switzerland',
+        'Belgium', 'Netherlands', 'Ireland', 'Wales', 'Cyprus', 'Israel',
+        'Russia', 'Belarus', 'Kazakhstan', 'Georgia', 'Armenia', 'Azerbaijan',
+        'Bulgaria', 'Albania', 'Kosovo', 'Moldova', 'Latvia', 'Lithuania',
+        'Estonia', 'Bosnia', 'Malta', 'Luxembourg', 'Andorra', 'Gibraltar',
+        'Brazil', 'Argentina', 'Colombia', 'Chile', 'Uruguay', 'Paraguay',
+        'Venezuela', 'Ecuador', 'Bolivia', 'Peru',
+        'Mexico', 'Canada', 'Australia', 'Japan', 'Korea', 'China',
+        'India', 'Thailand', 'Vietnam', 'Indonesia', 'Malaysia',
+        'SaudiArabia', 'Emirates', 'Qatar', 'Kuwait', 'Bahrain',
+        'Morocco', 'Tunisia', 'Algeria', 'Egypt', 'Nigeria', 'Ghana',
+        'Senegal', 'Cameroon', 'Tanzania', 'Uganda', 'Kenya', 'Zambia',
+    )
+    _country_pattern = '|'.join(_re_ls.escape(c) for c in _FULL_COUNTRY_NAMES)
+    _m = _re_ls.search(
+        rf'([a-zA-Z])({_country_pattern})(\s*[-–]\s*.*)?$',
+        name, _re_ls.IGNORECASE
+    )
+    if _m and _m.start(2) > 0:
+        name = name[:_m.start(2)].strip()
+
     # Trailing uppercase 'W' (WNBA women's leagues, e.g. "AcesW" → "Aces")
     # Only strip when preceded by a lowercase letter (not already a space)
     name = _re_ls.sub(r'([a-zA-Z])W$', r'\1', name)
