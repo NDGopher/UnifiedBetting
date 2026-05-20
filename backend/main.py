@@ -298,8 +298,11 @@ async def event_alert_worker(event_id):
                     # abbreviations) so we allow up to 40/100 as the minimum passing score.
                     try:
                         from fuzzywuzzy import fuzz as _fz_l0
-                        _pod_home_l0 = payload.get("homeTeam", "").lower()
-                        _pod_away_l0 = payload.get("awayTeam", "").lower()
+                        # Clean the POD team names the same way the rest of the pipeline
+                        # does — strips appended league/country suffixes like
+                        # "BrannNorway - Eliteserien" → "brann" before fuzzy matching.
+                        _pod_home_l0 = clean_pod_team_name_for_search(payload.get("homeTeam", ""))
+                        _pod_away_l0 = clean_pod_team_name_for_search(payload.get("awayTeam", ""))
                         _sw_home_l0  = _sw_home_name.lower()
                         _sw_away_l0  = _sw_away_name.lower()
                         if _sw_home_l0 and _sw_away_l0 and _pod_home_l0 and _pod_away_l0:

@@ -1,0 +1,125 @@
+2026-05-20 11:59:33,040 - main - INFO - [PerEventQueue] Processing alert for Event ID: 1630628133 (Aalesunds)
+[Pinnacle Fetcher] Attempting to fetch: https://swordfish-production.up.railway.app/events/1630628133
+[BackgroundRefresher] Loop #209 - sleeping for 5 seconds...
+[Pinnacle Fetcher] SUCCESS: Status Code 200 for 1630628133
+2026-05-20 11:59:34,756 - main - INFO - [SwordfishID] Event 1630628133: 'Aalesunds' vs 'Brann' | starts=2026-05-20 18:00 UTC | ext startTime=N/A
+2026-05-20 11:59:34,758 - main - WARNING - [SwordfishID] *** WRONG TEAMS (Layer 0) *** Event 1630628133: Swordfish returned 'Aalesunds' vs 'Brann' but POD sent 'Aalesunds' vs 'BrannNorway - Eliteserien'. home_best=100 away_best=36 min=36/100. Dropping alert.
+[DEBUG] clean_pod_team_name_for_search input: 'Aalesunds'
+[DEBUG] clean_pod_team_name_for_search output: 'aalesunds'
+[DEBUG] clean_pod_team_name_for_search input: 'BrannNorway - Eliteserien'
+[DEBUG] clean_pod_team_name_for_search output: 'brann'
+2026-05-20 11:59:34,772 - main - WARNING - [PerEventQueue] Swordfish ID mismatch for event 1630628133 — proceeding with BetBCK scrape using team names only. Pinnacle NVP will be N/A (no EV shown) to prevent false EV.
+2026-05-20 11:59:34,772 - main - INFO - [PerEventQueue] New event 1630628133. Initiating scrape.
+2026-05-20 11:59:34,773 - main - INFO - [PerEventQueue] POD Teams: Home='Aalesunds', Away='BrannNorway - Eliteserien'
+2026-05-20 11:59:34,774 - main - INFO - [PerEventQueue] Cleaned Teams: Home='aalesunds', Away='brann'
+============================================================
+[ALERT IN][1630628133] Brann @ Aalesunds | ? | market=Total | +299 -> +273 | noVig=+311 | eventId=1630628133 | startTime=?
+[SWORDFISH][1630628133] Swordfish: 'Aalesunds' vs 'Brann' | starts=2026-05-20 18:00 UTC | *** SUSPECT — ML odds mismatch ***
+[DEBUG] clean_pod_team_name_for_search input: 'Aalesunds'
+[DEBUG] clean_pod_team_name_for_search output: 'aalesunds'
+[DEBUG] clean_pod_team_name_for_search input: 'Brann'
+[DEBUG] clean_pod_team_name_for_search output: 'brann'
+[DEBUG] clean_pod_team_name_for_search input: 'Aalesunds'
+[DEBUG] clean_pod_team_name_for_search output: 'aalesunds'
+[DEBUG] clean_pod_team_name_for_search input: 'Brann'
+[DEBUG] clean_pod_team_name_for_search output: 'brann'
+[DEBUG] determine_betbck_search_term - Raw: Home='Aalesunds', Away='Brann'
+[DEBUG] determine_betbck_search_term - Cleaned: Home='aalesunds', Away='brann'
+[DEBUG] Using first part of home team: 'aalesunds'
+[SEARCH TERM][1630628133] Using 'aalesunds' (from 'Aalesunds' / 'Brann'): first word of home team 'aalesunds'
+2026-05-20 11:59:34,812 - betbck_request_manager - INFO - [BetBCK-Manager] Queued request for: aalesunds (Queue size: 1)
+2026-05-20 11:59:34,812 - betbck_request_manager - INFO - [BetBCK-Manager] Processing request for: aalesunds (Event: 1630628133)
+2026-05-20 11:59:34,813 - betbck_request_manager - INFO - [BetBCK-Manager] Session cookies: No session
+2026-05-20 11:59:34,813 - betbck_request_manager - INFO - [BetBCK-Manager] Creating/refreshing session
+[BetbckScraper] Attempting login to BetBCK...
+[BetbckScraper] Login SUCCESSFUL.
+[BetbckScraper] Getting search prerequisites from: https://betbck.com/Qubic/StraightSportSelection.php
+2026-05-20 11:59:37,958 - betbck_request_manager - INFO - [BetBCK-Manager] Session refreshed successfully
+[BetbckScraper] Searching BetBCK for 'aalesunds'...
+[BetbckScraper] Search POST successful (Status: 200). Response size: 42951 bytes.
+[SEARCH][1630628133] POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='aalesunds' -> HTTP 200 (42951 bytes)
+2026-05-20 11:59:38,432 - betbck_request_manager - INFO - [BetBCK-Manager] Response preview (first 200 chars):
+        <!DOCTYPE HTML PUBLIC "-/W3C/DTD XHTML 1.0 Transitional/EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html>
+    <HEAD>
+        <meta http-equiv="Content-Type" content="text/html; cha
+[DEBUG] clean_pod_team_name_for_search input: 'Aalesunds'
+[DEBUG] clean_pod_team_name_for_search output: 'aalesunds'
+[DEBUG] clean_pod_team_name_for_search input: 'Brann'
+[DEBUG] clean_pod_team_name_for_search output: 'brann'
+2026-05-20 11:59:38,444 - betbck_request_manager - INFO - [BetBCK-Manager] Using cleaned team names: Home='aalesunds', Away='brann' (original: Home='Aalesunds', Away='Brann')
+2026-05-20 11:59:38,445 - betbck_request_manager - INFO - [BetBCK-Manager] Search term being used: 'aalesunds'
+2026-05-20 11:59:38,445 - betbck_request_manager - INFO - [BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names
+[BetbckParser] No primary wrappers. Fallbacks: ['teams_betting_options_2', 'teams_betting_options'] (Event ID: 1630628133)
+[BetbckParser] Found 0 potential game wrapper tables. (Event ID: 1630628133)
+2026-05-20 11:59:38,477 - betbck_request_manager - INFO - [BetBCK-Manager] No game data found for: aalesunds
+2026-05-20 11:59:38,478 - betbck_request_manager - ERROR - [BetBCK-Manager] Request failed for event 1630628133: No matching game found
+[ERROR][1630628133] scrape_betbck_for_game_queued: No matching game found
+  detail={'traceback': 'NoneType: None\n'}
+[ERROR][1630628133] Full traceback:
+NoneType: None
+
+[MainLogic] Home-team search 'aalesunds' failed — retrying with away-team term 'brann'
+[INFO][1630628133] Retrying with away-team search term: 'brann'
+2026-05-20 11:59:38,480 - betbck_request_manager - INFO - [BetBCK-Manager] Queued request for: brann (Queue size: 1)
+2026-05-20 11:59:38,481 - betbck_request_manager - INFO - [BetBCK-Manager] Processing request for: brann (Event: 1630628133)
+2026-05-20 11:59:38,483 - betbck_request_manager - INFO - [BetBCK-Manager] Session cookies: {'__cf_bm': 'y9rRnlNAj9V4o6XK_QfxLky_MkptKaBrmu6dYPz4U1Y-1779296378-1.0.1.1-qrALlWGsrnXRMvceusKNgwQzh_Hnqdfq8YGVXlXJ7P3NRV4boqjzMEtwX2m_yQ_xz4vohFFkCBLD3056EKEBPBiFDD9R._Ej7K.Udzbe.oc', 'ASPSESSIONIDSSSBCQDA': 'BMJPMOOCGFEMEFNNFGHIEBLF', 'SYSTEMID': 'SYSTEMID11'}
+2026-05-20 11:59:38,484 - betbck_request_manager - INFO - [BetBCK-Manager] Using existing session (no page navigation)
+[BetbckScraper] Searching BetBCK for 'brann'...
+[BackgroundRefresher] Loop #210 - sleeping for 5 seconds...
+[BetbckScraper] Search POST successful (Status: 200). Response size: 54807 bytes.
+[SEARCH][1630628133] POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='brann' -> HTTP 200 (54807 bytes)
+2026-05-20 11:59:39,612 - betbck_request_manager - INFO - [BetBCK-Manager] Response preview (first 200 chars):
+        <!DOCTYPE HTML PUBLIC "-/W3C/DTD XHTML 1.0 Transitional/EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html>
+    <HEAD>
+        <meta http-equiv="Content-Type" content="text/html; cha
+[DEBUG] clean_pod_team_name_for_search input: 'Aalesunds'
+[DEBUG] clean_pod_team_name_for_search output: 'aalesunds'
+[DEBUG] clean_pod_team_name_for_search input: 'Brann'
+[DEBUG] clean_pod_team_name_for_search output: 'brann'
+2026-05-20 11:59:39,627 - betbck_request_manager - INFO - [BetBCK-Manager] Using cleaned team names: Home='aalesunds', Away='brann' (original: Home='Aalesunds', Away='Brann')
+2026-05-20 11:59:39,628 - betbck_request_manager - INFO - [BetBCK-Manager] Search term being used: 'brann'
+2026-05-20 11:59:39,628 - betbck_request_manager - INFO - [BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names
+[BetbckParser] Found 2 potential game wrapper tables. (Event ID: 1630628133)
+[BetbckParser] Normalized POD Targets: Home='aalesunds', Away='brann' (Event ID: 1630628133)
+[NORM_DEBUG] Original: 'SK Brann' ---> Normalized: 'brann'
+[BetbckParser] Comparing POD: H='aalesunds' A='brann' WITH BCK 0: L='brann' V='aalesund 2' (Raw: L='SK Brann', V='Aalesund 2') (Event ID: 1630628133)
+[DEBUG] Comparing normalized: POD H='aalesunds', A='brann' with BCK H='brann', A='aalesund 2' | token_set: (H-L 29 A-V 27) | partial: (H-L 20 A-V 20) (Event ID: 1630628133)
+[BetbckParser] Fuzzy Match (Order 2 - Flipped, score 184 > fwd 56) (Event ID: 1630628133)
+[MATCH][1630628133] [PASS] BCK 'SK Brann' vs 'Aalesund 2'  <->  POD 'aalesunds' vs 'brann'  [token_set_h=84 | token_set_a=100 | partial_h=89 | partial_a=100 | threshold=60]
+[FOUND][1630628133] Matched BetBCK: 'SK Brann' vs 'Aalesund 2'
+[ORIENT][1630628133] Orientation: REVERSE (flipped) (score 184 vs alt 0) | BCK local='SK Brann' = POD away
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1630628133)
+[BetbckParser] Game 0: Extracted 3 potential data rows from odds table. (Event ID: 1630628133)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1630628133)
+[BetbckParser] Match accepted: SK Brann vs Aalesund 2 (BCK date: 2026-05-20 13:00, score=184) (Event ID: 1630628133)
+[BCK DATE][1630628133] BCK game date: 2026-05-20 13:00 (PIN start unavailable)
+[NORM_DEBUG] Original: 'SK Brann 1H' ---> Normalized: 'brann 1h'
+[BetbckParser] Comparing POD: H='aalesunds' A='brann' WITH BCK 1: L='brann 1h' V='aalesund 2 1h' (Raw: L='SK Brann 1H', V='Aalesund 2 1H') (Event ID: 1630628133)
+[DEBUG] Comparing normalized: POD H='aalesunds', A='brann' with BCK H='brann 1h', A='aalesund 2 1h' | token_set: (H-L 24 A-V 22) | partial: (H-L 25 A-V 20) (Event ID: 1630628133)
+[BetbckParser] Fuzzy Match (Order 2 - Flipped, score 173 > fwd 46) (Event ID: 1630628133)
+[MATCH][1630628133] [PASS] BCK 'SK Brann 1H' vs 'Aalesund 2 1H'  <->  POD 'aalesunds' vs 'brann'  [token_set_h=73 | token_set_a=100 | partial_h=89 | partial_a=100 | threshold=60]
+[FOUND][1630628133] Matched BetBCK: 'SK Brann 1H' vs 'Aalesund 2 1H'
+[ORIENT][1630628133] Orientation: REVERSE (flipped) (score 173 vs alt 0) | BCK local='SK Brann 1H' = POD away
+[BetbckParser] Game Matched! BetBCK Local is POD Home: False. Parsing odds... (Event ID: 1630628133)
+[BetbckParser] Game 1: Extracted 3 potential data rows from odds table. (Event ID: 1630628133)
+[BetbckParser] Parsing all spreads and moneylines (including Set Spread/Moneyline for tennis) (Event ID: 1630628133)
+[BetbckParser] Match accepted: SK Brann 1H vs Aalesund 2 1H (BCK date: 2026-05-20 13:00, score=173) (Event ID: 1630628133)
+[BCK DATE][1630628133] BCK game date: 2026-05-20 13:00 (PIN start unavailable)
+[BetbckParser] row_data['full_game'] <- SK Brann vs Aalesund 2 (score=184) (Event ID: 1630628133)
+[BetbckParser] row_data['half_1'] <- SK Brann 1H vs Aalesund 2 1H (score=173) (Event ID: 1630628133)
+[BetbckParser] row_data keys: ['full_game', 'half_1'] (Event ID: 1630628133)
+2026-05-20 11:59:39,714 - betbck_request_manager - INFO - [BetBCK-Manager] Game data found, deriving 1H_data from row_data...
+2026-05-20 11:59:39,714 - betbck_request_manager - INFO - [BetBCK-Manager] 1H_data set from row_data key: half_1
+2026-05-20 11:59:39,714 - betbck_request_manager - INFO - [BetBCK-Manager] Successfully scraped data for: brann
+[ODDS][1630628133] home_moneyline=+225 | away_moneyline=+105
+2026-05-20 11:59:39,715 - utils.pod_utils - INFO - [PeriodValidation] BetBCK 1H: True, Pinnacle 1H: False, Pinnacle Full: False
+2026-05-20 11:59:39,715 - utils.pod_utils - ERROR - [PeriodValidation] ERROR: No full game Pinnacle data found - cannot proceed with EV calculation!
+2026-05-20 11:59:39,715 - utils.pod_utils - ERROR - [AnalyzeMarkets] Period separation validation failed - aborting EV calculation
+2026-05-20 11:59:39,715 - main - INFO - [PerEventQueue] Scrape successful. Storing event 1630628133 for display.
+2026-05-20 11:59:39,716 - main - WARNING - [PerEventQueue] No valid betting data for event 1630628133, skipping broadcast
+[ALERT DONE][1630628133] result=found_no_ev | EV markets=0 | positive_ev=0
+============================================================
+2026-05-20 11:59:39,720 - main - INFO - [PerEventQueue] Lock released for Event ID: 1630628133
+[BackgroundRefresher] Loop #211 - sleeping for 5 seconds...

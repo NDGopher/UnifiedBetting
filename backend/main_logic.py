@@ -316,8 +316,9 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
                 "away_moneyline": betbck_data.get("away_moneyline_american"),
                 "home_spreads": betbck_data.get("home_spreads", []),
                 "away_spreads": betbck_data.get("away_spreads", []),
-                "home_totals": betbck_data.get("home_totals", []),
-                "away_totals": betbck_data.get("away_totals", []),
+                "total_line": betbck_data.get("game_total_line"),
+                "total_over_odds": betbck_data.get("game_total_over_odds"),
+                "total_under_odds": betbck_data.get("game_total_under_odds"),
             }
             alog.log_odds(odds_summary)
 
