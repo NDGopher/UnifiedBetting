@@ -1465,9 +1465,15 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
             _tt_away_team = pin_data.get('away', '')
             _tt_meta_limit = meta_limits.get('max_team_total')
 
-            for _bck_side, _pin_tt, _mkt_label in [
-                ('home', pin_bck_home_tt, 'Team Total Home'),
-                ('away', pin_bck_away_tt, 'Team Total Away'),
+            # Determine which Pinnacle team name belongs to each BCK row.
+            # BCK "home" row = local team = PIN home only when _bck_home_is_pin_home.
+            # When reversed, BCK home = PIN away, so we must swap the display name.
+            _bck_home_tt_team = _tt_home_team if _bck_home_is_pin_home else _tt_away_team
+            _bck_away_tt_team = _tt_away_team if _bck_home_is_pin_home else _tt_home_team
+
+            for _bck_side, _pin_tt, _mkt_label, _tt_name in [
+                ('home', pin_bck_home_tt, 'Team Total Home', _bck_home_tt_team),
+                ('away', pin_bck_away_tt, 'Team Total Away', _bck_away_tt_team),
             ]:
                 _pin_line = normalize_total_line(_pin_tt.get('points'))
                 if _pin_line is None or not isinstance(_pin_tt, dict):
@@ -1494,7 +1500,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                         continue
                     _ev = calculate_ev(_bet_odds, _true_odds)
                     potential_bets.append({
-                        'market': _mkt_label,
+                        'market': f'TT {_tt_name}',
                         'selection': _direction.capitalize(),
                         'line': str(_pin_line),
                         'pinnacle_nvp': _pin_tt.get(_nvp_key, 'N/A'),
@@ -1503,7 +1509,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                         'ev': f"{_ev*100:.2f}%" if _ev is not None else 'N/A',
                         'home_team': _tt_home_team,
                         'away_team': _tt_away_team,
-                        'bet': format_bet_description(_mkt_label, _direction.capitalize(), str(_pin_line), _tt_home_team, _tt_away_team)
+                        'bet': f"TT {_tt_name} {_direction.capitalize()} {_pin_line}"
                     })
 
         return potential_bets

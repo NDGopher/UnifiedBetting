@@ -618,9 +618,12 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                 else:
                     pin_top_tt = pin_team_total.get('away') or {}
                     pin_bot_tt = pin_team_total.get('home') or {}
+                # tt_team_name must follow Pinnacle identity, not BCK row position.
+                # When BCK top = PIN home, home_team is correct for the top row.
+                # When BCK top = PIN away (reversed), away_team is the correct label.
                 for bck_prefix, pin_tt, tt_team_name in [
-                    ('home', pin_top_tt, home_team),
-                    ('away', pin_bot_tt, away_team),
+                    ('home', pin_top_tt, home_team if bck_top_is_pin_home else away_team),
+                    ('away', pin_bot_tt, away_team if bck_top_is_pin_home else home_team),
                 ]:
                     pin_tt_line = pin_tt.get('points')
                     if pin_tt_line is None or not isinstance(pin_tt, dict):
