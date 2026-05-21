@@ -1,0 +1,62 @@
+PS C:\Users\steph> cd c:/unifiedbetting
+PS C:\unifiedbetting> git pull origin main
+error: You have not concluded your merge (MERGE_HEAD exists).
+hint: Please, commit your changes before merging.
+fatal: Exiting because of unfinished merge.
+PS C:\unifiedbetting> git merge --abort
+PS C:\unifiedbetting> git pull origin main --no-edit
+remote: Enumerating objects: 127, done.
+remote: Counting objects: 100% (127/127), done.
+remote: Compressing objects: 100% (68/68), done.
+remote: Total 107 (delta 80), reused 65 (delta 38), pack-reused 0 (from 0)
+Receiving objects: 100% (107/107), 3.69 MiB | 8.30 MiB/s, done.
+Resolving deltas: 100% (80/80), completed with 16 local objects.
+From https://github.com/NDgopher/UnifiedBetting
+ * branch            main       -> FETCH_HEAD
+   b5cbbaa..9db6718  main       -> origin/main
+error: Your local changes to the following files would be overwritten by merge:
+        backend/data/buckeye_event_ids.json
+        backend/data/buckeye_results.json
+Please commit your changes or stash them before you merge.
+Aborting
+Merge with strategy ort failed.
+PS C:\unifiedbetting> git checkout -- .gitignore
+PS C:\unifiedbetting> git pull origin main --no-edit
+From https://github.com/NDgopher/UnifiedBetting
+ * branch            main       -> FETCH_HEAD
+error: Your local changes to the following files would be overwritten by merge:
+        backend/data/buckeye_event_ids.json
+        backend/data/buckeye_results.json
+Please commit your changes or stash them before you merge.
+Aborting
+Merge with strategy ort failed.
+PS C:\unifiedbetting> git checkout -- backend/data/buckeye_event_ids.json backend/data/buckeye_results.json
+PS C:\unifiedbetting> git pull origin main --no-edit
+From https://github.com/NDgopher/UnifiedBetting
+ * branch            main       -> FETCH_HEAD
+CONFLICT (modify/delete): backend/data/betbck_games.json deleted in HEAD and modified in 9db67186766a9be395cfa96ef92ff5c575627d59.  Version 9db67186766a9be395cfa96ef92ff5c575627d59 of backend/data/betbck_games.json left in tree.
+Automatic merge failed; fix conflicts and then commit the result.
+PS C:\unifiedbetting> git checkout -- backend/data/buckeye_event_ids.json backend/data/buckeye_results.json
+error: pathspec 'backend/data/buckeye_results.json' did not match any file(s) known to git
+PS C:\unifiedbetting> git pull origin main --no-edit
+error: Pulling is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
+PS C:\unifiedbetting> git rm --cached backend/data/buckeye_event_ids.json backend/data/buckeye_results.json backend/data/betbck_games.json backend/data/ace_results.json backend/data/alert_history.json "backend/data/betbck_games-SL-4090PC-HOME-2.json" "backend/data/betbck_games-SL-4090PC-HOME.json" "backend/data/buckeye_event_ids-SL-4090PC-HOME-2.json" "backend/data/buckeye_event_ids-SL-4090PC-HOME.json" "backend/data/buckeye_results-SL-4090PC-HOME.json"
+fatal: pathspec 'backend/data/buckeye_results.json' did not match any files
+PS C:\unifiedbetting> git commit -m "Untrack runtime data files (already in .gitignore)"
+U       backend/data/betbck_games.json
+error: Committing is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
+PS C:\unifiedbetting> git push origin main
+To https://github.com/NDgopher/UnifiedBetting
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/NDgopher/UnifiedBetting'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+PS C:\unifiedbetting>
