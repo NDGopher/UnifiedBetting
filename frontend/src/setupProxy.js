@@ -30,6 +30,7 @@ module.exports = function(app) {
     '/api',
     '/pod_alert',
     '/buckeye',
+    '/ace',
     '/pto',
     '/healthz',
     '/test',
