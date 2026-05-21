@@ -51,6 +51,7 @@ const BuckeyeScraper: React.FC = () => {
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const isPolling = useRef(false);
   const wsRef = useRef<WebSocket | null>(null);
+  const runningAce = useRef(false);
 
   // Connect WebSocket on component mount
   useEffect(() => {
@@ -64,19 +65,27 @@ const BuckeyeScraper: React.FC = () => {
 
   const checkPipelineStatus = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/pipeline-status`);
+      const statusUrl = runningAce.current
+        ? `${API_BASE}/ace/pipeline-status`
+        : `${API_BASE}/api/pipeline-status`;
+      const res = await fetch(statusUrl);
       const data = await res.json();
       if (data.status === 'success') {
         const running = data.data.running;
         const taskDone = data.data.task_done;
         setPipelineRunning(running);
-        
+
         if (running) {
           console.log('[BuckeyeScraper] Pipeline is running...');
         } else if (taskDone) {
           console.log('[BuckeyeScraper] Pipeline completed!');
           setMessage('Pipeline completed successfully');
-          fetchEvents(); // Fetch results when pipeline is done
+          if (runningAce.current) {
+            runningAce.current = false;
+            fetchAceEvents();
+          } else {
+            fetchEvents();
+          }
           stopPolling();
         }
       }
@@ -141,6 +150,33 @@ const BuckeyeScraper: React.FC = () => {
             setLastUpdate(last_run);
             setMessage(`Pipeline completed: ${total_matched} games matched, ${total_events} events found`);
           }
+          setPipelineRunning(false);
+          stopPolling();
+        } else if (data.type === 'ace_update') {
+          const { events, total_events, last_run } = data.data;
+          if (events && events.length > 0) {
+            const sortedEvents = [...events].sort((a: any, b: any) => {
+              const evA = parseFloat(a.ev?.replace('%', '') || '0');
+              const evB = parseFloat(b.ev?.replace('%', '') || '0');
+              return evB - evA;
+            });
+            setTopMarkets(sortedEvents);
+            setLastUpdate(last_run);
+            setMessage(`Ace: ${total_events} events found`);
+          }
+        } else if (data.type === 'ace_complete') {
+          const { events, total_events, last_run, total_matched } = data.data;
+          if (events && events.length > 0) {
+            const sortedEvents = [...events].sort((a: any, b: any) => {
+              const evA = parseFloat(a.ev?.replace('%', '') || '0');
+              const evB = parseFloat(b.ev?.replace('%', '') || '0');
+              return evB - evA;
+            });
+            setTopMarkets(sortedEvents);
+            setLastUpdate(last_run);
+            setMessage(`Ace pipeline done: ${total_matched} games matched, ${total_events} EV opportunities`);
+          }
+          runningAce.current = false;
           setPipelineRunning(false);
           stopPolling();
         }
@@ -291,6 +327,7 @@ const BuckeyeScraper: React.FC = () => {
       // Handle the new response format with status field
       if (data.status === 'success') {
         setMessage(data.message || 'Ace calculations completed successfully');
+        runningAce.current = true;
         startPolling(); // Start polling now that calculations are running
         // Don't fetch results immediately - let polling handle it
         // fetchAceEvents();

@@ -2525,4 +2525,79 @@ class AceScraper:
             return self._get_pinnacle_odds(str(event_id))
         except Exception as e:
             logger.error(f"[ACE PINNACLE] Error getting Pinnacle data: {e}")
-            return None 
+
+
+def ace_game_to_betbck_format(ace_game: Dict) -> Dict:
+    """Convert a single Ace-scraped game dict into the BetBCK-compatible format
+    expected by match_pinnacle_to_betbck() and calculate_ev_table_async()."""
+    import hashlib
+
+    home_odds = ace_game.get('home_odds', {})
+    away_odds = ace_game.get('away_odds', {})
+
+    # Spread lists — one entry each (Ace only surfaces the main line)
+    site_top_spreads: list = []
+    if home_odds.get('spread_line') and home_odds.get('spread_odds'):
+        try:
+            site_top_spreads = [{"line": float(home_odds['spread_line']), "odds": home_odds['spread_odds']}]
+        except (ValueError, TypeError):
+            pass
+
+    site_bottom_spreads: list = []
+    if away_odds.get('spread_line') and away_odds.get('spread_odds'):
+        try:
+            site_bottom_spreads = [{"line": float(away_odds['spread_line']), "odds": away_odds['spread_odds']}]
+        except (ValueError, TypeError):
+            pass
+
+    # Game total — Ace JSON: home row has over odds ('ovh'), away row has under odds ('unh')
+    total_line = home_odds.get('total_line') or away_odds.get('total_line')
+    over_odds = home_odds.get('total_odds')
+    under_odds = away_odds.get('total_odds')
+
+    # Convert date_time "MM/DD HH:MM" → ISO format "YYYY-MM-DDTHH:MM"
+    # (required for the 24-hour date filter inside match_pinnacle_to_betbck)
+    raw_dt = ace_game.get('date_time', '')
+    event_datetime = ''
+    if raw_dt:
+        m = re.match(r'(\d{1,2})/(\d{1,2})\s+(\d{1,2}:\d{2})', raw_dt)
+        if m:
+            month, day, time_part = int(m.group(1)), int(m.group(2)), m.group(3)
+            year = datetime.now().year
+            event_datetime = f"{year}-{month:02d}-{day:02d}T{time_part}"
+
+    home = ace_game.get('home_team', '')
+    away = ace_game.get('away_team', '')
+    sport = ace_game.get('sport', '')
+    game_id = str(ace_game.get('game_id') or hashlib.md5(
+        f"{home}_{away}_{sport}_{event_datetime}".encode()
+    ).hexdigest()[:8])
+
+    return {
+        "betbck_game_id": game_id,
+        "betbck_site_home_team": home,
+        "betbck_site_away_team": away,
+        "betbck_site_odds": {
+            "site_top_team_moneyline_american": home_odds.get('moneyline'),
+            "site_bottom_team_moneyline_american": away_odds.get('moneyline'),
+            "draw_moneyline_american": None,
+            "site_top_team_spreads": site_top_spreads,
+            "site_bottom_team_spreads": site_bottom_spreads,
+            "game_total_line": total_line,
+            "game_total_over_odds": over_odds,
+            "game_total_under_odds": under_odds,
+            "home_team_total_over_line": None,
+            "home_team_total_over_odds": None,
+            "home_team_total_under_line": None,
+            "home_team_total_under_odds": None,
+            "away_team_total_over_line": None,
+            "away_team_total_over_odds": None,
+            "away_team_total_under_line": None,
+            "away_team_total_under_odds": None,
+        },
+        "timestamp": datetime.now().isoformat(),
+        "event_datetime": event_datetime,
+        "sport": sport,
+        "league": ace_game.get('league', ''),
+        "market_suffix": None,
+    }
