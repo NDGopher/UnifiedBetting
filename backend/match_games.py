@@ -618,9 +618,13 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 betbck_home_odds = None
                 betbck_away_odds = None
             logger.debug(f"[MAPPING] Event: {best_match['home_team']} vs {best_match['away_team']} | BetBCK home odds: {betbck_home_odds}, away odds: {betbck_away_odds}")
-            # Determine sport for this match - use BetBCK sport if available, otherwise fall back to team name detection
-            sport = betbck_game.get('sport', '').lower()
-            if not sport or sport == 'soccer':  # If no sport or default soccer, try team name detection
+            # Determine sport for this match.
+            # Trust the explicit sport label carried from ace_game_to_betbck_format() /
+            # _determine_sport_from_league().  Only fall back to team-name detection when the
+            # sport is genuinely missing or unclassified — never overwrite a valid label like
+            # 'soccer' (that was the cause of Hammarby/AIK → 'other' and San Jose → 'ufc_boxing').
+            sport = betbck_game.get('sport', '').strip().lower()
+            if not sport or sport in ('unknown', 'other', ''):
                 sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
             logger.debug(f"[MAPPING] Using sport '{sport}' for {norm_bck_home} vs {norm_bck_away}")
             
