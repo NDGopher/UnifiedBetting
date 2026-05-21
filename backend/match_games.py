@@ -613,10 +613,20 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 betbck_home_odds = bottom_ml
                 betbck_away_odds = top_ml
             else:
-                # Fallback: log and assign None
-                logger.warning(f"[MAPPING] Could not confidently map BetBCK teams to event ID home/away: top='{betbck_top_team}', bottom='{betbck_bottom_team}', event_home='{norm_event_home}', event_away='{norm_event_away}'")
-                betbck_home_odds = None
-                betbck_away_odds = None
+                # Exact normalized names don't match (e.g. "ny knicks" vs "new york knicks" for NBA).
+                # Trust the orientation already determined by the fuzzy matcher — it's correct.
+                if best_orientation:  # direct: BetBCK top ≡ Pinnacle home
+                    betbck_home_odds = top_ml
+                    betbck_away_odds = bottom_ml
+                else:                 # flipped: BetBCK top ≡ Pinnacle away
+                    betbck_home_odds = bottom_ml
+                    betbck_away_odds = top_ml
+                logger.debug(
+                    f"[MAPPING] Exact name match failed; using fuzzy orientation="
+                    f"{'direct' if best_orientation else 'flipped'} for "
+                    f"top='{betbck_top_team}' vs event_home='{norm_event_home}', "
+                    f"bottom='{betbck_bottom_team}' vs event_away='{norm_event_away}'"
+                )
             logger.debug(f"[MAPPING] Event: {best_match['home_team']} vs {best_match['away_team']} | BetBCK home odds: {betbck_home_odds}, away odds: {betbck_away_odds}")
             # Determine sport for this match.
             # Trust the explicit sport label carried from ace_game_to_betbck_format() /

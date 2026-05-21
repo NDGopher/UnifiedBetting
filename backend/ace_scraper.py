@@ -305,14 +305,29 @@ class AceScraper:
         safe_print(f"[ACE DEBUG] get_active_league_ids returning: {league_ids_str}")
         return league_ids_str
 
-    # Known-working soccer league IDs (verified to return data from Ace)
-    _KNOWN_SOCCER_LEAGUE_IDS = [
+    # Known-working league IDs verified on Ace (action23.ag).
+    # Soccer IDs discovered via original API exploration.
+    # Non-soccer IDs (NBA, NFL, NHL, etc.) discovered by user clicking sports
+    # on NewSchedule.aspx: lg=416,417,418,535,443,298,7,211,544,442,129,171
+    _KNOWN_LEAGUE_IDS = [
+        # ── Basketball / NBA ──────────────────────────────────────────────────
+        "416", "417", "418", "535",
+        # ── Football / NFL ────────────────────────────────────────────────────
+        "443", "298", "7",
+        # ── Hockey / NHL ──────────────────────────────────────────────────────
+        "211", "544",
+        # ── Other (user-confirmed, sport TBD from Description) ───────────────
+        "442", "129", "171",
+        # ── Soccer (verified working) ─────────────────────────────────────────
         "2521", "515", "537", "1116", "3483", "1278", "439", "549", "451", "414",
         "558", "4437", "557", "440", "585", "1183", "333", "1180", "546", "2948",
         "1193", "1567", "520", "1241", "184", "2716", "482", "1195", "1189", "438",
         "745", "1186", "306", "116", "1181", "521", "4781", "2777", "1190", "441",
         "1196", "1162", "1569",
     ]
+
+    # Keep old name as alias so any external call still works
+    _KNOWN_SOCCER_LEAGUE_IDS = _KNOWN_LEAGUE_IDS
 
     def _discover_league_ids_from_create_sports(self) -> List[str]:
         """
@@ -771,6 +786,7 @@ class AceScraper:
             # Try to parse JSON
             data = json.loads(cleaned_content)
             games = []
+            seen_game_ids: set = set()   # dedupe by game_id to avoid double-counting
             
             # Navigate JSON structure safely
             result = data.get('result', {})
@@ -798,25 +814,25 @@ class AceScraper:
                         if not isinstance(game, dict):
                             continue
                         
-                        # Only process main games (not child games/props)
-                        # Check if this is a main game by looking for haschild=True or no GameChilds
-                        game_lines = game.get('GameLines', [])
-                        if not game_lines:
+                        if not game.get('GameLines'):
                             continue
-                        
-                        # Check if this is a main game (haschild=True) or has no child games
-                        main_line = game_lines[0]
-                        has_child = main_line.get('haschild', False)
-                        game_childs = game.get('GameChilds', [])
-                        
-                        # Only process if this is a main game (haschild=True) or has no child games
-                        if has_child or not game_childs:
-                            game_data = self._extract_game_from_json(game, league_desc)
-                            if game_data:
+
+                        # Process every top-level game entry regardless of haschild /
+                        # GameChilds.  The old filter (haschild OR not game_childs) was
+                        # correct for soccer where the main game has haschild=True, but it
+                        # excluded NBA/NHL/MLB games that are standalone (haschild=False)
+                        # yet still have a non-empty GameChilds array.
+                        # _extract_game_from_json returns None for prop/invalid entries.
+                        game_data = self._extract_game_from_json(game, league_desc)
+                        if game_data:
+                            # Include league_desc in the dedup key so that games with the
+                            # same Ace-internal idgm from different leagues don't collide.
+                            raw_gid = game_data.get('game_id') or f"{game_data.get('home_team')}_{game_data.get('away_team')}"
+                            gid = f"{league_desc}::{raw_gid}"
+                            if gid not in seen_game_ids:
+                                seen_game_ids.add(gid)
                                 games.append(game_data)
-                                safe_print(f"[ACE DEBUG] Added main game: {game_data.get('away_team', '')} vs {game_data.get('home_team', '')}")
-                        else:
-                            safe_print(f"[ACE DEBUG] Skipped child game: {game.get('htm', '')} vs {game.get('vtm', '')}")
+                                safe_print(f"[ACE DEBUG] Added game [{league_desc}]: {game_data.get('away_team','')} vs {game_data.get('home_team','')}")
             
             safe_print(f"[ACE DEBUG] _parse_json_response: {len(games)} main games parsed successfully")
             return games
@@ -848,28 +864,29 @@ class AceScraper:
             if not home_team or not away_team:
                 return None
             
-            # Additional filtering for problematic team names
-            combined_text = f"{home_team} {away_team} {league_desc}".upper()
-            
-            # Check for tennis props and other problematic patterns
-            problematic_patterns = [
+            # Filter on TEAM NAMES only (not league_desc) to avoid false positives.
+            # e.g. "NBA - GAME LINES" contains "GAME", "CHAMPIONSHIP" appears in real
+            # soccer league names — checking league_desc here would drop legitimate games.
+            teams_text = f"{home_team} {away_team}".upper()
+
+            # Patterns that indicate a prop / futures / non-game entry in team names
+            problematic_team_patterns = [
                 r'\b(?:1ST SET|2ND SET|3RD SET|4TH SET|5TH SET)\b',
-                r'\b(?:SETS|GAMES|GAME)\b',
-                r'\b(?:ALT\s+)\b',
-                r'\b(?:1H\s+)\b',
-                r'\b(?:FIRST HALF)\b',
+                r'\b(?:SETS|GAMES)\b',          # tennis game/set props (not "GAME LINES" league)
                 r'\b(?:SERIES PRICES|SERIES WINNER|SERIES BET)\b',
-                r'\b(?:CHAMPIONSHIP|CHAMPION|TITLE)\b',
-                r'\b(?:SEASON|REGULAR SEASON|PLAYOFFS)\b',
                 r'\b(?:WORLD SERIES|STANLEY CUP|SUPER BOWL)\b',
                 r'\b(?:TO WIN|TO ADVANCE|TO MAKE)\b',
-                r'\b(?:FUTURES|FUTURE BET|FUTURE MARKET)\b'
+                r'\b(?:FUTURES|FUTURE BET|FUTURE MARKET)\b',
             ]
-            
-            for pattern in problematic_patterns:
-                if re.search(pattern, combined_text, re.IGNORECASE):
-                    safe_print(f"[ACE DEBUG] Skipped game due to pattern '{pattern}': {home_team} vs {away_team}")
+            for pattern in problematic_team_patterns:
+                if re.search(pattern, teams_text, re.IGNORECASE):
+                    safe_print(f"[ACE DEBUG] Skipped game (team pattern '{pattern}'): {home_team} vs {away_team}")
                     return None
+
+            # Separate check: skip "team total" entries (same name on both sides)
+            # These come through as "METS TEAM TOTAL vs METS TEAM TOTAL" etc.
+            if 'TEAM TOTAL' in teams_text:
+                return None
             
             # Additional check for problematic team names (reduced filtering)
             problematic_team_keywords = [
@@ -2698,9 +2715,13 @@ def ace_game_to_betbck_format(ace_game: Dict) -> Dict:
     home = ace_game.get('home_team', '')
     away = ace_game.get('away_team', '')
     sport = ace_game.get('sport', '')
-    game_id = str(ace_game.get('game_id') or hashlib.md5(
+    league = ace_game.get('league', '')
+    # Prefix the Ace game_id with the league so that games from different sports that
+    # happen to share the same Ace-internal numeric idgm don't collide in match_games.py
+    raw_id = ace_game.get('game_id') or hashlib.md5(
         f"{home}_{away}_{sport}_{event_datetime}".encode()
-    ).hexdigest()[:8])
+    ).hexdigest()[:8]
+    game_id = f"{league}::{raw_id}"
 
     return {
         "betbck_game_id": game_id,
