@@ -858,19 +858,37 @@ class AceScraper:
     def _determine_sport_from_league(self, league_desc: str) -> str:
         """Determine sport from league description"""
         league_lower = league_desc.lower()
-        
+
         if 'mlb' in league_lower or 'baseball' in league_lower:
             return 'baseball'
-        elif 'nfl' in league_lower or 'ncaaf' in league_lower or 'college football' in league_lower or 'football' in league_lower:
+        elif ('nfl' in league_lower or 'ncaaf' in league_lower
+              or 'college football' in league_lower
+              or 'american football' in league_lower):
             return 'football'
-        elif 'nba' in league_lower or 'wnba' in league_lower or 'ncaab' in league_lower or 'college basketball' in league_lower or 'basketball' in league_lower:
+        elif ('nba' in league_lower or 'wnba' in league_lower
+              or 'ncaab' in league_lower or 'college basketball' in league_lower
+              or 'basketball' in league_lower or 'euroleague' in league_lower
+              or 'nbl' in league_lower):
             return 'basketball'
-        elif 'nhl' in league_lower or 'hockey' in league_lower:
+        elif ('nhl' in league_lower or 'hockey' in league_lower
+              or 'ice hockey' in league_lower):
             return 'hockey'
-        elif 'soccer' in league_lower or 'football' in league_lower:
-            return 'soccer'
-        elif 'ufc' in league_lower or 'mma' in league_lower:
+        elif ('ufc' in league_lower or 'mma' in league_lower
+              or 'boxing' in league_lower or 'martial arts' in league_lower):
             return 'fighting'
+        # Soccer: explicit keyword OR well-known league/competition names
+        elif any(kw in league_lower for kw in (
+            'soccer', 'premier league', 'la liga', 'bundesliga', 'serie a',
+            'ligue 1', 'eredivisie', 'primeira liga', 'mls', 'major league soccer',
+            'champions league', 'europa league', 'conference league',
+            'copa', 'mundial', 'world cup', 'euro', 'nations league',
+            'superliga', 'allsvenskan', 'eliteserien', 'ekstraklasa',
+            'süper lig', 'super lig', 'j league', 'j1 league', 'j2 league',
+            'a-league', 'chinese super league', 'k league',
+            'liga mx', 'ligamx', 'brasileirao', 'serie b',
+            'primera division', 'primera liga',
+        )):
+            return 'soccer'
         else:
             return 'unknown'
     

@@ -1959,17 +1959,38 @@ async def run_ace_streaming_pipeline_background():
 
         await asyncio.sleep(0)
 
-        # ── Step 3: Load Pinnacle event IDs (shared with Buckeye) ────────────────
-        logger.info("[ACE-PIPELINE] Step 3: Loading Pinnacle event IDs...")
-        print("[ACE-PIPELINE] Step 3: Loading Pinnacle event IDs...")
-        event_ids_path = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_event_ids.json')
-        if not os.path.exists(event_ids_path):
-            logger.error(f"[ACE-PIPELINE] Event IDs file missing: {event_ids_path}")
-            return {"status": "error", "message": "Pinnacle event IDs missing — run Get Event IDs first"}
+        # ── Step 3: Fetch fresh Pinnacle event IDs for ALL sports ────────────────
+        # Always fetch live from Pinnacle (not from stale disk file) so that
+        # baseball, basketball, hockey, football are all present regardless of
+        # when the user last ran "Get Event IDs" in the Buckeye tab.
+        logger.info("[ACE-PIPELINE] Step 3: Fetching fresh Pinnacle events (all sports)...")
+        print("[ACE-PIPELINE] Step 3: Fetching fresh Pinnacle events...")
+        try:
+            from eventID import get_todays_event_ids as _get_pinnacle_events
+            event_dicts = await asyncio.wait_for(
+                loop.run_in_executor(None, _get_pinnacle_events),
+                timeout=120
+            )
+        except asyncio.TimeoutError:
+            logger.error("[ACE-PIPELINE] Step 3 timed out fetching Pinnacle events")
+            event_dicts = []
+        except Exception as _e3:
+            logger.error(f"[ACE-PIPELINE] Step 3 error fetching Pinnacle events: {_e3}")
+            event_dicts = []
 
-        with open(event_ids_path, 'r') as _f:
-            _ev_data = json.load(_f)
-        event_dicts = _ev_data.get('event_ids', [])
+        # Fallback: if live fetch fails or returns nothing, use disk cache
+        if not event_dicts:
+            logger.warning("[ACE-PIPELINE] Step 3: Live fetch returned nothing — falling back to disk cache")
+            event_ids_path = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_event_ids.json')
+            if os.path.exists(event_ids_path):
+                with open(event_ids_path, 'r') as _f:
+                    _ev_data = json.load(_f)
+                event_dicts = _ev_data.get('event_ids', [])
+                logger.info(f"[ACE-PIPELINE] Step 3: Loaded {len(event_dicts)} events from disk cache")
+
+        if not event_dicts:
+            logger.error("[ACE-PIPELINE] Step 3: No Pinnacle events available from live fetch or cache")
+            return {"status": "error", "message": "Could not fetch Pinnacle events — check network"}
 
         # Attach event_datetime so the 24-hour date filter in match_games.py works
         for _ev in event_dicts:
@@ -1988,8 +2009,10 @@ async def run_ace_streaming_pipeline_background():
                 except Exception as _e2:
                     logger.warning(f"[ACE-PIPELINE] event_datetime error for {_ev.get('event_id','?')}: {_e2}")
 
-        logger.info(f"[ACE-PIPELINE] Step 3 done: {len(event_dicts)} Pinnacle events loaded")
-        print(f"[ACE-PIPELINE] Step 3 done: {len(event_dicts)} Pinnacle events")
+        from collections import Counter as _Counter
+        _sport_counts = _Counter(_ev.get('sport', '?') for _ev in event_dicts)
+        logger.info(f"[ACE-PIPELINE] Step 3 done: {len(event_dicts)} Pinnacle events — {dict(_sport_counts)}")
+        print(f"[ACE-PIPELINE] Step 3 done: {len(event_dicts)} Pinnacle events — {dict(_sport_counts)}")
 
         await asyncio.sleep(0)
 
