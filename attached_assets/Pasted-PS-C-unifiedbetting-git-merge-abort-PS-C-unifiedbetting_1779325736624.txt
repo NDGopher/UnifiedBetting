@@ -1,0 +1,36 @@
+PS C:\unifiedbetting> git merge --abort
+PS C:\unifiedbetting> git fetch origin
+PS C:\unifiedbetting> git reset --hard origin/main
+HEAD is now at 9db6718 Add CONMEBOL and other confederations to team name stripping logic
+PS C:\unifiedbetting> git rm --cached backend/data/betbck_games.json backend/data/ace_results.json backend/data/alert_history.json "backend/data/betbck_games-SL-4090PC-HOME-2.json" "backend/data/betbck_games-SL-4090PC-HOME.json" "backend/data/buckeye_event_ids-SL-4090PC-HOME-2.json" "backend/data/buckeye_event_ids-SL-4090PC-HOME.json" "backend/data/buckeye_results-SL-4090PC-HOME.json"
+rm 'backend/data/ace_results.json'
+rm 'backend/data/alert_history.json'
+rm 'backend/data/betbck_games-SL-4090PC-HOME-2.json'
+rm 'backend/data/betbck_games-SL-4090PC-HOME.json'
+rm 'backend/data/betbck_games.json'
+rm 'backend/data/buckeye_event_ids-SL-4090PC-HOME-2.json'
+rm 'backend/data/buckeye_event_ids-SL-4090PC-HOME.json'
+rm 'backend/data/buckeye_results-SL-4090PC-HOME.json'
+PS C:\unifiedbetting> git commit -m "Untrack runtime data files (already in .gitignore)"
+[main 9cb249e] Untrack runtime data files (already in .gitignore)
+ 8 files changed, 53826 deletions(-)
+ delete mode 100644 backend/data/ace_results.json
+ delete mode 100644 backend/data/alert_history.json
+ delete mode 100644 backend/data/betbck_games-SL-4090PC-HOME-2.json
+ delete mode 100644 backend/data/betbck_games-SL-4090PC-HOME.json
+ delete mode 100644 backend/data/betbck_games.json
+ delete mode 100644 backend/data/buckeye_event_ids-SL-4090PC-HOME-2.json
+ delete mode 100644 backend/data/buckeye_event_ids-SL-4090PC-HOME.json
+ delete mode 100644 backend/data/buckeye_results-SL-4090PC-HOME.json
+PS C:\unifiedbetting> git push origin main
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 32 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 395 bytes | 395.00 KiB/s, done.
+Total 4 (delta 3), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+remote: This repository moved. Please use the new location:
+remote:   https://github.com/NDGopher/UnifiedBetting.git
+To https://github.com/NDgopher/UnifiedBetting
+   9db6718..9cb249e  main -> main
