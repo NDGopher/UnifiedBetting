@@ -64,8 +64,9 @@ const BuckeyeScraper: React.FC = () => {
   }, []);
 
   const checkPipelineStatus = async () => {
+    const isAceRun = runningAce.current; // snapshot before async — SSE may clear it mid-flight
     try {
-      const statusUrl = runningAce.current
+      const statusUrl = isAceRun
         ? `${API_BASE}/ace/pipeline-status`
         : `${API_BASE}/api/pipeline-status`;
       const res = await fetch(statusUrl);
@@ -80,7 +81,7 @@ const BuckeyeScraper: React.FC = () => {
         } else if (taskDone) {
           console.log('[BuckeyeScraper] Pipeline completed!');
           setMessage('Pipeline completed successfully');
-          if (runningAce.current) {
+          if (isAceRun) {
             runningAce.current = false;
             fetchAceEvents();
           } else {
