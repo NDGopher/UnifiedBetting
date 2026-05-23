@@ -590,7 +590,8 @@ def strip_pod_league_suffix(name: str) -> str:
     # Also includes confederation names that POD appends (e.g. O'HigginsCONMEBOL)
     _LEAGUE_ABBREVS = (
         'WNBA', 'NBA', 'NFL', 'NHL', 'MLB', 'MLS', 'NWSL', 'PWHL',
-        'NCAAF', 'NCAAB', 'UFC', 'AFL', 'CFL', 'XFL', 'USFL',
+        'NCAAF', 'NCAAB', 'UFC', 'PFL', 'BKFC', 'ONE', 'RIZIN', 'LFA', 'CFFC',
+        'AFL', 'CFL', 'XFL', 'USFL',
         'UEFA', 'CONMEBOL', 'CONCACAF', 'AFC', 'OFC', 'FIFA',
     )
     for abbrev in _LEAGUE_ABBREVS:
@@ -664,11 +665,9 @@ def strip_pod_league_suffix(name: str) -> str:
 def clean_pod_team_name_for_search(name: str) -> str:
     """Clean team name for search by removing common suffixes and normalizing."""
     print(f"[DEBUG] clean_pod_team_name_for_search input: '{name}'")
-    # Strip WNBA / women's-league 'W' suffix concatenated directly to the team name
-    # e.g. "Las Vegas AcesW" → "Las Vegas Aces", "Chicago SkyW" → "Chicago Sky"
-    # The W is always uppercase and follows a letter (no space before it).
-    import re as _re_w
-    name = _re_w.sub(r'([a-zA-Z])W$', r'\1', name)
+    # Strip league abbreviations / country suffixes concatenated directly by POD
+    # e.g. "Taylor LapilusPFL" → "Taylor Lapilus", "BryneNorway - 1st Division" → "Bryne"
+    name = strip_pod_league_suffix(name)
     result = normalize_team_name_for_matching(name)
     print(f"[DEBUG] clean_pod_team_name_for_search output: '{result}'")
     return result
