@@ -32,7 +32,7 @@ except ImportError:
 # Attempt to import fuzzywuzzy for robust team matching
 try:
     from fuzzywuzzy import fuzz
-    FUZZY_MATCH_THRESHOLD = 60  # Threshold for team name matching (0-100) - Lowered for more tolerance
+    FUZZY_MATCH_THRESHOLD = 65  # Threshold for team name matching (0-100)
     print("[BetbckScraper] fuzzywuzzy library loaded.")
 except ImportError:
     print("[BetbckScraper] WARNING: fuzzywuzzy library not found. Team matching will rely on more exact normalization.")
@@ -847,6 +847,28 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                 except Exception:
                     pass
         _date_log = bck_game_date.strftime('%Y-%m-%d %H:%M') if bck_game_date else "unknown"
+
+        # --- Hard date reject: discard matches where BCK game is too far from the expected time ---
+        # This prevents wrong-league games (e.g. Atletico Madrid tomorrow) from matching a
+        # lower-division game happening today when Pinnacle's start time is unavailable.
+        _DATE_REJECT_HOURS = 18  # reject if BCK game > 18h away from anchor
+        if bck_game_date and not ("exact_order1" in _cand_scores or "exact_order2" in _cand_scores):
+            if event_date is not None:
+                _date_gap_h = abs((bck_game_date - event_date).total_seconds()) / 3600
+                if _date_gap_h > _DATE_REJECT_HOURS:
+                    print(f"[BetbckParser] DATE REJECT: {raw_bck_l} vs {raw_bck_v} — BCK date {_date_log} is {_date_gap_h:.1f}h from PIN {event_date.strftime('%Y-%m-%d %H:%M')} (Event ID: {event_id})")
+                    if _alog:
+                        _alog.log_bck_date(bck_date_str=_date_log, event_date_str=event_date.strftime('%Y-%m-%d %H:%M'), diff_h=_date_gap_h)
+                    continue
+            else:
+                # No PIN anchor: reject if BCK game is >18h from right now
+                _hours_from_now = (bck_game_date - datetime.datetime.now()).total_seconds() / 3600
+                if _hours_from_now > _DATE_REJECT_HOURS:
+                    print(f"[BetbckParser] DATE REJECT (no PIN anchor): {raw_bck_l} vs {raw_bck_v} — BCK date {_date_log} is {_hours_from_now:.1f}h from now (Event ID: {event_id})")
+                    if _alog:
+                        _alog.log_bck_date(bck_date_str=_date_log, event_date_str=None, diff_h=None)
+                    continue
+
         # Compute match quality score so the BEST match wins (not the first HTML-order match)
         if "exact_order1" in _cand_scores or "exact_order2" in _cand_scores:
             _match_score = 300  # exact name match always beats fuzzy
