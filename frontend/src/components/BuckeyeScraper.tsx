@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Box, Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Alert, FormControlLabel, Checkbox, Collapse, Slider } from '@mui/material';
 import MatchingStats from './MatchingStats';
 import dayjs from 'dayjs';
@@ -33,9 +33,12 @@ const BuckeyeScraper: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const [topMarkets, setTopMarkets] = useState<any[]>([]);
+  const [aceMarkets, setAceMarkets] = useState<any[]>([]);
+  const [buckeyeMarkets, setBuckeyeMarkets] = useState<any[]>([]);
   const [stats, setStats] = useState({ pinnacleEvents: 0, betbckMatches: 0, matchRate: 0 });
-  const [lastUpdate, setLastUpdate] = useState<string | null>(null);
+  const [aceLastUpdate, setAceLastUpdate] = useState<string | null>(null);
+  const [buckeyeLastUpdate, setBuckeyeLastUpdate] = useState<string | null>(null);
+  const [eventIdsLastRun, setEventIdsLastRun] = useState<string | null>(() => localStorage.getItem('eventIdsLastRun'));
   const [sortBy, setSortBy] = useState<'ev' | 'start_time' | 'pinnacle_limit'>('ev');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [pipelineRunning, setPipelineRunning] = useState(false);
@@ -53,15 +56,21 @@ const BuckeyeScraper: React.FC = () => {
   const wsRef = useRef<WebSocket | null>(null);
   const runningAce = useRef(false);
 
-  // Connect WebSocket on component mount
+  // Connect WebSocket on component mount + auto-run Get Event IDs if stale (>24h)
   useEffect(() => {
     connectWebSocket();
-    
+
+    const stored = localStorage.getItem('eventIdsLastRun');
+    const stale = !stored || dayjs().diff(dayjs(stored), 'hour') >= 24;
+    if (stale) {
+      handleGetEventIds();
+    }
+
     return () => {
       disconnectWebSocket();
       stopPolling();
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkPipelineStatus = async () => {
     const isAceRun = runningAce.current; // snapshot before async — SSE may clear it mid-flight
@@ -130,52 +139,32 @@ const BuckeyeScraper: React.FC = () => {
         if (data.type === 'buckeye_update') {
           const { events, total_events, last_run, batch_completed, total_batches } = data.data;
           if (events && events.length > 0) {
-            const sortedEvents = [...events].sort((a: any, b: any) => {
-              const evA = parseFloat(a.ev?.replace('%', '') || '0');
-              const evB = parseFloat(b.ev?.replace('%', '') || '0');
-              return evB - evA;
-            });
-            setTopMarkets(sortedEvents);
-            setLastUpdate(last_run);
+            setBuckeyeMarkets(events);
+            setBuckeyeLastUpdate(last_run);
             setMessage(`Streaming: ${batch_completed}/${total_batches} batches completed (${total_events} events)`);
           }
         } else if (data.type === 'buckeye_complete') {
           const { events, total_events, last_run, total_matched } = data.data;
           if (events && events.length > 0) {
-            const sortedEvents = [...events].sort((a: any, b: any) => {
-              const evA = parseFloat(a.ev?.replace('%', '') || '0');
-              const evB = parseFloat(b.ev?.replace('%', '') || '0');
-              return evB - evA;
-            });
-            setTopMarkets(sortedEvents);
-            setLastUpdate(last_run);
-            setMessage(`Pipeline completed: ${total_matched} games matched, ${total_events} events found`);
+            setBuckeyeMarkets(events);
+            setBuckeyeLastUpdate(last_run);
+            setMessage(`Buckeye done: ${total_matched} games matched, ${total_events} events found`);
           }
           setPipelineRunning(false);
           stopPolling();
         } else if (data.type === 'ace_update') {
           const { events, total_events, last_run } = data.data;
           if (events && events.length > 0) {
-            const sortedEvents = [...events].sort((a: any, b: any) => {
-              const evA = parseFloat(a.ev?.replace('%', '') || '0');
-              const evB = parseFloat(b.ev?.replace('%', '') || '0');
-              return evB - evA;
-            });
-            setTopMarkets(sortedEvents);
-            setLastUpdate(last_run);
+            setAceMarkets(events);
+            setAceLastUpdate(last_run);
             setMessage(`Ace: ${total_events} events found`);
           }
         } else if (data.type === 'ace_complete') {
           const { events, total_events, last_run, total_matched } = data.data;
           if (events && events.length > 0) {
-            const sortedEvents = [...events].sort((a: any, b: any) => {
-              const evA = parseFloat(a.ev?.replace('%', '') || '0');
-              const evB = parseFloat(b.ev?.replace('%', '') || '0');
-              return evB - evA;
-            });
-            setTopMarkets(sortedEvents);
-            setLastUpdate(last_run);
-            setMessage(`Ace pipeline done: ${total_matched} games matched, ${total_events} EV opportunities`);
+            setAceMarkets(events);
+            setAceLastUpdate(last_run);
+            setMessage(`Ace done: ${total_matched} games matched, ${total_events} EV opportunities`);
           }
           runningAce.current = false;
           setPipelineRunning(false);
@@ -229,20 +218,17 @@ const BuckeyeScraper: React.FC = () => {
       const data = await res.json();
       console.log('[BuckeyeScraper] Results response:', data);
       if (data.status === 'success') {
-        setLastUpdate(data.data.last_update || null);
-        const allMarkets = data.data.markets || [];
-        allMarkets.sort((a: any, b: any) => parseFloat(b.ev) - parseFloat(a.ev));
-        // Show up to 150 markets (sorted by EV desc initially)
-        const displayLimit = 150;
-        setTopMarkets(allMarkets.length > 0 ? allMarkets.slice(0, displayLimit) : []);
+        setBuckeyeLastUpdate(data.data.last_update || null);
+        const allMarkets = (data.data.markets || []).slice(0, 150);
+        setBuckeyeMarkets(allMarkets);
       } else {
         setError(data.message || 'Failed to fetch results');
-        setTopMarkets([]);
+        setBuckeyeMarkets([]);
       }
     } catch (err) {
       console.error('[BuckeyeScraper] Error fetching results:', err);
       setError('Failed to fetch results');
-      setTopMarkets([]);
+      setBuckeyeMarkets([]);
     } finally {
       setLoading(false);
     }
@@ -262,6 +248,9 @@ const BuckeyeScraper: React.FC = () => {
         if (data.data && typeof data.data.event_count === 'number') {
           setStats(s => ({ ...s, pinnacleEvents: data.data.event_count }));
         }
+        const now = new Date().toISOString();
+        localStorage.setItem('eventIdsLastRun', now);
+        setEventIdsLastRun(now);
       } else {
         setError(data.message || 'Failed to get event IDs');
       }
@@ -277,8 +266,8 @@ const BuckeyeScraper: React.FC = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
-    setTopMarkets([]); // Clear any old data immediately
-    setLastUpdate(null); // Clear last update timestamp
+    setBuckeyeMarkets([]); // Clear only Buckeye data — ACE results are preserved
+    setBuckeyeLastUpdate(null);
     try {
       console.log('[BuckeyeScraper] Starting streaming Buckeye pipeline...');
       const body = selectedSports.length > 0 ? { sport_filters: selectedSports } : {};
@@ -301,12 +290,12 @@ const BuckeyeScraper: React.FC = () => {
         startPolling();
       } else {
         setError(data.message || 'Failed to start streaming pipeline');
-        setTopMarkets([]);
+        setBuckeyeMarkets([]);
       }
     } catch (err) {
       console.error('[BuckeyeScraper] Error starting streaming pipeline:', err);
       setError('Failed to start streaming pipeline');
-      setTopMarkets([]);
+      setBuckeyeMarkets([]);
     } finally {
       setLoading(false);
     }
@@ -316,8 +305,8 @@ const BuckeyeScraper: React.FC = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
-    setTopMarkets([]); // Clear any old data immediately
-    setLastUpdate(null); // Clear last update timestamp
+    setAceMarkets([]); // Clear only ACE data — Buckeye results are preserved
+    setAceLastUpdate(null);
     // Don't start polling immediately - wait until calculations are actually running
     try {
       console.log('[BuckeyeScraper] Running Ace calculations...');
@@ -339,25 +328,22 @@ const BuckeyeScraper: React.FC = () => {
         // fetchAceEvents();
       } else if (data.status === 'error') {
         setError(data.message || data.error || 'Failed to run Ace calculations');
-        setTopMarkets([]);
-        stopPolling(); // Stop polling on error
+        setAceMarkets([]);
+        stopPolling();
       } else {
-        // Handle old format for backward compatibility
         if (data.message) {
           setMessage(data.message);
-          // Don't fetch results immediately - let polling handle it
-          // fetchAceEvents();
         } else {
           setError('Failed to run Ace calculations - unexpected response format');
-          setTopMarkets([]);
+          setAceMarkets([]);
           stopPolling();
         }
       }
     } catch (err) {
       console.error('[BuckeyeScraper] Error running Ace calculations:', err);
       setError('Failed to run Ace calculations - network error');
-      setTopMarkets([]);
-      stopPolling(); // Stop polling on error
+      setAceMarkets([]);
+      stopPolling();
     } finally {
       setLoading(false);
     }
@@ -374,48 +360,32 @@ const BuckeyeScraper: React.FC = () => {
       console.log('[BuckeyeScraper] Ace results response:', data);
       
       // Handle the new response format with status field
+      const setAce = (markets: any[], update: string | null) => {
+        setAceMarkets(markets.slice(0, 150));
+        setAceLastUpdate(update);
+        stopPolling();
+      };
       if (data.status === 'success') {
-        setLastUpdate(data.last_update || null);
-        const allMarkets = data.markets || [];
-        allMarkets.sort((a: any, b: any) => parseFloat(b.ev) - parseFloat(a.ev));
-        // Show up to 150 markets (sorted by EV desc initially)
-        const displayLimit = 150;
-        setTopMarkets(allMarkets.length > 0 ? allMarkets.slice(0, displayLimit) : []);
-        stopPolling(); // Stop polling when results are loaded
+        setAce(data.markets || [], data.last_update || null);
       } else if (data.status === 'partial_success') {
-        setLastUpdate(data.last_update || null);
-        const allMarkets = data.markets || [];
-        allMarkets.sort((a: any, b: any) => parseFloat(b.ev) - parseFloat(a.ev));
-        // Show up to 150 markets
-        const displayLimit = 150;
-        setTopMarkets(allMarkets.length > 0 ? allMarkets.slice(0, displayLimit) : []);
+        setAce(data.markets || [], data.last_update || null);
         setMessage(data.message || 'Partial results loaded');
-        stopPolling(); // Stop polling when results are loaded
       } else if (data.status === 'error') {
         setError(data.message || data.error || 'Failed to fetch Ace results');
-        setTopMarkets([]);
-        stopPolling(); // Stop polling on error
+        setAceMarkets([]);
+        stopPolling();
+      } else if (data.data && data.data.markets) {
+        setAce(data.data.markets || [], data.data.last_update || null);
       } else {
-        // Handle old format for backward compatibility
-        if (data.data && data.data.markets) {
-          setLastUpdate(data.data.last_update || null);
-          const allMarkets = data.data.markets || [];
-          allMarkets.sort((a: any, b: any) => parseFloat(b.ev) - parseFloat(a.ev));
-          // Show up to 150 markets
-          const displayLimit = 150;
-          setTopMarkets(allMarkets.length > 0 ? allMarkets.slice(0, displayLimit) : []);
-          stopPolling(); // Stop polling when results are loaded
-        } else {
-          setError('Failed to fetch Ace results - unexpected response format');
-          setTopMarkets([]);
-          stopPolling(); // Stop polling on error
-        }
+        setError('Failed to fetch Ace results - unexpected response format');
+        setAceMarkets([]);
+        stopPolling();
       }
     } catch (err) {
       console.error('[BuckeyeScraper] Error fetching Ace results:', err);
       setError('Failed to fetch Ace results - network error');
-      setTopMarkets([]);
-      stopPolling(); // Stop polling on error
+      setAceMarkets([]);
+      stopPolling();
     } finally {
       setLoading(false);
     }
@@ -439,6 +409,31 @@ const BuckeyeScraper: React.FC = () => {
         : [...prev, sportKey]
     );
   };
+
+  // Merged + sorted view of both pipelines' results
+  const topMarkets = useMemo(() => {
+    const combined = [...aceMarkets, ...buckeyeMarkets];
+    return combined.sort((a: any, b: any) => {
+      if (sortBy === 'ev') {
+        const evA = parseFloat(a.ev?.replace('%', '') || '0');
+        const evB = parseFloat(b.ev?.replace('%', '') || '0');
+        return sortDir === 'desc' ? evB - evA : evA - evB;
+      }
+      if (sortBy === 'start_time') {
+        const da = parseStartTime(a.start_time);
+        const db = parseStartTime(b.start_time);
+        return sortDir === 'desc'
+          ? (db ? db.valueOf() : 0) - (da ? da.valueOf() : 0)
+          : (da ? da.valueOf() : 0) - (db ? db.valueOf() : 0);
+      }
+      if (sortBy === 'pinnacle_limit') {
+        const va = a.pinnacle_limit ?? -1;
+        const vb = b.pinnacle_limit ?? -1;
+        return sortDir === 'desc' ? vb - va : va - vb;
+      }
+      return 0;
+    });
+  }, [aceMarkets, buckeyeMarkets, sortBy, sortDir]);
 
   const evLabel = (v: number, isMax: boolean) =>
     isMax && v >= EV_MAX_SLIDER ? 'All' : `${v}%`;
@@ -489,6 +484,11 @@ const BuckeyeScraper: React.FC = () => {
           onClick={handleGetEventIds}
         >
           Get Event IDs
+          {eventIdsLastRun && (
+            <Box component="span" sx={{ ml: 0.75, fontSize: '0.7rem', color: 'rgba(46,125,50,0.7)', fontWeight: 400 }}>
+              ({dayjs(eventIdsLastRun).fromNow()})
+            </Box>
+          )}
         </Button>
         <Button
           variant="outlined"
@@ -653,14 +653,26 @@ const BuckeyeScraper: React.FC = () => {
           )}
         </Box>
       </Collapse>
-      {lastUpdate && (
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, ml: 0.5 }}>
-          <Typography variant="body2" sx={{ color: '#aaa', fontSize: '0.8rem' }}>
-            Last Updated: {dayjs(lastUpdate).format('YYYY-MM-DD HH:mm:ss')} ({dayjs(lastUpdate).fromNow()})
-          </Typography>
+      {(aceLastUpdate || buckeyeLastUpdate || topMarkets.length > 0) && (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, ml: 0.5, flexWrap: 'wrap', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            {aceLastUpdate && (
+              <Typography variant="body2" sx={{ color: '#aaa', fontSize: '0.8rem' }}>
+                Ace: {dayjs(aceLastUpdate).format('HH:mm:ss')} ({dayjs(aceLastUpdate).fromNow()})
+              </Typography>
+            )}
+            {buckeyeLastUpdate && (
+              <Typography variant="body2" sx={{ color: '#aaa', fontSize: '0.8rem' }}>
+                Buckeye: {dayjs(buckeyeLastUpdate).format('HH:mm:ss')} ({dayjs(buckeyeLastUpdate).fromNow()})
+              </Typography>
+            )}
+          </Box>
           {topMarkets.length > 0 && (
             <Typography variant="body2" sx={{ color: '#555', fontSize: '0.75rem' }}>
               Showing {filteredMarkets.length} of {topMarkets.length} bets
+              {aceMarkets.length > 0 && buckeyeMarkets.length > 0 && (
+                <Box component="span" sx={{ color: '#555', ml: 0.5 }}>({aceMarkets.length} Ace + {buckeyeMarkets.length} Buckeye)</Box>
+              )}
               {(minEv > 0 || maxEv < EV_MAX_SLIDER) && <Box component="span" sx={{ color: '#2E7D32', ml: 0.5 }}>(filtered)</Box>}
             </Typography>
           )}
@@ -729,10 +741,6 @@ const BuckeyeScraper: React.FC = () => {
                 onClick={() => {
                   setSortBy('ev');
                   setSortDir(d => (sortBy === 'ev' && d === 'desc' ? 'asc' : 'desc'));
-                  setTopMarkets(prev => {
-                    const sorted = [...prev].sort((a: any, b: any) => (parseFloat(a.ev) - parseFloat(b.ev)) * (sortBy === 'ev' && sortDir === 'asc' ? 1 : -1));
-                    return sorted;
-                  });
                 }}
                 sx={{ 
                   color: '#B0B0B0', 
@@ -752,16 +760,6 @@ const BuckeyeScraper: React.FC = () => {
                 onClick={() => {
                   setSortBy('start_time');
                   setSortDir(d => (sortBy === 'start_time' && d === 'desc' ? 'asc' : 'desc'));
-                  setTopMarkets(prev => {
-                    const sorted = [...prev].sort((a: any, b: any) => {
-                      const da = parseStartTime(a.start_time);
-                      const db = parseStartTime(b.start_time);
-                      const va = da ? da.valueOf() : 0;
-                      const vb = db ? db.valueOf() : 0;
-                      return (va - vb) * (sortBy === 'start_time' && sortDir === 'asc' ? 1 : -1);
-                    });
-                    return sorted;
-                  });
                 }}
                 sx={{ 
                   color: '#B0B0B0', 
@@ -782,14 +780,6 @@ const BuckeyeScraper: React.FC = () => {
                 onClick={() => {
                   setSortBy('pinnacle_limit');
                   setSortDir(d => (sortBy === 'pinnacle_limit' && d === 'desc' ? 'asc' : 'desc'));
-                  setTopMarkets(prev => {
-                    const sorted = [...prev].sort((a: any, b: any) => {
-                      const va = a.pinnacle_limit ?? -1;
-                      const vb = b.pinnacle_limit ?? -1;
-                      return (va - vb) * (sortBy === 'pinnacle_limit' && sortDir === 'asc' ? 1 : -1);
-                    });
-                    return sorted;
-                  });
                 }}
                 sx={{ 
                   color: '#B0B0B0', 
