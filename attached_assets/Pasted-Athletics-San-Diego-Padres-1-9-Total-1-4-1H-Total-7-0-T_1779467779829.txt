@@ -1,0 +1,94 @@
+Athletics @ San Diego Padres
+
++1.9% Total
++1.4% 1H Total
++7.0% Team Total Home
++0.1% Team Total Away
+EV Found
+11:35:43 AM
+[ALERT IN]
+Athletics @ San Diego Padres | ? | market=Total | +148 -> +131 | noVig=+141 | eventId=1630846420 | startTime=?
+[SWORDFISH]
+Swordfish: 'San Diego Padres' vs 'Athletics' | starts=2026-05-23 01:40 UTC | OK
+[SEARCH TERM]
+Using 'Padres' (from 'San Diego Padres' / 'Athletics'): known_term map for 'san diego padres'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='Padres' -> HTTP 200 (87353 bytes)
+[MATCH]
+[PASS] BCK 'Athletics' vs 'San Diego Padres' <-> POD 'san diego padres' vs 'athletics' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Athletics' vs 'San Diego Padres'
+[BCK DATE]
+BCK game date: 2026-05-22 20:40 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Athletics 1st 5' vs 'San Diego Padres 1st 5' <-> POD 'san diego padres' vs 'athletics' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Athletics 1st 5' vs 'San Diego Padres 1st 5'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Athletics 1st 5' = POD away
+[BCK DATE]
+BCK game date: 2026-05-22 20:40 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Athletics Alt RL' vs 'Padres Alt RL' <-> POD 'san diego padres' vs 'athletics' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Athletics Alt RL' vs 'Padres Alt RL'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Athletics Alt RL' = POD away
+[BCK DATE]
+BCK game date: 2026-05-22 20:40 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Athletics Alt RL' vs 'Padres Alt RL' <-> POD 'san diego padres' vs 'athletics' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Athletics Alt RL' vs 'Padres Alt RL'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Athletics Alt RL' = POD away
+[BCK DATE]
+BCK game date: 2026-05-22 20:40 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Athletics Series' vs 'Padres Series' <-> POD 'san diego padres' vs 'athletics' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Athletics Series' vs 'Padres Series'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Athletics Series' = POD away
+[BCK DATE]
+BCK game date: 2026-05-22 20:40 (PIN start unavailable)
+[MATCH]
+[FAIL] BCK 'Yes Athletics/Padres score 1st Inn' vs 'No Athletics/Padres score 1st Inn' <-> POD 'san diego padres' vs 'athletics' [token_set_h=37 | token_set_a=45 | partial_h=50 | partial_a=65 | threshold=60]
+[MATCH]
+[PASS] BCK 'Athletics score first' vs 'Padres score first' <-> POD 'san diego padres' vs 'athletics' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Athletics score first' vs 'Padres score first'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Athletics score first' = POD away
+[BCK DATE]
+BCK game date: 2026-05-22 20:40 (PIN start unavailable)
+[ODDS]
+home_moneyline=-128 | away_moneyline=+118 | home_spreads=[{'line': '-1.5', 'odds': '+160'}] | away_spreads=[{'line': '+1.5', 'odds': '-180'}] | total_line=8 | total_over_odds=-110 | total_under_odds=-110
+[EV]
+Moneyline Home: BCK 1.7812 (-128) / PIN_NVP 1.8197 (-122) => -2.08%
+[EV]
+Moneyline Away: BCK 2.1800 (+118) / PIN_NVP 2.2200 (+122) => -1.85%
+[EV]
+Spread Home -1.5: BCK 2.6000 (+160) / PIN_NVP 2.7200 (+172) => -4.55%
+[EV]
+Spread Away 1.5: BCK 1.5556 (-180) / PIN_NVP 1.5814 (-172) => -1.55%
+[EV]
+Total Over 8.0: BCK 1.9091 (-110) / PIN_NVP 2.1400 (+114) => -11.00%
+[EV]
+Total Under 8.0: BCK 1.9091 (-110) / PIN_NVP 1.8696 (-115) => +1.93%
+[EV]
+1H Spread Home -0.5: BCK 2.3000 (+130) / PIN_NVP 2.3700 (+137) => -3.12%
+[EV]
+1H Spread Away 0.5: BCK 1.6667 (-150) / PIN_NVP 1.7299 (-137) => -3.55%
+[EV]
+1H Total Over 4.5: BCK 1.8333 (-120) / PIN_NVP 2.0300 (+103) => -9.64%
+[EV]
+1H Total Under 4.5: BCK 2.0000 (+100) / PIN_NVP 1.9709 (-103) => +1.42%
+[EV]
+Team Total Home Over 3.5: BCK 1.6897 (-145) / PIN_NVP 1.9901 (-101) => -15.14%
+[EV]
+Team Total Home Under 3.5: BCK 2.1500 (+115) / PIN_NVP 2.0100 (+101) => +7.02%
+[EV]
+Team Total Away Over 3.5: BCK 1.8000 (-125) / PIN_NVP 1.8000 (-125) => +0.06%
+[EV]
+Team Total Away Under 3.5: BCK 1.9524 (-105) / PIN_NVP 2.2500 (+125) => -13.27%

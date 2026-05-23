@@ -1,0 +1,61 @@
+Atalanta @ Fiorentina
+
++6.0% Team Total Away
+EV Found
+10:51:53 AM
+[ALERT IN]
+Atalanta @ Fiorentina | ? | market=Total | +280 -> +257 | noVig=+291 | eventId=1630423015 | startTime=?
+[SWORDFISH]
+Swordfish: 'Fiorentina' vs 'Atalanta' | starts=2026-05-22 18:45 UTC | OK
+[SEARCH TERM]
+Using 'fiorentina' (from 'Fiorentina' / 'Atalanta'): first word of home team 'fiorentina'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='fiorentina' -> HTTP 200 (58035 bytes)
+[MATCH]
+[PASS] BCK 'Atalanta' vs 'Fiorentina' <-> POD 'fiorentina' vs 'atalanta' [exact_order2=100]
+[FOUND]
+Matched BetBCK: 'Atalanta' vs 'Fiorentina'
+[BCK DATE]
+BCK game date: 2026-05-22 13:45 (PIN start unavailable)
+[MATCH]
+[PASS] BCK 'Atalanta 1H' vs 'Fiorentina 1H' <-> POD 'fiorentina' vs 'atalanta' [token_set_h=100 | token_set_a=100 | partial_h=100 | partial_a=100 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Atalanta 1H' vs 'Fiorentina 1H'
+[ORIENT]
+Orientation: REVERSE (flipped) (score 200 vs alt 0) | BCK local='Atalanta 1H' = POD away
+[BCK DATE]
+BCK game date: 2026-05-22 13:45 (PIN start unavailable)
+[ODDS]
+home_moneyline=+185 | away_moneyline=+140 | home_spreads=[{'line': '+0.25', 'odds': '-135'}] | away_spreads=[{'line': '-0.25', 'odds': '+105'}] | total_line=2.75 | total_over_odds=-135 | total_under_odds=-105
+[EV]
+Moneyline Home: BCK 2.8500 (+185) / PIN_NVP 3.0500 (+205) => -6.65%
+[EV]
+Moneyline Away: BCK 2.4000 (+140) / PIN_NVP 2.5200 (+152) => -4.65%
+[EV]
+Spread Home 0.25: BCK 1.7407 (-135) / PIN_NVP 1.8475 (-118) => -5.91%
+[EV]
+Spread Away -0.25: BCK 2.0500 (+105) / PIN_NVP 2.1800 (+118) => -5.79%
+[EV]
+Total Over 2.75: BCK 1.7407 (-135) / PIN_NVP 1.9524 (-105) => -10.87%
+[EV]
+Total Under 2.75: BCK 1.9524 (-105) / PIN_NVP 2.0500 (+105) => -4.72%
+[EV]
+1H Moneyline Home: BCK 3.3000 (+230) / PIN_NVP 3.6000 (+260) => -8.23%
+[EV]
+1H Moneyline Away: BCK 2.9000 (+190) / PIN_NVP 3.0900 (+209) => -6.24%
+[EV]
+1H Spread Home 0: BCK 2.0500 (+105) / PIN_NVP 2.1700 (+117) => -5.57%
+[EV]
+1H Spread Away 0: BCK 1.7407 (-135) / PIN_NVP 1.8547 (-117) => -6.11%
+[EV]
+1H Total Over 1.25: BCK 1.9524 (-105) / PIN_NVP 2.1700 (+117) => -10.24%
+[EV]
+1H Total Under 1.25: BCK 1.7407 (-135) / PIN_NVP 1.8475 (-118) => -5.96%
+[EV]
+Team Total Home Over 1.5: BCK 2.1000 (+110) / PIN_NVP 2.1900 (+119) => -4.11%
+[EV]
+Team Total Home Under 1.5: BCK 1.7143 (-140) / PIN_NVP 1.8403 (-119) => -6.83%
+[EV]
+Team Total Away Over 1.5: BCK 2.0000 (+100) / PIN_NVP 2.5000 (+150) => -19.87%
+[EV]
+Team Total Away Under 1.5: BCK 1.7692 (-130) / PIN_NVP 1.6711 (-149) => +6.01%

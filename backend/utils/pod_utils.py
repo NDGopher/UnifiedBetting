@@ -1454,12 +1454,13 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
         # --- TEAM TOTALS (full-game period only) ---
         pin_team_total = full_game.get('team_total') or {}
         if isinstance(pin_team_total, dict) and pin_team_total:
-            # Work out which Pinnacle side corresponds to BetBCK's local ("home") row.
-            # BetBCK "home" row = local team = POD home when bck_local_is_pod_home=True.
-            # If POD home = Pinnacle away (_nvp_swapped=True), then BCK home = PIN away.
-            # XOR: bck_home_is_pin_home = (bck_local_is_pod_home != _nvp_swapped)
-            _bck_local_is_pod_home = bet_data_copy.get('bck_local_is_pod_home', True)
-            _bck_home_is_pin_home = (_bck_local_is_pod_home != _nvp_swapped)
+            # Work out which Pinnacle side corresponds to BetBCK's "home" odds key.
+            # The BetBCK scraper already normalises home_team_total_* to POD perspective
+            # (it swaps h_cells/a_cells when bck_local_is_pod_home=False), so by the time
+            # we reach here, home_team_total_*_odds always belongs to the POD home team.
+            # We therefore only need to know whether POD home == Pinnacle home, which is
+            # exactly what _nvp_swapped captures: False => POD home IS Pinnacle home.
+            _bck_home_is_pin_home = not _nvp_swapped
             if _bck_home_is_pin_home:
                 pin_bck_home_tt = pin_team_total.get('home') or {}
                 pin_bck_away_tt = pin_team_total.get('away') or {}

@@ -1222,6 +1222,7 @@ def get_event_ids():
         })
 
 BUCKEYE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_results.json')
+ACE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'ace_results.json')
 current_results = None
 last_run_time = None
 
@@ -1231,6 +1232,9 @@ pipeline_task = None
 
 # Last completed Buckeye pipeline payload — replayed to new SSE connections
 _last_buckeye_payload: dict | None = None
+
+ace_pipeline_running = False
+ace_pipeline_task = None
 
 async def run_pipeline_background():
     """Background task to run the Buckeye pipeline"""
@@ -1898,6 +1902,206 @@ async def run_streaming_pipeline_background(sport_filters=None):
         pipeline_running = False
         logger.info("[STREAMING] Streaming pipeline background task completed")
         print(f"[STREAMING] Pipeline completed, pipeline_running set to False")
+
+
+async def run_ace_streaming_pipeline_background():
+    """Ace pipeline: scrape action23.ag → convert to BetBCK format → match Pinnacle → calculate EV → broadcast."""
+    global ace_pipeline_running
+    import time, functools
+    ace_pipeline_running = True
+    pipeline_start = time.time()
+
+    try:
+        logger.info("[ACE-PIPELINE] === ACE PIPELINE STARTED ===")
+        print("[ACE-PIPELINE] === ACE PIPELINE STARTED ===")
+
+        # Clear stale results file
+        try:
+            if os.path.exists(ACE_RESULTS_FILE):
+                os.remove(ACE_RESULTS_FILE)
+        except Exception as _e:
+            logger.warning(f"[ACE-PIPELINE] Could not delete old results file: {_e}")
+
+        loop = asyncio.get_event_loop()
+
+        # ── Step 1: Scrape Ace games (sync/blocking → run in executor) ──────────
+        logger.info("[ACE-PIPELINE] Step 1: Scraping Ace games...")
+        print("[ACE-PIPELINE] Step 1: Scraping Ace games...")
+        try:
+            ace_games_raw = await asyncio.wait_for(
+                loop.run_in_executor(None, ace_scraper.scrape_games),
+                timeout=180
+            )
+            logger.info(f"[ACE-PIPELINE] Step 1 done: {len(ace_games_raw)} games scraped in {time.time()-pipeline_start:.1f}s")
+            print(f"[ACE-PIPELINE] Step 1 done: {len(ace_games_raw)} games")
+        except asyncio.TimeoutError:
+            logger.error("[ACE-PIPELINE] Step 1 timed out after 180s")
+            print("[ACE-PIPELINE] Step 1 TIMEOUT")
+            return {"status": "error", "message": "Ace scrape timed out"}
+        except Exception as _e:
+            logger.error(f"[ACE-PIPELINE] Step 1 error: {_e}")
+            print(f"[ACE-PIPELINE] Step 1 ERROR: {_e}")
+            ace_games_raw = []
+
+        if not ace_games_raw:
+            logger.warning("[ACE-PIPELINE] No Ace games scraped")
+            print("[ACE-PIPELINE] WARNING: No Ace games scraped")
+            return {"status": "error", "message": "No Ace games scraped"}
+
+        await asyncio.sleep(0)
+
+        # ── Step 2: Convert to BetBCK-compatible format ──────────────────────────
+        logger.info("[ACE-PIPELINE] Step 2: Converting to BetBCK format...")
+        from ace_scraper import ace_game_to_betbck_format
+        ace_games_betbck = [ace_game_to_betbck_format(g) for g in ace_games_raw]
+        logger.info(f"[ACE-PIPELINE] Step 2 done: {len(ace_games_betbck)} games converted")
+        print(f"[ACE-PIPELINE] Step 2 done: {len(ace_games_betbck)} converted")
+
+        await asyncio.sleep(0)
+
+        # ── Step 3: Fetch fresh Pinnacle event IDs for ALL sports ────────────────
+        # Always fetch live from Pinnacle (not from stale disk file) so that
+        # baseball, basketball, hockey, football are all present regardless of
+        # when the user last ran "Get Event IDs" in the Buckeye tab.
+        logger.info("[ACE-PIPELINE] Step 3: Fetching fresh Pinnacle events (all sports)...")
+        print("[ACE-PIPELINE] Step 3: Fetching fresh Pinnacle events...")
+        try:
+            from eventID import get_todays_event_ids as _get_pinnacle_events
+            event_dicts = await asyncio.wait_for(
+                loop.run_in_executor(None, _get_pinnacle_events),
+                timeout=120
+            )
+        except asyncio.TimeoutError:
+            logger.error("[ACE-PIPELINE] Step 3 timed out fetching Pinnacle events")
+            event_dicts = []
+        except Exception as _e3:
+            logger.error(f"[ACE-PIPELINE] Step 3 error fetching Pinnacle events: {_e3}")
+            event_dicts = []
+
+        # Fallback: if live fetch fails or returns nothing, use disk cache
+        if not event_dicts:
+            logger.warning("[ACE-PIPELINE] Step 3: Live fetch returned nothing — falling back to disk cache")
+            event_ids_path = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_event_ids.json')
+            if os.path.exists(event_ids_path):
+                with open(event_ids_path, 'r') as _f:
+                    _ev_data = json.load(_f)
+                event_dicts = _ev_data.get('event_ids', [])
+                logger.info(f"[ACE-PIPELINE] Step 3: Loaded {len(event_dicts)} events from disk cache")
+
+        if not event_dicts:
+            logger.error("[ACE-PIPELINE] Step 3: No Pinnacle events available from live fetch or cache")
+            return {"status": "error", "message": "Could not fetch Pinnacle events — check network"}
+
+        # Attach event_datetime so the 24-hour date filter in match_games.py works
+        for _ev in event_dicts:
+            if 'starts' in _ev and not _ev.get('event_datetime'):
+                try:
+                    _st = _ev['starts']
+                    if isinstance(_st, (int, float)):
+                        if _st > 1e10:
+                            _st = _st / 1000
+                        _ev['event_datetime'] = datetime.fromtimestamp(_st).strftime('%Y-%m-%dT%H:%M')
+                    elif isinstance(_st, str):
+                        try:
+                            _ev['event_datetime'] = datetime.fromisoformat(_st.replace('Z', '+00:00')).strftime('%Y-%m-%dT%H:%M')
+                        except Exception:
+                            _ev['event_datetime'] = _st
+                except Exception as _e2:
+                    logger.warning(f"[ACE-PIPELINE] event_datetime error for {_ev.get('event_id','?')}: {_e2}")
+
+        from collections import Counter as _Counter
+        _sport_counts = _Counter(_ev.get('sport', '?') for _ev in event_dicts)
+        logger.info(f"[ACE-PIPELINE] Step 3 done: {len(event_dicts)} Pinnacle events — {dict(_sport_counts)}")
+        print(f"[ACE-PIPELINE] Step 3 done: {len(event_dicts)} Pinnacle events — {dict(_sport_counts)}")
+
+        await asyncio.sleep(0)
+
+        # ── Step 4: Match Ace → Pinnacle ─────────────────────────────────────────
+        logger.info("[ACE-PIPELINE] Step 4: Matching games to Pinnacle...")
+        print("[ACE-PIPELINE] Step 4: Matching games to Pinnacle...")
+        from match_games import match_pinnacle_to_betbck
+
+        matched = await loop.run_in_executor(
+            None,
+            functools.partial(match_pinnacle_to_betbck, event_dicts, {"games": ace_games_betbck})
+        )
+        n_matched = len(matched) if matched else 0
+        logger.info(f"[ACE-PIPELINE] Step 4 done: {n_matched} games matched")
+        print(f"[ACE-PIPELINE] Step 4 done: {n_matched} matched")
+
+        if not matched:
+            logger.warning("[ACE-PIPELINE] No games matched Pinnacle events")
+            print("[ACE-PIPELINE] WARNING: No games matched")
+            return {"status": "error", "message": "No Ace games matched Pinnacle events"}
+
+        await asyncio.sleep(0)
+
+        # ── Step 5: Calculate EV ─────────────────────────────────────────────────
+        logger.info("[ACE-PIPELINE] Step 5: Calculating EV...")
+        print("[ACE-PIPELINE] Step 5: Calculating EV...")
+        from calculate_ev_table import calculate_ev_table_async, format_ev_table_for_display
+
+        ev_table = await calculate_ev_table_async(matched)
+        n_ev = len(ev_table) if ev_table else 0
+        logger.info(f"[ACE-PIPELINE] Step 5 done: {n_ev} EV entries")
+        print(f"[ACE-PIPELINE] Step 5 done: {n_ev} EV entries")
+
+        if not ev_table:
+            logger.warning("[ACE-PIPELINE] EV table empty")
+            print("[ACE-PIPELINE] WARNING: EV table empty")
+            return {"status": "error", "message": "EV calculation returned no results"}
+
+        formatted = format_ev_table_for_display(ev_table)
+        logger.info(f"[ACE-PIPELINE] Formatted {len(formatted)} results")
+        print(f"[ACE-PIPELINE] Formatted {len(formatted)} results")
+
+        # ── Step 6: Persist results ──────────────────────────────────────────────
+        last_run = datetime.now().isoformat()
+        try:
+            os.makedirs(os.path.dirname(ACE_RESULTS_FILE), exist_ok=True)
+            with open(ACE_RESULTS_FILE, 'w', encoding='utf-8') as _f:
+                json.dump({"events": formatted, "total_events": len(formatted), "last_run": last_run}, _f, indent=2)
+            logger.info(f"[ACE-PIPELINE] Saved {len(formatted)} results to {ACE_RESULTS_FILE}")
+            print(f"[ACE-PIPELINE] Saved {len(formatted)} results")
+        except Exception as _e:
+            logger.error(f"[ACE-PIPELINE] Error writing results file: {_e}")
+            print(f"[ACE-PIPELINE] ERROR writing results: {_e}")
+
+        # ── Step 7: Broadcast via SSE/WebSocket ──────────────────────────────────
+        try:
+            _payload = {
+                "type": "ace_complete",
+                "data": {
+                    "events": formatted,
+                    "total_events": len(formatted),
+                    "last_run": last_run,
+                    "total_matched": n_matched,
+                }
+            }
+            await manager.broadcast(_payload)
+            await sse_manager.broadcast(_payload)
+            logger.info(f"[ACE-PIPELINE] Broadcasted ace_complete: {len(formatted)} events")
+            print(f"[ACE-PIPELINE] Broadcasted ace_complete: {len(formatted)} events")
+        except Exception as _e:
+            logger.error(f"[ACE-PIPELINE] Broadcast error: {_e}")
+            print(f"[ACE-PIPELINE] ERROR broadcasting: {_e}")
+
+        elapsed = time.time() - pipeline_start
+        logger.info(f"[ACE-PIPELINE] === ACE PIPELINE COMPLETED in {elapsed:.1f}s ===")
+        print(f"[ACE-PIPELINE] === ACE PIPELINE COMPLETED in {elapsed:.1f}s ===")
+        return {"status": "success", "message": f"Ace pipeline done: {len(formatted)} results"}
+
+    except Exception as e:
+        import traceback
+        logger.error(f"[ACE-PIPELINE] Pipeline failed: {e}\n{traceback.format_exc()}")
+        print(f"[ACE-PIPELINE] FAILED: {e}")
+        return {"status": "error", "message": f"Ace pipeline failed: {str(e)}"}
+
+    finally:
+        ace_pipeline_running = False
+        logger.info("[ACE-PIPELINE] ace_pipeline_running set to False")
+        print("[ACE-PIPELINE] ace_pipeline_running set to False")
+
 
 @app.get("/api/alert-log")
 async def get_alert_log():
@@ -2604,53 +2808,68 @@ async def get_betbck_status():
         }, status_code=500)
 
 @app.post("/ace/run-calculations")
-def run_ace_calculations():
-    """Run Ace calculations"""
-    try:
-        logger.info("=== Ace: Running Calculations ===")
-        logger.info("Starting Ace calculations...")
-        
-        results = ace_scraper.run_ace_calculations()
-        logger.info(f"Ace calculations returned: {results}")
-        
-        if results.get("status") == "success":
-            logger.info(f"Ace calculations completed: {results.get('message', 'Success')}")
-            return JSONResponse(content=results)
-        else:
-            error_msg = results.get("message") or results.get("error") or "Unknown error"
-            logger.error(f"Ace calculations failed: {error_msg}")
-            return JSONResponse(
-                status_code=500,
-                content={"status": "error", "message": error_msg}
-            )
-    except Exception as e:
-        logger.error(f"Error running Ace calculations: {e}")
-        import traceback
-        logger.error(f"Ace calculations traceback: {traceback.format_exc()}")
-        return JSONResponse(
-            status_code=500,
-            content={"status": "error", "message": f"Failed to run Ace calculations: {str(e)}"}
-        )
+async def run_ace_calculations():
+    """Start the Ace pipeline in the background (mirrors the Buckeye streaming pipeline)."""
+    global ace_pipeline_running, ace_pipeline_task
+    if ace_pipeline_running:
+        return JSONResponse(content={
+            "status": "success",
+            "message": "Ace pipeline already running — results will be broadcast when complete"
+        })
+    ace_pipeline_task = asyncio.create_task(run_ace_streaming_pipeline_background())
+
+    def _reset_on_error(task):
+        global ace_pipeline_running
+        try:
+            if task.exception():
+                ace_pipeline_running = False
+        except Exception:
+            pass
+
+    ace_pipeline_task.add_done_callback(_reset_on_error)
+    logger.info("[ACE] Pipeline task created")
+    return JSONResponse(content={
+        "status": "success",
+        "message": "Ace pipeline started — results will be broadcast via SSE when complete"
+    })
+
 
 @app.get("/ace/results")
 def get_ace_results():
-    """Get Ace results"""
+    """Return the latest saved Ace pipeline results."""
     try:
-        results = ace_scraper.get_ace_results()
-        
-        if results["status"] == "success":
-            return JSONResponse(content=results)
-        else:
+        if not os.path.exists(ACE_RESULTS_FILE):
             return JSONResponse(
                 status_code=404,
-                content={"status": "error", "message": results["message"]}
+                content={"status": "error", "message": "No Ace results found. Run pipeline first."}
             )
+        with open(ACE_RESULTS_FILE, 'r', encoding='utf-8') as _f:
+            data = json.load(_f)
+        return JSONResponse(content={
+            "status": "success",
+            "markets": data.get("events", []),
+            "last_update": data.get("last_run"),
+            "total_events": data.get("total_events", 0)
+        })
     except Exception as e:
-        logger.error(f"Error getting Ace results: {e}")
+        logger.error(f"Error reading Ace results: {e}")
         return JSONResponse(
             status_code=500,
-            content={"status": "error", "message": f"Failed to get Ace results: {str(e)}"}
-        ) 
+            content={"status": "error", "message": f"Failed to read Ace results: {str(e)}"}
+        )
+
+
+@app.get("/ace/pipeline-status")
+async def get_ace_pipeline_status():
+    """Return the current Ace pipeline running state."""
+    global ace_pipeline_running, ace_pipeline_task
+    return JSONResponse(content={
+        "status": "success",
+        "data": {
+            "running": ace_pipeline_running,
+            "task_done": ace_pipeline_task.done() if ace_pipeline_task else True
+        }
+    })
 
 @app.get("/high-ev-alerts")
 async def get_high_ev_alerts(limit: int = 100):
