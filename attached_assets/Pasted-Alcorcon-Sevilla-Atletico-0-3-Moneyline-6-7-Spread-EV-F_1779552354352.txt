@@ -1,0 +1,56 @@
+Alcorcon @ Sevilla Atletico
+
++0.3% Moneyline
++6.7% Spread
+EV Found
+11:04:27 AM
+[ALERT IN]
+Alcorcon @ Sevilla Atletico | ? | market=Total | +175 -> +155 | noVig=+193 | eventId=1631097214 | startTime=?
+[SWORDFISH]
+Swordfish: 'Sevilla Atletico' vs 'Alcorcon' | starts=2026-05-23 16:30 UTC | OK
+[SEARCH TERM]
+Using 'atletico' (from 'Sevilla Atletico' / 'Alcorcon'): last word of home team 'sevilla atletico'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='atletico' -> HTTP 200 (124660 bytes)
+[MATCH]
+[FAIL] BCK 'Midland' vs 'Atletico Rafaela' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=75 | token_set_a=27 | partial_h=50 | partial_a=29 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Patronato' vs 'Club Atletico Guemes' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=67 | token_set_a=47 | partial_h=62 | partial_a=50 | threshold=60]
+[MATCH]
+[PASS] BCK 'Club Atletico Mitre' vs 'Colon' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=67 | token_set_a=62 | partial_h=62 | partial_a=60 | threshold=60]
+[FOUND]
+Matched BetBCK: 'Club Atletico Mitre' vs 'Colon'
+[ORIENT]
+Orientation: FORWARD (score 129 vs alt 0) | BCK local='Club Atletico Mitre' = POD home
+[BCK DATE]
+BCK game date: 2026-05-24 16:00 (PIN start unavailable)
+[MATCH]
+[FAIL] BCK 'Atletico Atlanta' vs 'San Martin Tucuman' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=69 | token_set_a=23 | partial_h=50 | partial_a=27 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Atletico PR' vs 'Remo' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=84 | token_set_a=17 | partial_h=84 | partial_a=50 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Atletico Mineiro' vs 'Corinthians' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=84 | token_set_a=42 | partial_h=84 | partial_a=50 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Atletico PR 1H' vs 'Remo 1H' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=73 | token_set_a=13 | partial_h=73 | partial_a=36 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Atletico Mineiro 1H' vs 'Corinthians 1H' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=67 | token_set_a=36 | partial_h=50 | partial_a=50 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Atletico Grau' vs 'Cusco' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=76 | token_set_a=31 | partial_h=76 | partial_a=40 | threshold=60]
+[MATCH]
+[FAIL] BCK 'FC Cajamarca' vs 'Alianza Atletico' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=69 | token_set_a=35 | partial_h=69 | partial_a=40 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Atletico Madrid' vs 'Villarreal' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=70 | token_set_a=22 | partial_h=70 | partial_a=40 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Atletico Madrid 1H' vs 'Villarreal 1H' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=67 | token_set_a=19 | partial_h=50 | partial_a=31 | threshold=60]
+[MATCH]
+[FAIL] BCK 'Deportes Tolima' vs 'Atletico Nacional' <-> POD 'sevilla atletico' vs 'alcorcon' [token_set_h=67 | token_set_a=26 | partial_h=50 | partial_a=25 | threshold=60]
+[ODDS]
+home_moneyline=+450 | away_moneyline=-145 | home_spreads=[{'line': '+0.75', 'odds': '-130'}] | away_spreads=[{'line': '-0.75', 'odds': '+100'}] | total_line=1.5 | total_over_odds=-175 | total_under_odds=+135
+[EV]
+Moneyline Home: BCK 5.5000 (+450) / PIN_NVP 5.4800 (+448) => +0.31%
+[EV]
+Moneyline Away: BCK 1.6897 (-145) / PIN_NVP 1.6897 (-145) => -0.08%
+[EV]
+Spread Home 0.75: BCK 1.7692 (-130) / PIN_NVP 2.1400 (+114) => -17.48%
+[EV]
+Spread Away -0.75: BCK 2.0000 (+100) / PIN_NVP 1.8772 (-114) => +6.72%
