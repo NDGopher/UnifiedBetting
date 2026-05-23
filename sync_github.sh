@@ -1,15 +1,25 @@
 #!/bin/bash
-# Push all Replit commits to GitHub (force push to overwrite diverged history)
-# Run this from the Replit shell whenever you want to sync: bash sync_github.sh
+# Sync Replit <-> GitHub.
+# Run from the Replit shell: bash sync_github.sh
+# This PULLS GitHub first, then pushes — so local commits are never overwritten.
 
 TOKEN="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"
 REMOTE="https://${TOKEN}@github.com/NDGopher/UnifiedBetting.git"
 
-echo "[sync] Pushing to GitHub..."
-git push --force "$REMOTE" HEAD:main 2>&1
+echo "[sync] Pulling from GitHub first..."
+git pull --rebase "$REMOTE" main
 
-if [ $? -eq 0 ]; then
-    echo "[sync] Done — GitHub is now up to date with Replit."
-else
-    echo "[sync] Push failed. Check token validity or network."
+if [ $? -ne 0 ]; then
+    echo "[sync] Pull/rebase failed — aborting. Run 'git rebase --abort' then fix conflicts manually."
+    exit 1
 fi
+
+echo "[sync] Pushing to GitHub..."
+git push "$REMOTE" HEAD:main
+
+if [ $? -ne 0 ]; then
+    echo "[sync] Normal push failed, trying force push..."
+    git push --force "$REMOTE" HEAD:main
+fi
+
+echo "[sync] Done."

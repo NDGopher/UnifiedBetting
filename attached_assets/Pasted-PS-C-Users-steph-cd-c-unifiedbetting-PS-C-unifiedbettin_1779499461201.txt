@@ -1,0 +1,82 @@
+PS C:\Users\steph> cd c:/unifiedbetting
+PS C:\unifiedbetting> git pull origin main
+remote: Enumerating objects: 71, done.
+remote: Counting objects: 100% (22/22), done.
+remote: Total 71 (delta 22), reused 22 (delta 22), pack-reused 49 (from 1)
+Unpacking objects: 100% (71/71), 263.16 KiB | 738.00 KiB/s, done.
+From https://github.com/NDgopher/UnifiedBetting
+ * branch            main       -> FETCH_HEAD
+ + 9cb249e...1909052 main       -> origin/main  (forced update)
+CONFLICT (modify/delete): backend/data/ace_results.json deleted in HEAD and modified in 190905269d3e7002de35cb785183d87a23feafea.  Version 190905269d3e7002de35cb785183d87a23feafea of backend/data/ace_results.json left in tree.
+Automatic merge failed; fix conflicts and then commit the result.
+PS C:\unifiedbetting>
+PS C:\unifiedbetting> git add backend/data/ace_results.json
+The following paths are ignored by one of your .gitignore files:
+backend/data
+hint: Use -f if you really want to add them.
+hint: Disable this message with "git config set advice.addIgnoredFile false"
+PS C:\unifiedbetting> git commit -m "resolve conflict: keep ace_results.json"
+[main 5520f0d] resolve conflict: keep ace_results.json
+PS C:\unifiedbetting> # Step 1: Resolve the merge conflict (accept the file)
+PS C:\unifiedbetting> git add backend/data/ace_results.json
+The following paths are ignored by one of your .gitignore files:
+backend/data
+hint: Use -f if you really want to add them.
+hint: Disable this message with "git config set advice.addIgnoredFile false"
+PS C:\unifiedbetting> git commit -m "resolve merge conflict"
+On branch main
+Your branch is ahead of 'origin/main' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   backend/high_ev_alerts.db
+
+no changes added to commit (use "git add" and/or "git commit -a")
+PS C:\unifiedbetting>
+PS C:\unifiedbetting> # Step 2: Untrack all the runtime data files (keeps files on disk, just stops git watching them)
+PS C:\unifiedbetting> git rm --cached backend/data/ace_results.json
+rm 'backend/data/ace_results.json'
+PS C:\unifiedbetting> git rm --cached backend/data/alert_history.json
+fatal: pathspec 'backend/data/alert_history.json' did not match any files
+PS C:\unifiedbetting> git rm --cached backend/data/betbck_games.json
+fatal: pathspec 'backend/data/betbck_games.json' did not match any files
+PS C:\unifiedbetting> git rm --cached "backend/data/betbck_games-SL-4090PC-HOME.json"
+fatal: pathspec 'backend/data/betbck_games-SL-4090PC-HOME.json' did not match any files
+PS C:\unifiedbetting> git rm --cached "backend/data/betbck_games-SL-4090PC-HOME-2.json"
+fatal: pathspec 'backend/data/betbck_games-SL-4090PC-HOME-2.json' did not match any files
+PS C:\unifiedbetting> git rm --cached backend/data/buckeye_event_ids.json
+rm 'backend/data/buckeye_event_ids.json'
+PS C:\unifiedbetting> git rm --cached "backend/data/buckeye_event_ids-SL-4090PC-HOME.json"
+fatal: pathspec 'backend/data/buckeye_event_ids-SL-4090PC-HOME.json' did not match any files
+PS C:\unifiedbetting> git rm --cached "backend/data/buckeye_event_ids-SL-4090PC-HOME-2.json"
+fatal: pathspec 'backend/data/buckeye_event_ids-SL-4090PC-HOME-2.json' did not match any files
+PS C:\unifiedbetting> git rm --cached "backend/data/buckeye_results-SL-4090PC-HOME.json"
+fatal: pathspec 'backend/data/buckeye_results-SL-4090PC-HOME.json' did not match any files
+PS C:\unifiedbetting> git rm --cached backend/data/last_bad_response.txt
+rm 'backend/data/last_bad_response.txt'
+PS C:\unifiedbetting> git rm --cached backend/data/last_json_error.txt
+rm 'backend/data/last_json_error.txt'
+PS C:\unifiedbetting> git commit -m "stop tracking runtime data files"
+[main a46e04c] stop tracking runtime data files
+ 4 files changed, 20696 deletions(-)
+ delete mode 100644 backend/data/ace_results.json
+ delete mode 100644 backend/data/buckeye_event_ids.json
+ delete mode 100644 backend/data/last_bad_response.txt
+ delete mode 100644 backend/data/last_json_error.txt
+PS C:\unifiedbetting>
+PS C:\unifiedbetting> # Step 3: Push back so GitHub reflects the untracking
+PS C:\unifiedbetting> git push origin main
+Enumerating objects: 17, done.
+Counting objects: 100% (17/17), done.
+Delta compression using up to 32 threads
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (11/11), 1.05 KiB | 1.05 MiB/s, done.
+Total 11 (delta 8), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (8/8), completed with 5 local objects.
+remote: This repository moved. Please use the new location:
+remote:   https://github.com/NDGopher/UnifiedBetting.git
+To https://github.com/NDgopher/UnifiedBetting
+   1909052..a46e04c  main -> main
+PS C:\unifiedbetting>
