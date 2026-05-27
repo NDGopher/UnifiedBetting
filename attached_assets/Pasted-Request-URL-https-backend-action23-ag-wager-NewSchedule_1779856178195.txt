@@ -1,0 +1,86 @@
+Request URL
+https://backend.action23.ag/wager/NewSchedule.aspx?lg=416,419,535,298,7,211,544,2521,515,537,685,2887,3483,3231,3694,439,934,4286,574,948,519,1064,3114,585,936,3487,2203,2251,1183,483,2153,545,962,4757,333,2929,1180,546,2330,1193,1839,286,4411,3016,691,442,539&WT=0
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+104.21.38.253:443
+Referrer Policy
+strict-origin-when-cross-origin
+alt-svc
+h3=":443"; ma=86400
+cache-control
+private
+cf-cache-status
+DYNAMIC
+cf-ray
+a02247400d0ca200-MSP
+content-encoding
+zstd
+content-type
+text/html; charset=utf-8
+date
+Wed, 27 May 2026 04:29:24 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=0,i
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Dfa%2BVlyNkURPCKN%2B2c%2BD0QlNUpOLNWf6SSC1u%2FlWlGD7%2F9VvvCmKLMcCmAZnBsVvwaBKGRgjhbARjyy77zLQ%2Fmu56GfEXka6ZHZH%2Fee0tKr6X6NHXIg2jQQg6gwZKEbJ0QDfZHtL"}]}
+server
+cloudflare
+server-timing
+cfCacheStatus;desc="DYNAMIC"
+server-timing
+cfEdge;dur=5,cfOrigin;dur=191
+server-timing
+cfExtPri
+vary
+Accept-Encoding
+x-aspnet-version
+4.0.30319
+x-powered-by
+ASP.NET
+:authority
+backend.action23.ag
+:method
+GET
+:path
+/wager/NewSchedule.aspx?lg=416,419,535,298,7,211,544,2521,515,537,685,2887,3483,3231,3694,439,934,4286,574,948,519,1064,3114,585,936,3487,2203,2251,1183,483,2153,545,962,4757,333,2929,1180,546,2330,1193,1839,286,4411,3016,691,442,539&WT=0
+:scheme
+https
+accept
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-US,en;q=0.9
+cache-control
+no-cache
+cookie
+ASP.NET_SessionId=ecpoaadwpx0l5xdmn430f3pt; pl=
+pragma
+no-cache
+priority
+u=0, i
+referer
+https://backend.action23.ag/wager/CreateSports.aspx?WT=0
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?1
+sec-ch-ua-platform
+"Android"
+sec-fetch-dest
+document
+sec-fetch-mode
+navigate
+sec-fetch-site
+same-origin
+sec-fetch-user
+?1
+upgrade-insecure-requests
+1
+user-agent
+Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36

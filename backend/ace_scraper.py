@@ -143,9 +143,9 @@ class AceScraper:
             r'\b(?:MAKE PLAYOFFS|YES MAKE PLAYOFFS|NO MAKE PLAYOFFS)\b',
             r'\b(?:TO WIN|TO ADVANCE|PLAYER PROP|TEAM PROP)\b',
             r'\b(?:SEASON FUTURE|AWARD|MVP|ROOKIE)\b',
-            # Period-specific prop markets (team name starts with "1P", "2P", "1H", "2H", "Q1"…)
-            # Only block when the period prefix appears IN the team names, not the description.
-            r'^(?:1P|2P|3P|1H|2H|Q1|Q2|Q3|Q4)\s',  # period-prefixed team name
+            # Block hockey-period and quarter props (1P/2P/3P/Q1-Q4 prefix in team names).
+            # 1H/2H are handled by _extract_game_json → market_suffix tagging, so NOT blocked here.
+            r'^(?:1P|2P|3P|Q1|Q2|Q3|Q4)\s',
             r'\b(?:SET|1ST SET|2ND SET|3RD SET|4TH SET|5TH SET)\b',
             r'\b(?:HITS\+RUNS\+ERRORS|H\+R\+E|HRE|PITCHER|BATTER)\b',
             r'\b(?:STRIKEOUT|HOME RUN|RBI|ERA|WHIP)\b',
@@ -279,15 +279,15 @@ class AceScraper:
     EXCLUDED_TERMS = [
         "PRESIDENTIAL", "DEMOCRAT", "REPUBLICAN", "OSCARS", "NOBEL", "PERSON OF THE YEAR",
         "WINNER", "BREEDERS", "F1", "NASCAR", "CYCLING", "OUTRIGHT", "TEAM TOTALS",
-        "1H", "SEASON TOTAL", "MATCHUPS",
+        "SEASON TOTAL", "MATCHUPS",
         # User additions:
         "DARTS", "CRICKET", "SPECIALS", "SPECIAL", "REGULAR SEASON WINS", "MAKE THE PLAYOFFS",
         "AWARD", "E-SPORTS", "FORMULA 1", "CALDER", "VEZINA", "HART", "GOLF", "WINS",
         "QUARTERS", "POTENTIAL", "FUTURES", "RESULT", "PLAYER OF THE YEAR", "IMPROVED",
         "DEFENSIVE", "MVP", "NORRIS", "RICHARD", "ADAMS",
         # Additional exclusions to match Pinnacle scope:
-        "PROPS", "NHL TO MAKE PLAYOFFS", "WNCAA", "WOMEN'S", "LADIES'", "LADIES",
-        "EARLY GAME LINES", "STAGE OF ELIMINATION", "MOST RECEIVING YARDS", 
+        "PROPS", "NHL TO MAKE PLAYOFFS", "WNCAA",
+        "EARLY GAME LINES", "STAGE OF ELIMINATION", "MOST RECEIVING YARDS",
         "MOST RUSHING YARDS", "MOST PASSING YARDS", "CHAMPIONSHIP GONE"
     ]
     def _is_excluded_league_or_desc(self, text: str) -> bool:
@@ -306,13 +306,13 @@ class AceScraper:
     # on NewSchedule.aspx: lg=416,417,418,535,443,298,7,211,544,442,129,171
     _KNOWN_LEAGUE_IDS = [
         # ── Basketball / NBA ──────────────────────────────────────────────────
-        "416", "417", "418", "535",
+        "416", "417", "418", "419", "535",
         # ── Football / NFL ────────────────────────────────────────────────────
         "443", "298", "7",
         # ── Hockey / NHL ──────────────────────────────────────────────────────
         "211", "544",
         # ── Other (user-confirmed, sport TBD from Description) ───────────────
-        "442", "129", "171",
+        "442", "129", "171", "685",
         # ── Soccer (verified working) ─────────────────────────────────────────
         "2521", "515", "537", "1116", "3483", "1278", "439", "549", "451", "414",
         "558", "4437", "557", "440", "585", "1183", "333", "1180", "546", "2948",
@@ -919,6 +919,17 @@ class AceScraper:
             # DEBUG: Log odds for this game
             logging.debug(f"[ACE DEBUG] Odds for {home_team} vs {away_team}: home_odds={home_odds}, away_odds={away_odds}")
             
+            # Detect 1H / 2H prefix in team names → tag market_suffix and strip prefix
+            # e.g. "1H REAL MADRID vs 1H ATLETICO MADRID" → market_suffix='1H', teams stripped
+            market_suffix = None
+            _PERIOD_PREFIX_RE = re.compile(r'^(1H|2H)\s+', re.IGNORECASE)
+            home_pfx = _PERIOD_PREFIX_RE.match(home_team)
+            away_pfx = _PERIOD_PREFIX_RE.match(away_team)
+            if home_pfx and away_pfx:
+                market_suffix = home_pfx.group(1).upper()
+                home_team = _PERIOD_PREFIX_RE.sub('', home_team).strip()
+                away_team = _PERIOD_PREFIX_RE.sub('', away_team).strip()
+
             # Determine sport from league description
             sport = self._determine_sport_from_league(league_desc)
             
@@ -934,7 +945,8 @@ class AceScraper:
                 'away_odds': away_odds,
                 'home_odds': home_odds,
                 'sport': sport,
-                'league': league_desc
+                'league': league_desc,
+                'market_suffix': market_suffix,
             }
             
         except Exception as e:
@@ -962,6 +974,9 @@ class AceScraper:
         elif ('ufc' in league_lower or 'mma' in league_lower
               or 'boxing' in league_lower or 'martial arts' in league_lower):
             return 'fighting'
+        elif ('tennis' in league_lower or 'atp' in league_lower
+              or 'wta' in league_lower or 'itf' in league_lower):
+            return 'tennis'
         # Soccer: explicit keyword OR well-known league/competition names
         elif any(kw in league_lower for kw in (
             'soccer', 'premier league', 'la liga', 'bundesliga', 'serie a', 'serie b', 'serie c',
@@ -2731,5 +2746,5 @@ def ace_game_to_betbck_format(ace_game: Dict) -> Dict:
         "event_datetime": event_datetime,
         "sport": sport,
         "league": ace_game.get('league', ''),
-        "market_suffix": None,
+        "market_suffix": ace_game.get('market_suffix'),
     }

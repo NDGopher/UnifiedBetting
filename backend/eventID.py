@@ -15,7 +15,7 @@ ARCADIA_BASE_URL = "https://guest.api.arcadia.pinnacle.com/0.1"
 # Sports to exclude
 EXCLUDED_SPORTS = [
     "Cycling", "Formula 1", "Rugby Union", "Rugby League",
-    "Handball", "E Sports", "Darts", "Tennis"
+    "Handball", "E Sports", "Darts"
 ]
 
 BASE_DIR = Path(__file__).resolve().parent
