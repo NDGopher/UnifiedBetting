@@ -266,8 +266,10 @@ const BuckeyeScraper: React.FC = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
-    setBuckeyeMarkets([]); // Clear only Buckeye data — ACE results are preserved
+    setBuckeyeMarkets([]); // Clear Buckeye data
     setBuckeyeLastUpdate(null);
+    setAceMarkets([]);    // Clear ACE results so only Buckeye shows
+    setAceLastUpdate(null);
     try {
       console.log('[BuckeyeScraper] Starting streaming Buckeye pipeline...');
       const body = selectedSports.length > 0 ? { sport_filters: selectedSports } : {};
@@ -305,8 +307,10 @@ const BuckeyeScraper: React.FC = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
-    setAceMarkets([]); // Clear only ACE data — Buckeye results are preserved
+    setAceMarkets([]); // Clear ACE data
     setAceLastUpdate(null);
+    setBuckeyeMarkets([]);  // Clear Buckeye results so only ACE shows
+    setBuckeyeLastUpdate(null);
     // Don't start polling immediately - wait until calculations are actually running
     try {
       console.log('[BuckeyeScraper] Running Ace calculations...');
