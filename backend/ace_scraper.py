@@ -112,6 +112,12 @@ class AceScraper:
         # Initialize session
         self.session = requests.Session()
         self.logged_in = False
+
+        # Session-level cache of league IDs that actually returned active games.
+        # None = not yet populated (first fetch uses the full _KNOWN_LEAGUE_IDS list).
+        # Populated after the first successful parse; subsequent calls use only
+        # these IDs so we never request leagues ACE doesn't have active right now.
+        self._session_active_league_ids: list = None
         
         # Set up basic headers
         headers = {
@@ -327,14 +333,22 @@ class AceScraper:
     ]
 
     def _fetch_active_leagues(self) -> List[str]:
-        """Return the verified active league ID list.
+        """Return the league IDs to request from ACE.
 
-        We use the exact 47 IDs from the user's real browser request to
-        NewSchedule.aspx.  This matches a genuine user's request pattern,
-        avoids hitting IDs that don't exist on ACE, and lets the ACE JSON
-        response do the work of filtering out leagues with no active games.
+        First call in a session: use the full verified 47-ID list so ACE can
+        tell us which leagues have active games right now.
+
+        Subsequent calls: use only the IDs that actually came back in the first
+        response (cached by _parse_json_response).  This ensures we never send
+        IDs for leagues that are currently inactive, and varies the request
+        naturally rather than always sending the same static 47-ID string.
         """
-        safe_print(f"[ACE DEBUG] Using {len(self._KNOWN_LEAGUE_IDS)} verified league IDs")
+        if self._session_active_league_ids:
+            safe_print(f"[ACE DEBUG] Using {len(self._session_active_league_ids)} "
+                       f"session-cached active league IDs (from last response)")
+            return list(self._session_active_league_ids)
+        safe_print(f"[ACE DEBUG] First fetch — using all {len(self._KNOWN_LEAGUE_IDS)} "
+                   f"verified league IDs to discover active leagues")
         return list(self._KNOWN_LEAGUE_IDS)
     
     def get_combined_league_ids(self) -> str:
@@ -723,6 +737,32 @@ class AceScraper:
                                 safe_print(f"[ACE DEBUG] Added game [{league_desc}]: {game_data.get('away_team','')} vs {game_data.get('home_team','')}")
             
             safe_print(f"[ACE DEBUG] _parse_json_response: {len(games)} main games parsed successfully")
+
+            # ── Update session-level active-league cache ──────────────────────
+            # Collect every idlg value that actually appeared in this response.
+            # On the next scrape call we'll send only these IDs, so ACE sees a
+            # naturally varying request (only active leagues) rather than the
+            # same static 47-ID string every time.
+            active_ids_seen: list = []
+            seen_lg_ids: set = set()
+            for lg_group in list_leagues:
+                if not isinstance(lg_group, list):
+                    continue
+                for lg in lg_group:
+                    if not isinstance(lg, dict):
+                        continue
+                    for g in lg.get('Games', []):
+                        if not isinstance(g, dict):
+                            continue
+                        lg_id = str(g.get('idlg', ''))
+                        if lg_id and lg_id not in seen_lg_ids:
+                            seen_lg_ids.add(lg_id)
+                            active_ids_seen.append(lg_id)
+            if active_ids_seen:
+                self._session_active_league_ids = active_ids_seen
+                safe_print(f"[ACE DEBUG] Cached {len(active_ids_seen)} active league IDs "
+                           f"for subsequent requests: {','.join(sorted(active_ids_seen))}")
+
             return games
             
         except json.JSONDecodeError as e:
