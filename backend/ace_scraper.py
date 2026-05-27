@@ -143,27 +143,22 @@ class AceScraper:
             r'\b(?:MAKE PLAYOFFS|YES MAKE PLAYOFFS|NO MAKE PLAYOFFS)\b',
             r'\b(?:TO WIN|TO ADVANCE|PLAYER PROP|TEAM PROP)\b',
             r'\b(?:SEASON FUTURE|AWARD|MVP|ROOKIE)\b',
-            r'\b(?:1ST HALF|2ND HALF|HALF TIME|1H|2H|Q1|Q2|Q3|Q4)\b',
-            r'\b(?:QUARTER|PERIOD|OT|OVERTIME|EXTRA TIME)\b',
+            # Period-specific prop markets (team name starts with "1P", "2P", "1H", "2H", "Q1"…)
+            # Only block when the period prefix appears IN the team names, not the description.
+            r'^(?:1P|2P|3P|1H|2H|Q1|Q2|Q3|Q4)\s',  # period-prefixed team name
             r'\b(?:SET|1ST SET|2ND SET|3RD SET|4TH SET|5TH SET)\b',
             r'\b(?:HITS\+RUNS\+ERRORS|H\+R\+E|HRE|PITCHER|BATTER)\b',
-            r'\b(?:STRIKEOUT|HOME RUN|RBI|ERA|WHIP|SAVE|HOLD)\b',
-            r'\b(?:FIGHT|MATCH|BOUT|KNOCKOUT|KO|TKO|DECISION)\b',
+            r'\b(?:STRIKEOUT|HOME RUN|RBI|ERA|WHIP)\b',
             r'\b(?:SUBMISSION|CHOKE|ARM BAR|LEG LOCK)\b',
             r'\b(?:HOLE|ROUND|BOGEY|PAR|BIRDIE|EAGLE|PUTT|DRIVE)\b',
-            # Tennis-specific exclusions
-            r'\b(?:1ST SET|2ND SET|3RD SET|4TH SET|5TH SET)\b',
-            r'\b(?:SETS|GAMES|GAME)\b',
-            r'\b(?:TENNIS.*1ST SET|TENNIS.*GAMES|TENNIS.*SETS)\b',
-            r'\b(?:ATP.*1ST SET|WTA.*1ST SET|ATP.*GAMES|WTA.*GAMES)\b',
-            r'\b(?:ALT\s+)\b',  # Alternative lines
-            r'\b(?:FIRST HALF|1H\s+)\b',  # First half lines
-            # Futures and series exclusions
+            # Tennis-specific exclusions (must be tennis-scoped to avoid matching team names)
+            r'\b(?:TENNIS.*(?:1ST SET|GAMES|SETS)|ATP.*(?:1ST SET|GAMES)|WTA.*(?:1ST SET|GAMES))\b',
+            # Futures and series exclusions — keep only COMPOUND phrases that can't appear in game names
             r'\b(?:SERIES PRICES|SERIES WINNER|SERIES BET)\b',
-            r'\b(?:CHAMPIONSHIP|CHAMPION|TITLE)\b',
-            r'\b(?:SEASON|REGULAR SEASON|PLAYOFFS)\b',
-            r'\b(?:WORLD SERIES|STANLEY CUP|SUPER BOWL)\b',
-            r'\b(?:TO WIN|TO ADVANCE|TO MAKE)\b',
+            r'\b(?:CHAMPIONSHIP WINNER|CHAMPION ODDS|TITLE ODDS)\b',
+            r'\b(?:WORLD SERIES WINNER|STANLEY CUP WINNER|SUPER BOWL WINNER)\b',
+            r'\b(?:SEASON WINS|REGULAR SEASON WINS|WIN TOTAL)\b',
+            r'\b(?:TO WIN THE|TO ADVANCE TO|TO MAKE THE PLAYOFFS)\b',
             r'\b(?:FUTURES|FUTURE BET|FUTURE MARKET)\b',
             # F1-specific exclusions
             r'\b(?:BOTH CARS IN PODIUM|DOUBLE PODIUM|PODIUM FINISH)\b',
