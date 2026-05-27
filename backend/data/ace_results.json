@@ -122,6 +122,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Charleston Battery vs Detroit City",
+      "bet": "ML - Charleston Battery",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-115",
+      "pinnacle_nvp": "-119",
+      "ev": "1.77%",
+      "ev_val": 0.017727391067666964,
+      "start_time": "2026-05-30 05:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289834",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Palmeiras vs Chapecoense",
       "bet": "Over 3.0",
       "bet_type": "Total",
@@ -313,6 +328,21 @@
       "league": "Sweden - Allsvenskan",
       "pinnacle_limit": 550,
       "event_id": "1631277761",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Charleston Battery vs Detroit City",
+      "bet": "Charleston Battery -0.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-115",
+      "pinnacle_nvp": "-117",
+      "ev": "0.89%",
+      "ev_val": 0.008939674792932673,
+      "start_time": "2026-05-30 05:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289834",
       "period": "FG"
     },
     {
@@ -647,6 +677,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Pittsburgh Riverhounds vs Miami FC",
+      "bet": "ML - Pittsburgh Riverhounds",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-136",
+      "pinnacle_nvp": "-135",
+      "ev": "-0.33%",
+      "ev_val": -0.0032773591918100475,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289835",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "GAIS vs Kalmar",
       "bet": "Over 2.5",
       "bet_type": "Total",
@@ -733,21 +778,6 @@
       "league": "Sweden - Superettan",
       "pinnacle_limit": 250,
       "event_id": "1631265762",
-      "period": "FG"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Cienciano vs Juventud",
-      "bet": "ML - Cienciano",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-161",
-      "pinnacle_nvp": "-158",
-      "ev": "-0.61%",
-      "ev_val": -0.0060588519789330775,
-      "start_time": "2026-05-27 05:00 PM",
-      "league": "CONMEBOL - Copa Sudamericana",
-      "pinnacle_limit": 400,
-      "event_id": "1630979672",
       "period": "FG"
     },
     {
@@ -857,6 +887,36 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Indy Eleven vs Rhode Island",
+      "bet": "ML - Indy Eleven",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+181",
+      "pinnacle_nvp": "+184",
+      "ev": "-0.88%",
+      "ev_val": -0.008818342151675429,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289836",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Pittsburgh Riverhounds vs Miami FC",
+      "bet": "Pittsburgh Riverhounds -0.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-136",
+      "pinnacle_nvp": "-133",
+      "ev": "-0.90%",
+      "ev_val": -0.0089696643934557,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289835",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Henan vs Zhejiang",
       "bet": "Henan -0.5",
       "bet_type": "Spread",
@@ -932,6 +992,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Louisville City vs Tampa Bay Rowdies",
+      "bet": "ML - Louisville City",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-102",
+      "pinnacle_nvp": "+100",
+      "ev": "-1.13%",
+      "ev_val": -0.011286991082004483,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282595",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Palestino vs Audax Italiano",
       "bet": "Palestino -0.5",
       "bet_type": "Spread",
@@ -974,6 +1049,21 @@
       "pinnacle_limit": 450,
       "period": "FG",
       "event_id": "1631083736"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Las Vegas Lights vs FC Tulsa",
+      "bet": "ML - FC Tulsa",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+145",
+      "pinnacle_nvp": "+148",
+      "ev": "-1.17%",
+      "ev_val": -0.011698265429608723,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282592",
+      "period": "FG"
     },
     {
       "sport": "soccer",
@@ -1052,6 +1142,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Phoenix Rising vs Sacramento Republic",
+      "bet": "ML - Sacramento Republic",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+151",
+      "pinnacle_nvp": "+154",
+      "ev": "-1.26%",
+      "ev_val": -0.012588512981903999,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289004",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Defensores de Belgrano vs San Telmo",
       "bet": "ML - Defensores de Belgrano",
       "bet_type": "Moneyline",
@@ -1063,6 +1168,36 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 200,
       "event_id": "1631329036",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Cienciano vs Juventud",
+      "bet": "ML - Cienciano",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-172",
+      "pinnacle_nvp": "-166",
+      "ev": "-1.35%",
+      "ev_val": -0.01347763640847821,
+      "start_time": "2026-05-27 05:00 PM",
+      "league": "CONMEBOL - Copa Sudamericana",
+      "pinnacle_limit": 400,
+      "event_id": "1630979672",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Oakland Roots vs Colorado Springs Switchbacks",
+      "bet": "ML - Oakland Roots",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+161",
+      "pinnacle_nvp": "+165",
+      "ev": "-1.36%",
+      "ev_val": -0.013605442176870541,
+      "start_time": "2026-05-30 07:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289003",
       "period": "FG"
     },
     {
@@ -1171,6 +1306,21 @@
       "period": "FG"
     },
     {
+      "sport": "hockey",
+      "matchup": "Montreal Canadiens vs Carolina Hurricanes",
+      "bet": "ML - Carolina Hurricanes",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-144",
+      "pinnacle_nvp": "-139",
+      "ev": "-1.49%",
+      "ev_val": -0.014857881136950857,
+      "start_time": "2026-05-27 07:05 PM",
+      "league": "NHL",
+      "pinnacle_limit": 10000,
+      "event_id": "1631334131",
+      "period": "FG"
+    },
+    {
       "sport": "soccer",
       "matchup": "Flamengo vs Coritiba",
       "bet": "ML - Flamengo",
@@ -1229,21 +1379,6 @@
       "pinnacle_limit": 675,
       "period": "FG",
       "event_id": "1630994952"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Cienciano vs Juventud",
-      "bet": "Under 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "+110",
-      "pinnacle_nvp": "+113",
-      "ev": "-1.59%",
-      "ev_val": -0.015932521087160145,
-      "start_time": "2026-05-27 05:00 PM",
-      "league": "CONMEBOL - Copa Sudamericana",
-      "pinnacle_limit": 300,
-      "period": "FG",
-      "event_id": "1630979672"
     },
     {
       "sport": "soccer",
@@ -1667,6 +1802,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Cienciano vs Juventud",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "+110",
+      "pinnacle_nvp": "+115",
+      "ev": "-2.19%",
+      "ev_val": -0.021891010712622117,
+      "start_time": "2026-05-27 05:00 PM",
+      "league": "CONMEBOL - Copa Sudamericana",
+      "pinnacle_limit": 300,
+      "period": "FG",
+      "event_id": "1630979672"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Patronato vs Tristan Suarez",
       "bet": "ML - Tristan Suarez",
       "bet_type": "Moneyline",
@@ -1817,6 +1967,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Monterey Bay vs Loudoun United",
+      "bet": "ML - Monterey Bay",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+156",
+      "pinnacle_nvp": "+162",
+      "ev": "-2.44%",
+      "ev_val": -0.024390243902439046,
+      "start_time": "2026-05-30 09:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282594",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Olimpia Asuncion vs Audax Italiano",
       "bet": "ML - Olimpia Asuncion",
       "bet_type": "Moneyline",
@@ -1907,6 +2072,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Cienciano vs Juventud",
+      "bet": "Cienciano -1.0",
+      "bet_type": "Spread",
+      "betbck_odds": "+102",
+      "pinnacle_nvp": "+107",
+      "ev": "-2.56%",
+      "ev_val": -0.025566811384466925,
+      "start_time": "2026-05-27 05:00 PM",
+      "league": "CONMEBOL - Copa Sudamericana",
+      "pinnacle_limit": 400,
+      "event_id": "1630979672",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Hacken vs Hammarby",
       "bet": "Hacken 0.5",
       "bet_type": "Spread",
@@ -1918,6 +2098,21 @@
       "league": "Sweden - Allsvenskan",
       "pinnacle_limit": 725,
       "event_id": "1631327403",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Hartford Athletic vs New Mexico United",
+      "bet": "ML - Hartford Athletic",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+105",
+      "pinnacle_nvp": "+110",
+      "ev": "-2.57%",
+      "ev_val": -0.025665399239543807,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289833",
       "period": "FG"
     },
     {
@@ -2012,17 +2207,17 @@
     },
     {
       "sport": "soccer",
-      "matchup": "Cienciano vs Juventud",
-      "bet": "Cienciano -1.0",
-      "bet_type": "Spread",
-      "betbck_odds": "+108",
-      "pinnacle_nvp": "+114",
-      "ev": "-2.76%",
-      "ev_val": -0.027582982702197167,
-      "start_time": "2026-05-27 05:00 PM",
-      "league": "CONMEBOL - Copa Sudamericana",
+      "matchup": "Sporting Club Jacksonville vs San Antonio",
+      "bet": "ML - San Antonio",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+123",
+      "pinnacle_nvp": "+129",
+      "ev": "-2.75%",
+      "ev_val": -0.02747492368076765,
+      "start_time": "2026-05-27 06:30 PM",
+      "league": "USA - USL Championship",
       "pinnacle_limit": 400,
-      "event_id": "1630979672",
+      "event_id": "1631138749",
       "period": "FG"
     },
     {
@@ -2098,6 +2293,21 @@
       "league": "Ecuador - Serie A",
       "pinnacle_limit": 200,
       "event_id": "1631329033",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Las Vegas Lights vs FC Tulsa",
+      "bet": "FC Tulsa 0.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-128",
+      "pinnacle_nvp": "-120",
+      "ev": "-2.93%",
+      "ev_val": -0.029291553133514947,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282592",
       "period": "FG"
     },
     {
@@ -2186,7 +2396,7 @@
       "ev_val": -0.030064423765211234,
       "start_time": "2026-05-31 08:00 AM",
       "league": "Sweden - Superettan",
-      "pinnacle_limit": 125,
+      "pinnacle_limit": 250,
       "event_id": "1631324989",
       "period": "FG"
     },
@@ -2506,6 +2716,21 @@
       "period": "FG"
     },
     {
+      "sport": "hockey",
+      "matchup": "Montreal Canadiens vs Carolina Hurricanes",
+      "bet": "Over 5.5",
+      "bet_type": "Total",
+      "betbck_odds": "-115",
+      "pinnacle_nvp": "-107",
+      "ev": "-3.43%",
+      "ev_val": -0.03431548688465691,
+      "start_time": "2026-05-27 07:05 PM",
+      "league": "NHL",
+      "pinnacle_limit": 7500,
+      "event_id": "1631334131",
+      "period": "FG"
+    },
+    {
       "sport": "soccer",
       "matchup": "Estudiantes de Caseros vs Godoy Cruz",
       "bet": "Under 1.5",
@@ -2687,6 +2912,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Monterey Bay vs Loudoun United",
+      "bet": "ML - Loudoun United",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+166",
+      "pinnacle_nvp": "+176",
+      "ev": "-3.59%",
+      "ev_val": -0.03588256614715468,
+      "start_time": "2026-05-30 09:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282594",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Racing de Cordoba vs Ferro Carril Oeste",
       "bet": "Ferro Carril Oeste 0.0",
       "bet_type": "Spread",
@@ -2698,6 +2938,21 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 300,
       "event_id": "1631338227",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Hartford Athletic vs New Mexico United",
+      "bet": "Hartford Athletic -0.5",
+      "bet_type": "Spread",
+      "betbck_odds": "+105",
+      "pinnacle_nvp": "+113",
+      "ev": "-3.62%",
+      "ev_val": -0.036201222378937414,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289833",
       "period": "FG"
     },
     {
@@ -2819,6 +3074,21 @@
       "pinnacle_limit": 150,
       "period": "FG",
       "event_id": "1631334129"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Monterey Bay vs Loudoun United",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-135",
+      "pinnacle_nvp": "-123",
+      "ev": "-3.88%",
+      "ev_val": -0.03879583614536675,
+      "start_time": "2026-05-30 09:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631282594",
+      "period": "FG"
     },
     {
       "sport": "soccer",
@@ -3347,6 +3617,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Phoenix Rising vs Sacramento Republic",
+      "bet": "Under 2.0",
+      "bet_type": "Total",
+      "betbck_odds": "+131",
+      "pinnacle_nvp": "+142",
+      "ev": "-4.47%",
+      "ev_val": -0.04466501240694798,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631289004"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Emelec vs Universidad Catolica del Ecuador",
       "bet": "Under 2.5",
       "bet_type": "Total",
@@ -3554,6 +3839,21 @@
       "pinnacle_limit": 1000,
       "period": "FG",
       "event_id": "1631142056"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Indy Eleven vs Rhode Island",
+      "bet": "Indy Eleven 0.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-103",
+      "pinnacle_nvp": "+107",
+      "ev": "-4.65%",
+      "ev_val": -0.04650518316024821,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289836",
+      "period": "FG"
     },
     {
       "sport": "soccer",
@@ -3881,7 +4181,7 @@
       "ev_val": -0.04852521408182675,
       "start_time": "2026-05-31 08:00 AM",
       "league": "Sweden - Superettan",
-      "pinnacle_limit": 100,
+      "pinnacle_limit": 200,
       "event_id": "1631324989",
       "period": "FG"
     },
@@ -3947,6 +4247,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Phoenix Rising vs Sacramento Republic",
+      "bet": "Over 2.0",
+      "bet_type": "Total",
+      "betbck_odds": "-161",
+      "pinnacle_nvp": "-142",
+      "ev": "-4.92%",
+      "ev_val": -0.04919764667310267,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631289004",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Universitario de Deportes vs Sport Huancayo",
       "bet": "Under 3.0",
       "bet_type": "Total",
@@ -3959,6 +4274,21 @@
       "pinnacle_limit": 125,
       "period": "FG",
       "event_id": "1631309322"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Pittsburgh Riverhounds vs Miami FC",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-111",
+      "pinnacle_nvp": "+100",
+      "ev": "-4.95%",
+      "ev_val": -0.04954954954954949,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631289835"
     },
     {
       "sport": "soccer",
@@ -3977,6 +4307,36 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Indy Eleven vs Rhode Island",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+101",
+      "ev": "-4.97%",
+      "ev_val": -0.04973075704783014,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631289836",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "El Paso Locomotive vs Lexington SC",
+      "bet": "Over 3.0",
+      "bet_type": "Total",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+101",
+      "ev": "-4.97%",
+      "ev_val": -0.04973075704783014,
+      "start_time": "2026-05-30 08:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631282593",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Varnamo vs Nordic United",
       "bet": "ML - Varnamo",
       "bet_type": "Moneyline",
@@ -3986,7 +4346,7 @@
       "ev_val": -0.04988123515439424,
       "start_time": "2026-05-31 08:00 AM",
       "league": "Sweden - Superettan",
-      "pinnacle_limit": 125,
+      "pinnacle_limit": 250,
       "event_id": "1631324989",
       "period": "FG"
     },
@@ -4187,6 +4547,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Hartford Athletic vs New Mexico United",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-122",
+      "pinnacle_nvp": "-109",
+      "ev": "-5.27%",
+      "ev_val": -0.05274745905906253,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631289833"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Bahia vs Botafogo FR RJ",
       "bet": "Over 2.5",
       "bet_type": "Total",
@@ -4322,6 +4697,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Oakland Roots vs Colorado Springs Switchbacks",
+      "bet": "ML - Colorado Springs Switchbacks",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+161",
+      "pinnacle_nvp": "+176",
+      "ev": "-5.40%",
+      "ev_val": -0.054005074302283296,
+      "start_time": "2026-05-30 07:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289003",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Sao Bernardo vs Gremio Novorizontino",
       "bet": "Over 2.0",
       "bet_type": "Total",
@@ -4394,6 +4784,21 @@
       "pinnacle_limit": 225,
       "period": "FG",
       "event_id": "1631289828"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Cienciano vs Juventud",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-130",
+      "pinnacle_nvp": "-115",
+      "ev": "-5.49%",
+      "ev_val": -0.054898093359631916,
+      "start_time": "2026-05-27 05:00 PM",
+      "league": "CONMEBOL - Copa Sudamericana",
+      "pinnacle_limit": 300,
+      "event_id": "1630979672",
+      "period": "FG"
     },
     {
       "sport": "soccer",
@@ -4546,6 +4951,21 @@
       "period": "FG"
     },
     {
+      "sport": "hockey",
+      "matchup": "Montreal Canadiens vs Carolina Hurricanes",
+      "bet": "Under 5.5",
+      "bet_type": "Total",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "+107",
+      "ev": "-5.64%",
+      "ev_val": -0.05636493360031303,
+      "start_time": "2026-05-27 07:05 PM",
+      "league": "NHL",
+      "pinnacle_limit": 7500,
+      "period": "FG",
+      "event_id": "1631334131"
+    },
+    {
       "sport": "soccer",
       "matchup": "FC Lahti vs Ilves",
       "bet": "Over 2.5",
@@ -4652,6 +5072,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Louisville City vs Tampa Bay Rowdies",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-125",
+      "pinnacle_nvp": "-110",
+      "ev": "-5.71%",
+      "ev_val": -0.05709795704557363,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631282595",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Paris Saint-Germain vs Arsenal",
       "bet": "ML - Arsenal",
       "bet_type": "Moneyline",
@@ -4708,6 +5143,36 @@
       "league": "Norway - Eliteserien",
       "pinnacle_limit": 900,
       "event_id": "1631005143",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Las Vegas Lights vs FC Tulsa",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-120",
+      "pinnacle_nvp": "-106",
+      "ev": "-5.79%",
+      "ev_val": -0.057896539910928246,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631282592",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Sporting Club Jacksonville vs San Antonio",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "+100",
+      "pinnacle_nvp": "+112",
+      "ev": "-5.79%",
+      "ev_val": -0.05793688177107881,
+      "start_time": "2026-05-27 06:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 300,
+      "event_id": "1631138749",
       "period": "FG"
     },
     {
@@ -4802,6 +5267,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Oakland Roots vs Colorado Springs Switchbacks",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+103",
+      "ev": "-5.86%",
+      "ev_val": -0.05863367401828934,
+      "start_time": "2026-05-30 07:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631289003"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Huachipato vs Universidad Catolica",
       "bet": "ML - Universidad Catolica",
       "bet_type": "Moneyline",
@@ -4859,21 +5339,6 @@
       "pinnacle_limit": 100,
       "period": "FG",
       "event_id": "1631327441"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Cienciano vs Juventud",
-      "bet": "Over 2.5",
-      "bet_type": "Total",
-      "betbck_odds": "-130",
-      "pinnacle_nvp": "-113",
-      "ev": "-5.99%",
-      "ev_val": -0.05991988882530852,
-      "start_time": "2026-05-27 05:00 PM",
-      "league": "CONMEBOL - Copa Sudamericana",
-      "pinnacle_limit": 300,
-      "event_id": "1630979672",
-      "period": "FG"
     },
     {
       "sport": "soccer",
@@ -4982,6 +5447,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Las Vegas Lights vs FC Tulsa",
+      "bet": "ML - Las Vegas Lights",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+176",
+      "pinnacle_nvp": "+194",
+      "ev": "-6.12%",
+      "ev_val": -0.061224489795918435,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282592",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Estudiantes de Caseros vs Godoy Cruz",
       "bet": "Over 1.5",
       "bet_type": "Total",
@@ -5086,6 +5566,21 @@
       "period": "FG"
     },
     {
+      "sport": "hockey",
+      "matchup": "Montreal Canadiens vs Carolina Hurricanes",
+      "bet": "ML - Montreal Canadiens",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+124",
+      "pinnacle_nvp": "+139",
+      "ev": "-6.24%",
+      "ev_val": -0.06236919213059844,
+      "start_time": "2026-05-27 07:05 PM",
+      "league": "NHL",
+      "pinnacle_limit": 10000,
+      "event_id": "1631334131",
+      "period": "FG"
+    },
+    {
       "sport": "soccer",
       "matchup": "FC Lahti vs Ilves",
       "bet": "ML - FC Lahti",
@@ -5128,6 +5623,21 @@
       "league": "Sweden - Superettan",
       "pinnacle_limit": 250,
       "event_id": "1631256347",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "El Paso Locomotive vs Lexington SC",
+      "bet": "ML - Lexington SC",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+185",
+      "pinnacle_nvp": "+204",
+      "ev": "-6.25%",
+      "ev_val": -0.0625,
+      "start_time": "2026-05-30 08:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282593",
       "period": "FG"
     },
     {
@@ -5252,6 +5762,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "El Paso Locomotive vs Lexington SC",
+      "bet": "Lexington SC 0.0",
+      "bet_type": "Spread",
+      "betbck_odds": "+103",
+      "pinnacle_nvp": "+117",
+      "ev": "-6.37%",
+      "ev_val": -0.06365313653136528,
+      "start_time": "2026-05-30 08:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282593",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Ferrocarril Midland vs San Martin de Tucuman",
       "bet": "ML - Ferrocarril Midland",
       "bet_type": "Moneyline",
@@ -5339,6 +5864,21 @@
       "pinnacle_limit": 150,
       "event_id": "1630966440",
       "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Sporting Club Jacksonville vs San Antonio",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-130",
+      "pinnacle_nvp": "-112",
+      "ev": "-6.44%",
+      "ev_val": -0.06439409347923364,
+      "start_time": "2026-05-27 06:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 300,
+      "period": "FG",
+      "event_id": "1631138749"
     },
     {
       "sport": "soccer",
@@ -5447,6 +5987,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Charleston Battery vs Detroit City",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-120",
+      "pinnacle_nvp": "-104",
+      "ev": "-6.46%",
+      "ev_val": -0.06462585034013602,
+      "start_time": "2026-05-30 05:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631289834",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Gimnasia Jujuy vs Nueva Chicago",
       "bet": "ML - Nueva Chicago",
       "bet_type": "Moneyline",
@@ -5474,6 +6029,21 @@
       "pinnacle_limit": 225,
       "event_id": "1630979670",
       "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Charleston Battery vs Detroit City",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+104",
+      "ev": "-6.51%",
+      "ev_val": -0.06508770367732153,
+      "start_time": "2026-05-30 05:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631289834"
     },
     {
       "sport": "soccer",
@@ -5792,6 +6362,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Indy Eleven vs Rhode Island",
+      "bet": "ML - Rhode Island",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+148",
+      "pinnacle_nvp": "+167",
+      "ev": "-6.98%",
+      "ev_val": -0.06976744186046513,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289836",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Ponte Preta vs Botafogo SP",
       "bet": "ML - Ponte Preta",
       "bet_type": "Moneyline",
@@ -5834,6 +6419,21 @@
       "pinnacle_limit": 1500,
       "event_id": "1631142056",
       "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Louisville City vs Tampa Bay Rowdies",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "+110",
+      "ev": "-7.03%",
+      "ev_val": -0.07029478458049898,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631282595"
     },
     {
       "sport": "soccer",
@@ -5893,6 +6493,21 @@
       "league": "China - Super League",
       "pinnacle_limit": 450,
       "event_id": "1631277722",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Oakland Roots vs Colorado Springs Switchbacks",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-120",
+      "pinnacle_nvp": "-103",
+      "ev": "-7.08%",
+      "ev_val": -0.07078898462578131,
+      "start_time": "2026-05-30 07:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631289003",
       "period": "FG"
     },
     {
@@ -5972,6 +6587,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Las Vegas Lights vs FC Tulsa",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-110",
+      "pinnacle_nvp": "+106",
+      "ev": "-7.19%",
+      "ev_val": -0.07190524594510972,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631282592"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Racing de Cordoba vs Ferro Carril Oeste",
       "bet": "Under 2.0",
       "bet_type": "Total",
@@ -6041,7 +6671,7 @@
       "ev_val": -0.07273020480567649,
       "start_time": "2026-05-31 08:00 AM",
       "league": "Sweden - Superettan",
-      "pinnacle_limit": 100,
+      "pinnacle_limit": 200,
       "period": "FG",
       "event_id": "1631324989"
     },
@@ -6313,6 +6943,21 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 200,
       "event_id": "1631329036",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Hartford Athletic vs New Mexico United",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-108",
+      "pinnacle_nvp": "+109",
+      "ev": "-7.67%",
+      "ev_val": -0.0767373317708887,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631289833",
       "period": "FG"
     },
     {
@@ -6602,6 +7247,36 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Indy Eleven vs Rhode Island",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-120",
+      "pinnacle_nvp": "-101",
+      "ev": "-7.92%",
+      "ev_val": -0.07918968692449357,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631289836"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "El Paso Locomotive vs Lexington SC",
+      "bet": "Under 3.0",
+      "bet_type": "Total",
+      "betbck_odds": "-120",
+      "pinnacle_nvp": "-101",
+      "ev": "-7.92%",
+      "ev_val": -0.07918968692449357,
+      "start_time": "2026-05-30 08:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631282593"
+    },
+    {
+      "sport": "soccer",
       "matchup": "All Boys vs Los Andes",
       "bet": "Over 1.5",
       "bet_type": "Total",
@@ -6613,6 +7288,21 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 150,
       "event_id": "1631329034",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Pittsburgh Riverhounds vs Miami FC",
+      "bet": "Over 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "-119",
+      "pinnacle_nvp": "+100",
+      "ev": "-7.98%",
+      "ev_val": -0.07983193277310918,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "event_id": "1631289835",
       "period": "FG"
     },
     {
@@ -6707,6 +7397,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Monterey Bay vs Loudoun United",
+      "bet": "Under 2.5",
+      "bet_type": "Total",
+      "betbck_odds": "+105",
+      "pinnacle_nvp": "+123",
+      "ev": "-8.15%",
+      "ev_val": -0.08154121863799302,
+      "start_time": "2026-05-30 09:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 150,
+      "period": "FG",
+      "event_id": "1631282594"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Bragantino vs Carabobo",
       "bet": "Under 2.5",
       "bet_type": "Total",
@@ -6797,6 +7502,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Hartford Athletic vs New Mexico United",
+      "bet": "ML - New Mexico United",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+260",
+      "pinnacle_nvp": "+292",
+      "ev": "-8.28%",
+      "ev_val": -0.08280254777070062,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289833",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Molde vs Sandefjord",
       "bet": "Over 3.0",
       "bet_type": "Total",
@@ -6857,6 +7577,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Sporting Club Jacksonville vs San Antonio",
+      "bet": "ML - Sporting Club Jacksonville",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+224",
+      "pinnacle_nvp": "+254",
+      "ev": "-8.37%",
+      "ev_val": -0.08371040723981893,
+      "start_time": "2026-05-27 06:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 400,
+      "event_id": "1631138749",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Tecnico Universitario vs Barcelona SC",
       "bet": "Over 2.0",
       "bet_type": "Total",
@@ -6898,6 +7633,21 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 200,
       "event_id": "1631334127",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "El Paso Locomotive vs Lexington SC",
+      "bet": "ML - El Paso Locomotive",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+140",
+      "pinnacle_nvp": "+162",
+      "ev": "-8.50%",
+      "ev_val": -0.08501715592832648,
+      "start_time": "2026-05-30 08:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282593",
       "period": "FG"
     },
     {
@@ -7187,6 +7937,36 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Las Vegas Lights vs FC Tulsa",
+      "bet": "Las Vegas Lights 0.0",
+      "bet_type": "Spread",
+      "betbck_odds": "-102",
+      "pinnacle_nvp": "+120",
+      "ev": "-9.86%",
+      "ev_val": -0.09859255490999308,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282592",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Phoenix Rising vs Sacramento Republic",
+      "bet": "ML - Phoenix Rising",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+191",
+      "pinnacle_nvp": "+223",
+      "ev": "-9.91%",
+      "ev_val": -0.09907120743034048,
+      "start_time": "2026-05-30 09:30 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289004",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Colegiales vs Agropecuario",
       "bet": "ML - Agropecuario",
       "bet_type": "Moneyline",
@@ -7247,6 +8027,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Louisville City vs Tampa Bay Rowdies",
+      "bet": "ML - Tampa Bay Rowdies",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+270",
+      "pinnacle_nvp": "+312",
+      "ev": "-10.22%",
+      "ev_val": -0.10215966998301385,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631282595",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Molde vs Sandefjord",
       "bet": "ML - Sandefjord",
       "bet_type": "Moneyline",
@@ -7303,6 +8098,21 @@
       "league": "Peru - Liga 1",
       "pinnacle_limit": 150,
       "event_id": "1631334083",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Pittsburgh Riverhounds vs Miami FC",
+      "bet": "ML - Miami FC",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+362",
+      "pinnacle_nvp": "+416",
+      "ev": "-10.48%",
+      "ev_val": -0.10482464638635913,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289835",
       "period": "FG"
     },
     {
@@ -7457,6 +8267,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Pittsburgh Riverhounds vs Miami FC",
+      "bet": "Miami FC 0.5",
+      "bet_type": "Spread",
+      "betbck_odds": "+106",
+      "pinnacle_nvp": "+133",
+      "ev": "-11.63%",
+      "ev_val": -0.11625911625911622,
+      "start_time": "2026-05-30 06:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289835",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "Chongqing Tonglianglong vs Beijing Guoan",
       "bet": "ML - Chongqing Tonglianglong",
       "bet_type": "Moneyline",
@@ -7577,21 +8402,6 @@
     },
     {
       "sport": "soccer",
-      "matchup": "Cienciano vs Juventud",
-      "bet": "ML - Juventud",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+444",
-      "pinnacle_nvp": "+526",
-      "ev": "-13.17%",
-      "ev_val": -0.1316839584996009,
-      "start_time": "2026-05-27 05:00 PM",
-      "league": "CONMEBOL - Copa Sudamericana",
-      "pinnacle_limit": 400,
-      "event_id": "1630979672",
-      "period": "FG"
-    },
-    {
-      "sport": "soccer",
       "matchup": "Cienciano vs Sporting Cristal",
       "bet": "Sporting Cristal 0.5",
       "bet_type": "Spread",
@@ -7603,6 +8413,36 @@
       "league": "Peru - Liga 1",
       "pinnacle_limit": 150,
       "event_id": "1631334083",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Cienciano vs Juventud",
+      "bet": "ML - Juventud",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+460",
+      "pinnacle_nvp": "+549",
+      "ev": "-13.74%",
+      "ev_val": -0.13739987677141097,
+      "start_time": "2026-05-27 05:00 PM",
+      "league": "CONMEBOL - Copa Sudamericana",
+      "pinnacle_limit": 400,
+      "event_id": "1630979672",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
+      "matchup": "Charleston Battery vs Detroit City",
+      "bet": "ML - Detroit City",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+311",
+      "pinnacle_nvp": "+382",
+      "ev": "-14.64%",
+      "ev_val": -0.14641744548286628,
+      "start_time": "2026-05-30 05:00 PM",
+      "league": "USA - USL Championship",
+      "pinnacle_limit": 200,
+      "event_id": "1631289834",
       "period": "FG"
     },
     {
@@ -7621,6 +8461,6 @@
       "period": "FG"
     }
   ],
-  "total_events": 508,
-  "last_run": "2026-05-27T04:13:08.553068"
+  "total_events": 564,
+  "last_run": "2026-05-27T04:20:58.009490"
 }
