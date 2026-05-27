@@ -1654,16 +1654,15 @@ class AceScraper:
         try:
             safe_print("[ACE DEBUG] Filtering out corners and props markets...")
             
-            # Keywords that indicate corners, props, or other non-game markets
+            # Keywords that indicate corners, props, or other non-game markets.
+            # Keep these narrow — only literal market-type strings that would never be
+            # part of a real team name.  Broad words like 'game', 'set', 'cup', 'league'
+            # were removed because they appear in legitimate team names and caused 80%+
+            # of valid Pinnacle events to be incorrectly filtered out.
             corners_props_keywords = [
-                'corners', 'corner', 'cards', 'card', 'shots', 'shot', 'fouls', 'foul',
-                'offsides', 'offside', 'throw-ins', 'throw-in', 'free kicks', 'free kick',
-                'penalties', 'penalty', 'yellow cards', 'red cards', 'bookings', 'booking',
-                'assists', 'assist', 'goals', 'goal', 'saves', 'save', 'passes', 'pass',
-                'tackles', 'tackle', 'interceptions', 'interception', 'clearances', 'clearance',
-                'crosses', 'cross', 'headers', 'header', 'dribbles', 'dribble', 'blocks', 'block',
-                'first half', 'second half', '1h', '2h', 'quarter', 'period', 'set', 'game',
-                'player', 'team', 'season', 'tournament', 'championship', 'cup', 'league'
+                'corners', 'corner', 'yellow cards', 'red cards', 'bookings',
+                'throw-ins', 'throw-in', 'free kicks', 'free kick',
+                'offsides', 'offside',
             ]
             
             filtered_events = []
@@ -1796,21 +1795,9 @@ class AceScraper:
                 safe_print(f"[ACE MATCH DEBUG] Missing team names: away='{ace_away}', home='{ace_home}'")
                 return None
             
-            # Clean team names for matching (like Buckeye)
-            def ace_clean_team_name(name: str) -> str:
-                if not name:
-                    return ""
-                # Just lowercase and basic cleanup
-                cleaned = name.lower().strip()
-                # Remove common suffixes but keep more of the original name
-                suffixes_to_remove = ['fc', 'sc', 'bk', 'sk', 'ac', 'as', 'fk', 'cd', 'ca', 'afc', 'cfr', 'kc', 'scr']
-                for suffix in suffixes_to_remove:
-                    if cleaned.endswith(f' {suffix}'):
-                        cleaned = cleaned[:-len(f' {suffix}')].strip()
-                return cleaned
-            
-            clean_ace_away = ace_clean_team_name(ace_away)
-            clean_ace_home = ace_clean_team_name(ace_home)
+            # Use the full normalizer (same as BetBCK matching) instead of a weak local reimplementation
+            clean_ace_away = clean_pod_team_name_for_search(ace_away)
+            clean_ace_home = clean_pod_team_name_for_search(ace_home)
             
             safe_print(f"[ACE MATCH] ACE cleaned: away='{clean_ace_away}', home='{clean_ace_home}'")
             
@@ -1866,9 +1853,9 @@ class AceScraper:
                 if not pinnacle_away or not pinnacle_home:
                     continue
                 
-                # Clean Pinnacle team names
-                clean_pinnacle_away = ace_clean_team_name(pinnacle_away)
-                clean_pinnacle_home = ace_clean_team_name(pinnacle_home)
+                # Clean Pinnacle team names using the same normalizer as the ACE side
+                clean_pinnacle_away = clean_pod_team_name_for_search(pinnacle_away)
+                clean_pinnacle_home = clean_pod_team_name_for_search(pinnacle_home)
                 
                 # Check if teams match (relaxed like Buckeye)
                 away_match = ace_team_match(clean_ace_away, clean_pinnacle_away)
