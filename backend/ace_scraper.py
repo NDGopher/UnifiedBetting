@@ -300,149 +300,42 @@ class AceScraper:
         safe_print(f"[ACE DEBUG] get_active_league_ids returning: {league_ids_str}")
         return league_ids_str
 
-    # Known-working league IDs verified on Ace (action23.ag).
-    # Soccer IDs discovered via original API exploration.
-    # Non-soccer IDs (NBA, NFL, NHL, etc.) discovered by user clicking sports
-    # on NewSchedule.aspx: lg=416,417,418,535,443,298,7,211,544,442,129,171
+    # Exact league IDs from the user's verified NewSchedule.aspx browser request:
+    # https://backend.action23.ag/wager/NewSchedule.aspx?lg=<IDs>&WT=0
+    # Sending only these 47 IDs keeps the request pattern natural (matches a real
+    # logged-in user's selection) and avoids hitting IDs that don't exist on ACE.
+    # ACE automatically omits leagues with no active games from the JSON response,
+    # so inactive leagues cost nothing extra.
     _KNOWN_LEAGUE_IDS = [
-        # ── Basketball / NBA ──────────────────────────────────────────────────
-        "416", "417", "418", "419", "535",
-        # ── Football / NFL ────────────────────────────────────────────────────
-        "443", "298", "7",
-        # ── Hockey / NHL ──────────────────────────────────────────────────────
+        # ── MLB ───────────────────────────────────────────────────────────────
+        "416",          # MLB - GAME LINES
+        "419",          # MLB - ALT LINES (confirmed from payload)
+        # ── Basketball ────────────────────────────────────────────────────────
+        "535",
+        # ── Football ──────────────────────────────────────────────────────────
+        "298", "7",
+        # ── Hockey ────────────────────────────────────────────────────────────
         "211", "544",
-        # ── Other (user-confirmed, sport TBD from Description) ───────────────
-        "442", "129", "171", "685",
-        # ── Soccer (verified working) ─────────────────────────────────────────
-        "2521", "515", "537", "1116", "3483", "1278", "439", "549", "451", "414",
-        "558", "4437", "557", "440", "585", "1183", "333", "1180", "546", "2948",
-        "1193", "1567", "520", "1241", "184", "2716", "482", "1195", "1189", "438",
-        "745", "1186", "306", "116", "1181", "521", "4781", "2777", "1190", "441",
-        "1196", "1162", "1569",
+        # ── Other (sport resolved from Description at runtime) ────────────────
+        "685", "442", "539",
+        # ── Soccer ────────────────────────────────────────────────────────────
+        "2521", "515", "537", "2887", "3483", "3231", "3694", "439", "934",
+        "4286", "574", "948", "519", "1064", "3114", "585", "936", "3487",
+        "2203", "2251", "1183", "483", "2153", "545", "962", "4757", "333",
+        "2929", "1180", "546", "2330", "1193", "1839", "286", "4411", "3016",
+        "691",
     ]
 
-    # Keep old name as alias so any external call still works
-    _KNOWN_SOCCER_LEAGUE_IDS = _KNOWN_LEAGUE_IDS
-
-    def _discover_league_ids_from_create_sports(self) -> List[str]:
-        """
-        Fetch CreateSports.aspx and extract all league IDs from the HTML.
-        Looks for:
-          - <input> values that are numeric (form checkboxes/radios for leagues)
-          - href/onclick params: ?lg=NNN or &lg=NNN
-          - data-lg / data-league attributes
-          - JavaScript patterns: lg: NNN, leagueId: NNN, id: NNN inside arrays
-        """
-        try:
-            url = f"{self.base_url}/wager/CreateSports.aspx?WT=0"
-            resp = self.session.get(url, allow_redirects=False, timeout=15)
-            if resp.status_code != 200:
-                safe_print(f"[ACE DEBUG] CreateSports discovery: HTTP {resp.status_code}")
-                return []
-
-            html = resp.text
-            if not html or 'html' not in html.lower():
-                safe_print("[ACE DEBUG] CreateSports discovery: no HTML content")
-                return []
-
-            soup = BeautifulSoup(html, 'html.parser')
-            found: set = set()
-
-            # 1. Form inputs whose value is a pure integer (league checkboxes)
-            for inp in soup.find_all('input'):
-                v = inp.get('value', '').strip()
-                if v.isdigit() and int(v) > 50:
-                    found.add(v)
-
-            # 2. data-lg / data-league / data-id attributes on any element
-            for tag in soup.find_all(True):
-                for attr in ('data-lg', 'data-league', 'data-id', 'data-leagueid'):
-                    v = tag.get(attr, '').strip()
-                    if v.isdigit() and int(v) > 50:
-                        found.add(v)
-
-            # 3. href / onclick with ?lg= or &lg=
-            for tag in soup.find_all(True):
-                for attr in ('href', 'onclick', 'data-href', 'data-url'):
-                    v = tag.get(attr, '')
-                    if v:
-                        for m in re.findall(r'[?&]lg=(\d+)', v):
-                            if int(m) > 50:
-                                found.add(m)
-
-            # 4. JavaScript variable patterns inside <script> blocks
-            script_text = ' '.join(
-                (s.string or '') for s in soup.find_all('script') if s.string
-            )
-            for pattern in [
-                r'["\']?(?:lg|leagueId|LeagueId|league_id|id)["\']?\s*[:=]\s*["\']?(\d{3,5})["\']?',
-                r'league[Ii][dD]\s*[:=,]\s*(\d{3,5})',
-                r'"(\d{3,5})"',  # bare numeric strings in JS
-            ]:
-                for m in re.findall(pattern, script_text):
-                    if m.isdigit() and int(m) > 50:
-                        found.add(m)
-
-            safe_print(f"[ACE DEBUG] CreateSports discovery: found {len(found)} candidate league IDs")
-            return list(found)
-
-        except Exception as e:
-            safe_print(f"[ACE DEBUG] CreateSports discovery error: {e}")
-            return []
-
-    def _fetch_all_games_no_filter(self) -> str:
-        """
-        Call NewScheduleHelper.aspx WITHOUT the lg parameter.
-        Some sportsbook back-ends return all available leagues when no filter
-        is provided.  Returns the raw response string (may be empty).
-        """
-        try:
-            url = f"{self.base_url}/wager/NewScheduleHelper.aspx"
-            params = {'WT': '0'}
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                'Accept': 'application/json, text/plain, */*',
-                'Referer': f'{self.base_url}/wager/CreateSports.aspx?WT=0',
-            }
-            resp = self.session.get(url, params=params, headers=headers, timeout=30)
-            if resp.status_code == 200:
-                content = resp.text
-                if content.strip().startswith('{') and 'listLeagues' in content:
-                    safe_print(f"[ACE DEBUG] No-filter call returned {len(content)} chars with listLeagues")
-                    return content
-        except Exception as e:
-            safe_print(f"[ACE DEBUG] No-filter call error: {e}")
-        return ""
-
     def _fetch_active_leagues(self) -> List[str]:
+        """Return the verified active league ID list.
+
+        We use the exact 47 IDs from the user's real browser request to
+        NewSchedule.aspx.  This matches a genuine user's request pattern,
+        avoids hitting IDs that don't exist on ACE, and lets the ACE JSON
+        response do the work of filtering out leagues with no active games.
         """
-        Dynamically discover Ace league IDs so we get ALL sports (NBA, MLB,
-        NHL, soccer, etc.) not just the ones we happened to hardcode.
-
-        Strategy (in order):
-          1. Parse CreateSports.aspx HTML for league IDs
-          2. Fall back to known-working soccer IDs
-        """
-        try:
-            # --- Strategy 1: parse CreateSports.aspx ---------------------
-            if getattr(self, 'logged_in', False) and getattr(self, 'session', None):
-                discovered = self._discover_league_ids_from_create_sports()
-                if len(discovered) >= 10:
-                    # Merge with known soccer IDs (discovered may miss some)
-                    merged = list(set(discovered) | set(self._KNOWN_SOCCER_LEAGUE_IDS))
-                    safe_print(f"[ACE DEBUG] Dynamic league discovery: {len(merged)} IDs "
-                               f"({len(discovered)} from HTML + known soccer)")
-                    return merged
-                else:
-                    safe_print(f"[ACE DEBUG] CreateSports discovery returned only "
-                               f"{len(discovered)} IDs — falling back to known IDs")
-
-        except Exception as e:
-            safe_print(f"[ACE DEBUG] Error with league IDs: {e}")
-
-        # --- Fallback: known-working soccer IDs ----------------------
-        safe_print(f"[ACE DEBUG] Falling back to {len(self._KNOWN_SOCCER_LEAGUE_IDS)} known soccer league IDs")
-        return list(self._KNOWN_SOCCER_LEAGUE_IDS)
+        safe_print(f"[ACE DEBUG] Using {len(self._KNOWN_LEAGUE_IDS)} verified league IDs")
+        return list(self._KNOWN_LEAGUE_IDS)
     
     def get_combined_league_ids(self) -> str:
         """Get combined league IDs - now uses dynamic active leagues"""
@@ -919,16 +812,39 @@ class AceScraper:
             # DEBUG: Log odds for this game
             logging.debug(f"[ACE DEBUG] Odds for {home_team} vs {away_team}: home_odds={home_odds}, away_odds={away_odds}")
             
-            # Detect 1H / 2H prefix in team names → tag market_suffix and strip prefix
-            # e.g. "1H REAL MADRID vs 1H ATLETICO MADRID" → market_suffix='1H', teams stripped
+            # ── gdesc-based sub-market detection ─────────────────────────────
+            # gdesc on each game tells us what kind of line it is.
+            # Empty gdesc = main game line (most common).
+            gdesc = (game_json.get('gdesc') or '').upper()
             market_suffix = None
-            _PERIOD_PREFIX_RE = re.compile(r'^(1H|2H)\s+', re.IGNORECASE)
-            home_pfx = _PERIOD_PREFIX_RE.match(home_team)
-            away_pfx = _PERIOD_PREFIX_RE.match(away_team)
-            if home_pfx and away_pfx:
-                market_suffix = home_pfx.group(1).upper()
-                home_team = _PERIOD_PREFIX_RE.sub('', home_team).strip()
-                away_team = _PERIOD_PREFIX_RE.sub('', away_team).strip()
+
+            if 'ALTERNATE LINES' in gdesc:
+                # ACE league 419: alternate run-line spreads (no moneyline).
+                # Strip trailing " ALT" from team names so matching works:
+                # "SF GIANTS ALT" → "SF GIANTS"
+                home_team = re.sub(r'\s+ALT$', '', home_team, flags=re.IGNORECASE).strip()
+                away_team = re.sub(r'\s+ALT$', '', away_team, flags=re.IGNORECASE).strip()
+                market_suffix = 'ALT'
+            elif re.search(r'5\s+INNINGS?\s+LINE', gdesc):
+                # F5 = first half in Pinnacle (baseball period 1).
+                # Team names look like "5 INN SF GIANTS" — strip the prefix.
+                home_team = re.sub(r'^\d+\s+INN\s+', '', home_team, flags=re.IGNORECASE).strip()
+                away_team = re.sub(r'^\d+\s+INN\s+', '', away_team, flags=re.IGNORECASE).strip()
+                market_suffix = '1H'
+            elif re.search(r'\d+\s+INNINGS?\s+LINE', gdesc):
+                # F3, F7, etc. — Pinnacle has no equivalent market, skip.
+                return None
+
+            # ── Team-name period prefix (soccer/basketball 1H/2H games) ──────
+            # e.g. "1H REAL MADRID vs 1H ATLETICO MADRID" → market_suffix='1H'
+            if market_suffix is None:
+                _PERIOD_PREFIX_RE = re.compile(r'^(1H|2H)\s+', re.IGNORECASE)
+                home_pfx = _PERIOD_PREFIX_RE.match(home_team)
+                away_pfx = _PERIOD_PREFIX_RE.match(away_team)
+                if home_pfx and away_pfx:
+                    market_suffix = home_pfx.group(1).upper()
+                    home_team = _PERIOD_PREFIX_RE.sub('', home_team).strip()
+                    away_team = _PERIOD_PREFIX_RE.sub('', away_team).strip()
 
             # Determine sport from league description
             sport = self._determine_sport_from_league(league_desc)
@@ -1259,27 +1175,6 @@ class AceScraper:
             
             # Now proceed with scraping
             safe_print("[ACE DEBUG] Starting game scraping...")
-
-            # --- Strategy 0: try fetching ALL games without a league filter ---
-            # If the Ace endpoint returns all leagues when lg is omitted, this
-            # gives us NBA/MLB/NHL without needing to know their IDs.
-            if not league_ids:
-                safe_print("[ACE DEBUG] Strategy 0: trying no-filter call...")
-                no_filter_data = self._fetch_all_games_no_filter()
-                if no_filter_data:
-                    no_filter_games = self._parse_json_response(no_filter_data)
-                    sports_seen = set(g.get('sport', 'unknown') for g in no_filter_games)
-                    safe_print(f"[ACE DEBUG] Strategy 0 returned {len(no_filter_games)} games, "
-                               f"sports: {sports_seen}")
-                    # Only use no-filter result if it has multiple sports or is large
-                    if len(no_filter_games) > 50 or len(sports_seen) > 1:
-                        safe_print("[ACE DEBUG] Strategy 0 success — using no-filter games")
-                        # Continue to filtering below
-                        games_raw = no_filter_games
-                        filtered_games = [g for g in games_raw if self._should_include_game(g)]
-                        safe_print(f"[ACE DEBUG] After filtering: {len(filtered_games)} games")
-                        return filtered_games
-                safe_print("[ACE DEBUG] Strategy 0 insufficient — falling back to league-ID approach")
 
             # Get league IDs if not provided
             if not league_ids:
