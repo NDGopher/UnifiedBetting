@@ -12,6 +12,15 @@ logger = logging.getLogger(__name__)
 # Configuration
 ARCADIA_BASE_URL = "https://guest.api.arcadia.pinnacle.com/0.1"
 
+# Pinnacle now requires Origin/Referer headers that match their own site.
+# Without these the guest API returns 401 "No authorization token provided".
+ARCADIA_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "application/json, text/plain, */*",
+    "Origin": "https://www.pinnacle.com",
+    "Referer": "https://www.pinnacle.com/",
+}
+
 # Sports to exclude
 EXCLUDED_SPORTS = [
     "Cycling", "Formula 1", "Rugby Union", "Rugby League",
@@ -69,7 +78,7 @@ def fetch_sports() -> List[Dict[str, Any]]:
     url = f"{ARCADIA_BASE_URL}/sports"
     params = {"brandId": "0"}
     try:
-        response = requests.get(url, params=params, timeout=10)
+        response = requests.get(url, params=params, headers=ARCADIA_HEADERS, timeout=10)
         response.raise_for_status()
         sports_data = response.json()
         # Filter sports with matchups and exclude specified sports
@@ -158,7 +167,7 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
                 url = f"{ARCADIA_BASE_URL}/leagues/{league_id}/matchups"
                 params = {"brandId": "0"}
                 try:
-                    response = requests.get(url, params=params)
+                    response = requests.get(url, params=params, headers=ARCADIA_HEADERS)
                     total_requests += 1
                     response.raise_for_status()
                     matchups = response.json()
@@ -173,7 +182,7 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
             url = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups"
             params = {"withSpecials": "false", "brandId": "0"}
             try:
-                response = requests.get(url, params=params)
+                response = requests.get(url, params=params, headers=ARCADIA_HEADERS)
                 total_requests += 1
                 response.raise_for_status()
                 matchups = response.json()
@@ -191,7 +200,7 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
             url = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups"
             params = {"withSpecials": "false", "brandId": "0"}
             try:
-                response = requests.get(url, params=params)
+                response = requests.get(url, params=params, headers=ARCADIA_HEADERS)
                 total_requests += 1
                 response.raise_for_status()
                 matchups = response.json()
@@ -205,7 +214,7 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
                     logger.warning(f"401 Unauthorized for {sport_name}. Trying fallback endpoint...")
                     url = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups/highlighted"
                     try:
-                        response = requests.get(url, params={"brandId": "0"})
+                        response = requests.get(url, params={"brandId": "0"}, headers=ARCADIA_HEADERS)
                         total_requests += 1
                         response.raise_for_status()
                         matchups = response.json()
@@ -315,10 +324,6 @@ def load_event_ids(filename: str = None) -> Optional[List[dict]]:
         return None
 
 if __name__ == "__main__":
-    # Test the event ID fetching
     event_ids = get_todays_event_ids()
-    if event_ids:
-        save_event_ids(event_ids)
-        print(f"Successfully fetched and saved {len(event_ids)} event IDs")
-    else:
-        print("No event IDs fetched") 
+    save_event_ids(event_ids or [])
+    print(f"Successfully fetched and saved {len(event_ids or [])} event IDs") 
