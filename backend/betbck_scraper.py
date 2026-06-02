@@ -851,7 +851,8 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
         # --- Hard date reject: discard matches where BCK game is too far from the expected time ---
         # This prevents wrong-league games (e.g. Atletico Madrid tomorrow) from matching a
         # lower-division game happening today when Pinnacle's start time is unavailable.
-        _DATE_REJECT_HOURS = 18  # reject if BCK game > 18h away from anchor
+        _DATE_REJECT_HOURS = 18        # reject if BCK game > 18h from PIN anchor
+        _DATE_REJECT_HOURS_NO_ANCHOR = 168  # 7 days — POD rarely alerts >1wk out; avoids killing CFL/NFL future games
         if bck_game_date and not ("exact_order1" in _cand_scores or "exact_order2" in _cand_scores):
             if event_date is not None:
                 _date_gap_h = abs((bck_game_date - event_date).total_seconds()) / 3600
@@ -861,9 +862,11 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                         _alog.log_bck_date(bck_date_str=_date_log, event_date_str=event_date.strftime('%Y-%m-%d %H:%M'), diff_h=_date_gap_h)
                     continue
             else:
-                # No PIN anchor: reject if BCK game is >18h from right now
+                # No PIN anchor: use a generous 7-day window so CFL/NFL/WNBA games scheduled
+                # days in advance are not rejected. Soccer with ambiguous names (the original
+                # concern) is already protected by the 18h window when PIN anchor IS available.
                 _hours_from_now = (bck_game_date - datetime.datetime.now()).total_seconds() / 3600
-                if _hours_from_now > _DATE_REJECT_HOURS:
+                if _hours_from_now > _DATE_REJECT_HOURS_NO_ANCHOR or _hours_from_now < -24:
                     print(f"[BetbckParser] DATE REJECT (no PIN anchor): {raw_bck_l} vs {raw_bck_v} — BCK date {_date_log} is {_hours_from_now:.1f}h from now (Event ID: {event_id})")
                     if _alog:
                         _alog.log_bck_date(bck_date_str=_date_log, event_date_str=None, diff_h=None)
