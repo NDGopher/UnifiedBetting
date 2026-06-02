@@ -272,6 +272,9 @@ const BuckeyeScraper: React.FC = () => {
   };
 
   const handleRunCalculations = async () => {
+    // Immediately disable the button before any async work — prevents double-click
+    if (pipelineRunning) return;
+    setPipelineRunning(true);
     setLoading(true);
     setError(null);
     setMessage(null);
@@ -300,13 +303,16 @@ const BuckeyeScraper: React.FC = () => {
         // Start polling for results while pipeline runs (fallback)
         startPolling();
       } else {
+        // Backend rejected (e.g. already running) — restore button state
         setError(data.message || 'Failed to start streaming pipeline');
         setBuckeyeMarkets([]);
+        setPipelineRunning(false);
       }
     } catch (err) {
       console.error('[BuckeyeScraper] Error starting streaming pipeline:', err);
       setError('Failed to start streaming pipeline');
       setBuckeyeMarkets([]);
+      setPipelineRunning(false);
     } finally {
       setLoading(false);
     }

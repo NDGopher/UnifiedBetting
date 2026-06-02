@@ -2171,22 +2171,15 @@ async def run_streaming_pipeline(request: Request):
     """Start the streaming Buckeye pipeline in the background"""
     global pipeline_running, pipeline_task
     
-    # Check if previous task is still running or stuck
-    if pipeline_task and not pipeline_task.done():
-        logger.warning(f"[PIPELINE] Previous pipeline task still running, cancelling it")
-        print(f"[PIPELINE] Previous pipeline task still running, cancelling it")
-        try:
-            pipeline_task.cancel()
-            await asyncio.sleep(0.1)  # Give it a moment to cancel
-        except Exception as e:
-            logger.warning(f"[PIPELINE] Error cancelling previous task: {e}")
-            print(f"[PIPELINE] Error cancelling previous task: {e}")
-    
-    # Reset pipeline_running flag if it's stuck
-    if pipeline_running:
-        logger.warning(f"[PIPELINE] pipeline_running flag was True but task is done, resetting")
-        print(f"[PIPELINE] pipeline_running flag was True but task is done, resetting")
-        pipeline_running = False
+    # Reject if pipeline is actively running — never cancel a live run
+    if pipeline_running or (pipeline_task and not pipeline_task.done()):
+        logger.info(f"[PIPELINE] Rejected start request — pipeline already running")
+        print(f"[PIPELINE] Rejected start request — pipeline already running")
+        return {
+            "status": "error",
+            "message": "Pipeline is already running — please wait for it to finish",
+            "data": {}
+        }
     
     # Get sport filters from request body (optional)
     sport_filters = []

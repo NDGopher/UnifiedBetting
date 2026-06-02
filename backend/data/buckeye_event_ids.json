@@ -890,18 +890,10 @@
       "sport": "Boxing"
     },
     {
-      "event_id": 1631584133,
-      "home_team": "England",
-      "away_team": "India",
-      "starts": "2026-06-02T17:30:00Z",
-      "league": "Twenty20 International - Women",
-      "sport": "Cricket"
-    },
-    {
-      "event_id": 1631581297,
-      "home_team": "Surrey",
-      "away_team": "Middlesex",
-      "starts": "2026-06-03T17:30:00Z",
+      "event_id": 1631571470,
+      "home_team": "Hampshire Royals",
+      "away_team": "Sussex Sharks",
+      "starts": "2026-06-02T18:00:00Z",
       "league": "United Kingdom - Vitality T20 Blast",
       "sport": "Cricket"
     },
@@ -914,10 +906,18 @@
       "sport": "Cricket"
     },
     {
-      "event_id": 1631571470,
-      "home_team": "Hampshire Royals",
-      "away_team": "Sussex Sharks",
-      "starts": "2026-06-02T18:00:00Z",
+      "event_id": 1631584133,
+      "home_team": "England",
+      "away_team": "India",
+      "starts": "2026-06-02T17:30:00Z",
+      "league": "Twenty20 International - Women",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631581297,
+      "home_team": "Surrey",
+      "away_team": "Middlesex",
+      "starts": "2026-06-03T17:30:00Z",
       "league": "United Kingdom - Vitality T20 Blast",
       "sport": "Cricket"
     },
@@ -5203,5 +5203,5 @@
     }
   ],
   "count": 650,
-  "timestamp": "2026-06-02T15:18:45.931982"
+  "timestamp": "2026-06-02T15:20:43.747776"
 }
