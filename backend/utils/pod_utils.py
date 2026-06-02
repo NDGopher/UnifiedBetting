@@ -586,6 +586,23 @@ def strip_pod_league_suffix(name: str) -> str:
     # POD sometimes appends a bare " -" after the competition suffix (e.g. "O'HigginsCONMEBOL -").
     # Strip it first so the endswith() checks below can match the abbrev cleanly.
     name = _re_ls.sub(r'\s*-\s*$', '', name).strip()
+    # Multi-word league names concatenated directly with no space separator.
+    # e.g. "Montreal AlouettesCanadian Football" → "Montreal Alouettes"
+    _MULTIWORD_SUFFIXES = (
+        'Canadian Football',
+        'Arena Football',
+        'Major League Soccer',
+        'Major League Baseball',
+        'National Football League',
+        'National Basketball Association',
+        'National Hockey League',
+    )
+    for mw_suffix in _MULTIWORD_SUFFIXES:
+        if name.endswith(mw_suffix) and len(name) > len(mw_suffix):
+            preceding = name[-(len(mw_suffix) + 1):-(len(mw_suffix))]
+            if preceding.isalpha():
+                name = name[:-len(mw_suffix)].strip()
+                break
     # Multi-letter uppercase abbreviations concatenated directly (e.g. KnicksNBA)
     # Also includes confederation names that POD appends (e.g. O'HigginsCONMEBOL)
     _LEAGUE_ABBREVS = (
