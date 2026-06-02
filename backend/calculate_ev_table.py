@@ -374,7 +374,7 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
             event_name = f"{home_team} vs {away_team}" if home_team and away_team else home_team or away_team or "-"
             game_id = str(event_id)
             # --- Moneyline ---
-            ml = period_data.get('money_line', {})
+            ml = period_data.get('money_line') or {}
             meta_limits = (period_data.get('meta') or {}) if isinstance(period_data.get('meta'), dict) else {}
             pin_ml_home_dec = ml.get('nvp_home')
             pin_ml_away_dec = ml.get('nvp_away')
