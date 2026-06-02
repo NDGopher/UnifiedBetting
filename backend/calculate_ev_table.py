@@ -452,18 +452,22 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                     nvp_pin_spread = None
                     pin_spread_key = str(bck_line)
                     if pin_spread_key == "0": pin_spread_key = "0.0"
+                    # For top/home team: Pinnacle keys match home perspective directly.
+                    # Try direct key first, then float conversion (handles "+1.5" -> "1.5"),
+                    # then neg_key only as last resort to avoid matching opposite-direction alternates.
                     pin_spread_market = pin_spreads.get(pin_spread_key) or pin_spreads.get(f"{pin_spread_key}.0")
-                    # Try negative and float conversion if not found
-                    if not pin_spread_market:
-                        try:
-                            neg_key = str(-float(bck_line))
-                            pin_spread_market = pin_spreads.get(neg_key) or pin_spreads.get(f"{neg_key}.0")
-                        except Exception:
-                            pass
                     if not pin_spread_market and "." in pin_spread_key:
                         try:
                             float_key = str(float(pin_spread_key))
                             pin_spread_market = pin_spreads.get(float_key)
+                        except Exception:
+                            pass
+                    if not pin_spread_market:
+                        try:
+                            neg_key = str(-float(bck_line))
+                            pin_spread_market = pin_spreads.get(neg_key) or pin_spreads.get(f"{neg_key}.0")
+                            if pin_spread_market:
+                                logger.debug(f"[SPREAD-TOP] neg_key fallback used for bck_line={bck_line}, neg_key={neg_key}, team={bck_team_raw}")
                         except Exception:
                             pass
                     if bck_team_norm == matched_event.get('normalized_pinnacle_home'):
@@ -474,13 +478,15 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                         mapped_team = away_team
                         if pin_spread_market and isinstance(pin_spread_market, dict):
                             nvp_pin_spread = pin_spread_market.get('nvp_away')
+                    line_display = f"+{bck_line}" if isinstance(bck_line, (int, float)) and bck_line > 0 else str(bck_line)
                     if mapped_team and nvp_pin_spread and isinstance(nvp_pin_spread, (int, float)) and nvp_pin_spread > 1.0001:
                         ev = (american_to_decimal(bck_odds_am) / nvp_pin_spread - 1.0) if bck_odds_am else None
                         if ev is not None:
+                            logger.debug(f"[SPREAD-TOP] {mapped_team} {line_display}: book={bck_odds_am}, nvp={decimal_to_american(nvp_pin_spread)}, ev={ev*100:.2f}%")
                             all_bets_with_ev.append({
                                 'sport': sport,
                                 'matchup': event_name,
-                                'bet': f"{period_label}{mapped_team} {bck_line}",
+                                'bet': f"{period_label}{mapped_team} {line_display}",
                                 'bet_type': 'Spread',
                                 'betbck_odds': bck_odds_am,
                                 'pinnacle_nvp': decimal_to_american(nvp_pin_spread),
@@ -503,13 +509,19 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                     nvp_pin_spread = None
                     pin_spread_key = str(bck_line)
                     if pin_spread_key == "0": pin_spread_key = "0.0"
-                    pin_spread_market = pin_spreads.get(pin_spread_key) or pin_spreads.get(f"{pin_spread_key}.0")
+                    # For bottom/away team: Pinnacle stores spreads from the HOME perspective.
+                    # Away +X maps to Pinnacle key -X (home gives X pts); try neg_key FIRST.
+                    # Only fall back to direct key if neg_key is not available.
+                    pin_spread_market = None
+                    try:
+                        neg_key = str(-float(bck_line))
+                        pin_spread_market = pin_spreads.get(neg_key) or pin_spreads.get(f"{neg_key}.0")
+                        if pin_spread_market:
+                            logger.debug(f"[SPREAD-BOT] neg_key used for bck_line={bck_line}, neg_key={neg_key}, team={bck_team_raw}")
+                    except Exception:
+                        pass
                     if not pin_spread_market:
-                        try:
-                            neg_key = str(-float(bck_line))
-                            pin_spread_market = pin_spreads.get(neg_key) or pin_spreads.get(f"{neg_key}.0")
-                        except Exception:
-                            pass
+                        pin_spread_market = pin_spreads.get(pin_spread_key) or pin_spreads.get(f"{pin_spread_key}.0")
                     if not pin_spread_market and "." in pin_spread_key:
                         try:
                             float_key = str(float(pin_spread_key))
@@ -524,13 +536,15 @@ async def calculate_ev_table_async(matched_games: List[Dict[str, Any]]) -> List[
                         mapped_team = away_team
                         if pin_spread_market and isinstance(pin_spread_market, dict):
                             nvp_pin_spread = pin_spread_market.get('nvp_away')
+                    line_display = f"+{bck_line}" if isinstance(bck_line, (int, float)) and bck_line > 0 else str(bck_line)
                     if mapped_team and nvp_pin_spread and isinstance(nvp_pin_spread, (int, float)) and nvp_pin_spread > 1.0001:
                         ev = (american_to_decimal(bck_odds_am) / nvp_pin_spread - 1.0) if bck_odds_am else None
                         if ev is not None:
+                            logger.debug(f"[SPREAD-BOT] {mapped_team} {line_display}: book={bck_odds_am}, nvp={decimal_to_american(nvp_pin_spread)}, ev={ev*100:.2f}%")
                             all_bets_with_ev.append({
                                 'sport': sport,
                                 'matchup': event_name,
-                                'bet': f"{period_label}{mapped_team} {bck_line}",
+                                'bet': f"{period_label}{mapped_team} {line_display}",
                                 'bet_type': 'Spread',
                                 'betbck_odds': bck_odds_am,
                                 'pinnacle_nvp': decimal_to_american(nvp_pin_spread),
