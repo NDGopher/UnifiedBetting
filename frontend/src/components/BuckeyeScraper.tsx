@@ -1085,8 +1085,8 @@ const BuckeyeScraper: React.FC = () => {
                         <Typography sx={{ fontSize: '0.76rem', color: '#888', fontWeight: 600, mb: 1 }}>
                           {n}-Team {wongTeaserType} Teaser &nbsp;
                           <span style={{ color: '#FFA500', fontFamily: 'monospace' }}>{grpCombos[0].book_odds}</span>
-                          &nbsp;· EV <span style={{ color: '#4CAF50', fontWeight: 700 }}>+{grpCombos[0].ev_pct}%</span>
-                          &nbsp;· Win prob <span style={{ color: '#ccc' }}>{grpCombos[0].combined_prob_pct}%</span>
+                          &nbsp;· Blended EV <span style={{ color: '#4CAF50', fontWeight: 700 }}>+{grpCombos[0].ev_blended_pct ?? grpCombos[0].ev_pct}%</span>
+                          &nbsp;· Win prob <span style={{ color: '#ccc' }}>{grpCombos[0].combined_prob_blended_pct ?? grpCombos[0].combined_prob_pct}%</span>
                           &nbsp;· Break-even <span style={{ color: '#999' }}>{grpCombos[0].break_even_pct}%/leg</span>
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -1122,13 +1122,20 @@ const BuckeyeScraper: React.FC = () => {
                                   </Box>
                                 </Box>
                               ))}
-                              <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Typography sx={{ fontSize: '0.65rem', color: '#666' }}>
-                                  Lim {(combo.min_pin_limit / 1000).toFixed(0)}k+
-                                </Typography>
-                                <Typography sx={{ fontSize: '0.68rem', color: '#4CAF50', fontWeight: 700 }}>
-                                  +{combo.ev_pct}% EV
-                                </Typography>
+                              <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                  <Typography sx={{ fontSize: '0.65rem', color: '#666' }}>
+                                    Lim {(combo.min_pin_limit / 1000).toFixed(0)}k+
+                                  </Typography>
+                                  <Typography sx={{ fontSize: '0.7rem', color: '#4CAF50', fontWeight: 700 }}>
+                                    +{combo.ev_blended_pct ?? combo.ev_pct}% blended
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                  <Typography sx={{ fontSize: '0.62rem', color: '#666' }}>
+                                    hist: +{combo.ev_hist_pct}%
+                                  </Typography>
+                                </Box>
                               </Box>
                             </Box>
                           ))}
@@ -1141,10 +1148,10 @@ const BuckeyeScraper: React.FC = () => {
 
               {/* Footer note */}
               <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
-                Historical win rates: 75.8%/leg (6pt, since 2003 data) · 83%/leg (10pt, road teams).
+                Historical win rates: 75.8%/leg (6pt, 2003+ data) · 83%/leg (10pt, road only, 3-team -120).
                 Qualifiers cross key numbers 3 & 7 (6pt) or 3, 7 & 10 (10pt).
-                EV calculated at historical rates against current BetBCK teaser odds.
-                Pin limit filter ≥ 2,000 applied. Road + low-total (≤49) legs prioritized.
+                <strong style={{ color: '#555' }}> Blended EV</strong> = per-leg (NVP implied prob + historical) ÷ 2, multiplied across legs.
+                Hist EV shown for reference (blanket historical rate). Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game (main line only).
               </Typography>
             </Box>
           </Collapse>

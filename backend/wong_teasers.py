@@ -3,19 +3,25 @@ Wong Teaser Scanner — operates on the already-computed Buckeye EV table (no ex
 
 6-point Standard Wong Rules (since 2003 backtest data):
   Favorites: -7.5 to -8.5  → teased to -1.5/-2.5  (crosses key numbers 3 and 7)
-  Underdogs: +1.5 to +2.5  → teased to +7.5/+8.5  (crosses key numbers 3 and 7)
+  Underdogs: +1.5 to +2.5  → teased to +7.5/+8.5
   Historical per-leg win rate: ~75.8%
 
-10-point Sweetheart Rules (strictly road-teams-only):
+10-point Sweetheart Rules (road teams only, 3-team at -120 ONLY — no 2-team):
   Underdogs: +1.5 / +2 / +2.5  → teased to +11.5–+12.5 (crosses 3, 7, 10)
   Favorites: -9.5 / -10 / -10.5 → teased to ~0 / -0.5  (crosses 3, 7, 10)
   Historical per-leg win rate: ~83%
 
 BetBCK NFL Teaser Odds:
   6pt 2-team: -110   6pt 3-team: +160   6pt 4-team: +300   6pt 5-team: +450
-  10pt (any): -120, ties lose
+  10pt 3-team: -120, ties lose
 
-Priority boosts: road team + game total ≤ 49
+EV Calculation (Blended NVP + Historical, per combo):
+  projected_leg_prob = (nvp_implied_prob + historical_rate) / 2
+  teaser_win_prob    = product of all projected_leg_probs
+  EV% = (teaser_win_prob * decimal_payout - 1) * 100
+
+Priority boost: road team AND game total ≤ 49
+Deduplication: one leg per game (highest Pinnacle limit = main line).
 """
 
 import re
@@ -26,20 +32,20 @@ from typing import List, Dict, Optional, Any, Tuple
 logger = logging.getLogger(__name__)
 
 # ── Configurable defaults ─────────────────────────────────────────────────────
-MIN_PINNACLE_LIMIT  = 2000     # Both/all legs must meet this limit
-EV_FLAG_6PT         = 2.5      # Flag combos above this EV% (6pt)
-EV_FLAG_10PT        = 2.0      # Flag combos above this EV% (10pt)
-WONG_6PT_WIN_RATE   = 0.758    # Historical qualifying-leg win rate (6pt)
-WONG_10PT_WIN_RATE  = 0.83     # Consensus backtest win rate (10pt)
+MIN_PINNACLE_LIMIT  = 2000
+EV_FLAG_6PT         = 2.5      # blended EV% threshold for flagging combos
+EV_FLAG_10PT        = 2.0
+WONG_6PT_WIN_RATE   = 0.758    # historical qualifying-leg win rate (6pt)
+WONG_10PT_WIN_RATE  = 0.83     # consensus backtest rate (10pt)
 
-TEASER_ODDS_6PT  = {2: -110, 3: 160, 4: 300, 5: 450}  # American
-TEASER_ODDS_10PT = {2: -120, 3: -120}                  # -120 flat, ties lose
+TEASER_ODDS_6PT  = {2: -110, 3: 160, 4: 300, 5: 450}   # American
+TEASER_ODDS_10PT = {3: -120}                              # 3-team only, ties lose
 
 # 6pt qualifying line ranges
-WONG_FAV_MIN, WONG_FAV_MAX = -8.5, -7.5   # favorite side
-WONG_DOG_MIN, WONG_DOG_MAX =  1.5,  2.5   # underdog side
+WONG_FAV_MIN, WONG_FAV_MAX = -8.5, -7.5
+WONG_DOG_MIN, WONG_DOG_MAX =  1.5,  2.5
 
-# 10pt qualifying lines (exact values only)
+# 10pt qualifying lines (exact values)
 TEN_PT_DOG_LINES = {1.5, 2.0, 2.5}
 TEN_PT_FAV_LINES = {-9.5, -10.0, -10.5}
 
@@ -71,25 +77,38 @@ def _parse_spread_line(bet: str) -> Optional[float]:
 
 
 def _parse_team_from_bet(bet: str) -> str:
-    """Remove trailing line value to get team name."""
     m = re.match(r'^(.+?)\s+[+-]?\d+(?:\.\d+)?\s*$', bet.strip())
     return m.group(1).strip() if m else bet.strip()
 
 
+def _parse_nvp_prob(pin_nvp: str) -> Optional[float]:
+    """
+    Convert American odds string (e.g. '-114', '+108') to implied probability [0, 1].
+    -114 → 114 / (114+100) = 0.533
+    +108 → 100 / (108+100) = 0.481
+    """
+    if not pin_nvp:
+        return None
+    try:
+        s = str(pin_nvp).strip().replace('+', '')
+        val = float(s)
+    except (ValueError, TypeError):
+        return None
+    if val < 0:
+        return abs(val) / (abs(val) + 100.0)
+    elif val > 0:
+        return 100.0 / (val + 100.0)
+    return 0.5   # even money
+
+
 def _is_road_team(bet: str, matchup: str) -> Optional[bool]:
-    """
-    Pinnacle convention: matchup = 'Home vs Away'.
-    Returns True  if team is the AWAY (road) team.
-    Returns False if team is the HOME team.
-    Returns None  if undetermined.
-    """
+    """Pinnacle convention: matchup = 'Home vs Away'. Returns True if away (road)."""
     if ' vs ' not in matchup:
         return None
     home_raw, away_raw = matchup.split(' vs ', 1)
     home_lc = home_raw.strip().lower()
     away_lc = away_raw.strip().lower()
     team_lc = _parse_team_from_bet(bet).lower()
-    # Substring matching to handle abbreviations
     if team_lc == away_lc or away_lc.startswith(team_lc) or team_lc.startswith(away_lc):
         return True
     if team_lc == home_lc or home_lc.startswith(team_lc) or team_lc.startswith(home_lc):
@@ -109,9 +128,31 @@ def _get_game_total(event_id: str, bets_by_event: Dict[str, List[Dict]]) -> Opti
     return None
 
 
-def _teaser_ev_pct(n_teams: int, win_rate: float, american_odds: int) -> float:
+def _teaser_ev_hist(n_teams: int, win_rate: float, american_odds: int) -> float:
+    """EV% using flat historical win rate (for the break-even reference table)."""
     decimal = _american_to_decimal(american_odds)
     return ((win_rate ** n_teams) * decimal - 1) * 100
+
+
+def _combo_ev_blended(
+    nvp_probs: List[float],
+    historical_rate: float,
+    american_odds: int,
+) -> Tuple[float, float]:
+    """
+    Per-combo blended EV using individual leg NVP implied probabilities.
+      projected_leg_prob = (nvp_prob + historical_rate) / 2
+      teaser_win_prob    = product of projected probs
+      EV% = (teaser_win_prob * decimal - 1) * 100
+    Returns (ev_pct, teaser_win_prob_pct).
+    """
+    projected = [(p + historical_rate) / 2.0 for p in nvp_probs]
+    teaser_win_prob = 1.0
+    for p in projected:
+        teaser_win_prob *= p
+    decimal = _american_to_decimal(american_odds)
+    ev_pct = (teaser_win_prob * decimal - 1.0) * 100.0
+    return ev_pct, teaser_win_prob * 100.0
 
 
 def _break_even_rate(n_teams: int, american_odds: int) -> float:
@@ -123,24 +164,39 @@ def _fmt_odds(american: int) -> str:
     return f"+{american}" if american > 0 else str(american)
 
 
+def _deduplicate_legs(legs: List[Dict]) -> List[Dict]:
+    """
+    One entry per (event_id, role).
+    Among duplicates (alt lines for the same game+side), keep the one with
+    the highest Pinnacle limit — that is typically the main line.
+    """
+    best: Dict[tuple, Dict] = {}
+    for leg in legs:
+        key = (leg['event_id'], leg['role'])
+        if key not in best or leg['pin_limit'] > best[key]['pin_limit']:
+            best[key] = leg
+    return list(best.values())
+
+
 # ── Combo generator ───────────────────────────────────────────────────────────
 
 def _generate_combos(
     legs: List[Dict],
     odds_table: Dict[int, int],
-    win_rate: float,
+    historical_rate: float,
     ev_flag: float,
     teaser_type: str,
     min_teams: int,
     max_teams: int,
 ) -> List[Dict]:
     combos: List[Dict] = []
+
     for n in range(min_teams, max_teams + 1):
         if n not in odds_table:
             continue
         american = odds_table[n]
-        ev_pct = _teaser_ev_pct(n, win_rate, american)
-        be_rate = _break_even_rate(n, american)
+        be_rate  = _break_even_rate(n, american)
+        hist_ev  = _teaser_ev_hist(n, historical_rate, american)
 
         for combo_legs in itertools.combinations(legs, n):
             # Each leg must be from a different game
@@ -148,37 +204,56 @@ def _generate_combos(
             if len(set(event_ids)) != n:
                 continue
 
-            min_limit = min(l['pin_limit'] for l in combo_legs)
-            n_priority = sum(1 for l in combo_legs if l.get('priority'))
+            min_limit   = min(l['pin_limit'] for l in combo_legs)
+            n_priority  = sum(1 for l in combo_legs if l.get('priority'))
+
+            # Per-leg NVP implied probabilities (fallback to historical if missing)
+            nvp_probs = []
+            for l in combo_legs:
+                p = _parse_nvp_prob(l['pin_nvp'])
+                nvp_probs.append(p if p is not None else historical_rate)
+
+            blended_ev, win_prob_blended = _combo_ev_blended(nvp_probs, historical_rate, american)
+
+            # Build per-leg detail with individual projected probs
+            legs_out = []
+            for l, nvp_p in zip(combo_legs, nvp_probs):
+                proj_p = (nvp_p + historical_rate) / 2.0
+                legs_out.append({
+                    'matchup':           l['matchup'],
+                    'bet':               l['bet'],
+                    'spread_line':       l['spread_line'],
+                    'teased_line':       l['teased_line'],
+                    'pin_nvp':           l['pin_nvp'],
+                    'nvp_prob_pct':      round(nvp_p * 100.0, 1),
+                    'projected_prob_pct': round(proj_p * 100.0, 1),
+                    'pin_limit':         l['pin_limit'],
+                    'is_road':           l['is_road'],
+                    'game_total':        l['game_total'],
+                    'low_total':         l['low_total'],
+                    'start_time':        l['start_time'],
+                    'league':            l['league'],
+                })
 
             combos.append({
-                'teaser_type': teaser_type,
-                'n_teams': n,
-                'book_odds': _fmt_odds(american),
-                'win_rate_pct': round(win_rate * 100, 1),
-                'combined_prob_pct': round((win_rate ** n) * 100, 1),
-                'ev_pct': round(ev_pct, 2),
-                'break_even_pct': round(be_rate * 100, 1),
-                'flagged': ev_pct >= ev_flag,
-                'min_pin_limit': min_limit,
-                'priority_score': n_priority,
-                'legs': [
-                    {
-                        'matchup': l['matchup'],
-                        'bet': l['bet'],
-                        'spread_line': l['spread_line'],
-                        'teased_line': l['teased_line'],
-                        'pin_nvp': l['pin_nvp'],
-                        'pin_limit': l['pin_limit'],
-                        'is_road': l['is_road'],
-                        'game_total': l['game_total'],
-                        'low_total': l['low_total'],
-                        'start_time': l['start_time'],
-                        'league': l['league'],
-                    }
-                    for l in combo_legs
-                ],
+                'teaser_type':              teaser_type,
+                'n_teams':                  n,
+                'book_odds':               _fmt_odds(american),
+                'win_rate_hist_pct':        round(historical_rate * 100.0, 1),
+                'combined_prob_hist_pct':   round((historical_rate ** n) * 100.0, 1),
+                'combined_prob_blended_pct': round(win_prob_blended, 1),
+                'ev_hist_pct':             round(hist_ev, 2),
+                'ev_blended_pct':          round(blended_ev, 2),
+                'ev_pct':                  round(blended_ev, 2),   # primary sort key
+                'break_even_pct':          round(be_rate * 100.0, 1),
+                'flagged':                 blended_ev >= ev_flag,
+                'min_pin_limit':           min_limit,
+                'priority_score':          n_priority,
+                'legs':                    legs_out,
             })
+
+    # Sort: flagged first, then by blended EV desc, then priority desc
+    combos.sort(key=lambda x: (not x['flagged'], -x['priority_score'], -x['ev_blended_pct']))
     return combos
 
 
@@ -192,7 +267,7 @@ def calculate_wong_teasers(
 ) -> Dict[str, Any]:
     """
     Scan the Buckeye EV table for +EV Wong teaser combinations.
-    Input: flat list of bet dicts from calculate_ev_table_async (no extra scraping).
+    Input : flat list of bet dicts from calculate_ev_table_async.
     Output: dict with qualifying legs, combo lists, break-even analysis.
     """
     # Index all rows by event_id for fast game-total lookup
@@ -201,22 +276,21 @@ def calculate_wong_teasers(
         eid = str(row.get('event_id', ''))
         bets_by_event.setdefault(eid, []).append(row)
 
-    legs_6pt: List[Dict] = []
-    legs_10pt: List[Dict] = []
+    legs_6pt_raw:  List[Dict] = []
+    legs_10pt_raw: List[Dict] = []
 
     for row in all_bets:
         if row.get('bet_type') != 'Spread':
             continue
         if row.get('period', 'FG') not in ('FG', '', None):
-            continue  # Full-game spreads only
+            continue
         if not _is_nfl(row):
             continue
 
-        pin_limit = row.get('pinnacle_limit') or 0
         try:
-            pin_limit = float(pin_limit)
+            pin_limit = float(row.get('pinnacle_limit') or 0)
         except (TypeError, ValueError):
-            pin_limit = 0
+            pin_limit = 0.0
 
         if pin_limit < min_pin_limit:
             continue
@@ -225,51 +299,55 @@ def calculate_wong_teasers(
         if spread_line is None:
             continue
 
-        matchup = row.get('matchup', '')
-        is_road = _is_road_team(row.get('bet', ''), matchup)
+        matchup    = row.get('matchup', '')
+        is_road    = _is_road_team(row.get('bet', ''), matchup)
         game_total = _get_game_total(row.get('event_id', ''), bets_by_event)
-        low_total = game_total is not None and game_total <= 49.0
+        low_total  = game_total is not None and game_total <= 49.0
 
         leg_base = {
-            'matchup': matchup,
-            'bet': row.get('bet', ''),
+            'matchup':    matchup,
+            'bet':        row.get('bet', ''),
             'spread_line': spread_line,
-            'pin_nvp': row.get('pinnacle_nvp', ''),
-            'pin_limit': int(pin_limit),
-            'is_road': is_road,
+            'pin_nvp':    row.get('pinnacle_nvp', ''),
+            'pin_limit':  int(pin_limit),
+            'is_road':    is_road,
             'game_total': game_total,
-            'low_total': low_total,
+            'low_total':  low_total,
             'start_time': row.get('start_time', ''),
-            'event_id': str(row.get('event_id', '')),
-            'league': row.get('league', ''),
+            'event_id':   str(row.get('event_id', '')),
+            'league':     row.get('league', ''),
         }
 
         # ── 6pt qualification ──────────────────────────────────────────────
         is_fav_6pt = WONG_FAV_MIN <= spread_line <= WONG_FAV_MAX
         is_dog_6pt = WONG_DOG_MIN <= spread_line <= WONG_DOG_MAX
         if is_fav_6pt or is_dog_6pt:
-            # 6pt tease always adds 6 to the spread (more points for both sides)
-            teased = round(spread_line + 6.0, 1)   # -8 → -2 (fav); +2 → +8 (dog)
-            role = 'favorite' if spread_line < 0 else 'underdog'
+            teased   = round(spread_line + 6.0, 1)
+            role     = 'favorite' if spread_line < 0 else 'underdog'
             priority = bool(is_road) and low_total
-            legs_6pt.append({**leg_base, 'teased_line': teased, 'role': role, 'priority': priority})
+            legs_6pt_raw.append({**leg_base, 'teased_line': teased, 'role': role, 'priority': priority})
 
-        # ── 10pt qualification ────────────────────────────────────────────
+        # ── 10pt qualification (road teams only) ──────────────────────────
         is_dog_10pt = spread_line in TEN_PT_DOG_LINES
         is_fav_10pt = spread_line in TEN_PT_FAV_LINES
         if (is_dog_10pt or is_fav_10pt) and is_road is True:
-            if spread_line < 0:
-                teased = round(spread_line + 10.0, 1)
-                role = 'favorite'
-            else:
-                teased = round(spread_line + 10.0, 1)
-                role = 'underdog'
+            teased   = round(spread_line + 10.0, 1)
+            role     = 'favorite' if spread_line < 0 else 'underdog'
             priority = low_total
-            legs_10pt.append({**leg_base, 'teased_line': teased, 'role': role, 'priority': priority})
+            legs_10pt_raw.append({**leg_base, 'teased_line': teased, 'role': role, 'priority': priority})
 
-    logger.info(f"[WONG] {len(legs_6pt)} qualifying 6pt legs, {len(legs_10pt)} qualifying 10pt legs (NFL, pin_limit≥{min_pin_limit})")
+    # Deduplicate: one leg per (event_id, role) — highest Pinnacle limit = main line
+    legs_6pt  = _deduplicate_legs(legs_6pt_raw)
+    legs_10pt = _deduplicate_legs(legs_10pt_raw)
 
-    combos_6pt = _generate_combos(
+    logger.info(
+        f"[WONG] {len(legs_6pt)} qualifying 6pt legs "
+        f"({len(legs_6pt_raw)} raw → deduped), "
+        f"{len(legs_10pt)} qualifying 10pt legs "
+        f"(NFL, pin_limit≥{min_pin_limit})"
+    )
+
+    combos_6pt  = _generate_combos(
         legs_6pt, TEASER_ODDS_6PT, WONG_6PT_WIN_RATE, ev_flag_6pt,
         teaser_type='6pt', min_teams=2, max_teams=5,
     )
@@ -278,37 +356,36 @@ def calculate_wong_teasers(
         teaser_type='10pt', min_teams=3, max_teams=3,
     )
 
-    # Sort: priority first, then EV desc
-    combos_6pt.sort(key=lambda x: (-x['priority_score'], -x['ev_pct']))
-    combos_10pt.sort(key=lambda x: (-x['priority_score'], -x['ev_pct']))
-
-    # ── Break-even analysis table ──────────────────────────────────────────
+    # ── Break-even analysis table (reference, using historical rates) ───────
     breakeven = []
-    for n, odds in TEASER_ODDS_6PT.items():
-        be = _break_even_rate(n, odds)
-        ev = _teaser_ev_pct(n, WONG_6PT_WIN_RATE, odds)
+    for n, odds in sorted(TEASER_ODDS_6PT.items()):
+        be  = _break_even_rate(n, odds)
+        ev  = _teaser_ev_hist(n, WONG_6PT_WIN_RATE, odds)
         breakeven.append({
-            'type': '6pt', 'teams': n,
-            'book_odds': _fmt_odds(odds),
-            'break_even_pct': round(be * 100, 2),
-            'historical_rate_pct': round(WONG_6PT_WIN_RATE * 100, 1),
+            'type':                '6pt',
+            'teams':               n,
+            'book_odds':           _fmt_odds(odds),
+            'break_even_pct':      round(be * 100.0, 2),
+            'historical_rate_pct': round(WONG_6PT_WIN_RATE * 100.0, 1),
             'ev_at_historical_pct': round(ev, 2),
-            'profitable': ev > 0,
+            'profitable':          ev > 0,
         })
-    for n, odds in sorted(set(TEASER_ODDS_10PT.items())):
-        be = _break_even_rate(n, odds)
-        ev = _teaser_ev_pct(n, WONG_10PT_WIN_RATE, odds)
-        breakeven.append({
-            'type': '10pt', 'teams': n,
-            'book_odds': _fmt_odds(odds),
-            'break_even_pct': round(be * 100, 2),
-            'historical_rate_pct': round(WONG_10PT_WIN_RATE * 100, 1),
-            'ev_at_historical_pct': round(ev, 2),
-            'profitable': ev > 0,
-        })
+    # 10pt: only 3-team at -120
+    odds_10 = TEASER_ODDS_10PT[3]
+    be_10   = _break_even_rate(3, odds_10)
+    ev_10   = _teaser_ev_hist(3, WONG_10PT_WIN_RATE, odds_10)
+    breakeven.append({
+        'type':                '10pt',
+        'teams':               3,
+        'book_odds':           _fmt_odds(odds_10),
+        'break_even_pct':      round(be_10 * 100.0, 2),
+        'historical_rate_pct': round(WONG_10PT_WIN_RATE * 100.0, 1),
+        'ev_at_historical_pct': round(ev_10, 2),
+        'profitable':          ev_10 > 0,
+    })
 
     return {
-        'qualifying_legs_6pt': len(legs_6pt),
+        'qualifying_legs_6pt':  len(legs_6pt),
         'qualifying_legs_10pt': len(legs_10pt),
         'legs_6pt': [
             {k: v for k, v in l.items() if k != 'priority'}
@@ -318,15 +395,16 @@ def calculate_wong_teasers(
             {k: v for k, v in l.items() if k != 'priority'}
             for l in legs_10pt
         ],
-        'combos_6pt': combos_6pt[:60],
+        'combos_6pt':  combos_6pt[:60],
         'combos_10pt': combos_10pt[:20],
-        'breakeven': breakeven,
+        'breakeven':   breakeven,
         'config': {
-            'win_rate_6pt_pct': round(WONG_6PT_WIN_RATE * 100, 1),
-            'win_rate_10pt_pct': round(WONG_10PT_WIN_RATE * 100, 1),
-            'min_pin_limit': min_pin_limit,
-            'ev_flag_6pt': ev_flag_6pt,
-            'ev_flag_10pt': ev_flag_10pt,
-            'teaser_type': 'sides only, no totals (NFL full-game spreads)',
+            'win_rate_6pt_pct':   round(WONG_6PT_WIN_RATE * 100.0, 1),
+            'win_rate_10pt_pct':  round(WONG_10PT_WIN_RATE * 100.0, 1),
+            'min_pin_limit':      min_pin_limit,
+            'ev_flag_6pt':        ev_flag_6pt,
+            'ev_flag_10pt':       ev_flag_10pt,
+            'teaser_type':        'sides only, no totals (NFL full-game spreads)',
+            'ev_method':          'blended: (NVP_prob + historical) / 2 per leg',
         },
     }
