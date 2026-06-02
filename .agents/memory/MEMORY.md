@@ -1,0 +1,1 @@
+- [Pinnacle spread key mapping](pinnacle-spread-key-mapping.md) — hdp = home team's handicap; key selection must be driven by pinnacle home/away identity, not BetBCK top/bottom order.
