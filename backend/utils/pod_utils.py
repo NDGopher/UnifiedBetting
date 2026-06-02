@@ -659,6 +659,14 @@ def strip_pod_league_suffix(name: str) -> str:
     # Trailing uppercase 'W' (WNBA women's leagues, e.g. "AcesW" → "Aces")
     # Only strip when preceded by a lowercase letter (not already a space)
     name = _re_ls.sub(r'([a-zA-Z])W$', r'\1', name)
+
+    # Tennis tournament suffixes: POD concatenates WTA/ATP/ITF event info directly
+    # onto player names with no space (e.g. "Linda FruhvirtovaWTA 125K Birmingham").
+    # Strip everything from WTA/ATP/ITF onwards when it appears after an alpha char.
+    _m_tennis = _re_ls.search(r'(WTA|ATP|ITF)(\s+\S+)*\s*$', name, _re_ls.IGNORECASE)
+    if _m_tennis and _m_tennis.start() > 0 and name[_m_tennis.start() - 1].isalpha():
+        name = name[:_m_tennis.start()].strip()
+
     return name.strip()
 
 
