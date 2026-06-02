@@ -44,6 +44,9 @@ const BuckeyeScraper: React.FC = () => {
   const [pipelineRunning, setPipelineRunning] = useState(false);
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const [showSportSelection, setShowSportSelection] = useState(false);
+  const [wongTeasers, setWongTeasers] = useState<any | null>(null);
+  const [wongExpanded, setWongExpanded] = useState(false);
+  const [wongTeaserType, setWongTeaserType] = useState<'6pt' | '10pt'>('6pt');
 
   // EV range filter (display only)
   const EV_MAX_SLIDER = 20;
@@ -144,11 +147,14 @@ const BuckeyeScraper: React.FC = () => {
             setMessage(`Streaming: ${batch_completed}/${total_batches} batches completed (${total_events} events)`);
           }
         } else if (data.type === 'buckeye_complete') {
-          const { events, total_events, last_run, total_matched } = data.data;
+          const { events, total_events, last_run, total_matched, teaser_results } = data.data;
           if (events && events.length > 0) {
             setBuckeyeMarkets(events);
             setBuckeyeLastUpdate(last_run);
             setMessage(`Buckeye done: ${total_matched} games matched, ${total_events} events found`);
+          }
+          if (teaser_results) {
+            setWongTeasers(teaser_results);
           }
           setPipelineRunning(false);
           stopPolling();
@@ -221,6 +227,9 @@ const BuckeyeScraper: React.FC = () => {
         setBuckeyeLastUpdate(data.data.last_update || null);
         const allMarkets = (data.data.markets || []).slice(0, 150);
         setBuckeyeMarkets(allMarkets);
+        if (data.data.teaser_results) {
+          setWongTeasers(data.data.teaser_results);
+        }
       } else {
         setError(data.message || 'Failed to fetch results');
         setBuckeyeMarkets([]);
@@ -886,6 +895,255 @@ const BuckeyeScraper: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* ── Wong Teaser Scanner ─────────────────────────────────────────── */}
+      {wongTeasers && (
+        <Box sx={{ mt: 3 }}>
+          {/* Header row */}
+          <Box
+            onClick={() => setWongExpanded(e => !e)}
+            sx={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              cursor: 'pointer', userSelect: 'none',
+              px: 2, py: 1.25,
+              bgcolor: 'rgba(26,26,26,0.9)',
+              border: '1px solid rgba(255,165,0,0.25)',
+              borderRadius: wongExpanded ? '8px 8px 0 0' : 2,
+              '&:hover': { borderColor: 'rgba(255,165,0,0.5)' },
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Analytics sx={{ fontSize: '1rem', color: '#FFA500' }} />
+              <Typography sx={{ color: '#FFA500', fontWeight: 600, fontSize: '0.9rem' }}>
+                Wong Teaser Scanner
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 0.75 }}>
+                {wongTeasers.qualifying_legs_6pt > 0 && (
+                  <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,165,0,0.15)', border: '1px solid rgba(255,165,0,0.3)', borderRadius: 1, fontSize: '0.72rem', color: '#FFA500' }}>
+                    {wongTeasers.qualifying_legs_6pt} × 6pt leg{wongTeasers.qualifying_legs_6pt !== 1 ? 's' : ''}
+                  </Box>
+                )}
+                {wongTeasers.qualifying_legs_10pt > 0 && (
+                  <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,200,0,0.12)', border: '1px solid rgba(255,200,0,0.3)', borderRadius: 1, fontSize: '0.72rem', color: '#FFD700' }}>
+                    {wongTeasers.qualifying_legs_10pt} × 10pt leg{wongTeasers.qualifying_legs_10pt !== 1 ? 's' : ''}
+                  </Box>
+                )}
+                {wongTeasers.qualifying_legs_6pt === 0 && wongTeasers.qualifying_legs_10pt === 0 && (
+                  <Box sx={{ px: 1, py: 0.25, fontSize: '0.72rem', color: '#666' }}>No qualifying legs this week</Box>
+                )}
+              </Box>
+            </Box>
+            {wongExpanded ? <ExpandLess sx={{ color: '#FFA500', fontSize: '1.1rem' }} /> : <ExpandMore sx={{ color: '#FFA500', fontSize: '1.1rem' }} />}
+          </Box>
+
+          <Collapse in={wongExpanded}>
+            <Box sx={{ border: '1px solid rgba(255,165,0,0.25)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
+
+              {/* ── Break-even analysis ──────────────────────────────────── */}
+              <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: '#999', mb: 1, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                Profitability Analysis (using historical win rates)
+              </Typography>
+              <Box sx={{ overflowX: 'auto', mb: 2.5 }}>
+                <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.8rem' }}>
+                  <thead>
+                    <tr>
+                      {['Type', 'Teams', 'Book Odds', 'Break-even/leg', 'Historical Rate', 'EV @ Historical', ''].map(h => (
+                        <th key={h} style={{ color: '#777', fontWeight: 500, padding: '4px 12px 8px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.07)', whiteSpace: 'nowrap' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(wongTeasers.breakeven || []).map((row: any, i: number) => (
+                      <tr key={i}>
+                        <td style={{ padding: '5px 12px', textAlign: 'center', color: row.type === '6pt' ? '#FFA500' : '#FFD700', fontWeight: 600 }}>{row.type}</td>
+                        <td style={{ padding: '5px 12px', textAlign: 'center', color: '#ccc' }}>{row.teams}-team</td>
+                        <td style={{ padding: '5px 12px', textAlign: 'center', color: '#ccc', fontFamily: 'monospace' }}>{row.book_odds}</td>
+                        <td style={{ padding: '5px 12px', textAlign: 'center', color: '#aaa' }}>{row.break_even_pct}%</td>
+                        <td style={{ padding: '5px 12px', textAlign: 'center', color: '#aaa' }}>{row.historical_rate_pct}%</td>
+                        <td style={{ padding: '5px 12px', textAlign: 'center' }}>
+                          <span style={{
+                            color: row.ev_at_historical_pct > 0 ? '#4CAF50' : '#f44336',
+                            fontWeight: 700,
+                          }}>
+                            {row.ev_at_historical_pct > 0 ? '+' : ''}{row.ev_at_historical_pct}%
+                          </span>
+                        </td>
+                        <td style={{ padding: '5px 12px', textAlign: 'center' }}>
+                          {row.profitable && <span style={{ color: '#4CAF50', fontSize: '0.7rem' }}>✔ +EV</span>}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Box>
+
+              {/* ── Type toggle ────────────────────────────────────────────── */}
+              {(wongTeasers.qualifying_legs_6pt > 0 || wongTeasers.qualifying_legs_10pt > 0) && (
+                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                  {(['6pt', '10pt'] as const).map(t => (
+                    <Button
+                      key={t}
+                      size="small"
+                      onClick={() => setWongTeaserType(t)}
+                      sx={{
+                        fontSize: '0.78rem', textTransform: 'none', borderRadius: 1.5,
+                        px: 2, py: 0.4,
+                        color: wongTeaserType === t ? '#FFA500' : '#666',
+                        border: `1px solid ${wongTeaserType === t ? 'rgba(255,165,0,0.5)' : 'rgba(255,255,255,0.08)'}`,
+                        bgcolor: wongTeaserType === t ? 'rgba(255,165,0,0.08)' : 'transparent',
+                        '&:hover': { borderColor: 'rgba(255,165,0,0.4)', color: '#FFA500' },
+                      }}
+                    >
+                      {t}
+                    </Button>
+                  ))}
+                </Box>
+              )}
+
+              {/* ── Qualifying legs list ──────────────────────────────────── */}
+              {wongTeaserType === '6pt' && wongTeasers.qualifying_legs_6pt === 0 && (
+                <Typography sx={{ color: '#555', fontSize: '0.82rem', mb: 2, fontStyle: 'italic' }}>
+                  No 6pt qualifying legs found in current slate (need NFL spreads between ±7.5–8.5 or ±1.5–2.5 with Pin limit ≥ 2,000).
+                </Typography>
+              )}
+              {wongTeaserType === '10pt' && wongTeasers.qualifying_legs_10pt === 0 && (
+                <Typography sx={{ color: '#555', fontSize: '0.82rem', mb: 2, fontStyle: 'italic' }}>
+                  No 10pt qualifying legs found (need NFL road-team spreads at ±1.5/2/2.5 or ±9.5/10/10.5 with Pin limit ≥ 2,000).
+                </Typography>
+              )}
+
+              {/* Legs grid */}
+              {(() => {
+                const legs = wongTeaserType === '6pt'
+                  ? (wongTeasers.legs_6pt || [])
+                  : (wongTeasers.legs_10pt || []);
+                if (legs.length === 0) return null;
+                return (
+                  <Box sx={{ mb: 2.5 }}>
+                    <Typography sx={{ fontSize: '0.74rem', color: '#666', mb: 1, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Qualifying Legs ({legs.length})
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {legs.map((leg: any, i: number) => (
+                        <Box key={i} sx={{
+                          px: 1.5, py: 1,
+                          bgcolor: 'rgba(255,165,0,0.05)',
+                          border: `1px solid ${leg.low_total && leg.is_road ? 'rgba(255,165,0,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                          borderRadius: 1.5,
+                          minWidth: 200,
+                          flex: '0 1 auto',
+                        }}>
+                          <Typography sx={{ fontSize: '0.78rem', color: '#ddd', fontWeight: 600, lineHeight: 1.3 }}>
+                            {leg.bet}
+                          </Typography>
+                          <Typography sx={{ fontSize: '0.7rem', color: '#777', lineHeight: 1.3 }}>
+                            {leg.matchup}
+                          </Typography>
+                          <Box sx={{ display: 'flex', gap: 0.75, mt: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
+                            <Box sx={{ fontSize: '0.68rem', color: '#FFA500', fontFamily: 'monospace' }}>
+                              → teased to {leg.teased_line > 0 ? '+' : ''}{leg.teased_line}
+                            </Box>
+                            {leg.pin_nvp && (
+                              <Box sx={{ fontSize: '0.68rem', color: '#888', fontFamily: 'monospace' }}>NVP {leg.pin_nvp}</Box>
+                            )}
+                          </Box>
+                          <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap' }}>
+                            {leg.is_road && <Box sx={{ fontSize: '0.65rem', color: '#64B5F6', px: 0.75, py: 0.25, bgcolor: 'rgba(100,181,246,0.1)', borderRadius: 0.75 }}>🏈 Road</Box>}
+                            {leg.low_total && <Box sx={{ fontSize: '0.65rem', color: '#81C784', px: 0.75, py: 0.25, bgcolor: 'rgba(129,199,132,0.1)', borderRadius: 0.75 }}>↓ O/U {leg.game_total}</Box>}
+                            {leg.pin_limit >= 5000 && <Box sx={{ fontSize: '0.65rem', color: '#CE93D8', px: 0.75, py: 0.25, bgcolor: 'rgba(206,147,216,0.08)', borderRadius: 0.75 }}>Lim {(leg.pin_limit/1000).toFixed(0)}k</Box>}
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                );
+              })()}
+
+              {/* ── Combos ────────────────────────────────────────────────── */}
+              {(() => {
+                const combos: any[] = wongTeaserType === '6pt'
+                  ? (wongTeasers.combos_6pt || [])
+                  : (wongTeasers.combos_10pt || []);
+                if (combos.length === 0) return null;
+
+                const bySize: Record<number, any[]> = {};
+                combos.forEach(c => { (bySize[c.n_teams] = bySize[c.n_teams] || []).push(c); });
+
+                return (
+                  <Box>
+                    <Typography sx={{ fontSize: '0.74rem', color: '#666', mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Best Combinations ({combos.length} total)
+                    </Typography>
+                    {Object.entries(bySize).sort(([a], [b]) => Number(a) - Number(b)).map(([n, grpCombos]) => (
+                      <Box key={n} sx={{ mb: 2 }}>
+                        <Typography sx={{ fontSize: '0.76rem', color: '#888', fontWeight: 600, mb: 1 }}>
+                          {n}-Team {wongTeaserType} Teaser &nbsp;
+                          <span style={{ color: '#FFA500', fontFamily: 'monospace' }}>{grpCombos[0].book_odds}</span>
+                          &nbsp;· EV <span style={{ color: '#4CAF50', fontWeight: 700 }}>+{grpCombos[0].ev_pct}%</span>
+                          &nbsp;· Win prob <span style={{ color: '#ccc' }}>{grpCombos[0].combined_prob_pct}%</span>
+                          &nbsp;· Break-even <span style={{ color: '#999' }}>{grpCombos[0].break_even_pct}%/leg</span>
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {grpCombos.slice(0, 12).map((combo: any, ci: number) => (
+                            <Box key={ci} sx={{
+                              p: 1.5,
+                              bgcolor: combo.flagged ? 'rgba(255,165,0,0.07)' : 'rgba(255,255,255,0.03)',
+                              border: `1px solid ${combo.flagged ? 'rgba(255,165,0,0.35)' : 'rgba(255,255,255,0.07)'}`,
+                              borderRadius: 1.5,
+                              minWidth: 220,
+                              flex: '0 1 auto',
+                              position: 'relative',
+                            }}>
+                              {combo.flagged && (
+                                <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.62rem', color: '#FFA500', fontWeight: 700 }}>★ EDGE</Box>
+                              )}
+                              {combo.priority_score > 0 && (
+                                <Box sx={{ position: 'absolute', top: combo.flagged ? 20 : 6, right: 8, fontSize: '0.62rem', color: '#64B5F6' }}>
+                                  {'⬆'.repeat(combo.priority_score)} priority
+                                </Box>
+                              )}
+                              {combo.legs.map((leg: any, li: number) => (
+                                <Box key={li} sx={{ mb: li < combo.legs.length - 1 ? 0.75 : 0 }}>
+                                  <Typography sx={{ fontSize: '0.76rem', color: '#ddd', fontWeight: 600, lineHeight: 1.2, pr: combo.flagged || combo.priority_score > 0 ? 4 : 0 }}>
+                                    {leg.bet}
+                                  </Typography>
+                                  <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', flexWrap: 'wrap' }}>
+                                    <Typography sx={{ fontSize: '0.68rem', color: '#FFA500', fontFamily: 'monospace' }}>
+                                      → {leg.teased_line > 0 ? '+' : ''}{leg.teased_line}
+                                    </Typography>
+                                    {leg.is_road && <Box component="span" sx={{ fontSize: '0.62rem', color: '#64B5F6' }}>road</Box>}
+                                    {leg.low_total && <Box component="span" sx={{ fontSize: '0.62rem', color: '#81C784' }}>O/U {leg.game_total}</Box>}
+                                  </Box>
+                                </Box>
+                              ))}
+                              <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Typography sx={{ fontSize: '0.65rem', color: '#666' }}>
+                                  Lim {(combo.min_pin_limit / 1000).toFixed(0)}k+
+                                </Typography>
+                                <Typography sx={{ fontSize: '0.68rem', color: '#4CAF50', fontWeight: 700 }}>
+                                  +{combo.ev_pct}% EV
+                                </Typography>
+                              </Box>
+                            </Box>
+                          ))}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                );
+              })()}
+
+              {/* Footer note */}
+              <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
+                Historical win rates: 75.8%/leg (6pt, since 2003 data) · 83%/leg (10pt, road teams).
+                Qualifiers cross key numbers 3 & 7 (6pt) or 3, 7 & 10 (10pt).
+                EV calculated at historical rates against current BetBCK teaser odds.
+                Pin limit filter ≥ 2,000 applied. Road + low-total (≤49) legs prioritized.
+              </Typography>
+            </Box>
+          </Collapse>
+        </Box>
+      )}
     </>
   );
 };

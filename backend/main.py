@@ -1225,6 +1225,7 @@ BUCKEYE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_
 ACE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'ace_results.json')
 current_results = None
 last_run_time = None
+current_teaser_results = None   # Wong Teaser Scanner results (latest Buckeye run)
 
 # Global variable to track pipeline status
 pipeline_running = False
@@ -1839,6 +1840,22 @@ async def run_streaming_pipeline_background(sport_filters=None):
         if not last_run_time:
             last_run_time = datetime.now().isoformat()
         
+        # ── Wong Teaser Scanner ─────────────────────────────────────────────
+        global current_teaser_results
+        try:
+            from wong_teasers import calculate_wong_teasers
+            current_teaser_results = calculate_wong_teasers(streaming_results)
+            logger.info(
+                f"[WONG] Teaser scan complete: "
+                f"{current_teaser_results.get('qualifying_legs_6pt', 0)} 6pt legs, "
+                f"{current_teaser_results.get('qualifying_legs_10pt', 0)} 10pt legs, "
+                f"{len(current_teaser_results.get('combos_6pt', []))} 6pt combos, "
+                f"{len(current_teaser_results.get('combos_10pt', []))} 10pt combos"
+            )
+        except Exception as _wong_err:
+            logger.error(f"[WONG] Teaser scan failed: {_wong_err}")
+            current_teaser_results = None
+
         # Final broadcast - always send, even if no events
         try:
             global _last_buckeye_payload
@@ -1850,7 +1867,8 @@ async def run_streaming_pipeline_background(sport_filters=None):
                     "last_run": last_run_time,
                     "streaming": False,
                     "total_processed": total_processed,
-                    "total_matched": total_matched
+                    "total_matched": total_matched,
+                    "teaser_results": current_teaser_results,
                 }
             }
             _last_buckeye_payload = _final_payload
@@ -2729,7 +2747,8 @@ def get_buckeye_results():
                 "status": "success",
                 "data": {
                     "markets": all_markets,
-                    "last_update": last_run_time
+                    "last_update": last_run_time,
+                    "teaser_results": current_teaser_results,
                 }
             })
         
@@ -2781,7 +2800,8 @@ def get_buckeye_results():
             "status": "success",
             "data": {
                 "markets": all_markets,
-                "last_update": last_update
+                "last_update": last_update,
+                "teaser_results": data.get("teaser_results"),
             }
         })
     except Exception as e:
