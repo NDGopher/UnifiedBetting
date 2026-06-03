@@ -1225,6 +1225,8 @@ BUCKEYE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_
 ACE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'ace_results.json')
 current_results = None
 last_run_time = None
+current_teaser_results = None   # Wong Teaser Scanner results (latest Buckeye run)
+current_parlay_results = None   # Parlay Generator results (latest Buckeye run)
 
 # Global variable to track pipeline status
 pipeline_running = False
@@ -1839,6 +1841,39 @@ async def run_streaming_pipeline_background(sport_filters=None):
         if not last_run_time:
             last_run_time = datetime.now().isoformat()
         
+        # ── Wong Teaser Scanner ─────────────────────────────────────────────
+        global current_teaser_results
+        try:
+            from wong_teasers import calculate_wong_teasers
+            current_teaser_results = calculate_wong_teasers(
+                streaming_results,
+                betbck_games=betbck_games if isinstance(betbck_games, list) else None,
+            )
+            logger.info(
+                f"[WONG] Teaser scan complete: "
+                f"{current_teaser_results.get('qualifying_legs_6pt', 0)} 6pt legs, "
+                f"{current_teaser_results.get('qualifying_legs_10pt', 0)} 10pt legs, "
+                f"{len(current_teaser_results.get('combos_6pt', []))} 6pt combos, "
+                f"{len(current_teaser_results.get('combos_10pt', []))} 10pt combos"
+            )
+        except Exception as _wong_err:
+            logger.error(f"[WONG] Teaser scan failed: {_wong_err}")
+            current_teaser_results = None
+
+        # ── Parlay Generator ─────────────────────────────────────────────────
+        global current_parlay_results
+        try:
+            from parlays import calculate_parlays
+            current_parlay_results = calculate_parlays(streaming_results)
+            logger.info(
+                f"[PARLAYS] Done: {current_parlay_results.get('eligible_legs', 0)} legs, "
+                f"{current_parlay_results.get('total_combos', 0)} combos, "
+                f"{len(current_parlay_results.get('parlays', []))} returned"
+            )
+        except Exception as _parlay_err:
+            logger.error(f"[PARLAYS] Generation failed: {_parlay_err}")
+            current_parlay_results = None
+
         # Final broadcast - always send, even if no events
         try:
             global _last_buckeye_payload
@@ -1850,7 +1885,9 @@ async def run_streaming_pipeline_background(sport_filters=None):
                     "last_run": last_run_time,
                     "streaming": False,
                     "total_processed": total_processed,
-                    "total_matched": total_matched
+                    "total_matched": total_matched,
+                    "teaser_results":  current_teaser_results,
+                    "parlay_results":  current_parlay_results,
                 }
             }
             _last_buckeye_payload = _final_payload
@@ -2055,6 +2092,21 @@ async def run_ace_streaming_pipeline_background():
         logger.info(f"[ACE-PIPELINE] Formatted {len(formatted)} results")
         print(f"[ACE-PIPELINE] Formatted {len(formatted)} results")
 
+        # ── Step 5b: Calculate parlays from Ace EV results ────────────────────────
+        ace_parlay_results = None
+        try:
+            from parlays import calculate_parlays
+            ace_parlay_results = calculate_parlays(formatted)
+            logger.info(
+                f"[ACE-PARLAYS] Done: {ace_parlay_results.get('eligible_legs', 0)} legs, "
+                f"{ace_parlay_results.get('total_combos', 0)} combos, "
+                f"{len(ace_parlay_results.get('parlays', []))} returned"
+            )
+            print(f"[ACE-PARLAYS] Done: {len(ace_parlay_results.get('parlays', []))} parlays")
+        except Exception as _parlay_err:
+            logger.error(f"[ACE-PARLAYS] Generation failed: {_parlay_err}")
+            ace_parlay_results = None
+
         # ── Step 6: Persist results ──────────────────────────────────────────────
         last_run = datetime.now().isoformat()
         try:
@@ -2076,6 +2128,7 @@ async def run_ace_streaming_pipeline_background():
                     "total_events": len(formatted),
                     "last_run": last_run,
                     "total_matched": n_matched,
+                    "parlay_results": ace_parlay_results,
                 }
             }
             await manager.broadcast(_payload)
@@ -2153,22 +2206,15 @@ async def run_streaming_pipeline(request: Request):
     """Start the streaming Buckeye pipeline in the background"""
     global pipeline_running, pipeline_task
     
-    # Check if previous task is still running or stuck
-    if pipeline_task and not pipeline_task.done():
-        logger.warning(f"[PIPELINE] Previous pipeline task still running, cancelling it")
-        print(f"[PIPELINE] Previous pipeline task still running, cancelling it")
-        try:
-            pipeline_task.cancel()
-            await asyncio.sleep(0.1)  # Give it a moment to cancel
-        except Exception as e:
-            logger.warning(f"[PIPELINE] Error cancelling previous task: {e}")
-            print(f"[PIPELINE] Error cancelling previous task: {e}")
-    
-    # Reset pipeline_running flag if it's stuck
-    if pipeline_running:
-        logger.warning(f"[PIPELINE] pipeline_running flag was True but task is done, resetting")
-        print(f"[PIPELINE] pipeline_running flag was True but task is done, resetting")
-        pipeline_running = False
+    # Reject if pipeline is actively running — never cancel a live run
+    if pipeline_running or (pipeline_task and not pipeline_task.done()):
+        logger.info(f"[PIPELINE] Rejected start request — pipeline already running")
+        print(f"[PIPELINE] Rejected start request — pipeline already running")
+        return {
+            "status": "error",
+            "message": "Pipeline is already running — please wait for it to finish",
+            "data": {}
+        }
     
     # Get sport filters from request body (optional)
     sport_filters = []
@@ -2729,7 +2775,9 @@ def get_buckeye_results():
                 "status": "success",
                 "data": {
                     "markets": all_markets,
-                    "last_update": last_run_time
+                    "last_update": last_run_time,
+                    "teaser_results":  current_teaser_results,
+                    "parlay_results":  current_parlay_results,
                 }
             })
         
@@ -2781,7 +2829,8 @@ def get_buckeye_results():
             "status": "success",
             "data": {
                 "markets": all_markets,
-                "last_update": last_update
+                "last_update": last_update,
+                "teaser_results": data.get("teaser_results"),
             }
         })
     except Exception as e:
