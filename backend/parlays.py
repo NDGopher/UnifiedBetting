@@ -35,7 +35,7 @@ MAX_PLUS_ODDS  = 150     # Reject legs priced worse than +150 American
 MAX_PLUS_LEGS  = 3       # Max +money legs per parlay
 MIN_LEGS       = 2
 MAX_LEGS       = 4
-TOP_N          = 15
+TOP_PER_SIZE   = 5   # top 5 per leg-count (2L / 3L / 4L) = up to 15 total
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -218,17 +218,32 @@ def calculate_parlays(
                 ],
             })
 
-    # ── 3. Sort: EV descending (highest to lowest) ───────────────────────────
+    # ── 3. Sort by EV desc, then bucket top N per leg-count ──────────────────
     parlays.sort(key=lambda x: -x['ev_blended_pct'])
-    top = parlays[:TOP_N]
 
+    # Take top TOP_PER_SIZE from each size (guarantees 2L / 3L / 4L variety)
+    by_size: Dict[int, list] = {2: [], 3: [], 4: []}
+    for p in parlays:
+        n = p['n_legs']
+        if n in by_size and len(by_size[n]) < TOP_PER_SIZE:
+            by_size[n].append(p)
+
+    # Merge buckets and re-sort by EV so final list is still EV-ordered
+    top: List[Dict] = []
+    for n in [2, 3, 4]:
+        top.extend(by_size[n])
+    top.sort(key=lambda x: -x['ev_blended_pct'])
+
+    counts = {n: len(by_size[n]) for n in [2, 3, 4]}
     logger.info(
-        f"[PARLAYS] {len(parlays)} raw combos generated → returning top {len(top)}"
+        f"[PARLAYS] {len(parlays)} raw combos → "
+        f"2L:{counts[2]}  3L:{counts[3]}  4L:{counts[4]}  total:{len(top)}"
     )
     return {
         'parlays':       top,
         'total_combos':  len(parlays),
         'eligible_legs': len(eligible),
+        'counts_by_size': counts,
         'config':        _config(min_pin_limit),
     }
 

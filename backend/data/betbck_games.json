@@ -1,71 +1,5 @@
 [
   {
-    "betbck_game_id": "9971add4",
-    "betbck_site_home_team": "Guardians (Live)",
-    "betbck_site_away_team": "Yankees (Live)",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": null,
-      "site_bottom_team_moneyline_american": null,
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [],
-      "site_bottom_team_spreads": [],
-      "game_total_line": null,
-      "game_total_over_odds": null,
-      "game_total_under_odds": null,
-      "home_team_total_over_line": null,
-      "home_team_total_over_odds": null,
-      "home_team_total_under_line": null,
-      "home_team_total_under_odds": null,
-      "away_team_total_over_line": null,
-      "away_team_total_over_odds": null,
-      "away_team_total_under_line": null,
-      "away_team_total_under_odds": null
-    },
-    "timestamp": "2026-06-02T20:55:02.553287",
-    "event_datetime": "2027-06-02T18:05",
-    "sport": "soccer",
-    "market_suffix": null
-  },
-  {
-    "betbck_game_id": "99e474e2",
-    "betbck_site_home_team": "Athletics (Live)",
-    "betbck_site_away_team": "Cubs (Live)",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": null,
-      "site_bottom_team_moneyline_american": null,
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [
-        {
-          "line": -1.0,
-          "odds": "-180",
-          "raw": "-1"
-        }
-      ],
-      "site_bottom_team_spreads": [
-        {
-          "line": 1.0,
-          "odds": "+150",
-          "raw": "+1"
-        }
-      ],
-      "game_total_line": 4.5,
-      "game_total_over_odds": "-110",
-      "game_total_under_odds": "-120",
-      "home_team_total_over_line": null,
-      "home_team_total_over_odds": null,
-      "home_team_total_under_line": null,
-      "home_team_total_under_odds": null,
-      "away_team_total_over_line": null,
-      "away_team_total_over_odds": null,
-      "away_team_total_under_line": null,
-      "away_team_total_under_odds": null
-    },
-    "timestamp": "2026-06-02T20:55:02.557772",
-    "event_datetime": "2027-06-02T19:05",
-    "sport": "soccer",
-    "market_suffix": null
-  },
-  {
     "betbck_game_id": "9e427a32",
     "betbck_site_home_team": "Pirates (Live)",
     "betbck_site_away_team": "Astros (Live)",
@@ -87,7 +21,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.562187",
+    "timestamp": "2026-06-02T21:54:00.780629",
     "event_datetime": "2027-06-02T19:10",
     "sport": "soccer",
     "market_suffix": null
@@ -114,7 +48,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.566641",
+    "timestamp": "2026-06-02T21:54:00.784431",
     "event_datetime": "2027-06-02T20:40",
     "sport": "soccer",
     "market_suffix": null
@@ -141,7 +75,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.570902",
+    "timestamp": "2026-06-02T21:54:00.787711",
     "event_datetime": "2027-06-02T20:40",
     "sport": "soccer",
     "market_suffix": null
@@ -208,19 +142,19 @@
           "raw": "-2½"
         }
       ],
-      "game_total_line": 218.5,
+      "game_total_line": 219.0,
       "game_total_over_odds": "-105",
       "game_total_under_odds": "-105",
-      "home_team_total_over_line": 107.0,
+      "home_team_total_over_line": 107.5,
       "home_team_total_over_odds": "-115",
-      "home_team_total_under_line": 107.0,
+      "home_team_total_under_line": 107.5,
       "home_team_total_under_odds": "-115",
-      "away_team_total_over_line": 111.5,
+      "away_team_total_over_line": 112.0,
       "away_team_total_over_odds": "-115",
-      "away_team_total_under_line": 111.5,
+      "away_team_total_under_line": 112.0,
       "away_team_total_under_odds": "-115"
     },
-    "timestamp": "2026-06-02T20:55:02.575631",
+    "timestamp": "2026-06-02T21:54:00.791368",
     "event_datetime": "2026-06-03T19:30",
     "sport": "basketball",
     "market_suffix": null
@@ -259,164 +193,8 @@
       "away_team_total_under_line": 57.5,
       "away_team_total_under_odds": "-115"
     },
-    "timestamp": "2026-06-02T20:55:02.580408",
+    "timestamp": "2026-06-02T21:54:00.794907",
     "event_datetime": "2026-06-03T19:30",
-    "sport": "basketball",
-    "market_suffix": "1H"
-  },
-  {
-    "betbck_game_id": "5252d404",
-    "betbck_site_home_team": "Portland Fire",
-    "betbck_site_away_team": "Golden St Valkyries",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": null,
-      "site_bottom_team_moneyline_american": null,
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [
-        {
-          "line": 9.5,
-          "odds": "-115",
-          "raw": "+9½"
-        }
-      ],
-      "site_bottom_team_spreads": [
-        {
-          "line": -9.5,
-          "odds": "-115",
-          "raw": "-9½"
-        }
-      ],
-      "game_total_line": 160.0,
-      "game_total_over_odds": "-115",
-      "game_total_under_odds": "-115",
-      "home_team_total_over_line": 75.5,
-      "home_team_total_over_odds": "-115",
-      "home_team_total_under_line": 75.5,
-      "home_team_total_under_odds": "-115",
-      "away_team_total_over_line": 85.0,
-      "away_team_total_over_odds": "-115",
-      "away_team_total_under_line": 85.0,
-      "away_team_total_under_odds": "-115"
-    },
-    "timestamp": "2026-06-02T20:55:02.585003",
-    "event_datetime": "2026-06-02T21:00",
-    "sport": "basketball",
-    "market_suffix": null
-  },
-  {
-    "betbck_game_id": "0c38b2d3",
-    "betbck_site_home_team": "Las Vegas Aces",
-    "betbck_site_away_team": "Los Angeles Sparks",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-280",
-      "site_bottom_team_moneyline_american": "+225",
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [
-        {
-          "line": -7.0,
-          "odds": "-115",
-          "raw": "-7"
-        }
-      ],
-      "site_bottom_team_spreads": [
-        {
-          "line": 7.0,
-          "odds": "-115",
-          "raw": "+7"
-        }
-      ],
-      "game_total_line": 176.0,
-      "game_total_over_odds": "-115",
-      "game_total_under_odds": "-115",
-      "home_team_total_over_line": 91.5,
-      "home_team_total_over_odds": "-115",
-      "home_team_total_under_line": 91.5,
-      "home_team_total_under_odds": "-115",
-      "away_team_total_over_line": 84.5,
-      "away_team_total_over_odds": "-115",
-      "away_team_total_under_line": 84.5,
-      "away_team_total_under_odds": "-115"
-    },
-    "timestamp": "2026-06-02T20:55:02.589648",
-    "event_datetime": "2026-06-02T21:00",
-    "sport": "basketball",
-    "market_suffix": null
-  },
-  {
-    "betbck_game_id": "849303a6",
-    "betbck_site_home_team": "Portland Fire",
-    "betbck_site_away_team": "Golden St Valkyries",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+215",
-      "site_bottom_team_moneyline_american": "-270",
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [
-        {
-          "line": 5.0,
-          "odds": "-115",
-          "raw": "+5"
-        }
-      ],
-      "site_bottom_team_spreads": [
-        {
-          "line": -5.0,
-          "odds": "-115",
-          "raw": "-5"
-        }
-      ],
-      "game_total_line": 83.0,
-      "game_total_over_odds": "-115",
-      "game_total_under_odds": "-115",
-      "home_team_total_over_line": null,
-      "home_team_total_over_odds": null,
-      "home_team_total_under_line": null,
-      "home_team_total_under_odds": null,
-      "away_team_total_over_line": null,
-      "away_team_total_over_odds": null,
-      "away_team_total_under_line": null,
-      "away_team_total_under_odds": null
-    },
-    "timestamp": "2026-06-02T20:55:02.594394",
-    "event_datetime": "2026-06-02T21:00",
-    "sport": "basketball",
-    "market_suffix": "1H"
-  },
-  {
-    "betbck_game_id": "189b732d",
-    "betbck_site_home_team": "Las Vegas Aces",
-    "betbck_site_away_team": "Los Angeles Sparks",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-220",
-      "site_bottom_team_moneyline_american": "+180",
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [
-        {
-          "line": -3.5,
-          "odds": "-115",
-          "raw": "-3½"
-        }
-      ],
-      "site_bottom_team_spreads": [
-        {
-          "line": 3.5,
-          "odds": "-115",
-          "raw": "+3½"
-        }
-      ],
-      "game_total_line": 86.5,
-      "game_total_over_odds": "-115",
-      "game_total_under_odds": "-115",
-      "home_team_total_over_line": null,
-      "home_team_total_over_odds": null,
-      "home_team_total_under_line": null,
-      "home_team_total_under_odds": null,
-      "away_team_total_over_line": null,
-      "away_team_total_over_odds": null,
-      "away_team_total_under_line": null,
-      "away_team_total_under_odds": null
-    },
-    "timestamp": "2026-06-02T20:55:02.599071",
-    "event_datetime": "2026-06-02T21:00",
     "sport": "basketball",
     "market_suffix": "1H"
   },
@@ -442,7 +220,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.603838",
+    "timestamp": "2026-06-02T21:54:00.798410",
     "event_datetime": "2026-06-03T12:05",
     "sport": "baseball",
     "market_suffix": null
@@ -481,7 +259,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.608516",
+    "timestamp": "2026-06-02T21:54:00.801988",
     "event_datetime": "2026-06-03T12:10",
     "sport": "baseball",
     "market_suffix": null
@@ -520,7 +298,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.613169",
+    "timestamp": "2026-06-02T21:54:00.805454",
     "event_datetime": "2026-06-03T12:40",
     "sport": "baseball",
     "market_suffix": null
@@ -530,8 +308,8 @@
     "betbck_site_home_team": "New York Mets",
     "betbck_site_away_team": "Seattle Mariners",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+128",
-      "site_bottom_team_moneyline_american": "-141",
+      "site_top_team_moneyline_american": "+129",
+      "site_bottom_team_moneyline_american": "-142",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
@@ -559,7 +337,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.619289",
+    "timestamp": "2026-06-02T21:54:00.808993",
     "event_datetime": "2026-06-03T14:40",
     "sport": "baseball",
     "market_suffix": null
@@ -598,7 +376,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.625720",
+    "timestamp": "2026-06-02T21:54:00.812586",
     "event_datetime": "2026-06-03T17:40",
     "sport": "baseball",
     "market_suffix": null
@@ -637,7 +415,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.631037",
+    "timestamp": "2026-06-02T21:54:00.816092",
     "event_datetime": "2026-06-03T17:45",
     "sport": "baseball",
     "market_suffix": null
@@ -647,8 +425,8 @@
     "betbck_site_home_team": "Cleveland Guardians",
     "betbck_site_away_team": "New York Yankees",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+146",
-      "site_bottom_team_moneyline_american": "-161",
+      "site_top_team_moneyline_american": "+147",
+      "site_bottom_team_moneyline_american": "-162",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
@@ -676,7 +454,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.638044",
+    "timestamp": "2026-06-02T21:54:00.819922",
     "event_datetime": "2026-06-03T18:05",
     "sport": "baseball",
     "market_suffix": null
@@ -715,8 +493,179 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.643192",
+    "timestamp": "2026-06-02T21:54:00.823520",
     "event_datetime": "2026-06-03T18:10",
+    "sport": "baseball",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "77887399",
+    "betbck_site_home_team": "Toronto Blue Jays",
+    "betbck_site_away_team": "Atlanta Braves",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+132",
+      "site_bottom_team_moneyline_american": "-145",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.5,
+          "odds": "-165",
+          "raw": "+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.5,
+          "odds": "+145",
+          "raw": "-1½"
+        }
+      ],
+      "game_total_line": 8.0,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-110",
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:00.827006",
+    "event_datetime": "2026-06-03T18:15",
+    "sport": "baseball",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "7d6eda9e",
+    "betbck_site_home_team": "Texas Rangers",
+    "betbck_site_away_team": "St Louis Cardinals",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-105",
+      "site_bottom_team_moneyline_american": "-105",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 8.5,
+      "game_total_over_odds": "+105",
+      "game_total_under_odds": "-125",
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:00.830568",
+    "event_datetime": "2026-06-03T18:45",
+    "sport": "baseball",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "2eb632d0",
+    "betbck_site_home_team": "Athletics",
+    "betbck_site_away_team": "Chicago Cubs",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+112",
+      "site_bottom_team_moneyline_american": "-122",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 9.0,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-115",
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:00.834044",
+    "event_datetime": "2026-06-03T19:05",
+    "sport": "baseball",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "f96aca76",
+    "betbck_site_home_team": "Pittsburgh Pirates",
+    "betbck_site_away_team": "Houston Astros",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-151",
+      "site_bottom_team_moneyline_american": "+138",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": -1.5,
+          "odds": "+110",
+          "raw": "-1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": 1.5,
+          "odds": "-130",
+          "raw": "+1½"
+        }
+      ],
+      "game_total_line": 7.5,
+      "game_total_over_odds": "-110",
+      "game_total_under_odds": "-110",
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:00.837590",
+    "event_datetime": "2026-06-03T19:10",
+    "sport": "baseball",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "5ddc335f",
+    "betbck_site_home_team": "Colorado Rockies",
+    "betbck_site_away_team": "Los Angeles Angels",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+141",
+      "site_bottom_team_moneyline_american": "-154",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [
+        {
+          "line": 1.5,
+          "odds": "-155",
+          "raw": "+1½"
+        }
+      ],
+      "site_bottom_team_spreads": [
+        {
+          "line": -1.5,
+          "odds": "+135",
+          "raw": "-1½"
+        }
+      ],
+      "game_total_line": 8.5,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-105",
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:00.841295",
+    "event_datetime": "2026-06-03T20:38",
     "sport": "baseball",
     "market_suffix": null
   },
@@ -754,7 +703,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.648002",
+    "timestamp": "2026-06-02T21:54:00.844881",
     "event_datetime": "2026-06-03T20:40",
     "sport": "baseball",
     "market_suffix": null
@@ -764,8 +713,8 @@
     "betbck_site_home_team": "Lotte Giants",
     "betbck_site_away_team": "KIA Tigers",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-101",
-      "site_bottom_team_moneyline_american": "-129",
+      "site_top_team_moneyline_american": "+105",
+      "site_bottom_team_moneyline_american": "-135",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -781,7 +730,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.652473",
+    "timestamp": "2026-06-02T21:54:00.848356",
     "event_datetime": "2026-06-03T03:00",
     "sport": "baseball",
     "market_suffix": null
@@ -791,12 +740,39 @@
     "betbck_site_home_team": "Hanwha Eagles",
     "betbck_site_away_team": "Doosan Bears",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-177",
-      "site_bottom_team_moneyline_american": "+147",
+      "site_top_team_moneyline_american": "-200",
+      "site_bottom_team_moneyline_american": "+160",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
       "game_total_line": 9.0,
+      "game_total_over_odds": "-115",
+      "game_total_under_odds": "-115",
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:00.851775",
+    "event_datetime": "2026-06-03T03:00",
+    "sport": "baseball",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "45fd0bb5",
+    "betbck_site_home_team": "LG Twins",
+    "betbck_site_away_team": "KT Wiz Suwon",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "+109",
+      "site_bottom_team_moneyline_american": "-139",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 10.5,
       "game_total_over_odds": "-120",
       "game_total_under_odds": "-110",
       "home_team_total_over_line": null,
@@ -808,34 +784,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.656900",
-    "event_datetime": "2026-06-03T03:00",
-    "sport": "baseball",
-    "market_suffix": null
-  },
-  {
-    "betbck_game_id": "45fd0bb5",
-    "betbck_site_home_team": "LG Twins",
-    "betbck_site_away_team": "KT Wiz Suwon",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+107",
-      "site_bottom_team_moneyline_american": "-137",
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [],
-      "site_bottom_team_spreads": [],
-      "game_total_line": 10.5,
-      "game_total_over_odds": "-110",
-      "game_total_under_odds": "-120",
-      "home_team_total_over_line": null,
-      "home_team_total_over_odds": null,
-      "home_team_total_under_line": null,
-      "home_team_total_under_odds": null,
-      "away_team_total_over_line": null,
-      "away_team_total_over_odds": null,
-      "away_team_total_under_line": null,
-      "away_team_total_under_odds": null
-    },
-    "timestamp": "2026-06-02T20:55:02.661250",
+    "timestamp": "2026-06-02T21:54:00.855045",
     "event_datetime": "2026-06-03T03:00",
     "sport": "baseball",
     "market_suffix": null
@@ -845,8 +794,8 @@
     "betbck_site_home_team": "NC Dinos",
     "betbck_site_away_team": "Samsung Lions",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+131",
-      "site_bottom_team_moneyline_american": "-161",
+      "site_top_team_moneyline_american": "+127",
+      "site_bottom_team_moneyline_american": "-157",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -862,7 +811,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.665717",
+    "timestamp": "2026-06-02T21:54:00.858421",
     "event_datetime": "2026-06-03T03:00",
     "sport": "baseball",
     "market_suffix": null
@@ -889,7 +838,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.670157",
+    "timestamp": "2026-06-02T21:54:00.862114",
     "event_datetime": "2026-06-03T03:00",
     "sport": "baseball",
     "market_suffix": null
@@ -899,35 +848,8 @@
     "betbck_site_home_team": "Orix Buffaloes",
     "betbck_site_away_team": "Yomiuri Giants",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-114",
-      "site_bottom_team_moneyline_american": "-116",
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [],
-      "site_bottom_team_spreads": [],
-      "game_total_line": 6.5,
-      "game_total_over_odds": "-110",
-      "game_total_under_odds": "-120",
-      "home_team_total_over_line": null,
-      "home_team_total_over_odds": null,
-      "home_team_total_under_line": null,
-      "home_team_total_under_odds": null,
-      "away_team_total_over_line": null,
-      "away_team_total_over_odds": null,
-      "away_team_total_under_line": null,
-      "away_team_total_under_odds": null
-    },
-    "timestamp": "2026-06-02T20:55:02.674945",
-    "event_datetime": "2026-06-03T04:00",
-    "sport": "baseball",
-    "market_suffix": null
-  },
-  {
-    "betbck_game_id": "094e3bfa",
-    "betbck_site_home_team": "Nippon Ham Fighters",
-    "betbck_site_away_team": "Hiroshima Carp",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-145",
-      "site_bottom_team_moneyline_american": "+115",
+      "site_top_team_moneyline_american": "-115",
+      "site_bottom_team_moneyline_american": "-115",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -943,7 +865,34 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.679565",
+    "timestamp": "2026-06-02T21:54:00.865635",
+    "event_datetime": "2026-06-03T04:00",
+    "sport": "baseball",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "094e3bfa",
+    "betbck_site_home_team": "Nippon Ham Fighters",
+    "betbck_site_away_team": "Hiroshima Carp",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-147",
+      "site_bottom_team_moneyline_american": "+117",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 6.5,
+      "game_total_over_odds": "-105",
+      "game_total_under_odds": "-125",
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:00.869182",
     "event_datetime": "2026-06-03T04:00",
     "sport": "baseball",
     "market_suffix": null
@@ -953,8 +902,8 @@
     "betbck_site_home_team": "Seibu Lions",
     "betbck_site_away_team": "Hanshin Tigers",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+125",
-      "site_bottom_team_moneyline_american": "-155",
+      "site_top_team_moneyline_american": "+123",
+      "site_bottom_team_moneyline_american": "-153",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -970,7 +919,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.683988",
+    "timestamp": "2026-06-02T21:54:00.872659",
     "event_datetime": "2026-06-03T04:00",
     "sport": "baseball",
     "market_suffix": null
@@ -980,14 +929,14 @@
     "betbck_site_home_team": "Rakuten Gold. Eagles",
     "betbck_site_away_team": "Yokohama Baystars",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+118",
-      "site_bottom_team_moneyline_american": "-148",
+      "site_top_team_moneyline_american": "+119",
+      "site_bottom_team_moneyline_american": "-149",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
       "game_total_line": 6.5,
-      "game_total_over_odds": "-110",
-      "game_total_under_odds": "-120",
+      "game_total_over_odds": "-120",
+      "game_total_under_odds": "-110",
       "home_team_total_over_line": null,
       "home_team_total_over_odds": null,
       "home_team_total_under_line": null,
@@ -997,7 +946,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.688677",
+    "timestamp": "2026-06-02T21:54:00.876420",
     "event_datetime": "2026-06-03T04:00",
     "sport": "baseball",
     "market_suffix": null
@@ -1007,8 +956,8 @@
     "betbck_site_home_team": "Chiba Lotte Marines",
     "betbck_site_away_team": "Yakult Swallows",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+117",
-      "site_bottom_team_moneyline_american": "-147",
+      "site_top_team_moneyline_american": "+118",
+      "site_bottom_team_moneyline_american": "-148",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -1024,7 +973,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.693397",
+    "timestamp": "2026-06-02T21:54:00.880009",
     "event_datetime": "2026-06-03T04:00",
     "sport": "baseball",
     "market_suffix": null
@@ -1051,7 +1000,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.699370",
+    "timestamp": "2026-06-02T21:54:00.883566",
     "event_datetime": "2026-06-03T04:00",
     "sport": "baseball",
     "market_suffix": null
@@ -1061,14 +1010,14 @@
     "betbck_site_home_team": "Wei Chuan Dragons",
     "betbck_site_away_team": "Rakuten Monkeys",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-143",
-      "site_bottom_team_moneyline_american": "+113",
+      "site_top_team_moneyline_american": "-123",
+      "site_bottom_team_moneyline_american": "-107",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
       "game_total_line": 7.5,
-      "game_total_over_odds": "-115",
-      "game_total_under_odds": "-115",
+      "game_total_over_odds": "-125",
+      "game_total_under_odds": "-105",
       "home_team_total_over_line": null,
       "home_team_total_over_odds": null,
       "home_team_total_under_line": null,
@@ -1078,7 +1027,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.703966",
+    "timestamp": "2026-06-02T21:54:00.887223",
     "event_datetime": "2026-06-03T05:35",
     "sport": "baseball",
     "market_suffix": null
@@ -1088,35 +1037,8 @@
     "betbck_site_home_team": "Fubon Guardians",
     "betbck_site_away_team": "TSG Hawks",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-113",
-      "site_bottom_team_moneyline_american": "-117",
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [],
-      "site_bottom_team_spreads": [],
-      "game_total_line": 6.5,
-      "game_total_over_odds": "-110",
-      "game_total_under_odds": "-120",
-      "home_team_total_over_line": null,
-      "home_team_total_over_odds": null,
-      "home_team_total_under_line": null,
-      "home_team_total_under_odds": null,
-      "away_team_total_over_line": null,
-      "away_team_total_over_odds": null,
-      "away_team_total_under_line": null,
-      "away_team_total_under_odds": null
-    },
-    "timestamp": "2026-06-02T20:55:02.708416",
-    "event_datetime": "2026-06-03T05:35",
-    "sport": "baseball",
-    "market_suffix": null
-  },
-  {
-    "betbck_game_id": "82a72692",
-    "betbck_site_home_team": "Uni Lions",
-    "betbck_site_away_team": "Chinatrust Brothers",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-131",
-      "site_bottom_team_moneyline_american": "+101",
+      "site_top_team_moneyline_american": "-101",
+      "site_bottom_team_moneyline_american": "-129",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -1132,7 +1054,34 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.712953",
+    "timestamp": "2026-06-02T21:54:00.890648",
+    "event_datetime": "2026-06-03T05:35",
+    "sport": "baseball",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "82a72692",
+    "betbck_site_home_team": "Uni Lions",
+    "betbck_site_away_team": "Chinatrust Brothers",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-133",
+      "site_bottom_team_moneyline_american": "+103",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": 6.5,
+      "game_total_over_odds": "+110",
+      "game_total_under_odds": "-140",
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:00.894643",
     "event_datetime": "2026-06-03T05:35",
     "sport": "baseball",
     "market_suffix": null
@@ -1211,7 +1160,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.717706",
+    "timestamp": "2026-06-02T21:54:00.898338",
     "event_datetime": "2026-09-09T19:20",
     "sport": "football",
     "market_suffix": null
@@ -1290,7 +1239,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.722528",
+    "timestamp": "2026-06-02T21:54:00.901991",
     "event_datetime": "2026-09-10T19:35",
     "sport": "football",
     "market_suffix": null
@@ -1369,7 +1318,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.727254",
+    "timestamp": "2026-06-02T21:54:00.905779",
     "event_datetime": "2026-09-13T12:00",
     "sport": "football",
     "market_suffix": null
@@ -1448,7 +1397,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.732001",
+    "timestamp": "2026-06-02T21:54:00.909471",
     "event_datetime": "2026-09-13T12:00",
     "sport": "football",
     "market_suffix": null
@@ -1527,7 +1476,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.736727",
+    "timestamp": "2026-06-02T21:54:00.913285",
     "event_datetime": "2026-09-13T12:00",
     "sport": "football",
     "market_suffix": null
@@ -1606,7 +1555,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.741594",
+    "timestamp": "2026-06-02T21:54:00.917041",
     "event_datetime": "2026-09-13T12:00",
     "sport": "football",
     "market_suffix": null
@@ -1685,7 +1634,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.746215",
+    "timestamp": "2026-06-02T21:54:00.920733",
     "event_datetime": "2026-09-13T12:00",
     "sport": "football",
     "market_suffix": null
@@ -1764,7 +1713,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.750922",
+    "timestamp": "2026-06-02T21:54:00.924328",
     "event_datetime": "2026-09-13T12:00",
     "sport": "football",
     "market_suffix": null
@@ -1843,7 +1792,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.755570",
+    "timestamp": "2026-06-02T21:54:00.927896",
     "event_datetime": "2026-09-13T12:00",
     "sport": "football",
     "market_suffix": null
@@ -1922,7 +1871,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.760367",
+    "timestamp": "2026-06-02T21:54:00.931631",
     "event_datetime": "2026-09-13T12:00",
     "sport": "football",
     "market_suffix": null
@@ -2001,7 +1950,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.765198",
+    "timestamp": "2026-06-02T21:54:00.935473",
     "event_datetime": "2026-09-13T15:05",
     "sport": "football",
     "market_suffix": null
@@ -2080,7 +2029,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.769909",
+    "timestamp": "2026-06-02T21:54:00.939058",
     "event_datetime": "2026-09-13T15:25",
     "sport": "football",
     "market_suffix": null
@@ -2159,7 +2108,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.774820",
+    "timestamp": "2026-06-02T21:54:00.942745",
     "event_datetime": "2026-09-13T15:25",
     "sport": "football",
     "market_suffix": null
@@ -2238,7 +2187,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.779580",
+    "timestamp": "2026-06-02T21:54:00.946560",
     "event_datetime": "2026-09-13T15:25",
     "sport": "football",
     "market_suffix": null
@@ -2317,7 +2266,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.784327",
+    "timestamp": "2026-06-02T21:54:00.950239",
     "event_datetime": "2026-09-13T19:20",
     "sport": "football",
     "market_suffix": null
@@ -2396,7 +2345,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.789062",
+    "timestamp": "2026-06-02T21:54:00.954055",
     "event_datetime": "2026-09-14T19:15",
     "sport": "football",
     "market_suffix": null
@@ -2435,7 +2384,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.793878",
+    "timestamp": "2026-06-02T21:54:00.957684",
     "event_datetime": "2026-06-04T18:30",
     "sport": "football",
     "market_suffix": null
@@ -2474,7 +2423,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.798726",
+    "timestamp": "2026-06-02T21:54:00.961353",
     "event_datetime": "2026-06-05T20:00",
     "sport": "football",
     "market_suffix": null
@@ -2513,7 +2462,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.803425",
+    "timestamp": "2026-06-02T21:54:00.964879",
     "event_datetime": "2026-06-06T18:00",
     "sport": "football",
     "market_suffix": null
@@ -2528,21 +2477,21 @@
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
-          "line": 3.0,
-          "odds": "+105",
-          "raw": "+3"
+          "line": 3.25,
+          "odds": "-135",
+          "raw": "+3,+3½"
         }
       ],
       "site_bottom_team_spreads": [
         {
-          "line": -3.0,
-          "odds": "-135",
-          "raw": "-3"
+          "line": -3.25,
+          "odds": "+105",
+          "raw": "-3,-3½"
         }
       ],
       "game_total_line": 4.0,
-      "game_total_over_odds": "+105",
-      "game_total_under_odds": "-145",
+      "game_total_over_odds": "+100",
+      "game_total_under_odds": "-140",
       "home_team_total_over_line": null,
       "home_team_total_over_odds": null,
       "home_team_total_under_line": null,
@@ -2552,7 +2501,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.807746",
+    "timestamp": "2026-06-02T21:54:00.968205",
     "event_datetime": "2026-06-03T06:30",
     "sport": "soccer",
     "market_suffix": null
@@ -2591,7 +2540,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.812314",
+    "timestamp": "2026-06-02T21:54:00.971840",
     "event_datetime": "2026-06-03T12:00",
     "sport": "soccer",
     "market_suffix": null
@@ -2630,7 +2579,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.816690",
+    "timestamp": "2026-06-02T21:54:00.975251",
     "event_datetime": "2026-06-03T13:00",
     "sport": "soccer",
     "market_suffix": null
@@ -2669,7 +2618,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.821076",
+    "timestamp": "2026-06-02T21:54:00.978634",
     "event_datetime": "2026-06-03T13:00",
     "sport": "soccer",
     "market_suffix": null
@@ -2679,8 +2628,8 @@
     "betbck_site_home_team": "Italy",
     "betbck_site_away_team": "Luxembourg",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-205",
-      "site_bottom_team_moneyline_american": "+525",
+      "site_top_team_moneyline_american": "-210",
+      "site_bottom_team_moneyline_american": "+535",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
@@ -2708,7 +2657,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.825404",
+    "timestamp": "2026-06-02T21:54:00.982197",
     "event_datetime": "2026-06-03T13:45",
     "sport": "soccer",
     "market_suffix": null
@@ -2736,8 +2685,8 @@
         }
       ],
       "game_total_line": 2.5,
-      "game_total_over_odds": "-150",
-      "game_total_under_odds": "+110",
+      "game_total_over_odds": "-155",
+      "game_total_under_odds": "+115",
       "home_team_total_over_line": null,
       "home_team_total_over_odds": null,
       "home_team_total_under_line": null,
@@ -2747,7 +2696,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.829645",
+    "timestamp": "2026-06-02T21:54:00.985505",
     "event_datetime": "2026-06-03T13:45",
     "sport": "soccer",
     "market_suffix": null
@@ -2786,7 +2735,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.833873",
+    "timestamp": "2026-06-02T21:54:00.988727",
     "event_datetime": "2026-06-03T13:45",
     "sport": "soccer",
     "market_suffix": null
@@ -2813,7 +2762,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.838127",
+    "timestamp": "2026-06-02T21:54:00.992086",
     "event_datetime": "2026-06-03T19:45",
     "sport": "soccer",
     "market_suffix": null
@@ -2829,20 +2778,20 @@
       "site_top_team_spreads": [
         {
           "line": 2.25,
-          "odds": "-130",
+          "odds": "-135",
           "raw": "+2,+2½"
         }
       ],
       "site_bottom_team_spreads": [
         {
           "line": -2.25,
-          "odds": "+100",
+          "odds": "+105",
           "raw": "-2,-2½"
         }
       ],
       "game_total_line": 3.0,
-      "game_total_over_odds": "-155",
-      "game_total_under_odds": "+115",
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105",
       "home_team_total_over_line": null,
       "home_team_total_over_odds": null,
       "home_team_total_under_line": null,
@@ -2852,7 +2801,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.842554",
+    "timestamp": "2026-06-02T21:54:00.995396",
     "event_datetime": "2026-06-03T20:00",
     "sport": "soccer",
     "market_suffix": null
@@ -2891,7 +2840,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.846732",
+    "timestamp": "2026-06-02T21:54:00.998609",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -2930,7 +2879,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.851105",
+    "timestamp": "2026-06-02T21:54:01.001832",
     "event_datetime": "2026-06-04T11:00",
     "sport": "soccer",
     "market_suffix": null
@@ -2969,7 +2918,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.855493",
+    "timestamp": "2026-06-02T21:54:01.005247",
     "event_datetime": "2026-06-04T12:00",
     "sport": "soccer",
     "market_suffix": null
@@ -3008,7 +2957,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.859839",
+    "timestamp": "2026-06-02T21:54:01.008492",
     "event_datetime": "2026-06-04T12:00",
     "sport": "soccer",
     "market_suffix": null
@@ -3047,7 +2996,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.864367",
+    "timestamp": "2026-06-02T21:54:01.011362",
     "event_datetime": "2026-06-04T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -3086,7 +3035,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.868591",
+    "timestamp": "2026-06-02T21:54:01.014602",
     "event_datetime": "2026-06-04T14:10",
     "sport": "soccer",
     "market_suffix": null
@@ -3125,7 +3074,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.872841",
+    "timestamp": "2026-06-02T21:54:01.017964",
     "event_datetime": "2026-06-04T21:00",
     "sport": "soccer",
     "market_suffix": null
@@ -3141,14 +3090,14 @@
       "site_top_team_spreads": [
         {
           "line": 1.0,
-          "odds": "-135",
+          "odds": "-140",
           "raw": "+1"
         }
       ],
       "site_bottom_team_spreads": [
         {
           "line": -1.0,
-          "odds": "+105",
+          "odds": "+110",
           "raw": "-1"
         }
       ],
@@ -3164,7 +3113,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.877059",
+    "timestamp": "2026-06-02T21:54:01.021241",
     "event_datetime": "2026-06-05T18:30",
     "sport": "soccer",
     "market_suffix": null
@@ -3203,7 +3152,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.881355",
+    "timestamp": "2026-06-02T21:54:01.024424",
     "event_datetime": "2026-06-06T12:45",
     "sport": "soccer",
     "market_suffix": null
@@ -3242,7 +3191,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.885266",
+    "timestamp": "2026-06-02T21:54:01.027397",
     "event_datetime": "2026-06-06T13:30",
     "sport": "soccer",
     "market_suffix": null
@@ -3281,7 +3230,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.889479",
+    "timestamp": "2026-06-02T21:54:01.030678",
     "event_datetime": "2026-06-06T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -3297,20 +3246,20 @@
       "site_top_team_spreads": [
         {
           "line": 2.0,
-          "odds": "-115",
+          "odds": "+100",
           "raw": "+2"
         }
       ],
       "site_bottom_team_spreads": [
         {
           "line": -2.0,
-          "odds": "-115",
+          "odds": "-130",
           "raw": "-2"
         }
       ],
       "game_total_line": 3.0,
-      "game_total_over_odds": "-110",
-      "game_total_under_odds": "-130",
+      "game_total_over_odds": "-130",
+      "game_total_under_odds": "-110",
       "home_team_total_over_line": null,
       "home_team_total_over_odds": null,
       "home_team_total_under_line": null,
@@ -3320,7 +3269,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.893749",
+    "timestamp": "2026-06-02T21:54:01.034022",
     "event_datetime": "2026-06-06T15:00",
     "sport": "soccer",
     "market_suffix": null
@@ -3359,7 +3308,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.897878",
+    "timestamp": "2026-06-02T21:54:01.037369",
     "event_datetime": "2026-06-06T17:00",
     "sport": "soccer",
     "market_suffix": null
@@ -3386,7 +3335,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.902037",
+    "timestamp": "2026-06-02T21:54:01.040708",
     "event_datetime": "2026-06-06T19:00",
     "sport": "soccer",
     "market_suffix": null
@@ -3414,8 +3363,8 @@
         }
       ],
       "game_total_line": 1.5,
-      "game_total_over_odds": "-140",
-      "game_total_under_odds": "+100",
+      "game_total_over_odds": "-145",
+      "game_total_under_odds": "+105",
       "home_team_total_over_line": null,
       "home_team_total_over_odds": null,
       "home_team_total_under_line": null,
@@ -3425,7 +3374,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.906346",
+    "timestamp": "2026-06-02T21:54:01.044242",
     "event_datetime": "2026-06-03T06:30",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3464,7 +3413,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.910956",
+    "timestamp": "2026-06-02T21:54:01.047897",
     "event_datetime": "2026-06-03T12:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3474,20 +3423,20 @@
     "betbck_site_home_team": "Israel",
     "betbck_site_away_team": "Albania",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+265",
-      "site_bottom_team_moneyline_american": "+185",
+      "site_top_team_moneyline_american": "+260",
+      "site_bottom_team_moneyline_american": "+190",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
           "line": 0.0,
-          "odds": "+130",
+          "odds": "+125",
           "raw": "pk"
         }
       ],
       "site_bottom_team_spreads": [
         {
           "line": 0.0,
-          "odds": "-160",
+          "odds": "-155",
           "raw": "pk"
         }
       ],
@@ -3503,7 +3452,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.915218",
+    "timestamp": "2026-06-02T21:54:01.051420",
     "event_datetime": "2026-06-03T13:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3519,14 +3468,14 @@
       "site_top_team_spreads": [
         {
           "line": 0.25,
-          "odds": "+110",
+          "odds": "+115",
           "raw": "pk,+½"
         }
       ],
       "site_bottom_team_spreads": [
         {
           "line": -0.25,
-          "odds": "-140",
+          "odds": "-145",
           "raw": "pk,-½"
         }
       ],
@@ -3542,7 +3491,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.919618",
+    "timestamp": "2026-06-02T21:54:01.054719",
     "event_datetime": "2026-06-03T13:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3581,7 +3530,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.923982",
+    "timestamp": "2026-06-02T21:54:01.057995",
     "event_datetime": "2026-06-03T13:45",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3620,7 +3569,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.928097",
+    "timestamp": "2026-06-02T21:54:01.061218",
     "event_datetime": "2026-06-03T13:45",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3659,7 +3608,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.932330",
+    "timestamp": "2026-06-02T21:54:01.064486",
     "event_datetime": "2026-06-03T13:45",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3686,7 +3635,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.936615",
+    "timestamp": "2026-06-02T21:54:01.067755",
     "event_datetime": "2026-06-03T19:45",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3696,20 +3645,20 @@
     "betbck_site_home_team": "El Salvador",
     "betbck_site_away_team": "South Korea",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+965",
-      "site_bottom_team_moneyline_american": "-200",
+      "site_top_team_moneyline_american": "+960",
+      "site_bottom_team_moneyline_american": "-195",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
           "line": 1.0,
-          "odds": "-140",
+          "odds": "-145",
           "raw": "+1"
         }
       ],
       "site_bottom_team_spreads": [
         {
           "line": -1.0,
-          "odds": "+110",
+          "odds": "+115",
           "raw": "-1"
         }
       ],
@@ -3725,7 +3674,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.940989",
+    "timestamp": "2026-06-02T21:54:01.071062",
     "event_datetime": "2026-06-03T20:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3764,7 +3713,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.945210",
+    "timestamp": "2026-06-02T21:54:01.074442",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3803,7 +3752,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.949479",
+    "timestamp": "2026-06-02T21:54:01.077764",
     "event_datetime": "2026-06-04T11:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3842,7 +3791,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.953747",
+    "timestamp": "2026-06-02T21:54:01.081200",
     "event_datetime": "2026-06-04T12:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3881,7 +3830,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.957878",
+    "timestamp": "2026-06-02T21:54:01.084426",
     "event_datetime": "2026-06-04T12:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3920,7 +3869,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.961550",
+    "timestamp": "2026-06-02T21:54:01.087191",
     "event_datetime": "2026-06-04T14:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3959,7 +3908,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.966483",
+    "timestamp": "2026-06-02T21:54:01.090508",
     "event_datetime": "2026-06-04T14:10",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -3998,7 +3947,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.970691",
+    "timestamp": "2026-06-02T21:54:01.093810",
     "event_datetime": "2026-06-04T21:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -4037,7 +3986,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.975182",
+    "timestamp": "2026-06-02T21:54:01.097218",
     "event_datetime": "2026-06-11T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4076,7 +4025,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.979478",
+    "timestamp": "2026-06-02T21:54:01.100466",
     "event_datetime": "2026-06-11T21:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4115,7 +4064,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.984822",
+    "timestamp": "2026-06-02T21:54:01.104117",
     "event_datetime": "2026-06-12T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4154,7 +4103,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.990671",
+    "timestamp": "2026-06-02T21:54:01.107415",
     "event_datetime": "2026-06-12T20:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4193,7 +4142,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.995084",
+    "timestamp": "2026-06-02T21:54:01.110655",
     "event_datetime": "2026-06-13T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4232,7 +4181,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:02.999345",
+    "timestamp": "2026-06-02T21:54:01.113979",
     "event_datetime": "2026-06-13T17:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4271,7 +4220,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.003582",
+    "timestamp": "2026-06-02T21:54:01.117245",
     "event_datetime": "2026-06-13T20:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4310,7 +4259,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.007986",
+    "timestamp": "2026-06-02T21:54:01.120891",
     "event_datetime": "2026-06-13T23:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4349,7 +4298,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.012341",
+    "timestamp": "2026-06-02T21:54:01.124156",
     "event_datetime": "2026-06-14T12:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4388,7 +4337,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.016487",
+    "timestamp": "2026-06-02T21:54:01.127567",
     "event_datetime": "2026-06-14T15:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4427,7 +4376,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.020700",
+    "timestamp": "2026-06-02T21:54:01.130945",
     "event_datetime": "2026-06-14T18:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4466,7 +4415,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.024853",
+    "timestamp": "2026-06-02T21:54:01.134384",
     "event_datetime": "2026-06-14T21:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4505,7 +4454,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.029047",
+    "timestamp": "2026-06-02T21:54:01.137689",
     "event_datetime": "2026-06-15T11:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4544,7 +4493,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.033359",
+    "timestamp": "2026-06-02T21:54:01.140944",
     "event_datetime": "2026-06-15T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4583,7 +4532,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.037641",
+    "timestamp": "2026-06-02T21:54:01.144329",
     "event_datetime": "2026-06-15T17:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4622,7 +4571,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.041556",
+    "timestamp": "2026-06-02T21:54:01.147270",
     "event_datetime": "2026-06-15T20:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4661,7 +4610,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.046032",
+    "timestamp": "2026-06-02T21:54:01.150545",
     "event_datetime": "2026-06-16T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4700,7 +4649,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.049684",
+    "timestamp": "2026-06-02T21:54:01.153458",
     "event_datetime": "2026-06-16T17:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4739,7 +4688,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.053867",
+    "timestamp": "2026-06-02T21:54:01.156693",
     "event_datetime": "2026-06-16T20:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4778,7 +4727,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.058046",
+    "timestamp": "2026-06-02T21:54:01.159950",
     "event_datetime": "2026-06-16T23:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4817,7 +4766,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.062348",
+    "timestamp": "2026-06-02T21:54:01.163332",
     "event_datetime": "2026-06-17T12:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4856,7 +4805,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.066552",
+    "timestamp": "2026-06-02T21:54:01.166557",
     "event_datetime": "2026-06-17T15:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4895,7 +4844,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.070744",
+    "timestamp": "2026-06-02T21:54:01.170058",
     "event_datetime": "2026-06-17T18:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4934,7 +4883,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.075000",
+    "timestamp": "2026-06-02T21:54:01.173387",
     "event_datetime": "2026-06-17T21:00",
     "sport": "soccer",
     "market_suffix": null
@@ -4973,7 +4922,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.079244",
+    "timestamp": "2026-06-02T21:54:01.176759",
     "event_datetime": "2026-06-11T14:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5012,7 +4961,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.084013",
+    "timestamp": "2026-06-02T21:54:01.180506",
     "event_datetime": "2026-06-12T14:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5051,7 +5000,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.090435",
+    "timestamp": "2026-06-02T21:54:01.183475",
     "event_datetime": "2026-06-12T20:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5062,7 +5011,7 @@
     "betbck_site_away_team": "Qatar",
     "betbck_site_odds": {
       "site_top_team_moneyline_american": "-160",
-      "site_bottom_team_moneyline_american": "+905",
+      "site_bottom_team_moneyline_american": "+910",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
@@ -5090,7 +5039,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.095006",
+    "timestamp": "2026-06-02T21:54:01.186701",
     "event_datetime": "2026-06-13T14:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5129,7 +5078,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.099500",
+    "timestamp": "2026-06-02T21:54:01.190000",
     "event_datetime": "2026-06-13T17:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5168,7 +5117,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.103698",
+    "timestamp": "2026-06-02T21:54:01.193319",
     "event_datetime": "2026-06-13T20:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5207,7 +5156,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.107982",
+    "timestamp": "2026-06-02T21:54:01.196559",
     "event_datetime": "2026-06-13T23:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5246,7 +5195,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.112202",
+    "timestamp": "2026-06-02T21:54:01.199781",
     "event_datetime": "2026-06-14T12:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5285,7 +5234,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.116424",
+    "timestamp": "2026-06-02T21:54:01.203017",
     "event_datetime": "2026-06-14T15:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5324,7 +5273,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.120615",
+    "timestamp": "2026-06-02T21:54:01.206274",
     "event_datetime": "2026-06-14T18:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5363,7 +5312,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.124804",
+    "timestamp": "2026-06-02T21:54:01.209960",
     "event_datetime": "2026-06-14T21:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5402,7 +5351,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.128984",
+    "timestamp": "2026-06-02T21:54:01.213222",
     "event_datetime": "2026-06-15T11:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5412,7 +5361,7 @@
     "betbck_site_home_team": "Egypt",
     "betbck_site_away_team": "Belgium",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+430",
+      "site_top_team_moneyline_american": "+435",
       "site_bottom_team_moneyline_american": "+120",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
@@ -5441,7 +5390,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.133119",
+    "timestamp": "2026-06-02T21:54:01.216404",
     "event_datetime": "2026-06-15T14:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5480,7 +5429,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.137477",
+    "timestamp": "2026-06-02T21:54:01.219863",
     "event_datetime": "2026-06-15T17:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5519,7 +5468,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.141313",
+    "timestamp": "2026-06-02T21:54:01.222707",
     "event_datetime": "2026-06-15T20:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5558,7 +5507,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.145523",
+    "timestamp": "2026-06-02T21:54:01.225920",
     "event_datetime": "2026-06-16T14:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5597,7 +5546,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.149138",
+    "timestamp": "2026-06-02T21:54:01.228683",
     "event_datetime": "2026-06-16T17:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5636,7 +5585,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.153317",
+    "timestamp": "2026-06-02T21:54:01.232131",
     "event_datetime": "2026-06-16T20:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5675,7 +5624,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.157490",
+    "timestamp": "2026-06-02T21:54:01.235506",
     "event_datetime": "2026-06-16T23:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5714,7 +5663,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.161733",
+    "timestamp": "2026-06-02T21:54:01.238910",
     "event_datetime": "2026-06-17T12:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5753,7 +5702,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.166112",
+    "timestamp": "2026-06-02T21:54:01.242208",
     "event_datetime": "2026-06-17T15:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5792,7 +5741,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.170435",
+    "timestamp": "2026-06-02T21:54:01.245454",
     "event_datetime": "2026-06-17T18:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5831,7 +5780,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.174718",
+    "timestamp": "2026-06-02T21:54:01.248657",
     "event_datetime": "2026-06-17T21:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -5870,7 +5819,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.179062",
+    "timestamp": "2026-06-02T21:54:01.252062",
     "event_datetime": "2026-06-06T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -5909,7 +5858,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.183603",
+    "timestamp": "2026-06-02T21:54:01.255437",
     "event_datetime": "2026-06-07T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -5936,7 +5885,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.187916",
+    "timestamp": "2026-06-02T21:54:01.258713",
     "event_datetime": "2026-06-07T10:00",
     "sport": "soccer",
     "market_suffix": null
@@ -5975,7 +5924,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.192207",
+    "timestamp": "2026-06-02T21:54:01.262112",
     "event_datetime": "2026-06-06T00:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6014,7 +5963,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.196539",
+    "timestamp": "2026-06-02T21:54:01.265581",
     "event_datetime": "2026-06-06T00:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6053,7 +6002,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.200934",
+    "timestamp": "2026-06-02T21:54:01.269009",
     "event_datetime": "2026-06-06T01:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6092,7 +6041,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.205297",
+    "timestamp": "2026-06-02T21:54:01.272382",
     "event_datetime": "2026-06-06T01:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6131,7 +6080,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.209713",
+    "timestamp": "2026-06-02T21:54:01.275755",
     "event_datetime": "2026-06-06T02:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6170,7 +6119,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.214087",
+    "timestamp": "2026-06-02T21:54:01.279268",
     "event_datetime": "2026-06-06T02:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6197,7 +6146,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.218604",
+    "timestamp": "2026-06-02T21:54:01.282850",
     "event_datetime": "2026-06-06T03:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6224,7 +6173,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.222978",
+    "timestamp": "2026-06-02T21:54:01.286272",
     "event_datetime": "2026-06-06T04:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6263,7 +6212,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.228016",
+    "timestamp": "2026-06-02T21:54:01.289808",
     "event_datetime": "2026-06-06T05:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6302,7 +6251,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.232365",
+    "timestamp": "2026-06-02T21:54:01.293142",
     "event_datetime": "2026-06-06T00:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -6341,7 +6290,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.236711",
+    "timestamp": "2026-06-02T21:54:01.296542",
     "event_datetime": "2026-06-06T00:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -6380,7 +6329,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.241363",
+    "timestamp": "2026-06-02T21:54:01.300051",
     "event_datetime": "2026-06-06T01:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -6419,7 +6368,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.245706",
+    "timestamp": "2026-06-02T21:54:01.303501",
     "event_datetime": "2026-06-06T01:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -6458,7 +6407,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.250025",
+    "timestamp": "2026-06-02T21:54:01.307063",
     "event_datetime": "2026-06-05T18:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6485,7 +6434,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.254365",
+    "timestamp": "2026-06-02T21:54:01.310446",
     "event_datetime": "2026-06-05T19:30",
     "sport": "soccer",
     "market_suffix": null
@@ -6524,7 +6473,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.258975",
+    "timestamp": "2026-06-02T21:54:01.313909",
     "event_datetime": "2026-06-06T11:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6563,7 +6512,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.263389",
+    "timestamp": "2026-06-02T21:54:01.317297",
     "event_datetime": "2026-06-06T13:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6602,7 +6551,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.267904",
+    "timestamp": "2026-06-02T21:54:01.321022",
     "event_datetime": "2026-06-06T13:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6641,7 +6590,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.272253",
+    "timestamp": "2026-06-02T21:54:01.324398",
     "event_datetime": "2026-06-06T13:30",
     "sport": "soccer",
     "market_suffix": null
@@ -6680,7 +6629,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.276758",
+    "timestamp": "2026-06-02T21:54:01.327932",
     "event_datetime": "2026-06-06T13:30",
     "sport": "soccer",
     "market_suffix": null
@@ -6719,7 +6668,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.281406",
+    "timestamp": "2026-06-02T21:54:01.331413",
     "event_datetime": "2026-06-06T13:30",
     "sport": "soccer",
     "market_suffix": null
@@ -6758,7 +6707,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.285945",
+    "timestamp": "2026-06-02T21:54:01.335047",
     "event_datetime": "2026-06-06T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6797,7 +6746,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.290401",
+    "timestamp": "2026-06-02T21:54:01.338522",
     "event_datetime": "2026-06-06T16:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6836,7 +6785,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.294921",
+    "timestamp": "2026-06-02T21:54:01.342034",
     "event_datetime": "2026-06-07T13:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6875,7 +6824,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.299457",
+    "timestamp": "2026-06-02T21:54:01.345535",
     "event_datetime": "2026-06-07T13:30",
     "sport": "soccer",
     "market_suffix": null
@@ -6914,7 +6863,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.303946",
+    "timestamp": "2026-06-02T21:54:01.349014",
     "event_datetime": "2026-06-07T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6953,7 +6902,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.308525",
+    "timestamp": "2026-06-02T21:54:01.352605",
     "event_datetime": "2026-06-07T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -6992,7 +6941,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.312842",
+    "timestamp": "2026-06-02T21:54:01.355960",
     "event_datetime": "2026-06-07T14:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7031,7 +6980,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.317357",
+    "timestamp": "2026-06-02T21:54:01.359596",
     "event_datetime": "2026-06-07T14:30",
     "sport": "soccer",
     "market_suffix": null
@@ -7070,7 +7019,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.321670",
+    "timestamp": "2026-06-02T21:54:01.363004",
     "event_datetime": "2026-06-07T15:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7109,7 +7058,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.326115",
+    "timestamp": "2026-06-02T21:54:01.366501",
     "event_datetime": "2026-06-07T15:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7148,7 +7097,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.330688",
+    "timestamp": "2026-06-02T21:54:01.369940",
     "event_datetime": "2026-06-07T15:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7187,7 +7136,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.335203",
+    "timestamp": "2026-06-02T21:54:01.373378",
     "event_datetime": "2026-06-07T15:30",
     "sport": "soccer",
     "market_suffix": null
@@ -7226,7 +7175,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.339719",
+    "timestamp": "2026-06-02T21:54:01.376833",
     "event_datetime": "2026-06-06T11:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -7265,7 +7214,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.344425",
+    "timestamp": "2026-06-02T21:54:01.380183",
     "event_datetime": "2026-06-06T13:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -7304,7 +7253,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.348959",
+    "timestamp": "2026-06-02T21:54:01.383782",
     "event_datetime": "2026-06-06T13:00",
     "sport": "soccer",
     "market_suffix": "1H"
@@ -7343,7 +7292,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.353245",
+    "timestamp": "2026-06-02T21:54:01.387250",
     "event_datetime": "2026-06-06T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7370,7 +7319,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.357563",
+    "timestamp": "2026-06-02T21:54:01.390592",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7397,7 +7346,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.361973",
+    "timestamp": "2026-06-02T21:54:01.393992",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7424,7 +7373,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.366373",
+    "timestamp": "2026-06-02T21:54:01.397305",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7434,8 +7383,8 @@
     "betbck_site_home_team": "P Cantlay",
     "betbck_site_away_team": "R Henley",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+130",
-      "site_bottom_team_moneyline_american": "-150",
+      "site_top_team_moneyline_american": "+125",
+      "site_bottom_team_moneyline_american": "-145",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -7451,7 +7400,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.371088",
+    "timestamp": "2026-06-02T21:54:01.400658",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7461,8 +7410,8 @@
     "betbck_site_home_team": "S Woo Kim",
     "betbck_site_away_team": "T Fleetwood",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-140",
-      "site_bottom_team_moneyline_american": "+120",
+      "site_top_team_moneyline_american": "-130",
+      "site_bottom_team_moneyline_american": "+110",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -7478,7 +7427,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.376312",
+    "timestamp": "2026-06-02T21:54:01.404008",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7505,7 +7454,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.381468",
+    "timestamp": "2026-06-02T21:54:01.407342",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7532,7 +7481,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.386589",
+    "timestamp": "2026-06-02T21:54:01.410667",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7559,7 +7508,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.391701",
+    "timestamp": "2026-06-02T21:54:01.413991",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7586,7 +7535,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.396781",
+    "timestamp": "2026-06-02T21:54:01.417310",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7613,7 +7562,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.401762",
+    "timestamp": "2026-06-02T21:54:01.420839",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7640,7 +7589,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.406836",
+    "timestamp": "2026-06-02T21:54:01.424182",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7667,7 +7616,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.411855",
+    "timestamp": "2026-06-02T21:54:01.427602",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7694,7 +7643,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.416870",
+    "timestamp": "2026-06-02T21:54:01.431543",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7721,7 +7670,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.421872",
+    "timestamp": "2026-06-02T21:54:01.434953",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7748,7 +7697,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.426997",
+    "timestamp": "2026-06-02T21:54:01.438263",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7775,7 +7724,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.432079",
+    "timestamp": "2026-06-02T21:54:01.441518",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7802,7 +7751,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.437074",
+    "timestamp": "2026-06-02T21:54:01.445039",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7812,8 +7761,8 @@
     "betbck_site_home_team": "K Bradley",
     "betbck_site_away_team": "J Bridgeman",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-140",
-      "site_bottom_team_moneyline_american": "+120",
+      "site_top_team_moneyline_american": "-130",
+      "site_bottom_team_moneyline_american": "+110",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -7829,7 +7778,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.442253",
+    "timestamp": "2026-06-02T21:54:01.448494",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7856,7 +7805,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.447290",
+    "timestamp": "2026-06-02T21:54:01.451767",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7883,7 +7832,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.452382",
+    "timestamp": "2026-06-02T21:54:01.455202",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7910,7 +7859,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.457408",
+    "timestamp": "2026-06-02T21:54:01.458452",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7937,7 +7886,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.462353",
+    "timestamp": "2026-06-02T21:54:01.461751",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7964,7 +7913,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.467358",
+    "timestamp": "2026-06-02T21:54:01.465109",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -7991,7 +7940,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.472448",
+    "timestamp": "2026-06-02T21:54:01.468390",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8018,7 +7967,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.477326",
+    "timestamp": "2026-06-02T21:54:01.471633",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8045,7 +7994,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.481699",
+    "timestamp": "2026-06-02T21:54:01.474871",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8072,7 +8021,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.486682",
+    "timestamp": "2026-06-02T21:54:01.478155",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8099,7 +8048,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.491251",
+    "timestamp": "2026-06-02T21:54:01.481477",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8126,7 +8075,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.495784",
+    "timestamp": "2026-06-02T21:54:01.484789",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8153,7 +8102,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.500063",
+    "timestamp": "2026-06-02T21:54:01.488011",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8163,8 +8112,8 @@
     "betbck_site_home_team": "M Kuchar",
     "betbck_site_away_team": "B Horschel",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-130",
-      "site_bottom_team_moneyline_american": "+110",
+      "site_top_team_moneyline_american": "-115",
+      "site_bottom_team_moneyline_american": "-105",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -8180,7 +8129,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.504483",
+    "timestamp": "2026-06-02T21:54:01.491396",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8207,7 +8156,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.509936",
+    "timestamp": "2026-06-02T21:54:01.494804",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8217,8 +8166,8 @@
     "betbck_site_home_team": "T Hoge",
     "betbck_site_away_team": "M Hubbard",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+105",
-      "site_bottom_team_moneyline_american": "-125",
+      "site_top_team_moneyline_american": "-105",
+      "site_bottom_team_moneyline_american": "-115",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -8234,7 +8183,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.517348",
+    "timestamp": "2026-06-02T21:54:01.498139",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8261,7 +8210,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.523507",
+    "timestamp": "2026-06-02T21:54:01.501448",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8288,7 +8237,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.527917",
+    "timestamp": "2026-06-02T21:54:01.504869",
     "event_datetime": "2026-06-04T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8298,8 +8247,8 @@
     "betbck_site_home_team": "J Rahm",
     "betbck_site_away_team": "B DeChambeau",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-225",
-      "site_bottom_team_moneyline_american": "+185",
+      "site_top_team_moneyline_american": "-200",
+      "site_bottom_team_moneyline_american": "+170",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -8315,7 +8264,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.532257",
+    "timestamp": "2026-06-02T21:54:01.508197",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8342,7 +8291,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.536559",
+    "timestamp": "2026-06-02T21:54:01.511424",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8369,7 +8318,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.540864",
+    "timestamp": "2026-06-02T21:54:01.514746",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8396,7 +8345,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.545311",
+    "timestamp": "2026-06-02T21:54:01.518013",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8423,7 +8372,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.549611",
+    "timestamp": "2026-06-02T21:54:01.521492",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8450,7 +8399,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.554009",
+    "timestamp": "2026-06-02T21:54:01.524769",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8477,7 +8426,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.558363",
+    "timestamp": "2026-06-02T21:54:01.528038",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8504,7 +8453,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.562910",
+    "timestamp": "2026-06-02T21:54:01.531536",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8531,7 +8480,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.567452",
+    "timestamp": "2026-06-02T21:54:01.534968",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8558,7 +8507,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.573047",
+    "timestamp": "2026-06-02T21:54:01.538266",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8568,8 +8517,8 @@
     "betbck_site_home_team": "V Perez",
     "betbck_site_away_team": "C Ortiz",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-165",
-      "site_bottom_team_moneyline_american": "+145",
+      "site_top_team_moneyline_american": "-150",
+      "site_bottom_team_moneyline_american": "+130",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -8585,7 +8534,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.577393",
+    "timestamp": "2026-06-02T21:54:01.541472",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8612,7 +8561,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.581733",
+    "timestamp": "2026-06-02T21:54:01.544729",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8639,7 +8588,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.586020",
+    "timestamp": "2026-06-02T21:54:01.548007",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8649,8 +8598,8 @@
     "betbck_site_home_team": "C Surratt",
     "betbck_site_away_team": "B Hun An",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+115",
-      "site_bottom_team_moneyline_american": "-135",
+      "site_top_team_moneyline_american": "-105",
+      "site_bottom_team_moneyline_american": "-115",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -8666,7 +8615,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.590518",
+    "timestamp": "2026-06-02T21:54:01.551546",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8675,33 +8624,6 @@
     "betbck_game_id": "1305dae0",
     "betbck_site_home_team": "Y H Song",
     "betbck_site_away_team": "A Kim",
-    "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-145",
-      "site_bottom_team_moneyline_american": "+125",
-      "draw_moneyline_american": null,
-      "site_top_team_spreads": [],
-      "site_bottom_team_spreads": [],
-      "game_total_line": null,
-      "game_total_over_odds": null,
-      "game_total_under_odds": null,
-      "home_team_total_over_line": null,
-      "home_team_total_over_odds": null,
-      "home_team_total_under_line": null,
-      "home_team_total_under_odds": null,
-      "away_team_total_over_line": null,
-      "away_team_total_over_odds": null,
-      "away_team_total_under_line": null,
-      "away_team_total_under_odds": null
-    },
-    "timestamp": "2026-06-02T20:55:03.594939",
-    "event_datetime": "2026-06-04T06:15",
-    "sport": "soccer",
-    "market_suffix": null
-  },
-  {
-    "betbck_game_id": "fbb7145e",
-    "betbck_site_home_team": "C Tringale",
-    "betbck_site_away_team": "R T Lee",
     "betbck_site_odds": {
       "site_top_team_moneyline_american": "-130",
       "site_bottom_team_moneyline_american": "+110",
@@ -8720,7 +8642,34 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.599434",
+    "timestamp": "2026-06-02T21:54:01.554793",
+    "event_datetime": "2026-06-04T06:15",
+    "sport": "soccer",
+    "market_suffix": null
+  },
+  {
+    "betbck_game_id": "fbb7145e",
+    "betbck_site_home_team": "C Tringale",
+    "betbck_site_away_team": "R T Lee",
+    "betbck_site_odds": {
+      "site_top_team_moneyline_american": "-120",
+      "site_bottom_team_moneyline_american": "+100",
+      "draw_moneyline_american": null,
+      "site_top_team_spreads": [],
+      "site_bottom_team_spreads": [],
+      "game_total_line": null,
+      "game_total_over_odds": null,
+      "game_total_under_odds": null,
+      "home_team_total_over_line": null,
+      "home_team_total_over_odds": null,
+      "home_team_total_under_line": null,
+      "home_team_total_under_odds": null,
+      "away_team_total_over_line": null,
+      "away_team_total_over_odds": null,
+      "away_team_total_under_line": null,
+      "away_team_total_under_odds": null
+    },
+    "timestamp": "2026-06-02T21:54:01.558056",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8747,7 +8696,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.603750",
+    "timestamp": "2026-06-02T21:54:01.561369",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8774,7 +8723,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.608114",
+    "timestamp": "2026-06-02T21:54:01.564627",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8784,8 +8733,8 @@
     "betbck_site_home_team": "C Schwartzel",
     "betbck_site_away_team": "P Uihlein",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-190",
-      "site_bottom_team_moneyline_american": "+160",
+      "site_top_team_moneyline_american": "-175",
+      "site_bottom_team_moneyline_american": "+155",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -8801,7 +8750,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.612525",
+    "timestamp": "2026-06-02T21:54:01.567951",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8828,7 +8777,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.616987",
+    "timestamp": "2026-06-02T21:54:01.571231",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8855,7 +8804,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.621723",
+    "timestamp": "2026-06-02T21:54:01.574504",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8882,7 +8831,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.626212",
+    "timestamp": "2026-06-02T21:54:01.577772",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8909,7 +8858,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.630569",
+    "timestamp": "2026-06-02T21:54:01.581228",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8919,8 +8868,8 @@
     "betbck_site_home_team": "A Meronk",
     "betbck_site_away_team": "L Masaveu",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-155",
-      "site_bottom_team_moneyline_american": "+135",
+      "site_top_team_moneyline_american": "-145",
+      "site_bottom_team_moneyline_american": "+125",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -8936,7 +8885,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.635040",
+    "timestamp": "2026-06-02T21:54:01.584746",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -8963,7 +8912,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.639397",
+    "timestamp": "2026-06-02T21:54:01.588112",
     "event_datetime": "2026-06-04T01:00",
     "sport": "soccer",
     "market_suffix": null
@@ -8990,7 +8939,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.643910",
+    "timestamp": "2026-06-02T21:54:01.591432",
     "event_datetime": "2026-06-04T01:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9017,7 +8966,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.648363",
+    "timestamp": "2026-06-02T21:54:01.594777",
     "event_datetime": "2026-06-04T01:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9044,7 +8993,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.652639",
+    "timestamp": "2026-06-02T21:54:01.598193",
     "event_datetime": "2026-06-04T01:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9071,7 +9020,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.657075",
+    "timestamp": "2026-06-02T21:54:01.601520",
     "event_datetime": "2026-06-04T01:10",
     "sport": "soccer",
     "market_suffix": null
@@ -9098,7 +9047,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.663095",
+    "timestamp": "2026-06-02T21:54:01.604750",
     "event_datetime": "2026-06-04T01:10",
     "sport": "soccer",
     "market_suffix": null
@@ -9125,7 +9074,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.668440",
+    "timestamp": "2026-06-02T21:54:01.608090",
     "event_datetime": "2026-06-04T01:20",
     "sport": "soccer",
     "market_suffix": null
@@ -9152,7 +9101,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.672961",
+    "timestamp": "2026-06-02T21:54:01.611319",
     "event_datetime": "2026-06-04T01:20",
     "sport": "soccer",
     "market_suffix": null
@@ -9179,7 +9128,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.677366",
+    "timestamp": "2026-06-02T21:54:01.614609",
     "event_datetime": "2026-06-04T01:20",
     "sport": "soccer",
     "market_suffix": null
@@ -9206,7 +9155,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.681782",
+    "timestamp": "2026-06-02T21:54:01.618001",
     "event_datetime": "2026-06-04T01:30",
     "sport": "soccer",
     "market_suffix": null
@@ -9233,7 +9182,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.686140",
+    "timestamp": "2026-06-02T21:54:01.621751",
     "event_datetime": "2026-06-04T01:40",
     "sport": "soccer",
     "market_suffix": null
@@ -9260,7 +9209,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.690489",
+    "timestamp": "2026-06-02T21:54:01.625111",
     "event_datetime": "2026-06-04T01:50",
     "sport": "soccer",
     "market_suffix": null
@@ -9287,7 +9236,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.694832",
+    "timestamp": "2026-06-02T21:54:01.628438",
     "event_datetime": "2026-06-04T02:10",
     "sport": "soccer",
     "market_suffix": null
@@ -9314,7 +9263,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.699214",
+    "timestamp": "2026-06-02T21:54:01.631834",
     "event_datetime": "2026-06-04T02:10",
     "sport": "soccer",
     "market_suffix": null
@@ -9341,7 +9290,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.703732",
+    "timestamp": "2026-06-02T21:54:01.635323",
     "event_datetime": "2026-06-04T02:20",
     "sport": "soccer",
     "market_suffix": null
@@ -9368,7 +9317,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.708062",
+    "timestamp": "2026-06-02T21:54:01.638655",
     "event_datetime": "2026-06-04T05:45",
     "sport": "soccer",
     "market_suffix": null
@@ -9395,7 +9344,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.712361",
+    "timestamp": "2026-06-02T21:54:01.642018",
     "event_datetime": "2026-06-04T05:45",
     "sport": "soccer",
     "market_suffix": null
@@ -9422,7 +9371,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.716667",
+    "timestamp": "2026-06-02T21:54:01.645329",
     "event_datetime": "2026-06-04T06:35",
     "sport": "soccer",
     "market_suffix": null
@@ -9449,7 +9398,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.721095",
+    "timestamp": "2026-06-02T21:54:01.648617",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9476,7 +9425,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.725395",
+    "timestamp": "2026-06-02T21:54:01.651874",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9503,7 +9452,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.729992",
+    "timestamp": "2026-06-02T21:54:01.655114",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9530,7 +9479,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.734357",
+    "timestamp": "2026-06-02T21:54:01.658551",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9557,7 +9506,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.738575",
+    "timestamp": "2026-06-02T21:54:01.661765",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9584,7 +9533,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.742950",
+    "timestamp": "2026-06-02T21:54:01.665184",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9611,7 +9560,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.747324",
+    "timestamp": "2026-06-02T21:54:01.668468",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9638,7 +9587,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.751564",
+    "timestamp": "2026-06-02T21:54:01.671775",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9665,7 +9614,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.755794",
+    "timestamp": "2026-06-02T21:54:01.675011",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9692,7 +9641,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.760015",
+    "timestamp": "2026-06-02T21:54:01.678292",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9719,7 +9668,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.764333",
+    "timestamp": "2026-06-02T21:54:01.681618",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9746,7 +9695,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.768586",
+    "timestamp": "2026-06-02T21:54:01.684920",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9773,7 +9722,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.772956",
+    "timestamp": "2026-06-02T21:54:01.688293",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9800,7 +9749,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.777391",
+    "timestamp": "2026-06-02T21:54:01.691481",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9827,7 +9776,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.781737",
+    "timestamp": "2026-06-02T21:54:01.694757",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -9854,7 +9803,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.786096",
+    "timestamp": "2026-06-02T21:54:01.698232",
     "event_datetime": "2026-06-04T06:45",
     "sport": "soccer",
     "market_suffix": null
@@ -9881,7 +9830,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.790409",
+    "timestamp": "2026-06-02T21:54:01.701502",
     "event_datetime": "2026-06-04T06:55",
     "sport": "soccer",
     "market_suffix": null
@@ -9908,7 +9857,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.794722",
+    "timestamp": "2026-06-02T21:54:01.704963",
     "event_datetime": "2026-06-04T07:05",
     "sport": "soccer",
     "market_suffix": null
@@ -9935,7 +9884,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.798952",
+    "timestamp": "2026-06-02T21:54:01.708260",
     "event_datetime": "2026-06-04T07:05",
     "sport": "soccer",
     "market_suffix": null
@@ -9945,8 +9894,8 @@
     "betbck_site_home_team": "R Hisatsune",
     "betbck_site_away_team": "JT Poston",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-125",
-      "site_bottom_team_moneyline_american": "+105",
+      "site_top_team_moneyline_american": "-120",
+      "site_bottom_team_moneyline_american": "+100",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -9962,7 +9911,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.803547",
+    "timestamp": "2026-06-02T21:54:01.711650",
     "event_datetime": "2026-06-04T07:25",
     "sport": "soccer",
     "market_suffix": null
@@ -9989,7 +9938,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.807998",
+    "timestamp": "2026-06-02T21:54:01.715393",
     "event_datetime": "2026-06-04T07:35",
     "sport": "soccer",
     "market_suffix": null
@@ -10016,7 +9965,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.812511",
+    "timestamp": "2026-06-02T21:54:01.718897",
     "event_datetime": "2026-06-04T07:45",
     "sport": "soccer",
     "market_suffix": null
@@ -10043,7 +9992,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.816819",
+    "timestamp": "2026-06-02T21:54:01.722326",
     "event_datetime": "2026-06-04T07:55",
     "sport": "soccer",
     "market_suffix": null
@@ -10070,7 +10019,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.821070",
+    "timestamp": "2026-06-02T21:54:01.725540",
     "event_datetime": "2026-06-04T08:10",
     "sport": "soccer",
     "market_suffix": null
@@ -10097,7 +10046,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.825377",
+    "timestamp": "2026-06-02T21:54:01.731096",
     "event_datetime": "2026-06-04T08:20",
     "sport": "soccer",
     "market_suffix": null
@@ -10124,7 +10073,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.829769",
+    "timestamp": "2026-06-02T21:54:01.735573",
     "event_datetime": "2026-06-04T08:30",
     "sport": "soccer",
     "market_suffix": null
@@ -10151,7 +10100,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.834033",
+    "timestamp": "2026-06-02T21:54:01.738956",
     "event_datetime": "2026-06-04T08:40",
     "sport": "soccer",
     "market_suffix": null
@@ -10178,7 +10127,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.838310",
+    "timestamp": "2026-06-02T21:54:01.742261",
     "event_datetime": "2026-06-04T09:00",
     "sport": "soccer",
     "market_suffix": null
@@ -10205,7 +10154,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.842769",
+    "timestamp": "2026-06-02T21:54:01.745566",
     "event_datetime": "2026-06-04T09:10",
     "sport": "soccer",
     "market_suffix": null
@@ -10232,7 +10181,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.847144",
+    "timestamp": "2026-06-02T21:54:01.748845",
     "event_datetime": "2026-06-04T09:25",
     "sport": "soccer",
     "market_suffix": null
@@ -10259,7 +10208,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.851397",
+    "timestamp": "2026-06-02T21:54:01.752106",
     "event_datetime": "2026-06-04T09:35",
     "sport": "soccer",
     "market_suffix": null
@@ -10286,7 +10235,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.855678",
+    "timestamp": "2026-06-02T21:54:01.755442",
     "event_datetime": "2026-06-04T09:55",
     "sport": "soccer",
     "market_suffix": null
@@ -10313,7 +10262,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.860054",
+    "timestamp": "2026-06-02T21:54:01.758853",
     "event_datetime": "2026-06-04T10:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10340,7 +10289,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.864385",
+    "timestamp": "2026-06-02T21:54:01.762122",
     "event_datetime": "2026-06-04T10:25",
     "sport": "soccer",
     "market_suffix": null
@@ -10367,7 +10316,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.868790",
+    "timestamp": "2026-06-02T21:54:01.765499",
     "event_datetime": "2026-06-04T10:40",
     "sport": "soccer",
     "market_suffix": null
@@ -10394,7 +10343,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.873118",
+    "timestamp": "2026-06-02T21:54:01.768844",
     "event_datetime": "2026-06-04T11:00",
     "sport": "soccer",
     "market_suffix": null
@@ -10404,8 +10353,8 @@
     "betbck_site_home_team": "H Hall",
     "betbck_site_away_team": "B Harman",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+105",
-      "site_bottom_team_moneyline_american": "-125",
+      "site_top_team_moneyline_american": "+100",
+      "site_bottom_team_moneyline_american": "-120",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -10421,7 +10370,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.877828",
+    "timestamp": "2026-06-02T21:54:01.772075",
     "event_datetime": "2026-06-04T11:10",
     "sport": "soccer",
     "market_suffix": null
@@ -10448,7 +10397,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.882579",
+    "timestamp": "2026-06-02T21:54:01.775405",
     "event_datetime": "2026-06-04T11:20",
     "sport": "soccer",
     "market_suffix": null
@@ -10458,8 +10407,8 @@
     "betbck_site_home_team": "J Bridgeman",
     "betbck_site_away_team": "A Fitzpatrick",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-105",
-      "site_bottom_team_moneyline_american": "-115",
+      "site_top_team_moneyline_american": "-115",
+      "site_bottom_team_moneyline_american": "-105",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -10475,7 +10424,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.887038",
+    "timestamp": "2026-06-02T21:54:01.778724",
     "event_datetime": "2026-06-04T11:30",
     "sport": "soccer",
     "market_suffix": null
@@ -10502,7 +10451,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.891466",
+    "timestamp": "2026-06-02T21:54:01.782041",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10512,8 +10461,8 @@
     "betbck_site_home_team": "B DeChambeau",
     "betbck_site_away_team": "D Puig",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-120",
-      "site_bottom_team_moneyline_american": "+100",
+      "site_top_team_moneyline_american": "-130",
+      "site_bottom_team_moneyline_american": "+110",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -10529,7 +10478,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.895781",
+    "timestamp": "2026-06-02T21:54:01.785356",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10539,8 +10488,8 @@
     "betbck_site_home_team": "T Hatton",
     "betbck_site_away_team": "T Detry",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-110",
-      "site_bottom_team_moneyline_american": "-110",
+      "site_top_team_moneyline_american": "-125",
+      "site_bottom_team_moneyline_american": "+105",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -10556,7 +10505,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.900069",
+    "timestamp": "2026-06-02T21:54:01.788646",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10583,7 +10532,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.904474",
+    "timestamp": "2026-06-02T21:54:01.791984",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10610,7 +10559,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.908965",
+    "timestamp": "2026-06-02T21:54:01.795310",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10637,7 +10586,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.913315",
+    "timestamp": "2026-06-02T21:54:01.798609",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10664,7 +10613,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.917902",
+    "timestamp": "2026-06-02T21:54:01.802005",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10674,8 +10623,8 @@
     "betbck_site_home_team": "B Grace",
     "betbck_site_away_team": "T McKibbin",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-110",
-      "site_bottom_team_moneyline_american": "-110",
+      "site_top_team_moneyline_american": "-120",
+      "site_bottom_team_moneyline_american": "+100",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -10691,7 +10640,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.922254",
+    "timestamp": "2026-06-02T21:54:01.805363",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10718,7 +10667,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.926597",
+    "timestamp": "2026-06-02T21:54:01.808717",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10745,7 +10694,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.931004",
+    "timestamp": "2026-06-02T21:54:01.812031",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10772,7 +10721,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.935388",
+    "timestamp": "2026-06-02T21:54:01.815306",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10799,7 +10748,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.939685",
+    "timestamp": "2026-06-02T21:54:01.818531",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10809,8 +10758,8 @@
     "betbck_site_home_team": "B Steele",
     "betbck_site_away_team": "C Surratt",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-125",
-      "site_bottom_team_moneyline_american": "+105",
+      "site_top_team_moneyline_american": "-110",
+      "site_bottom_team_moneyline_american": "-110",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -10826,7 +10775,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.944132",
+    "timestamp": "2026-06-02T21:54:01.821977",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10836,8 +10785,8 @@
     "betbck_site_home_team": "A Kim",
     "betbck_site_away_team": "P Uihlein",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-145",
-      "site_bottom_team_moneyline_american": "+125",
+      "site_top_team_moneyline_american": "-135",
+      "site_bottom_team_moneyline_american": "+115",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -10853,7 +10802,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.948419",
+    "timestamp": "2026-06-02T21:54:01.825281",
     "event_datetime": "2026-06-04T06:15",
     "sport": "soccer",
     "market_suffix": null
@@ -10863,8 +10812,8 @@
     "betbck_site_home_team": "F Auger Aliassime",
     "betbck_site_away_team": "F Cobolli",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-105",
-      "site_bottom_team_moneyline_american": "-125",
+      "site_top_team_moneyline_american": "-110",
+      "site_bottom_team_moneyline_american": "-120",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [
         {
@@ -10892,7 +10841,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.952847",
+    "timestamp": "2026-06-02T21:54:01.828801",
     "event_datetime": "2026-06-03T08:00",
     "sport": "soccer",
     "market_suffix": null
@@ -10931,7 +10880,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.957731",
+    "timestamp": "2026-06-02T21:54:01.832555",
     "event_datetime": "2026-06-03T08:00",
     "sport": "soccer",
     "market_suffix": null
@@ -10958,7 +10907,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.962446",
+    "timestamp": "2026-06-02T21:54:01.836255",
     "event_datetime": "2026-06-03T08:00",
     "sport": "soccer",
     "market_suffix": null
@@ -10997,7 +10946,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.967146",
+    "timestamp": "2026-06-02T21:54:01.839604",
     "event_datetime": "2026-06-03T13:15",
     "sport": "soccer",
     "market_suffix": null
@@ -11036,7 +10985,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.971745",
+    "timestamp": "2026-06-02T21:54:01.843109",
     "event_datetime": "2026-06-03T13:15",
     "sport": "soccer",
     "market_suffix": null
@@ -11063,7 +11012,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.976332",
+    "timestamp": "2026-06-02T21:54:01.846578",
     "event_datetime": "2026-06-03T13:15",
     "sport": "soccer",
     "market_suffix": null
@@ -11073,8 +11022,8 @@
     "betbck_site_home_team": "A Kalinskaya",
     "betbck_site_away_team": "M Chwalinska",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "-125",
-      "site_bottom_team_moneyline_american": "-105",
+      "site_top_team_moneyline_american": "-140",
+      "site_bottom_team_moneyline_american": "+110",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -11090,7 +11039,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.980824",
+    "timestamp": "2026-06-02T21:54:01.849950",
     "event_datetime": "2026-06-03T04:05",
     "sport": "soccer",
     "market_suffix": null
@@ -11117,7 +11066,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.985437",
+    "timestamp": "2026-06-02T21:54:01.853500",
     "event_datetime": "2026-06-03T04:05",
     "sport": "soccer",
     "market_suffix": null
@@ -11144,7 +11093,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.989989",
+    "timestamp": "2026-06-02T21:54:01.857001",
     "event_datetime": "2026-06-03T04:05",
     "sport": "soccer",
     "market_suffix": null
@@ -11183,7 +11132,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.994531",
+    "timestamp": "2026-06-02T21:54:01.860363",
     "event_datetime": "2026-06-03T06:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11222,7 +11171,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:03.999133",
+    "timestamp": "2026-06-02T21:54:01.863908",
     "event_datetime": "2026-06-03T06:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11261,7 +11210,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.003508",
+    "timestamp": "2026-06-02T21:54:01.867274",
     "event_datetime": "2026-06-05T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11300,7 +11249,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.008472",
+    "timestamp": "2026-06-02T21:54:01.870748",
     "event_datetime": "2026-06-05T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11327,7 +11276,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.015756",
+    "timestamp": "2026-06-02T21:54:01.874266",
     "event_datetime": "2026-06-05T07:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11337,8 +11286,8 @@
     "betbck_site_home_team": "Steve Garcia",
     "betbck_site_away_team": "Diego Lopes",
     "betbck_site_odds": {
-      "site_top_team_moneyline_american": "+145",
-      "site_bottom_team_moneyline_american": "-175",
+      "site_top_team_moneyline_american": "+140",
+      "site_bottom_team_moneyline_american": "-170",
       "draw_moneyline_american": null,
       "site_top_team_spreads": [],
       "site_bottom_team_spreads": [],
@@ -11354,7 +11303,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.020349",
+    "timestamp": "2026-06-02T21:54:01.877605",
     "event_datetime": "2026-06-14T19:20",
     "sport": "soccer",
     "market_suffix": null
@@ -11381,7 +11330,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.024835",
+    "timestamp": "2026-06-02T21:54:01.881124",
     "event_datetime": "2026-06-14T21:50",
     "sport": "soccer",
     "market_suffix": null
@@ -11408,7 +11357,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.029301",
+    "timestamp": "2026-06-02T21:54:01.884767",
     "event_datetime": "2026-06-06T16:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11435,7 +11384,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.033775",
+    "timestamp": "2026-06-02T21:54:01.888248",
     "event_datetime": "2026-06-06T16:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11462,7 +11411,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.038153",
+    "timestamp": "2026-06-02T21:54:01.891679",
     "event_datetime": "2026-06-06T16:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11489,7 +11438,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.042772",
+    "timestamp": "2026-06-02T21:54:01.895135",
     "event_datetime": "2026-06-06T16:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11516,7 +11465,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.047281",
+    "timestamp": "2026-06-02T21:54:01.898567",
     "event_datetime": "2026-06-06T16:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11543,7 +11492,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.051807",
+    "timestamp": "2026-06-02T21:54:01.902006",
     "event_datetime": "2026-06-06T16:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11570,7 +11519,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.056356",
+    "timestamp": "2026-06-02T21:54:01.905393",
     "event_datetime": "2026-06-06T16:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11597,7 +11546,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.060772",
+    "timestamp": "2026-06-02T21:54:01.908716",
     "event_datetime": "2026-06-06T13:00",
     "sport": "soccer",
     "market_suffix": null
@@ -11624,7 +11573,7 @@
       "away_team_total_under_line": null,
       "away_team_total_under_odds": null
     },
-    "timestamp": "2026-06-02T20:55:04.065386",
+    "timestamp": "2026-06-02T21:54:01.912110",
     "event_datetime": "2026-06-27T22:00",
     "sport": "soccer",
     "market_suffix": null

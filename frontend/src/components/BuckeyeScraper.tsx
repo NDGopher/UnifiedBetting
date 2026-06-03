@@ -51,6 +51,7 @@ const BuckeyeScraper: React.FC = () => {
   const [combosExpanded, setCombosExpanded] = useState(false);
   const [parlays, setParlays] = useState<any | null>(null);
   const [parlaysExpanded, setParlaysExpanded] = useState(false);
+  const [parlayLegFilter, setParlayLegFilter] = useState<'all' | 2 | 3 | 4>('all');
 
   // EV range filter (display only)
   const EV_MAX_SLIDER = 20;
@@ -1222,35 +1223,74 @@ const BuckeyeScraper: React.FC = () => {
                 </Typography>
               ) : (
                 <>
-                  <Typography sx={{ fontSize: '0.74rem', color: '#666', mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Top Parlays ({(parlays.parlays || []).length} shown · {parlays.total_combos ?? '?'} total combos)
-                  </Typography>
+                  {/* Size filter tabs */}
+                  <Box sx={{ display: 'flex', gap: 0.75, mb: 1.5, alignItems: 'center' }}>
+                    {(['all', 2, 3, 4] as const).map(f => {
+                      const label = f === 'all' ? 'All' : `${f}-leg`;
+                      const count = f === 'all'
+                        ? (parlays.parlays || []).length
+                        : (parlays.parlays || []).filter((p: any) => p.n_legs === f).length;
+                      const active = parlayLegFilter === f;
+                      return count > 0 ? (
+                        <Box
+                          key={String(f)}
+                          onClick={() => setParlayLegFilter(f)}
+                          sx={{
+                            px: 1.25, py: 0.3,
+                            fontSize: '0.72rem', fontWeight: active ? 600 : 400,
+                            color: active ? '#64B5F6' : '#666',
+                            bgcolor: active ? 'rgba(100,181,246,0.12)' : 'transparent',
+                            border: `1px solid ${active ? 'rgba(100,181,246,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                            borderRadius: 1,
+                            cursor: 'pointer',
+                            userSelect: 'none',
+                          }}
+                        >
+                          {label} {count > 0 && <Box component="span" sx={{ opacity: 0.6 }}>({count})</Box>}
+                        </Box>
+                      ) : null;
+                    })}
+                    <Typography sx={{ ml: 'auto', fontSize: '0.7rem', color: '#444' }}>
+                      {parlays.total_combos?.toLocaleString() ?? '?'} total combos · {parlays.eligible_legs} eligible legs
+                    </Typography>
+                  </Box>
 
+                  {/* Parlay cards */}
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {(parlays.parlays || []).map((parlay: any, pi: number) => (
+                    {(parlays.parlays || [])
+                      .filter((p: any) => parlayLegFilter === 'all' || p.n_legs === parlayLegFilter)
+                      .map((parlay: any, pi: number) => (
                       <Box key={pi} sx={{
                         p: 1.5,
                         bgcolor: parlay.ev_blended_pct >= 0 ? 'rgba(100,181,246,0.05)' : 'rgba(255,255,255,0.02)',
                         border: `1px solid ${parlay.same_sport ? 'rgba(100,181,246,0.3)' : 'rgba(255,255,255,0.07)'}`,
                         borderRadius: 1.5,
-                        minWidth: 220,
-                        maxWidth: 300,
+                        minWidth: 230,
+                        maxWidth: 310,
                         flex: '0 1 auto',
                         position: 'relative',
                       }}>
                         {parlay.same_sport && (
                           <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.6rem', color: '#64B5F6', fontWeight: 700, letterSpacing: '0.05em' }}>
-                            ◆ SAME SPORT
+                            ◆ SAME
                           </Box>
                         )}
 
                         {/* Legs */}
                         {(parlay.legs || []).map((leg: any, li: number) => (
-                          <Box key={li} sx={{ mb: li < parlay.legs.length - 1 ? 0.75 : 0 }}>
-                            <Typography sx={{ fontSize: '0.76rem', color: '#ddd', fontWeight: 600, lineHeight: 1.2, pr: parlay.same_sport ? 5 : 0 }}>
+                          <Box key={li} sx={{ mb: li < parlay.legs.length - 1 ? 0.9 : 0 }}>
+                            {/* Bet name */}
+                            <Typography sx={{ fontSize: '0.76rem', color: '#ddd', fontWeight: 600, lineHeight: 1.25, pr: parlay.same_sport ? 4 : 0 }}>
                               {leg.bet}
                             </Typography>
-                            <Box sx={{ display: 'flex', gap: 0.6, alignItems: 'center', flexWrap: 'wrap', mt: 0.2 }}>
+                            {/* Matchup context */}
+                            {leg.matchup && (
+                              <Typography sx={{ fontSize: '0.6rem', color: '#555', lineHeight: 1.2, mb: 0.2 }}>
+                                {leg.matchup}
+                              </Typography>
+                            )}
+                            {/* Stats row */}
+                            <Box sx={{ display: 'flex', gap: 0.6, alignItems: 'center', flexWrap: 'wrap' }}>
                               <Box component="span" sx={{ fontSize: '0.62rem', color: '#888', fontFamily: 'monospace' }}>
                                 {leg.betbck_odds}
                               </Box>
@@ -1272,10 +1312,10 @@ const BuckeyeScraper: React.FC = () => {
                         {/* Footer */}
                         <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography sx={{ fontSize: '0.65rem', color: '#888', fontFamily: 'monospace' }}>
-                              {parlay.n_legs}L {parlay.parlay_odds}
+                            <Typography sx={{ fontSize: '0.67rem', color: '#888', fontFamily: 'monospace', fontWeight: 600 }}>
+                              {parlay.n_legs}L &nbsp;{parlay.parlay_odds}
                             </Typography>
-                            <Typography sx={{ fontSize: '0.7rem', color: parlay.ev_blended_pct >= 0 ? '#4CAF50' : '#aaa', fontWeight: 700 }}>
+                            <Typography sx={{ fontSize: '0.72rem', color: parlay.ev_blended_pct >= 0 ? '#4CAF50' : '#aaa', fontWeight: 700 }}>
                               {parlay.ev_blended_pct >= 0 ? '+' : ''}{parlay.ev_blended_pct}% EV
                             </Typography>
                           </Box>
@@ -1291,7 +1331,7 @@ const BuckeyeScraper: React.FC = () => {
 
                   {/* Footer note */}
                   <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
-                    Parlay EV = ∏(1 + leg_EV) − 1 · Parlay odds = product of BetBCK decimal odds.
+                    Parlay EV = ∏(1 + leg_EV) − 1 · Parlay odds = product of BetBCK decimal odds · Top 5 per size shown.
                     Ranked highest EV to lowest · Pin limit ≥ 1,000 · Leg EV ≥ −1% · Odds ≤ +150 · Max 3 +money legs · One leg per game.
                   </Typography>
                 </>
