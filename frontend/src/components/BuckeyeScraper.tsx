@@ -1284,8 +1284,8 @@ const BuckeyeScraper: React.FC = () => {
                               {leg.bet}
                             </Typography>
                             {/* Matchup context */}
-                            {leg.matchup && (
-                              <Typography sx={{ fontSize: '0.6rem', color: '#555', lineHeight: 1.2, mb: 0.2 }}>
+                            {leg.matchup && leg.matchup.trim() && (
+                              <Typography sx={{ fontSize: '0.61rem', color: '#aaa', lineHeight: 1.25, mb: 0.25 }}>
                                 {leg.matchup}
                               </Typography>
                             )}
