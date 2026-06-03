@@ -5,10 +5,10 @@
       "matchup": "Atlanta Braves vs Toronto Blue Jays",
       "bet": "ML - Toronto Blue Jays",
       "bet_type": "Moneyline",
-      "betbck_odds": "+141",
-      "pinnacle_nvp": "+131",
-      "ev": "4.46%",
-      "ev_val": 0.04464672735153896,
+      "betbck_odds": "+140",
+      "pinnacle_nvp": "+132",
+      "ev": "3.31%",
+      "ev_val": 0.03314679294016365,
       "start_time": "2026-06-03 06:15 PM",
       "league": "MLB",
       "pinnacle_limit": 10000,
@@ -18,16 +18,46 @@
     {
       "sport": "baseball",
       "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
+      "bet": "Under 7.5",
+      "bet_type": "Total",
+      "betbck_odds": "+160",
+      "pinnacle_nvp": "+153",
+      "ev": "2.89%",
+      "ev_val": 0.028888009497427758,
+      "start_time": "2026-06-03 08:40 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "period": "ALT",
+      "event_id": "1631435538"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
       "bet": "ML - Arizona Diamondbacks",
       "bet_type": "Moneyline",
       "betbck_odds": "+180",
-      "pinnacle_nvp": "+176",
-      "ev": "1.49%",
-      "ev_val": 0.014860456687205481,
+      "pinnacle_nvp": "+175",
+      "ev": "1.86%",
+      "ev_val": 0.018552200800290963,
       "start_time": "2026-06-03 08:40 PM",
       "league": "MLB",
       "pinnacle_limit": 10000,
       "event_id": "1631435538",
+      "period": "FG"
+    },
+    {
+      "sport": "basketball",
+      "matchup": "San Antonio Spurs vs New York Knicks",
+      "bet": "Over 217.5",
+      "bet_type": "Total",
+      "betbck_odds": "+103",
+      "pinnacle_nvp": "+101",
+      "ev": "1.00%",
+      "ev_val": 0.009950248756219082,
+      "start_time": "2026-06-03 07:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 20000,
+      "event_id": "1631566921",
       "period": "FG"
     },
     {
@@ -76,6 +106,21 @@
       "event_id": "1631435519"
     },
     {
+      "sport": "baseball",
+      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
+      "bet": "Under 9.0",
+      "bet_type": "Total",
+      "betbck_odds": "-116",
+      "pinnacle_nvp": "-117",
+      "ev": "0.38%",
+      "ev_val": 0.003810763082070734,
+      "start_time": "2026-06-03 08:40 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "period": "FG",
+      "event_id": "1631435538"
+    },
+    {
       "sport": "soccer",
       "matchup": "Chacarita Juniors vs Temperley",
       "bet": "ML - Chacarita Juniors",
@@ -88,6 +133,21 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 200,
       "event_id": "1631596169",
+      "period": "FG"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Chicago Cubs vs Athletics",
+      "bet": "Over 8.5",
+      "bet_type": "Total",
+      "betbck_odds": "-108",
+      "pinnacle_nvp": "-108",
+      "ev": "0.20%",
+      "ev_val": 0.0020426253516785398,
+      "start_time": "2026-06-03 07:05 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "event_id": "1631435008",
       "period": "FG"
     },
     {
@@ -138,46 +198,16 @@
     {
       "sport": "baseball",
       "matchup": "Los Angeles Angels vs Colorado Rockies",
-      "bet": "ML - Los Angeles Angels",
+      "bet": "ML - Colorado Rockies",
       "bet_type": "Moneyline",
-      "betbck_odds": "-141",
-      "pinnacle_nvp": "-140",
-      "ev": "-0.34%",
-      "ev_val": -0.00337034509852574,
+      "betbck_odds": "+131",
+      "pinnacle_nvp": "+132",
+      "ev": "-0.56%",
+      "ev_val": -0.005596211795092509,
       "start_time": "2026-06-03 08:38 PM",
       "league": "MLB",
       "pinnacle_limit": 10000,
       "event_id": "1631435664",
-      "period": "FG"
-    },
-    {
-      "sport": "basketball",
-      "matchup": "San Antonio Spurs vs New York Knicks",
-      "bet": "Over 218.0",
-      "bet_type": "Total",
-      "betbck_odds": "+105",
-      "pinnacle_nvp": "+106",
-      "ev": "-0.44%",
-      "ev_val": -0.004371053909665079,
-      "start_time": "2026-06-03 07:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 20000,
-      "event_id": "1631566921",
-      "period": "FG"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "Chicago Cubs vs Athletics",
-      "bet": "Athletics +1.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-177",
-      "pinnacle_nvp": "-174",
-      "ev": "-0.64%",
-      "ev_val": -0.006367141960362144,
-      "start_time": "2026-06-03 07:05 PM",
-      "league": "MLB",
-      "pinnacle_limit": 10000,
-      "event_id": "1631435008",
       "period": "FG"
     },
     {
@@ -197,17 +227,17 @@
     },
     {
       "sport": "baseball",
-      "matchup": "Los Angeles Angels vs Colorado Rockies",
-      "bet": "Los Angeles Angels -1.5",
+      "matchup": "Chicago Cubs vs Athletics",
+      "bet": "Athletics +1.5",
       "bet_type": "Spread",
-      "betbck_odds": "+145",
-      "pinnacle_nvp": "+147",
-      "ev": "-0.81%",
-      "ev_val": -0.0080971659919028,
-      "start_time": "2026-06-03 08:38 PM",
+      "betbck_odds": "-177",
+      "pinnacle_nvp": "-173",
+      "ev": "-0.76%",
+      "ev_val": -0.007627297772714314,
+      "start_time": "2026-06-03 07:05 PM",
       "league": "MLB",
       "pinnacle_limit": 10000,
-      "event_id": "1631435664",
+      "event_id": "1631435008",
       "period": "FG"
     },
     {
@@ -241,36 +271,6 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "St. Louis Cardinals vs Texas Rangers",
-      "bet": "ML - St. Louis Cardinals",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-112",
-      "pinnacle_nvp": "-110",
-      "ev": "-1.05%",
-      "ev_val": -0.010529460085131892,
-      "start_time": "2026-06-03 06:45 PM",
-      "league": "MLB",
-      "pinnacle_limit": 10000,
-      "event_id": "1631435650",
-      "period": "FG"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Gimnasia y Tiro vs Ferrocarril Midland",
-      "bet": "ML - Gimnasia y Tiro",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+205",
-      "pinnacle_nvp": "+209",
-      "ev": "-1.29%",
-      "ev_val": -0.012944983818770184,
-      "start_time": "2026-06-05 07:30 PM",
-      "league": "Argentina - Primera B Nacional",
-      "pinnacle_limit": 300,
-      "event_id": "1631599524",
-      "period": "FG"
-    },
-    {
       "sport": "soccer",
       "matchup": "Chacarita Juniors vs Temperley",
       "bet": "Chacarita Juniors -0.5",
@@ -286,18 +286,18 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "Philadelphia Phillies vs San Diego Padres",
-      "bet": "ML - Philadelphia Phillies",
+      "sport": "soccer",
+      "matchup": "Gimnasia y Tiro vs Ferrocarril Midland",
+      "bet": "ML - Gimnasia y Tiro",
       "bet_type": "Moneyline",
-      "betbck_odds": "-205",
-      "pinnacle_nvp": "-197",
-      "ev": "-1.34%",
-      "ev_val": -0.013391990683832566,
-      "start_time": "2026-06-03 05:40 PM",
-      "league": "MLB",
-      "pinnacle_limit": 10000,
-      "event_id": "1631434996",
+      "betbck_odds": "+205",
+      "pinnacle_nvp": "+209",
+      "ev": "-1.42%",
+      "ev_val": -0.014221073044602517,
+      "start_time": "2026-06-05 07:30 PM",
+      "league": "Argentina - Primera B Nacional",
+      "pinnacle_limit": 300,
+      "event_id": "1631599524",
       "period": "FG"
     },
     {
@@ -317,33 +317,33 @@
     },
     {
       "sport": "baseball",
-      "matchup": "Los Angeles Angels vs Colorado Rockies",
-      "bet": "Los Angeles Angels +1.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-245",
-      "pinnacle_nvp": "-232",
+      "matchup": "Philadelphia Phillies vs San Diego Padres",
+      "bet": "ML - Philadelphia Phillies",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-205",
+      "pinnacle_nvp": "-195",
       "ev": "-1.60%",
-      "ev_val": -0.015958584691738387,
-      "start_time": "2026-06-03 08:38 PM",
+      "ev_val": -0.016002064782552616,
+      "start_time": "2026-06-03 05:40 PM",
       "league": "MLB",
-      "pinnacle_limit": 6000,
-      "event_id": "1631435664",
-      "period": "ALT"
+      "pinnacle_limit": 10000,
+      "event_id": "1631434996",
+      "period": "FG"
     },
     {
       "sport": "baseball",
-      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
-      "bet": "Under 7.5",
-      "bet_type": "Total",
-      "betbck_odds": "+160",
-      "pinnacle_nvp": "+164",
-      "ev": "-1.66%",
-      "ev_val": -0.016641452344931973,
-      "start_time": "2026-06-03 08:40 PM",
+      "matchup": "St. Louis Cardinals vs Texas Rangers",
+      "bet": "ML - Texas Rangers",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+102",
+      "pinnacle_nvp": "+106",
+      "ev": "-1.70%",
+      "ev_val": -0.017031630170316392,
+      "start_time": "2026-06-03 06:45 PM",
       "league": "MLB",
-      "pinnacle_limit": 7500,
-      "period": "ALT",
-      "event_id": "1631435538"
+      "pinnacle_limit": 10000,
+      "event_id": "1631435650",
+      "period": "FG"
     },
     {
       "sport": "baseball",
@@ -359,6 +359,21 @@
       "pinnacle_limit": 4500,
       "event_id": "1631435524",
       "period": "ALT"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Philadelphia Phillies vs San Diego Padres",
+      "bet": "ML - San Diego Padres",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+190",
+      "pinnacle_nvp": "+195",
+      "ev": "-1.76%",
+      "ev_val": -0.017615176151761558,
+      "start_time": "2026-06-03 05:40 PM",
+      "league": "MLB",
+      "pinnacle_limit": 10000,
+      "event_id": "1631434996",
+      "period": "FG"
     },
     {
       "sport": "soccer",
@@ -406,18 +421,18 @@
       "period": "FG"
     },
     {
-      "sport": "tennis",
-      "matchup": "Matteo Berrettini vs Matteo Arnaldi",
-      "bet": "ML - Matteo Berrettini",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-201",
-      "pinnacle_nvp": "-190",
-      "ev": "-1.87%",
-      "ev_val": -0.018668127253640088,
-      "start_time": "2026-06-03 01:15 PM",
-      "league": "ATP French Open - QF",
-      "pinnacle_limit": 20100,
-      "event_id": "1631604070",
+      "sport": "baseball",
+      "matchup": "Los Angeles Angels vs Colorado Rockies",
+      "bet": "Over 8.5",
+      "bet_type": "Total",
+      "betbck_odds": "-115",
+      "pinnacle_nvp": "-110",
+      "ev": "-1.86%",
+      "ev_val": -0.018600935752596248,
+      "start_time": "2026-06-03 08:38 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "event_id": "1631435664",
       "period": "FG"
     },
     {
@@ -437,21 +452,6 @@
     },
     {
       "sport": "baseball",
-      "matchup": "Chicago Cubs vs Athletics",
-      "bet": "Under 9.0",
-      "bet_type": "Total",
-      "betbck_odds": "-120",
-      "pinnacle_nvp": "-115",
-      "ev": "-1.96%",
-      "ev_val": -0.019607843137254832,
-      "start_time": "2026-06-03 07:05 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "period": "FG",
-      "event_id": "1631435008"
-    },
-    {
-      "sport": "baseball",
       "matchup": "Milwaukee Brewers vs San Francisco Giants",
       "bet": "ML - San Francisco Giants",
       "bet_type": "Moneyline",
@@ -466,6 +466,21 @@
       "period": "FG"
     },
     {
+      "sport": "basketball",
+      "matchup": "Seattle Storm vs Phoenix Mercury",
+      "bet": "ML - Phoenix Mercury",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-250",
+      "pinnacle_nvp": "-233",
+      "ev": "-2.03%",
+      "ev_val": -0.020293911826452127,
+      "start_time": "2026-06-03 09:05 PM",
+      "league": "WNBA",
+      "pinnacle_limit": 2000,
+      "event_id": "1631435017",
+      "period": "FG"
+    },
+    {
       "sport": "tennis",
       "matchup": "Diana Shnaider vs Maja Chwalinska",
       "bet": "ML - Diana Shnaider",
@@ -476,23 +491,8 @@
       "ev_val": -0.020435279243735338,
       "start_time": "2026-06-04 10:00 AM",
       "league": "WTA French Open - SF",
-      "pinnacle_limit": 3050,
+      "pinnacle_limit": 4350,
       "event_id": "1631640295",
-      "period": "FG"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "Los Angeles Angels vs Colorado Rockies",
-      "bet": "Over 8.5",
-      "bet_type": "Total",
-      "betbck_odds": "-115",
-      "pinnacle_nvp": "-110",
-      "ev": "-2.07%",
-      "ev_val": -0.02065729838066832,
-      "start_time": "2026-06-03 08:38 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "event_id": "1631435664",
       "period": "FG"
     },
     {
@@ -571,21 +571,6 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "Philadelphia Phillies vs San Diego Padres",
-      "bet": "ML - San Diego Padres",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+190",
-      "pinnacle_nvp": "+197",
-      "ev": "-2.29%",
-      "ev_val": -0.022911051212938016,
-      "start_time": "2026-06-03 05:40 PM",
-      "league": "MLB",
-      "pinnacle_limit": 10000,
-      "event_id": "1631434996",
-      "period": "FG"
-    },
-    {
       "sport": "soccer",
       "matchup": "Chaco For Ever vs Ferro Carril Oeste",
       "bet": "ML - Chaco For Ever",
@@ -633,22 +618,7 @@
     {
       "sport": "basketball",
       "matchup": "Seattle Storm vs Phoenix Mercury",
-      "bet": "ML - Phoenix Mercury",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-250",
-      "pinnacle_nvp": "-230",
-      "ev": "-2.37%",
-      "ev_val": -0.023709902370990243,
-      "start_time": "2026-06-03 09:05 PM",
-      "league": "WNBA",
-      "pinnacle_limit": 2000,
-      "event_id": "1631435017",
-      "period": "FG"
-    },
-    {
-      "sport": "basketball",
-      "matchup": "Seattle Storm vs Phoenix Mercury",
-      "bet": "Over 160.5",
+      "bet": "Over 161.0",
       "bet_type": "Total",
       "betbck_odds": "-105",
       "pinnacle_nvp": "+100",
@@ -663,7 +633,7 @@
     {
       "sport": "basketball",
       "matchup": "Seattle Storm vs Phoenix Mercury",
-      "bet": "Under 160.5",
+      "bet": "Under 161.0",
       "bet_type": "Total",
       "betbck_odds": "-105",
       "pinnacle_nvp": "+100",
@@ -689,6 +659,21 @@
       "pinnacle_limit": 350,
       "period": "FG",
       "event_id": "1631514582"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Chicago Cubs vs Athletics",
+      "bet": "Under 7.5",
+      "bet_type": "Total",
+      "betbck_odds": "+145",
+      "pinnacle_nvp": "+152",
+      "ev": "-2.62%",
+      "ev_val": -0.026232114467408474,
+      "start_time": "2026-06-03 07:05 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "period": "ALT",
+      "event_id": "1631435008"
     },
     {
       "sport": "baseball",
@@ -737,17 +722,17 @@
     },
     {
       "sport": "baseball",
-      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
-      "bet": "ML - Los Angeles Dodgers",
+      "matchup": "Los Angeles Angels vs Colorado Rockies",
+      "bet": "ML - Los Angeles Angels",
       "bet_type": "Moneyline",
-      "betbck_odds": "-190",
-      "pinnacle_nvp": "-176",
-      "ev": "-2.72%",
-      "ev_val": -0.027204723088792737,
-      "start_time": "2026-06-03 08:40 PM",
+      "betbck_odds": "-141",
+      "pinnacle_nvp": "-132",
+      "ev": "-2.66%",
+      "ev_val": -0.026640171892922226,
+      "start_time": "2026-06-03 08:38 PM",
       "league": "MLB",
       "pinnacle_limit": 10000,
-      "event_id": "1631435538",
+      "event_id": "1631435664",
       "period": "FG"
     },
     {
@@ -811,6 +796,21 @@
       "period": "FG"
     },
     {
+      "sport": "baseball",
+      "matchup": "St. Louis Cardinals vs Texas Rangers",
+      "bet": "ML - St. Louis Cardinals",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-112",
+      "pinnacle_nvp": "-105",
+      "ev": "-2.83%",
+      "ev_val": -0.028307421531240884,
+      "start_time": "2026-06-03 06:45 PM",
+      "league": "MLB",
+      "pinnacle_limit": 10000,
+      "event_id": "1631435650",
+      "period": "FG"
+    },
+    {
       "sport": "soccer",
       "matchup": "Chacarita Juniors vs Temperley",
       "bet": "Over 2.0",
@@ -842,6 +842,36 @@
     },
     {
       "sport": "baseball",
+      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
+      "bet": "ML - Los Angeles Dodgers",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-190",
+      "pinnacle_nvp": "-175",
+      "ev": "-2.91%",
+      "ev_val": -0.029061202624882987,
+      "start_time": "2026-06-03 08:40 PM",
+      "league": "MLB",
+      "pinnacle_limit": 10000,
+      "event_id": "1631435538",
+      "period": "FG"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Los Angeles Angels vs Colorado Rockies",
+      "bet": "Los Angeles Angels +1.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-245",
+      "pinnacle_nvp": "-222",
+      "ev": "-2.95%",
+      "ev_val": -0.02952221550232781,
+      "start_time": "2026-06-03 08:38 PM",
+      "league": "MLB",
+      "pinnacle_limit": 6000,
+      "event_id": "1631435664",
+      "period": "ALT"
+    },
+    {
+      "sport": "baseball",
       "matchup": "Boston Red Sox vs Baltimore Orioles",
       "bet": "ML - Baltimore Orioles",
       "bet_type": "Moneyline",
@@ -869,21 +899,6 @@
       "pinnacle_limit": 300,
       "event_id": "1631603568",
       "period": "FG"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "Chicago Cubs vs Athletics",
-      "bet": "Under 7.5",
-      "bet_type": "Total",
-      "betbck_odds": "+145",
-      "pinnacle_nvp": "+153",
-      "ev": "-3.05%",
-      "ev_val": -0.030470914127423754,
-      "start_time": "2026-06-03 07:05 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "period": "ALT",
-      "event_id": "1631435008"
     },
     {
       "sport": "basketball",
@@ -946,6 +961,21 @@
       "event_id": "1631435525"
     },
     {
+      "sport": "baseball",
+      "matchup": "Los Angeles Angels vs Colorado Rockies",
+      "bet": "Los Angeles Angels -1.5",
+      "bet_type": "Spread",
+      "betbck_odds": "+145",
+      "pinnacle_nvp": "+153",
+      "ev": "-3.20%",
+      "ev_val": -0.032003160806005515,
+      "start_time": "2026-06-03 08:38 PM",
+      "league": "MLB",
+      "pinnacle_limit": 10000,
+      "event_id": "1631435664",
+      "period": "FG"
+    },
+    {
       "sport": "soccer",
       "matchup": "Los Andes vs Estudiantes de Caseros",
       "bet": "Under 1.5",
@@ -956,7 +986,7 @@
       "ev_val": -0.033302497687326627,
       "start_time": "2026-06-06 01:00 PM",
       "league": "Argentina - Primera B Nacional",
-      "pinnacle_limit": 150,
+      "pinnacle_limit": 225,
       "period": "FG",
       "event_id": "1631596121"
     },
@@ -1019,21 +1049,6 @@
       "pinnacle_limit": 150,
       "period": "FG",
       "event_id": "1631599568"
-    },
-    {
-      "sport": "soccer",
-      "matchup": "Gimnasia y Tiro vs Ferrocarril Midland",
-      "bet": "ML - Ferrocarril Midland",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+170",
-      "pinnacle_nvp": "+180",
-      "ev": "-3.47%",
-      "ev_val": -0.03468001430103684,
-      "start_time": "2026-06-05 07:30 PM",
-      "league": "Argentina - Primera B Nacional",
-      "pinnacle_limit": 300,
-      "event_id": "1631599524",
-      "period": "FG"
     },
     {
       "sport": "baseball",
@@ -1112,6 +1127,21 @@
     },
     {
       "sport": "soccer",
+      "matchup": "Gimnasia y Tiro vs Ferrocarril Midland",
+      "bet": "ML - Ferrocarril Midland",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+170",
+      "pinnacle_nvp": "+180",
+      "ev": "-3.57%",
+      "ev_val": -0.03571428571428559,
+      "start_time": "2026-06-05 07:30 PM",
+      "league": "Argentina - Primera B Nacional",
+      "pinnacle_limit": 300,
+      "event_id": "1631599524",
+      "period": "FG"
+    },
+    {
+      "sport": "soccer",
       "matchup": "San Martin de Tucuman vs Quilmes",
       "bet": "ML - San Martin de Tucuman",
       "bet_type": "Moneyline",
@@ -1123,21 +1153,6 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 200,
       "event_id": "1631599678",
-      "period": "FG"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "St. Louis Cardinals vs Texas Rangers",
-      "bet": "ML - Texas Rangers",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+102",
-      "pinnacle_nvp": "+110",
-      "ev": "-3.58%",
-      "ev_val": -0.0357995226730311,
-      "start_time": "2026-06-03 06:45 PM",
-      "league": "MLB",
-      "pinnacle_limit": 10000,
-      "event_id": "1631435650",
       "period": "FG"
     },
     {
@@ -1201,21 +1216,6 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "Los Angeles Angels vs Colorado Rockies",
-      "bet": "ML - Colorado Rockies",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+131",
-      "pinnacle_nvp": "+140",
-      "ev": "-3.71%",
-      "ev_val": -0.037098791162984535,
-      "start_time": "2026-06-03 08:38 PM",
-      "league": "MLB",
-      "pinnacle_limit": 10000,
-      "event_id": "1631435664",
-      "period": "FG"
-    },
-    {
       "sport": "soccer",
       "matchup": "All Boys vs Racing de Cordoba",
       "bet": "Under 1.5",
@@ -1274,36 +1274,6 @@
       "pinnacle_limit": 7500,
       "period": "FG",
       "event_id": "1631434996"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
-      "bet": "Under 9.0",
-      "bet_type": "Total",
-      "betbck_odds": "-115",
-      "pinnacle_nvp": "-106",
-      "ev": "-3.83%",
-      "ev_val": -0.03828949722669539,
-      "start_time": "2026-06-03 08:40 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "period": "FG",
-      "event_id": "1631435538"
-    },
-    {
-      "sport": "basketball",
-      "matchup": "San Antonio Spurs vs New York Knicks",
-      "bet": "Under 218.0",
-      "bet_type": "Total",
-      "betbck_odds": "-115",
-      "pinnacle_nvp": "-106",
-      "ev": "-3.83%",
-      "ev_val": -0.03828949722669539,
-      "start_time": "2026-06-03 07:35 PM",
-      "league": "NBA",
-      "pinnacle_limit": 20000,
-      "period": "FG",
-      "event_id": "1631566921"
     },
     {
       "sport": "soccer",
@@ -1396,21 +1366,6 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "Los Angeles Angels vs Colorado Rockies",
-      "bet": "Under 7.5",
-      "bet_type": "Total",
-      "betbck_odds": "+140",
-      "pinnacle_nvp": "+151",
-      "ev": "-4.23%",
-      "ev_val": -0.042298483639265694,
-      "start_time": "2026-06-03 08:38 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "period": "ALT",
-      "event_id": "1631435664"
-    },
-    {
       "sport": "soccer",
       "matchup": "San Miguel vs Defensores de Belgrano",
       "bet": "Under 1.5",
@@ -1451,7 +1406,7 @@
       "ev_val": -0.042778483693350466,
       "start_time": "2026-06-06 01:00 PM",
       "league": "Argentina - Primera B Nacional",
-      "pinnacle_limit": 200,
+      "pinnacle_limit": 300,
       "event_id": "1631596121",
       "period": "FG"
     },
@@ -1528,21 +1483,6 @@
       "league": "MLB",
       "pinnacle_limit": 10000,
       "event_id": "1631435002",
-      "period": "FG"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
-      "bet": "Los Angeles Dodgers -1.5",
-      "bet_type": "Spread",
-      "betbck_odds": "-119",
-      "pinnacle_nvp": "-108",
-      "ev": "-4.45%",
-      "ev_val": -0.044477604125762404,
-      "start_time": "2026-06-03 08:40 PM",
-      "league": "MLB",
-      "pinnacle_limit": 10000,
-      "event_id": "1631435538",
       "period": "FG"
     },
     {
@@ -1649,6 +1589,21 @@
       "pinnacle_limit": 150,
       "period": "1H",
       "event_id": "1631543064"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Los Angeles Angels vs Colorado Rockies",
+      "bet": "Under 7.5",
+      "bet_type": "Total",
+      "betbck_odds": "+140",
+      "pinnacle_nvp": "+152",
+      "ev": "-4.61%",
+      "ev_val": -0.04610492845786962,
+      "start_time": "2026-06-03 08:38 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "period": "ALT",
+      "event_id": "1631435664"
     },
     {
       "sport": "hockey",
@@ -1816,6 +1771,21 @@
       "period": "FG"
     },
     {
+      "sport": "baseball",
+      "matchup": "Atlanta Braves vs Toronto Blue Jays",
+      "bet": "ML - Atlanta Braves",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-150",
+      "pinnacle_nvp": "-132",
+      "ev": "-5.09%",
+      "ev_val": -0.05087319665907375,
+      "start_time": "2026-06-03 06:15 PM",
+      "league": "MLB",
+      "pinnacle_limit": 10000,
+      "event_id": "1631435646",
+      "period": "FG"
+    },
+    {
       "sport": "soccer",
       "matchup": "Gimnasia y Tiro vs Ferrocarril Midland",
       "bet": "Over 1.5",
@@ -1828,6 +1798,21 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 225,
       "event_id": "1631599524",
+      "period": "FG"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
+      "bet": "Los Angeles Dodgers -1.5",
+      "bet_type": "Spread",
+      "betbck_odds": "-119",
+      "pinnacle_nvp": "-106",
+      "ev": "-5.09%",
+      "ev_val": -0.05088389146272221,
+      "start_time": "2026-06-03 08:40 PM",
+      "league": "MLB",
+      "pinnacle_limit": 10000,
+      "event_id": "1631435538",
       "period": "FG"
     },
     {
@@ -1846,19 +1831,19 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
-      "bet": "Over 9.0",
+      "sport": "basketball",
+      "matchup": "San Antonio Spurs vs New York Knicks",
+      "bet": "Under 217.5",
       "bet_type": "Total",
-      "betbck_odds": "-105",
-      "pinnacle_nvp": "+106",
-      "ev": "-5.22%",
-      "ev_val": -0.052242256125751285,
-      "start_time": "2026-06-03 08:40 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "event_id": "1631435538",
-      "period": "FG"
+      "betbck_odds": "-113",
+      "pinnacle_nvp": "-101",
+      "ev": "-5.28%",
+      "ev_val": -0.05278605416462845,
+      "start_time": "2026-06-03 07:35 PM",
+      "league": "NBA",
+      "pinnacle_limit": 20000,
+      "period": "FG",
+      "event_id": "1631566921"
     },
     {
       "sport": "soccer",
@@ -1921,6 +1906,21 @@
       "period": "FG"
     },
     {
+      "sport": "tennis",
+      "matchup": "Matteo Berrettini vs Matteo Arnaldi",
+      "bet": "ML - Matteo Berrettini",
+      "bet_type": "Moneyline",
+      "betbck_odds": "-201",
+      "pinnacle_nvp": "-170",
+      "ev": "-5.70%",
+      "ev_val": -0.05698209205859872,
+      "start_time": "2026-06-03 02:15 PM",
+      "league": "ATP French Open - QF",
+      "pinnacle_limit": 20100,
+      "event_id": "1631604070",
+      "period": "FG"
+    },
+    {
       "sport": "soccer",
       "matchup": "All Boys vs Racing de Cordoba",
       "bet": "Racing de Cordoba +0.5",
@@ -1948,21 +1948,6 @@
       "league": "Argentina - Primera B Nacional",
       "pinnacle_limit": 150,
       "event_id": "1631599626",
-      "period": "FG"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "Atlanta Braves vs Toronto Blue Jays",
-      "bet": "ML - Atlanta Braves",
-      "bet_type": "Moneyline",
-      "betbck_odds": "-151",
-      "pinnacle_nvp": "-131",
-      "ev": "-5.82%",
-      "ev_val": -0.058214359416918326,
-      "start_time": "2026-06-03 06:15 PM",
-      "league": "MLB",
-      "pinnacle_limit": 10000,
-      "event_id": "1631435646",
       "period": "FG"
     },
     {
@@ -2056,6 +2041,21 @@
       "period": "FG"
     },
     {
+      "sport": "baseball",
+      "matchup": "St. Louis Cardinals vs Texas Rangers",
+      "bet": "Over 6.5",
+      "bet_type": "Total",
+      "betbck_odds": "-225",
+      "pinnacle_nvp": "-187",
+      "ev": "-5.96%",
+      "ev_val": -0.05960648148148151,
+      "start_time": "2026-06-03 06:45 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "event_id": "1631435650",
+      "period": "ALT"
+    },
+    {
       "sport": "soccer",
       "matchup": "Chaco For Ever vs Ferro Carril Oeste",
       "bet": "Ferro Carril Oeste -0.5",
@@ -2146,21 +2146,6 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "St. Louis Cardinals vs Texas Rangers",
-      "bet": "Over 6.5",
-      "bet_type": "Total",
-      "betbck_odds": "-225",
-      "pinnacle_nvp": "-186",
-      "ev": "-6.14%",
-      "ev_val": -0.06143960724857411,
-      "start_time": "2026-06-03 06:45 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "event_id": "1631435650",
-      "period": "ALT"
-    },
-    {
       "sport": "soccer",
       "matchup": "San Miguel vs Defensores de Belgrano",
       "bet": "ML - San Miguel",
@@ -2174,6 +2159,21 @@
       "pinnacle_limit": 200,
       "event_id": "1631599630",
       "period": "FG"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Los Angeles Angels vs Colorado Rockies",
+      "bet": "Over 7.5",
+      "bet_type": "Total",
+      "betbck_odds": "-180",
+      "pinnacle_nvp": "-152",
+      "ev": "-6.29%",
+      "ev_val": -0.06291834002677366,
+      "start_time": "2026-06-03 08:38 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "event_id": "1631435664",
+      "period": "ALT"
     },
     {
       "sport": "baseball",
@@ -2201,7 +2201,7 @@
       "ev_val": -0.06356801093643216,
       "start_time": "2026-06-06 01:00 PM",
       "league": "Argentina - Primera B Nacional",
-      "pinnacle_limit": 200,
+      "pinnacle_limit": 300,
       "event_id": "1631596121",
       "period": "FG"
     },
@@ -2312,21 +2312,6 @@
     },
     {
       "sport": "baseball",
-      "matchup": "Los Angeles Angels vs Colorado Rockies",
-      "bet": "Over 7.5",
-      "bet_type": "Total",
-      "betbck_odds": "-180",
-      "pinnacle_nvp": "-151",
-      "ev": "-6.52%",
-      "ev_val": -0.06517094017094016,
-      "start_time": "2026-06-03 08:38 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "event_id": "1631435664",
-      "period": "ALT"
-    },
-    {
-      "sport": "baseball",
       "matchup": "Houston Astros vs Pittsburgh Pirates",
       "bet": "Over 6.5",
       "bet_type": "Total",
@@ -2371,21 +2356,6 @@
       "event_id": "1631603568"
     },
     {
-      "sport": "baseball",
-      "matchup": "Chicago Cubs vs Athletics",
-      "bet": "Over 9.0",
-      "bet_type": "Total",
-      "betbck_odds": "+100",
-      "pinnacle_nvp": "+115",
-      "ev": "-6.98%",
-      "ev_val": -0.06976744186046513,
-      "start_time": "2026-06-03 07:05 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "event_id": "1631435008",
-      "period": "FG"
-    },
-    {
       "sport": "soccer",
       "matchup": "San Martin de San Juan vs Nueva Chicago",
       "bet": "Over 2.0",
@@ -2399,21 +2369,6 @@
       "pinnacle_limit": 150,
       "event_id": "1631599519",
       "period": "FG"
-    },
-    {
-      "sport": "baseball",
-      "matchup": "Los Angeles Angels vs Colorado Rockies",
-      "bet": "Under 8.5",
-      "bet_type": "Total",
-      "betbck_odds": "-105",
-      "pinnacle_nvp": "+110",
-      "ev": "-7.03%",
-      "ev_val": -0.07029478458049898,
-      "start_time": "2026-06-03 08:38 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "period": "FG",
-      "event_id": "1631435664"
     },
     {
       "sport": "soccer",
@@ -2431,21 +2386,6 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "St. Louis Cardinals vs Texas Rangers",
-      "bet": "Under 6.5",
-      "bet_type": "Total",
-      "betbck_odds": "+165",
-      "pinnacle_nvp": "+186",
-      "ev": "-7.21%",
-      "ev_val": -0.07212885154061621,
-      "start_time": "2026-06-03 06:45 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "period": "ALT",
-      "event_id": "1631435650"
-    },
-    {
       "sport": "tennis",
       "matchup": "Marta Kostyuk vs Mirra Andreeva",
       "bet": "ML - Mirra Andreeva",
@@ -2459,6 +2399,21 @@
       "pinnacle_limit": 21750,
       "event_id": "1631621632",
       "period": "FG"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Los Angeles Angels vs Colorado Rockies",
+      "bet": "Under 8.5",
+      "bet_type": "Total",
+      "betbck_odds": "-105",
+      "pinnacle_nvp": "+110",
+      "ev": "-7.25%",
+      "ev_val": -0.07250311050786107,
+      "start_time": "2026-06-03 08:38 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "period": "FG",
+      "event_id": "1631435664"
     },
     {
       "sport": "soccer",
@@ -2536,6 +2491,21 @@
       "period": "FG"
     },
     {
+      "sport": "baseball",
+      "matchup": "St. Louis Cardinals vs Texas Rangers",
+      "bet": "Under 6.5",
+      "bet_type": "Total",
+      "betbck_odds": "+165",
+      "pinnacle_nvp": "+187",
+      "ev": "-7.50%",
+      "ev_val": -0.07504363001745207,
+      "start_time": "2026-06-03 06:45 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "period": "ALT",
+      "event_id": "1631435650"
+    },
+    {
       "sport": "soccer",
       "matchup": "CA Atlanta vs Gimnasia Jujuy",
       "bet": "CA Atlanta -0.5",
@@ -2591,7 +2561,7 @@
       "ev_val": -0.07607498096095933,
       "start_time": "2026-06-06 01:00 PM",
       "league": "Argentina - Primera B Nacional",
-      "pinnacle_limit": 150,
+      "pinnacle_limit": 225,
       "event_id": "1631596121",
       "period": "FG"
     },
@@ -2731,19 +2701,19 @@
       "period": "FG"
     },
     {
-      "sport": "baseball",
-      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
-      "bet": "Over 7.5",
-      "bet_type": "Total",
-      "betbck_odds": "-210",
-      "pinnacle_nvp": "-164",
-      "ev": "-8.20%",
-      "ev_val": -0.08197109689647009,
-      "start_time": "2026-06-03 08:40 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "event_id": "1631435538",
-      "period": "ALT"
+      "sport": "tennis",
+      "matchup": "Matteo Berrettini vs Matteo Arnaldi",
+      "bet": "ML - Matteo Arnaldi",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+148",
+      "pinnacle_nvp": "+170",
+      "ev": "-8.11%",
+      "ev_val": -0.08114116339384958,
+      "start_time": "2026-06-03 02:15 PM",
+      "league": "ATP French Open - QF",
+      "pinnacle_limit": 20100,
+      "event_id": "1631604070",
+      "period": "FG"
     },
     {
       "sport": "soccer",
@@ -2821,21 +2791,6 @@
       "period": "1H"
     },
     {
-      "sport": "baseball",
-      "matchup": "Chicago Cubs vs Athletics",
-      "bet": "Over 7.5",
-      "bet_type": "Total",
-      "betbck_odds": "-195",
-      "pinnacle_nvp": "-153",
-      "ev": "-8.59%",
-      "ev_val": -0.08590905569757534,
-      "start_time": "2026-06-03 07:05 PM",
-      "league": "MLB",
-      "pinnacle_limit": 7500,
-      "event_id": "1631435008",
-      "period": "ALT"
-    },
-    {
       "sport": "soccer",
       "matchup": "San Martin de San Juan vs Nueva Chicago",
       "bet": "Nueva Chicago +0.5",
@@ -2896,6 +2851,21 @@
       "period": "FG"
     },
     {
+      "sport": "baseball",
+      "matchup": "Chicago Cubs vs Athletics",
+      "bet": "Over 7.5",
+      "bet_type": "Total",
+      "betbck_odds": "-195",
+      "pinnacle_nvp": "-152",
+      "ev": "-8.87%",
+      "ev_val": -0.0886623416743898,
+      "start_time": "2026-06-03 07:05 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "event_id": "1631435008",
+      "period": "ALT"
+    },
+    {
       "sport": "soccer",
       "matchup": "Guemes vs Deportivo Maipu",
       "bet": "Under 2.0",
@@ -2911,18 +2881,33 @@
       "event_id": "1631596170"
     },
     {
-      "sport": "basketball",
-      "matchup": "Seattle Storm vs Phoenix Mercury",
-      "bet": "ML - Seattle Storm",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+200",
-      "pinnacle_nvp": "+230",
-      "ev": "-9.17%",
-      "ev_val": -0.09173478655767486,
-      "start_time": "2026-06-03 09:05 PM",
-      "league": "WNBA",
-      "pinnacle_limit": 2000,
-      "event_id": "1631435017",
+      "sport": "baseball",
+      "matchup": "Chicago Cubs vs Athletics",
+      "bet": "Under 8.5",
+      "bet_type": "Total",
+      "betbck_odds": "-112",
+      "pinnacle_nvp": "+108",
+      "ev": "-9.22%",
+      "ev_val": -0.09215484755053105,
+      "start_time": "2026-06-03 07:05 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "period": "FG",
+      "event_id": "1631435008"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
+      "bet": "Over 9.0",
+      "bet_type": "Total",
+      "betbck_odds": "-104",
+      "pinnacle_nvp": "+117",
+      "ev": "-9.61%",
+      "ev_val": -0.09606522509748305,
+      "start_time": "2026-06-03 08:40 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "event_id": "1631435538",
       "period": "FG"
     },
     {
@@ -2941,19 +2926,19 @@
       "period": "1H"
     },
     {
-      "sport": "baseball",
-      "matchup": "Chicago Cubs vs Athletics",
-      "bet": "Athletics -1.5",
-      "bet_type": "Spread",
-      "betbck_odds": "+165",
-      "pinnacle_nvp": "+195",
-      "ev": "-10.29%",
-      "ev_val": -0.10291130670277593,
-      "start_time": "2026-06-03 07:05 PM",
-      "league": "MLB",
-      "pinnacle_limit": 6000,
-      "event_id": "1631435008",
-      "period": "ALT"
+      "sport": "basketball",
+      "matchup": "Seattle Storm vs Phoenix Mercury",
+      "bet": "ML - Seattle Storm",
+      "bet_type": "Moneyline",
+      "betbck_odds": "+200",
+      "pinnacle_nvp": "+233",
+      "ev": "-9.88%",
+      "ev_val": -0.0988284770201262,
+      "start_time": "2026-06-03 09:05 PM",
+      "league": "WNBA",
+      "pinnacle_limit": 2000,
+      "event_id": "1631435017",
+      "period": "FG"
     },
     {
       "sport": "baseball",
@@ -2971,6 +2956,21 @@
       "period": "ALT"
     },
     {
+      "sport": "baseball",
+      "matchup": "Chicago Cubs vs Athletics",
+      "bet": "Athletics -1.5",
+      "bet_type": "Spread",
+      "betbck_odds": "+165",
+      "pinnacle_nvp": "+196",
+      "ev": "-10.44%",
+      "ev_val": -0.10442717134166957,
+      "start_time": "2026-06-03 07:05 PM",
+      "league": "MLB",
+      "pinnacle_limit": 6000,
+      "event_id": "1631435008",
+      "period": "ALT"
+    },
+    {
       "sport": "soccer",
       "matchup": "Guemes vs Deportivo Maipu",
       "bet": "ML - Deportivo Maipu",
@@ -2984,6 +2984,21 @@
       "pinnacle_limit": 200,
       "event_id": "1631596170",
       "period": "FG"
+    },
+    {
+      "sport": "baseball",
+      "matchup": "Arizona Diamondbacks vs Los Angeles Dodgers",
+      "bet": "Over 7.5",
+      "bet_type": "Total",
+      "betbck_odds": "-210",
+      "pinnacle_nvp": "-153",
+      "ev": "-10.80%",
+      "ev_val": -0.10804200834412314,
+      "start_time": "2026-06-03 08:40 PM",
+      "league": "MLB",
+      "pinnacle_limit": 7500,
+      "event_id": "1631435538",
+      "period": "ALT"
     },
     {
       "sport": "soccer",
@@ -3101,7 +3116,7 @@
       "ev_val": -0.13731128684399718,
       "start_time": "2026-06-04 10:00 AM",
       "league": "WTA French Open - SF",
-      "pinnacle_limit": 3050,
+      "pinnacle_limit": 4350,
       "event_id": "1631640295",
       "period": "FG"
     },
@@ -3119,23 +3134,8 @@
       "pinnacle_limit": 150,
       "event_id": "1631543064",
       "period": "1H"
-    },
-    {
-      "sport": "tennis",
-      "matchup": "Matteo Berrettini vs Matteo Arnaldi",
-      "bet": "ML - Matteo Arnaldi",
-      "bet_type": "Moneyline",
-      "betbck_odds": "+148",
-      "pinnacle_nvp": "+190",
-      "ev": "-14.54%",
-      "ev_val": -0.14541695382494835,
-      "start_time": "2026-06-03 01:15 PM",
-      "league": "ATP French Open - QF",
-      "pinnacle_limit": 20100,
-      "event_id": "1631604070",
-      "period": "FG"
     }
   ],
   "total_events": 209,
-  "last_run": "2026-06-03T12:46:14.858831"
+  "last_run": "2026-06-03T13:09:31.564102"
 }
