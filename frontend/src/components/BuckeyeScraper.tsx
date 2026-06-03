@@ -52,6 +52,7 @@ const BuckeyeScraper: React.FC = () => {
   const [parlays, setParlays] = useState<any | null>(null);
   const [parlaysExpanded, setParlaysExpanded] = useState(false);
   const [parlayLegFilter, setParlayLegFilter] = useState<'all' | 2 | 3 | 4>('all');
+  const [parlayNext24h, setParlayNext24h] = useState(false);
 
   // EV range filter (display only)
   const EV_MAX_SLIDER = 20;
@@ -294,6 +295,7 @@ const BuckeyeScraper: React.FC = () => {
     setWongTeasers(null);        // Clear Wong Teaser results
     setParlays(null);            // Clear Parlay results
     setParlaysExpanded(false);   // Always start collapsed for new run
+    setParlayNext24h(false);     // Reset 24h filter for new run
     setAceMarkets([]);    // Clear ACE results so only Buckeye shows
     setAceLastUpdate(null);
     try {
@@ -1176,7 +1178,27 @@ const BuckeyeScraper: React.FC = () => {
       {/* ══════════════════════════════════════════════════════════════════
           PARLAYS
       ══════════════════════════════════════════════════════════════════ */}
-      {parlays && (
+      {parlays && (() => {
+        // ── 24h helper ──────────────────────────────────────────────────────
+        const isWithin24h = (startTimeStr: string): boolean => {
+          if (!startTimeStr) return false;
+          const m = startTimeStr.match(/(\d{4}-\d{2}-\d{2})\s+(\d+:\d+)\s*(AM|PM)?/i);
+          if (!m) return false;
+          const [, datePart, timePart, ampm] = m;
+          let [hrs, mins] = timePart.split(':').map(Number);
+          if (ampm) {
+            if (ampm.toUpperCase() === 'PM' && hrs !== 12) hrs += 12;
+            if (ampm.toUpperCase() === 'AM' && hrs === 12) hrs = 0;
+          }
+          const startDate = new Date(`${datePart}T${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:00`);
+          const now = new Date();
+          return startDate >= now && startDate <= new Date(now.getTime() + 24 * 3600 * 1000);
+        };
+        const allLegs24h = (p: any) => (p.legs || []).every((l: any) => isWithin24h(l.start_time));
+        const parlayList: any[] = parlays.parlays || [];
+        const count24h = parlayList.filter(allLegs24h).length;
+
+        return (
         <Box sx={{ mt: 1.5 }}>
           {/* Header row */}
           <Box
@@ -1194,9 +1216,9 @@ const BuckeyeScraper: React.FC = () => {
               <Typography sx={{ color: '#64B5F6', fontWeight: 600, fontSize: '0.9rem' }}>
                 🎲 Parlays
               </Typography>
-              <Box sx={{ display: 'flex', gap: 0.75 }}>
+              <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center' }}>
                 {([2, 3, 4] as const).map(n => {
-                  const count = (parlays.parlays || []).filter((p: any) => p.n_legs === n).length;
+                  const count = parlayList.filter((p: any) => p.n_legs === n).length;
                   return count > 0 ? (
                     <Box key={n} sx={{ px: 1, py: 0.25, bgcolor: 'rgba(100,181,246,0.12)', border: '1px solid rgba(100,181,246,0.25)', borderRadius: 1, fontSize: '0.72rem', color: '#64B5F6' }}>
                       {n}-leg ×{count}
@@ -1208,6 +1230,21 @@ const BuckeyeScraper: React.FC = () => {
                     {parlays.eligible_legs} eligible legs
                   </Box>
                 )}
+                {/* 24h toggle */}
+                <Box
+                  onClick={(e) => { e.stopPropagation(); setParlayNext24h(v => !v); }}
+                  sx={{
+                    px: 1, py: 0.25,
+                    fontSize: '0.7rem', fontWeight: parlayNext24h ? 700 : 400,
+                    color: parlayNext24h ? '#FFB300' : '#555',
+                    bgcolor: parlayNext24h ? 'rgba(255,179,0,0.1)' : 'transparent',
+                    border: `1px solid ${parlayNext24h ? 'rgba(255,179,0,0.4)' : 'rgba(255,255,255,0.06)'}`,
+                    borderRadius: 1,
+                    cursor: 'pointer', userSelect: 'none',
+                  }}
+                >
+                  ⏱ 24h {parlayNext24h && count24h > 0 ? `(${count24h})` : ''}
+                </Box>
               </Box>
             </Box>
             {parlaysExpanded
@@ -1258,8 +1295,8 @@ const BuckeyeScraper: React.FC = () => {
 
                   {/* Parlay cards */}
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {(parlays.parlays || [])
-                      .filter((p: any) => parlayLegFilter === 'all' || p.n_legs === parlayLegFilter)
+                    {parlayList
+                      .filter((p: any) => (parlayLegFilter === 'all' || p.n_legs === parlayLegFilter) && (!parlayNext24h || allLegs24h(p)))
                       .map((parlay: any, pi: number) => (
                       <Box key={pi} sx={{
                         p: 1.5,
@@ -1340,7 +1377,8 @@ const BuckeyeScraper: React.FC = () => {
             </Box>
           </Collapse>
         </Box>
-      )}
+        );
+      })()}
     </>
   );
 };
