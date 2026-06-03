@@ -1150,8 +1150,8 @@ const BuckeyeScraper: React.FC = () => {
               <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
                 Historical win rates: 75.8%/leg (6pt, 2003+ data) · 83%/leg (10pt, road only, 3-team -120).
                 Qualifiers cross key numbers 3 & 7 (6pt) or 3, 7 & 10 (10pt).
-                <strong style={{ color: '#555' }}> Blended EV</strong> = per-leg (NVP implied prob + historical) ÷ 2, multiplied across legs.
-                Hist EV shown for reference (blanket historical rate). Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game (main line only).
+                <strong style={{ color: '#555' }}> EV</strong> = per-combo: baseline 75.8% + 1% if O/U ≤49 + small main-line-EV adj, multiplied across legs.
+                Hist EV = blanket historical flat rate (reference only). Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game (main line only).
               </Typography>
             </Box>
           </Collapse>

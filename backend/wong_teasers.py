@@ -15,8 +15,10 @@ BetBCK NFL Teaser Odds:
   6pt 2-team: -110   6pt 3-team: +160   6pt 4-team: +300   6pt 5-team: +450
   10pt 3-team: -120, ties lose
 
-EV Calculation (Blended NVP + Historical, per combo):
-  projected_leg_prob = (nvp_implied_prob + historical_rate) / 2
+EV Calculation (per combo, historical-rate-anchored):
+  projected_leg_prob = historical_rate
+                       + 0.01 if game_total ≤ 49 (low-total bonus)
+                       + (main_line_ev_pct / 100) * 0.5 (EV-table legs only)
   teaser_win_prob    = product of all projected_leg_probs
   EV% = (teaser_win_prob * decimal_payout - 1) * 100
 
@@ -145,23 +147,17 @@ def _teaser_ev_hist(n_teams: int, win_rate: float, american_odds: int) -> float:
 
 
 def _combo_ev_blended(
-    main_line_evs: List[float],
-    historical_rate: float,
+    proj_probs: List[float],
     american_odds: int,
 ) -> Tuple[float, float]:
     """
-    Per-combo EV using historical win rate as the base, with a per-leg
-    adjustment driven by the main line EV% (BetBCK odds vs Pinnacle NVP):
-      projected_leg_prob = historical_rate + (main_line_ev_pct / 100) * 0.5
-    A leg with +6% main-line EV gets a +3pp boost over the baseline 75.8%.
-    Legs with no Pinnacle match (main_line_ev = 0) use exactly historical_rate.
-      teaser_win_prob = product of projected probs
+    Per-combo EV given pre-computed per-leg projected probabilities.
+      teaser_win_prob = product of proj_probs
       EV% = (teaser_win_prob * decimal - 1) * 100
     Returns (ev_pct, teaser_win_prob_pct).
     """
-    projected = [historical_rate + (ev / 100.0) * 0.5 for ev in main_line_evs]
     teaser_win_prob = 1.0
-    for p in projected:
+    for p in proj_probs:
         teaser_win_prob *= p
     decimal = _american_to_decimal(american_odds)
     ev_pct = (teaser_win_prob * decimal - 1.0) * 100.0
@@ -261,6 +257,12 @@ def _scan_betbck_for_nfl(
                 line_sign = '+' if line > 0 else ''
                 bet_str   = f"{team} {line_sign}{line:g}"
 
+                try:
+                    game_total = float(odds_data.get('game_total_line') or 0) or None
+                except (TypeError, ValueError):
+                    game_total = None
+                low_total = game_total is not None and game_total <= 49.0
+
                 leg_base = {
                     'matchup':          matchup,
                     'bet':              bet_str,
@@ -268,8 +270,8 @@ def _scan_betbck_for_nfl(
                     'pin_nvp':          odds_str,   # BetBCK odds (display only)
                     'pin_limit':        NFL_BETBCK_DEFAULT_LIMIT,
                     'is_road':          is_road,
-                    'game_total':       None,
-                    'low_total':        False,
+                    'game_total':       game_total,
+                    'low_total':        low_total,
                     'start_time':       start_dt,
                     'event_id':         game_id,
                     'league':           'NFL',
@@ -283,7 +285,7 @@ def _scan_betbck_for_nfl(
                     if is_fav_6pt or is_dog_6pt:
                         teased   = round(line + 6.0, 1)
                         role     = 'favorite' if line < 0 else 'underdog'
-                        priority = bool(is_road)  # no game_total available
+                        priority = bool(is_road) and low_total
                         legs_6pt.append({**leg_base, 'teased_line': teased, 'role': role, 'priority': priority})
                         found_6pt = True
 
@@ -330,51 +332,74 @@ def _generate_combos(
             min_limit   = min(l['pin_limit'] for l in combo_legs)
             n_priority  = sum(1 for l in combo_legs if l.get('priority'))
 
-            # Per-leg main line EV% (0.0 for betbck-direct legs without Pinnacle match)
-            main_line_evs = [l.get('main_line_ev_pct', 0.0) for l in combo_legs]
-
-            blended_ev, win_prob_blended = _combo_ev_blended(main_line_evs, historical_rate, american)
-
-            # Build per-leg detail with individual projected probs
+            # Per-leg projected probabilities (true per-combo differentiation)
+            #   base: historical_rate (0.758 / 0.83)
+            #   +0.01 if game has a low total (≤49) — ~1% historically per leg
+            #   + small EV-table main-line-EV adjustment (0 for betbck-direct legs)
             legs_out = []
-            for l, leg_ev in zip(combo_legs, main_line_evs):
-                proj_p = historical_rate + (leg_ev / 100.0) * 0.5
+            proj_probs = []
+            for l in combo_legs:
+                low_total_bonus = 0.01 if l.get('low_total') else 0.0
+                ev_adj = l.get('main_line_ev_pct', 0.0) / 100.0 * 0.5
+                proj_p = historical_rate + low_total_bonus + ev_adj
+                proj_probs.append(proj_p)
                 legs_out.append({
-                    'matchup':           l['matchup'],
-                    'bet':               l['bet'],
-                    'spread_line':       l['spread_line'],
-                    'teased_line':       l['teased_line'],
-                    'pin_nvp':           l['pin_nvp'],
-                    'main_line_ev_pct':  leg_ev,
+                    'matchup':            l['matchup'],
+                    'bet':                l['bet'],
+                    'spread_line':        l['spread_line'],
+                    'teased_line':        l['teased_line'],
+                    'pin_nvp':            l['pin_nvp'],
+                    'main_line_ev_pct':   l.get('main_line_ev_pct', 0.0),
                     'projected_prob_pct': round(proj_p * 100.0, 1),
-                    'pin_limit':         l['pin_limit'],
-                    'is_road':           l['is_road'],
-                    'game_total':        l['game_total'],
-                    'low_total':         l['low_total'],
-                    'start_time':        l['start_time'],
-                    'league':            l['league'],
+                    'pin_limit':          l['pin_limit'],
+                    'is_road':            l['is_road'],
+                    'game_total':         l['game_total'],
+                    'low_total':          l['low_total'],
+                    'start_time':         l['start_time'],
+                    'league':             l['league'],
                 })
 
+            blended_ev, win_prob_blended = _combo_ev_blended(proj_probs, american)
+            all_low_total = all(l.get('low_total') for l in combo_legs)
+
             combos.append({
-                'teaser_type':              teaser_type,
-                'n_teams':                  n,
-                'book_odds':               _fmt_odds(american),
-                'win_rate_hist_pct':        round(historical_rate * 100.0, 1),
-                'combined_prob_hist_pct':   round((historical_rate ** n) * 100.0, 1),
+                'teaser_type':               teaser_type,
+                'n_teams':                   n,
+                'book_odds':                 _fmt_odds(american),
+                'win_rate_hist_pct':         round(historical_rate * 100.0, 1),
+                'combined_prob_hist_pct':    round((historical_rate ** n) * 100.0, 1),
                 'combined_prob_blended_pct': round(win_prob_blended, 1),
-                'ev_hist_pct':             round(hist_ev, 2),
-                'ev_blended_pct':          round(blended_ev, 2),
-                'ev_pct':                  round(blended_ev, 2),   # primary sort key
-                'break_even_pct':          round(be_rate * 100.0, 1),
-                'flagged':                 blended_ev >= ev_flag,
-                'min_pin_limit':           min_limit,
-                'priority_score':          n_priority,
-                'legs':                    legs_out,
+                'ev_hist_pct':               round(hist_ev, 2),
+                'ev_blended_pct':            round(blended_ev, 2),
+                'ev_pct':                    round(blended_ev, 2),
+                'break_even_pct':            round(be_rate * 100.0, 1),
+                'flagged':                   blended_ev >= ev_flag,
+                'all_low_total':             all_low_total,
+                'min_pin_limit':             min_limit,
+                'priority_score':            n_priority,
+                'legs':                      legs_out,
             })
 
-    # Sort: flagged first, then by blended EV desc, then priority desc
-    combos.sort(key=lambda x: (not x['flagged'], -x['priority_score'], -x['ev_blended_pct']))
+    # Sort: all-low-total combos first, then by blended EV desc (true per-combo)
+    combos.sort(key=lambda x: (not x['all_low_total'], -x['priority_score'], -x['ev_blended_pct']))
     return combos
+
+
+def _balanced_combos(combos: List[Dict], per_size: int = 15) -> List[Dict]:
+    """
+    Return up to `per_size` combos per n_teams group, preserving each group's
+    internal sort order (all_low_total → priority_score → ev_blended_pct).
+    This guarantees 2-team combos are always included even when 5-team combos
+    have higher raw EV and would crowd them out of a flat slice.
+    """
+    from collections import defaultdict
+    buckets: dict = defaultdict(list)
+    for c in combos:
+        buckets[c['n_teams']].append(c)
+    result = []
+    for n in sorted(buckets):
+        result.extend(buckets[n][:per_size])
+    return result
 
 
 # ── Main entry point ──────────────────────────────────────────────────────────
@@ -531,7 +556,7 @@ def calculate_wong_teasers(
             {k: v for k, v in l.items() if k != 'priority'}
             for l in legs_10pt
         ],
-        'combos_6pt':  combos_6pt[:60],
+        'combos_6pt':  _balanced_combos(combos_6pt, per_size=15),
         'combos_10pt': combos_10pt[:20],
         'breakeven':   breakeven,
         'config': {
@@ -541,6 +566,6 @@ def calculate_wong_teasers(
             'ev_flag_6pt':        ev_flag_6pt,
             'ev_flag_10pt':       ev_flag_10pt,
             'teaser_type':        'sides only, no totals (NFL full-game spreads)',
-            'ev_method':          'historical_rate + (main_line_ev_pct / 100) * 0.5 per leg',
+            'ev_method':          'historical_rate + 0.01*(low_total) + (main_line_ev_pct/100)*0.5 per leg',
         },
     }
