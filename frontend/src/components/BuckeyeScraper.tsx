@@ -48,6 +48,7 @@ const BuckeyeScraper: React.FC = () => {
   const [wongExpanded, setWongExpanded] = useState(false);
   const [wongTeaserType, setWongTeaserType] = useState<'6pt' | '10pt'>('6pt');
   const [wongComboView, setWongComboView] = useState<'top8' | 'grouped'>('top8');
+  const [combosExpanded, setCombosExpanded] = useState(false);
 
   // EV range filter (display only)
   const EV_MAX_SLIDER = 20;
@@ -281,6 +282,7 @@ const BuckeyeScraper: React.FC = () => {
     setMessage(null);
     setBuckeyeMarkets([]); // Clear Buckeye data
     setBuckeyeLastUpdate(null);
+    setWongTeasers(null); // Clear Wong Teaser results
     setAceMarkets([]);    // Clear ACE results so only Buckeye shows
     setAceLastUpdate(null);
     try {
@@ -1086,12 +1088,9 @@ const BuckeyeScraper: React.FC = () => {
                           +{combo.ev_blended_pct ?? combo.ev_pct}% blended
                         </Typography>
                       </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Box sx={{ display: 'flex' }}>
                         <Typography sx={{ fontSize: '0.62rem', color: '#666' }}>
                           Lim {(combo.min_pin_limit / 1000).toFixed(0)}k+
-                        </Typography>
-                        <Typography sx={{ fontSize: '0.62rem', color: '#666' }}>
-                          hist: +{combo.ev_hist_pct}%
                         </Typography>
                       </Box>
                     </Box>
@@ -1100,10 +1099,18 @@ const BuckeyeScraper: React.FC = () => {
 
                 return (
                   <Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
-                      <Typography sx={{ fontSize: '0.74rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Best Combinations ({combos.length} total)
-                      </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: combosExpanded ? 1.5 : 0 }}>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 0.75, cursor: 'pointer', userSelect: 'none' }}
+                        onClick={() => setCombosExpanded(v => !v)}
+                      >
+                        {combosExpanded
+                          ? <ExpandLess sx={{ fontSize: '0.9rem', color: '#666' }} />
+                          : <ExpandMore sx={{ fontSize: '0.9rem', color: '#666' }} />}
+                        <Typography sx={{ fontSize: '0.74rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          Best Combinations ({combos.length} total)
+                        </Typography>
+                      </Box>
                       <Box sx={{ display: 'flex', gap: 0.75 }}>
                         {(['top8', 'grouped'] as const).map(v => (
                           <Button key={v} size="small" onClick={() => setWongComboView(v)} sx={{
@@ -1119,13 +1126,13 @@ const BuckeyeScraper: React.FC = () => {
                       </Box>
                     </Box>
 
-                    {wongComboView === 'top8' && (
+                    {combosExpanded && wongComboView === 'top8' && (
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                         {top8.map((combo, ci) => <ComboCard key={ci} combo={combo} ci={ci} />)}
                       </Box>
                     )}
 
-                    {wongComboView === 'grouped' && Object.entries(bySize).sort(([a], [b]) => Number(a) - Number(b)).map(([n, grpCombos]) => (
+                    {combosExpanded && wongComboView === 'grouped' && Object.entries(bySize).sort(([a], [b]) => Number(a) - Number(b)).map(([n, grpCombos]) => (
                       <Box key={n} sx={{ mb: 2 }}>
                         <Typography sx={{ fontSize: '0.76rem', color: '#888', fontWeight: 600, mb: 1 }}>
                           {n}-Team {wongTeaserType} &nbsp;
