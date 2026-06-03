@@ -47,7 +47,7 @@ const BuckeyeScraper: React.FC = () => {
   const [wongTeasers, setWongTeasers] = useState<any | null>(null);
   const [wongExpanded, setWongExpanded] = useState(false);
   const [wongTeaserType, setWongTeaserType] = useState<'6pt' | '10pt'>('6pt');
-  const [wongComboView, setWongComboView] = useState<'top8' | 'grouped'>('top8');
+  const [wongComboView, setWongComboView] = useState<'best' | 'grouped'>('grouped');
   const [combosExpanded, setCombosExpanded] = useState(false);
   const [parlays, setParlays] = useState<any | null>(null);
   const [parlaysExpanded, setParlaysExpanded] = useState(false);
@@ -998,14 +998,21 @@ const BuckeyeScraper: React.FC = () => {
 
               {/* Legs grid */}
               {(() => {
-                const legs = wongTeaserType === '6pt'
+                const rawLegs = wongTeaserType === '6pt'
                   ? (wongTeasers.legs_6pt || [])
                   : (wongTeasers.legs_10pt || []);
-                if (legs.length === 0) return null;
+                if (rawLegs.length === 0) return null;
+                // Sort: priority (road + low total) first, then by underlying Pinnacle EV desc
+                const legs = [...rawLegs].sort((a: any, b: any) => {
+                  const aPri = (a.is_road && a.low_total) ? 1 : 0;
+                  const bPri = (b.is_road && b.low_total) ? 1 : 0;
+                  if (bPri !== aPri) return bPri - aPri;
+                  return (b.main_line_ev_pct ?? 0) - (a.main_line_ev_pct ?? 0);
+                });
                 return (
                   <Box sx={{ mb: 2.5 }}>
                     <Typography sx={{ fontSize: '0.74rem', color: '#666', mb: 1, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Qualifying Legs ({legs.length})
+                      Qualifying Legs ({legs.length}) — ranked by priority then spread EV
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                       {legs.map((leg: any, i: number) => (
@@ -1017,9 +1024,16 @@ const BuckeyeScraper: React.FC = () => {
                           minWidth: 200,
                           flex: '0 1 auto',
                         }}>
-                          <Typography sx={{ fontSize: '0.78rem', color: '#ddd', fontWeight: 600, lineHeight: 1.3 }}>
-                            {leg.bet}
-                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 1 }}>
+                            <Typography sx={{ fontSize: '0.78rem', color: '#ddd', fontWeight: 600, lineHeight: 1.3 }}>
+                              {leg.bet}
+                            </Typography>
+                            {leg.main_line_ev_pct != null && leg.main_line_ev_pct !== 0 && (
+                              <Box sx={{ fontSize: '0.68rem', color: leg.main_line_ev_pct >= 0 ? '#4CAF50' : '#aaa', fontFamily: 'monospace', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                                {leg.main_line_ev_pct >= 0 ? '+' : ''}{leg.main_line_ev_pct.toFixed(2)}% EV
+                              </Box>
+                            )}
+                          </Box>
                           <Typography sx={{ fontSize: '0.7rem', color: '#777', lineHeight: 1.3 }}>
                             {leg.matchup}
                           </Typography>
@@ -1029,11 +1043,6 @@ const BuckeyeScraper: React.FC = () => {
                             </Box>
                             {leg.pin_nvp && (
                               <Box sx={{ fontSize: '0.68rem', color: '#888', fontFamily: 'monospace' }}>NVP {leg.pin_nvp}</Box>
-                            )}
-                            {leg.projected_prob_pct != null && (
-                              <Box sx={{ fontSize: '0.68rem', color: '#4CAF50', fontFamily: 'monospace', fontWeight: 600 }}>
-                                proj {leg.projected_prob_pct}%
-                              </Box>
                             )}
                           </Box>
                           <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap' }}>
@@ -1058,7 +1067,12 @@ const BuckeyeScraper: React.FC = () => {
                 const bySize: Record<number, any[]> = {};
                 combos.forEach(c => { (bySize[c.n_teams] = bySize[c.n_teams] || []).push(c); });
 
-                const top8 = [...combos].sort((a, b) => (b.ev_blended_pct ?? b.ev_pct) - (a.ev_blended_pct ?? a.ev_pct)).slice(0, 8);
+                // Balanced "best picks": top 2 per size bucket (avoids 5-leggers monopolising the list)
+                const bestPicks: any[] = [];
+                Object.keys(bySize).sort((a, b) => Number(a) - Number(b)).forEach(n => {
+                  const sorted = [...bySize[Number(n)]].sort((a, b) => (b.ev_blended_pct ?? b.ev_pct) - (a.ev_blended_pct ?? a.ev_pct));
+                  bestPicks.push(...sorted.slice(0, 2));
+                });
 
                 const ComboCard = ({ combo, ci }: { combo: any; ci: number }) => (
                   <Box key={ci} sx={{
@@ -1125,7 +1139,7 @@ const BuckeyeScraper: React.FC = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', gap: 0.75 }}>
-                        {(['top8', 'grouped'] as const).map(v => (
+                        {(['best', 'grouped'] as const).map(v => (
                           <Button key={v} size="small" onClick={() => setWongComboView(v)} sx={{
                             fontSize: '0.7rem', textTransform: 'none', borderRadius: 1.5, px: 1.5, py: 0.3,
                             color: wongComboView === v ? '#FFA500' : '#555',
@@ -1133,15 +1147,15 @@ const BuckeyeScraper: React.FC = () => {
                             bgcolor: wongComboView === v ? 'rgba(255,165,0,0.07)' : 'transparent',
                             '&:hover': { borderColor: 'rgba(255,165,0,0.3)', color: '#FFA500' },
                           }}>
-                            {v === 'top8' ? 'Top 8 Overall' : 'By Size'}
+                            {v === 'best' ? 'Best Picks' : 'By Size'}
                           </Button>
                         ))}
                       </Box>
                     </Box>
 
-                    {combosExpanded && wongComboView === 'top8' && (
+                    {combosExpanded && wongComboView === 'best' && (
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                        {top8.map((combo, ci) => <ComboCard key={ci} combo={combo} ci={ci} />)}
+                        {bestPicks.map((combo, ci) => <ComboCard key={ci} combo={combo} ci={ci} />)}
                       </Box>
                     )}
 
@@ -1153,7 +1167,7 @@ const BuckeyeScraper: React.FC = () => {
                           &nbsp;· Break-even <span style={{ color: '#999' }}>{grpCombos[0].break_even_pct}%/leg</span>
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                          {grpCombos.slice(0, 6).map((combo: any, ci: number) => (
+                          {grpCombos.slice(0, 8).map((combo: any, ci: number) => (
                             <ComboCard key={ci} combo={combo} ci={ci} />
                           ))}
                         </Box>
@@ -1369,7 +1383,7 @@ const BuckeyeScraper: React.FC = () => {
 
                   {/* Footer note */}
                   <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
-                    Parlay EV = ∏(1 + leg_EV) − 1 · Parlay odds = product of BetBCK decimal odds · Top 5 per size shown.
+                    Parlay EV = ∏(1 + leg_EV) − 1 · Parlay odds = product of BetBCK decimal odds · Top 10 per size shown.
                     Ranked highest EV to lowest · Pin limit ≥ 1,000 · Leg EV ≥ −1% · Odds ≤ +150 · Max 3 +money legs · One leg per game.
                   </Typography>
                 </>

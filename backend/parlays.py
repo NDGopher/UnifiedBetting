@@ -35,7 +35,7 @@ MAX_PLUS_ODDS  = 150     # Reject legs priced worse than +150 American
 MAX_PLUS_LEGS  = 3       # Max +money legs per parlay
 MIN_LEGS       = 2
 MAX_LEGS       = 4
-TOP_PER_SIZE   = 5   # top 5 per leg-count (2L / 3L / 4L) = up to 15 total
+TOP_PER_SIZE   = 10  # top 10 per leg-count (2L / 3L / 4L) = up to 30 total
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
