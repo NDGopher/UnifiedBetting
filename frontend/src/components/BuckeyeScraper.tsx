@@ -1291,9 +1291,8 @@ const BuckeyeScraper: React.FC = () => {
 
                   {/* Footer note */}
                   <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
-                    Proj prob = Pinnacle NVP implied probability · Payout = product of BetBCK decimal odds.
-                    EV ≥ −1% per leg · Pin limit ≥ 1,000 · Odds ≤ +150 · Max 3 +money legs · One leg per game.
-                    NFL same-sport combos ranked first.
+                    Parlay EV = ∏(1 + leg_EV) − 1 · Parlay odds = product of BetBCK decimal odds.
+                    Ranked highest EV to lowest · Pin limit ≥ 1,000 · Leg EV ≥ −1% · Odds ≤ +150 · Max 3 +money legs · One leg per game.
                   </Typography>
                 </>
               )}

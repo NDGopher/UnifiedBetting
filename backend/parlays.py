@@ -129,25 +129,27 @@ def calculate_parlays(
         if ev_pct < MIN_LEG_EV_PCT:
             continue
 
-        # Pinnacle NVP → projected probability (required)
-        proj_prob = _parse_nvp_prob(row.get('pinnacle_nvp'))
-        if proj_prob is None:
-            continue
+        # Derive projected win probability from leg EV and BetBCK odds:
+        # ev_pct = (proj_prob * betbck_decimal - 1) * 100
+        # => proj_prob = (1 + ev_pct/100) / betbck_decimal
+        betbck_decimal = _american_to_decimal(betbck_american)
+        proj_prob = (1.0 + ev_pct / 100.0) / betbck_decimal
 
         league = (row.get('league') or '').strip()
         eligible.append({
-            'bet':           row.get('bet', ''),
-            'matchup':       row.get('matchup', ''),
-            'league':        league,
-            'start_time':    row.get('start_time', ''),
-            'event_id':      str(row.get('event_id', id(row))),
-            'pin_nvp':       row.get('pinnacle_nvp', ''),
-            'pin_limit':     int(pin_limit),
-            'betbck_odds':   str(row.get('betbck_odds', '')),
+            'bet':             row.get('bet', ''),
+            'matchup':         row.get('matchup', ''),
+            'league':          league,
+            'start_time':      row.get('start_time', ''),
+            'event_id':        str(row.get('event_id', id(row))),
+            'pin_nvp':         row.get('pinnacle_nvp', ''),
+            'pin_limit':       int(pin_limit),
+            'betbck_odds':     str(row.get('betbck_odds', '')),
             'betbck_american': betbck_american,
-            'ev_pct':        ev_pct,
-            'proj_prob':     proj_prob,
-            'is_plus':       betbck_american > 0,
+            'betbck_decimal':  betbck_decimal,
+            'ev_pct':          ev_pct,
+            'proj_prob':       proj_prob,
+            'is_plus':         betbck_american > 0,
         })
 
     logger.info(
@@ -174,24 +176,24 @@ def calculate_parlays(
             if n_plus > MAX_PLUS_LEGS:
                 continue
 
-            # EV math
-            win_prob       = 1.0
-            decimal_payout = 1.0
+            # ── EV math (derived from individual leg EVs) ─────────────────
+            # parlay_EV = ∏(1 + ev_i/100) - 1
+            # win_prob  = ∏[(1 + ev_i/100) / betbck_decimal_i]
+            # decimal_payout = ∏ betbck_decimal_i  (actual BetBCK parlay odds)
+            combined_ev_factor = 1.0
+            win_prob           = 1.0
+            decimal_payout     = 1.0
             for l in combo:
-                win_prob       *= l['proj_prob']
-                decimal_payout *= _american_to_decimal(l['betbck_american'])
+                factor          = 1.0 + l['ev_pct'] / 100.0
+                combined_ev_factor *= factor
+                win_prob           *= factor / l['betbck_decimal']
+                decimal_payout     *= l['betbck_decimal']
 
-            ev_pct = (win_prob * decimal_payout - 1.0) * 100.0
+            ev_pct = (combined_ev_factor - 1.0) * 100.0
 
-            # Sport grouping
+            # Sport grouping (for badge only — NOT used in sorting)
             leagues    = [l['league'] for l in combo]
             same_sport = len(set(leagues)) == 1
-            if same_sport and leagues[0].upper() == 'NFL':
-                sport_rank = 0
-            elif same_sport:
-                sport_rank = 1
-            else:
-                sport_rank = 2
 
             parlays.append({
                 'n_legs':         n,
@@ -199,7 +201,6 @@ def calculate_parlays(
                 'win_prob_pct':   round(win_prob * 100.0, 2),
                 'ev_blended_pct': round(ev_pct, 2),
                 'same_sport':     same_sport,
-                'sport_rank':     sport_rank,
                 'n_plus_legs':    n_plus,
                 'legs': [
                     {
@@ -217,8 +218,8 @@ def calculate_parlays(
                 ],
             })
 
-    # ── 3. Sort: sport tier → EV desc — then trim ────────────────────────────
-    parlays.sort(key=lambda x: (x['sport_rank'], -x['ev_blended_pct']))
+    # ── 3. Sort: EV descending (highest to lowest) ───────────────────────────
+    parlays.sort(key=lambda x: -x['ev_blended_pct'])
     top = parlays[:TOP_N]
 
     logger.info(
