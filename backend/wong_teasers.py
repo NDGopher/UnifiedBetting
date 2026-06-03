@@ -150,13 +150,16 @@ def _combo_ev_blended(
     american_odds: int,
 ) -> Tuple[float, float]:
     """
-    Per-combo blended EV using individual leg NVP implied probabilities.
-      projected_leg_prob = (nvp_prob + historical_rate) / 2
-      teaser_win_prob    = product of projected probs
+    Per-combo EV using historical win rate as the base, with a tiny
+    NVP market-signal adjustment per leg:
+      projected_leg_prob = historical_rate + (0.50 - nvp_prob) * 0.25
+    This anchors to the backtest rate (0.758 / 0.83) and nudges it
+    slightly when the market prices a leg away from 50/50.
+      teaser_win_prob = product of projected probs
       EV% = (teaser_win_prob * decimal - 1) * 100
     Returns (ev_pct, teaser_win_prob_pct).
     """
-    projected = [(p + historical_rate) / 2.0 for p in nvp_probs]
+    projected = [historical_rate + (0.50 - p) * 0.25 for p in nvp_probs]
     teaser_win_prob = 1.0
     for p in projected:
         teaser_win_prob *= p
@@ -337,7 +340,7 @@ def _generate_combos(
             # Build per-leg detail with individual projected probs
             legs_out = []
             for l, nvp_p in zip(combo_legs, nvp_probs):
-                proj_p = (nvp_p + historical_rate) / 2.0
+                proj_p = historical_rate + (0.50 - nvp_p) * 0.25
                 legs_out.append({
                     'matchup':           l['matchup'],
                     'bet':               l['bet'],
@@ -539,6 +542,6 @@ def calculate_wong_teasers(
             'ev_flag_6pt':        ev_flag_6pt,
             'ev_flag_10pt':       ev_flag_10pt,
             'teaser_type':        'sides only, no totals (NFL full-game spreads)',
-            'ev_method':          'blended: (NVP_prob + historical) / 2 per leg',
+            'ev_method':          'historical_rate + (0.50 - NVP_prob) * 0.25 per leg',
         },
     }
