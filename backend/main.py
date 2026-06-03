@@ -1226,6 +1226,7 @@ ACE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'ace_results.
 current_results = None
 last_run_time = None
 current_teaser_results = None   # Wong Teaser Scanner results (latest Buckeye run)
+current_parlay_results = None   # Parlay Generator results (latest Buckeye run)
 
 # Global variable to track pipeline status
 pipeline_running = False
@@ -1859,6 +1860,20 @@ async def run_streaming_pipeline_background(sport_filters=None):
             logger.error(f"[WONG] Teaser scan failed: {_wong_err}")
             current_teaser_results = None
 
+        # ── Parlay Generator ─────────────────────────────────────────────────
+        global current_parlay_results
+        try:
+            from parlays import calculate_parlays
+            current_parlay_results = calculate_parlays(streaming_results)
+            logger.info(
+                f"[PARLAYS] Done: {current_parlay_results.get('eligible_legs', 0)} legs, "
+                f"{current_parlay_results.get('total_combos', 0)} combos, "
+                f"{len(current_parlay_results.get('parlays', []))} returned"
+            )
+        except Exception as _parlay_err:
+            logger.error(f"[PARLAYS] Generation failed: {_parlay_err}")
+            current_parlay_results = None
+
         # Final broadcast - always send, even if no events
         try:
             global _last_buckeye_payload
@@ -1871,7 +1886,8 @@ async def run_streaming_pipeline_background(sport_filters=None):
                     "streaming": False,
                     "total_processed": total_processed,
                     "total_matched": total_matched,
-                    "teaser_results": current_teaser_results,
+                    "teaser_results":  current_teaser_results,
+                    "parlay_results":  current_parlay_results,
                 }
             }
             _last_buckeye_payload = _final_payload
@@ -2744,7 +2760,8 @@ def get_buckeye_results():
                 "data": {
                     "markets": all_markets,
                     "last_update": last_run_time,
-                    "teaser_results": current_teaser_results,
+                    "teaser_results":  current_teaser_results,
+                    "parlay_results":  current_parlay_results,
                 }
             })
         

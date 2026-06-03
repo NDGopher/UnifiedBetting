@@ -49,6 +49,8 @@ const BuckeyeScraper: React.FC = () => {
   const [wongTeaserType, setWongTeaserType] = useState<'6pt' | '10pt'>('6pt');
   const [wongComboView, setWongComboView] = useState<'top8' | 'grouped'>('top8');
   const [combosExpanded, setCombosExpanded] = useState(false);
+  const [parlays, setParlays] = useState<any | null>(null);
+  const [parlaysExpanded, setParlaysExpanded] = useState(false);
 
   // EV range filter (display only)
   const EV_MAX_SLIDER = 20;
@@ -149,7 +151,7 @@ const BuckeyeScraper: React.FC = () => {
             setMessage(`Streaming: ${batch_completed}/${total_batches} batches completed (${total_events} events)`);
           }
         } else if (data.type === 'buckeye_complete') {
-          const { events, total_events, last_run, total_matched, teaser_results } = data.data;
+          const { events, total_events, last_run, total_matched, teaser_results, parlay_results } = data.data;
           if (events && events.length > 0) {
             setBuckeyeMarkets(events);
             setBuckeyeLastUpdate(last_run);
@@ -157,6 +159,9 @@ const BuckeyeScraper: React.FC = () => {
           }
           if (teaser_results) {
             setWongTeasers(teaser_results);
+          }
+          if (parlay_results) {
+            setParlays(parlay_results);
           }
           setPipelineRunning(false);
           stopPolling();
@@ -232,6 +237,9 @@ const BuckeyeScraper: React.FC = () => {
         if (data.data.teaser_results) {
           setWongTeasers(data.data.teaser_results);
         }
+        if (data.data.parlay_results) {
+          setParlays(data.data.parlay_results);
+        }
       } else {
         setError(data.message || 'Failed to fetch results');
         setBuckeyeMarkets([]);
@@ -283,6 +291,7 @@ const BuckeyeScraper: React.FC = () => {
     setBuckeyeMarkets([]); // Clear Buckeye data
     setBuckeyeLastUpdate(null);
     setWongTeasers(null); // Clear Wong Teaser results
+    setParlays(null);     // Clear Parlay results
     setAceMarkets([]);    // Clear ACE results so only Buckeye shows
     setAceLastUpdate(null);
     try {
@@ -1157,6 +1166,137 @@ const BuckeyeScraper: React.FC = () => {
                 <strong style={{ color: '#555' }}> Blended EV</strong> = per-combo: (hist + 0.01 if O/U ≤49) + (0.50 − NVP_implied) × 0.30, multiplied across legs.
                 Hist EV = flat historical rate (reference). Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game (main line only).
               </Typography>
+            </Box>
+          </Collapse>
+        </Box>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════
+          PARLAYS
+      ══════════════════════════════════════════════════════════════════ */}
+      {parlays && (
+        <Box sx={{ mt: 1.5 }}>
+          {/* Header row */}
+          <Box
+            onClick={() => setParlaysExpanded(v => !v)}
+            sx={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              px: 2, py: 1.25,
+              bgcolor: 'rgba(20,20,20,0.95)',
+              border: '1px solid rgba(100,181,246,0.25)',
+              borderRadius: parlaysExpanded ? '8px 8px 0 0' : '8px',
+              cursor: 'pointer', userSelect: 'none',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Typography sx={{ color: '#64B5F6', fontWeight: 600, fontSize: '0.9rem' }}>
+                🎲 Parlays
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 0.75 }}>
+                {([2, 3, 4] as const).map(n => {
+                  const count = (parlays.parlays || []).filter((p: any) => p.n_legs === n).length;
+                  return count > 0 ? (
+                    <Box key={n} sx={{ px: 1, py: 0.25, bgcolor: 'rgba(100,181,246,0.12)', border: '1px solid rgba(100,181,246,0.25)', borderRadius: 1, fontSize: '0.72rem', color: '#64B5F6' }}>
+                      {n}-leg ×{count}
+                    </Box>
+                  ) : null;
+                })}
+                {parlays.eligible_legs != null && (
+                  <Box sx={{ px: 1, py: 0.25, fontSize: '0.72rem', color: '#555' }}>
+                    {parlays.eligible_legs} eligible legs
+                  </Box>
+                )}
+              </Box>
+            </Box>
+            {parlaysExpanded
+              ? <ExpandLess sx={{ color: '#64B5F6', fontSize: '1.1rem' }} />
+              : <ExpandMore sx={{ color: '#64B5F6', fontSize: '1.1rem' }} />}
+          </Box>
+
+          <Collapse in={parlaysExpanded}>
+            <Box sx={{ border: '1px solid rgba(100,181,246,0.25)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
+
+              {(parlays.parlays || []).length === 0 ? (
+                <Typography sx={{ color: '#555', fontSize: '0.82rem', fontStyle: 'italic' }}>
+                  No qualifying parlays found (need pin_limit ≥ 1,000, leg EV ≥ −1%, odds ≤ +150).
+                </Typography>
+              ) : (
+                <>
+                  <Typography sx={{ fontSize: '0.74rem', color: '#666', mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Top Parlays ({(parlays.parlays || []).length} shown · {parlays.total_combos ?? '?'} total combos)
+                  </Typography>
+
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {(parlays.parlays || []).map((parlay: any, pi: number) => (
+                      <Box key={pi} sx={{
+                        p: 1.5,
+                        bgcolor: parlay.ev_blended_pct >= 0 ? 'rgba(100,181,246,0.05)' : 'rgba(255,255,255,0.02)',
+                        border: `1px solid ${parlay.same_sport ? 'rgba(100,181,246,0.3)' : 'rgba(255,255,255,0.07)'}`,
+                        borderRadius: 1.5,
+                        minWidth: 220,
+                        maxWidth: 300,
+                        flex: '0 1 auto',
+                        position: 'relative',
+                      }}>
+                        {parlay.same_sport && (
+                          <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.6rem', color: '#64B5F6', fontWeight: 700, letterSpacing: '0.05em' }}>
+                            ◆ SAME SPORT
+                          </Box>
+                        )}
+
+                        {/* Legs */}
+                        {(parlay.legs || []).map((leg: any, li: number) => (
+                          <Box key={li} sx={{ mb: li < parlay.legs.length - 1 ? 0.75 : 0 }}>
+                            <Typography sx={{ fontSize: '0.76rem', color: '#ddd', fontWeight: 600, lineHeight: 1.2, pr: parlay.same_sport ? 5 : 0 }}>
+                              {leg.bet}
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 0.6, alignItems: 'center', flexWrap: 'wrap', mt: 0.2 }}>
+                              <Box component="span" sx={{ fontSize: '0.62rem', color: '#888', fontFamily: 'monospace' }}>
+                                {leg.betbck_odds}
+                              </Box>
+                              {leg.league && (
+                                <Box component="span" sx={{ fontSize: '0.6rem', color: '#64B5F6', px: 0.5, py: 0.1, bgcolor: 'rgba(100,181,246,0.08)', borderRadius: 0.5 }}>
+                                  {leg.league}
+                                </Box>
+                              )}
+                              <Box component="span" sx={{ fontSize: '0.62rem', color: leg.ev_pct >= 0 ? '#4CAF50' : '#aaa', fontFamily: 'monospace' }}>
+                                {leg.ev_pct >= 0 ? '+' : ''}{leg.ev_pct}% EV
+                              </Box>
+                              <Box component="span" sx={{ fontSize: '0.6rem', color: '#555' }}>
+                                Lim {(leg.pin_limit / 1000).toFixed(0)}k
+                              </Box>
+                            </Box>
+                          </Box>
+                        ))}
+
+                        {/* Footer */}
+                        <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography sx={{ fontSize: '0.65rem', color: '#888', fontFamily: 'monospace' }}>
+                              {parlay.n_legs}L {parlay.parlay_odds}
+                            </Typography>
+                            <Typography sx={{ fontSize: '0.7rem', color: parlay.ev_blended_pct >= 0 ? '#4CAF50' : '#aaa', fontWeight: 700 }}>
+                              {parlay.ev_blended_pct >= 0 ? '+' : ''}{parlay.ev_blended_pct}% EV
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Typography sx={{ fontSize: '0.62rem', color: '#555' }}>
+                              win {parlay.win_prob_pct}%
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+
+                  {/* Footer note */}
+                  <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
+                    Proj prob = Pinnacle NVP implied probability · Payout = product of BetBCK decimal odds.
+                    EV ≥ −1% per leg · Pin limit ≥ 1,000 · Odds ≤ +150 · Max 3 +money legs · One leg per game.
+                    NFL same-sport combos ranked first.
+                  </Typography>
+                </>
+              )}
             </Box>
           </Collapse>
         </Box>
