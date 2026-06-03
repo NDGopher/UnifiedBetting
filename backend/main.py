@@ -2092,6 +2092,21 @@ async def run_ace_streaming_pipeline_background():
         logger.info(f"[ACE-PIPELINE] Formatted {len(formatted)} results")
         print(f"[ACE-PIPELINE] Formatted {len(formatted)} results")
 
+        # ── Step 5b: Calculate parlays from Ace EV results ────────────────────────
+        ace_parlay_results = None
+        try:
+            from parlays import calculate_parlays
+            ace_parlay_results = calculate_parlays(formatted)
+            logger.info(
+                f"[ACE-PARLAYS] Done: {ace_parlay_results.get('eligible_legs', 0)} legs, "
+                f"{ace_parlay_results.get('total_combos', 0)} combos, "
+                f"{len(ace_parlay_results.get('parlays', []))} returned"
+            )
+            print(f"[ACE-PARLAYS] Done: {len(ace_parlay_results.get('parlays', []))} parlays")
+        except Exception as _parlay_err:
+            logger.error(f"[ACE-PARLAYS] Generation failed: {_parlay_err}")
+            ace_parlay_results = None
+
         # ── Step 6: Persist results ──────────────────────────────────────────────
         last_run = datetime.now().isoformat()
         try:
@@ -2113,6 +2128,7 @@ async def run_ace_streaming_pipeline_background():
                     "total_events": len(formatted),
                     "last_run": last_run,
                     "total_matched": n_matched,
+                    "parlay_results": ace_parlay_results,
                 }
             }
             await manager.broadcast(_payload)

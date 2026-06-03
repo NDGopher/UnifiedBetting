@@ -176,11 +176,14 @@ const BuckeyeScraper: React.FC = () => {
             setMessage(`Ace: ${total_events} events found`);
           }
         } else if (data.type === 'ace_complete') {
-          const { events, total_events, last_run, total_matched } = data.data;
+          const { events, total_events, last_run, total_matched, parlay_results } = data.data;
           if (events && events.length > 0) {
             setAceMarkets(events);
             setAceLastUpdate(last_run);
             setMessage(`Ace done: ${total_matched} games matched, ${total_events} EV opportunities`);
+          }
+          if (parlay_results) {
+            setParlays(parlay_results);
           }
           runningAce.current = false;
           setPipelineRunning(false);
@@ -353,10 +356,15 @@ const BuckeyeScraper: React.FC = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
-    setAceMarkets([]); // Clear ACE data
+    setAceMarkets([]);
     setAceLastUpdate(null);
-    setBuckeyeMarkets([]);  // Clear Buckeye results so only ACE shows
+    setBuckeyeMarkets([]);
     setBuckeyeLastUpdate(null);
+    setParlays(null);
+    setWongTeasers(null);
+    setParlaysExpanded(false);
+    setParlayNext24h(false);
+    setEvNext24h(false);
     // Don't start polling immediately - wait until calculations are actually running
     try {
       console.log('[BuckeyeScraper] Running Ace calculations...');
