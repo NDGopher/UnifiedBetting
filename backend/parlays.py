@@ -222,6 +222,10 @@ def calculate_parlays(
         if betbck_american > MAX_PLUS_ODDS:
             continue
 
+        # Team totals are not parlayable
+        if (row.get('bet_type') or '').strip().lower() == 'team total':
+            continue
+
         ev_pct = _parse_ev_pct(row.get('ev') or row.get('ev_pct'))
         if ev_pct < MIN_LEG_EV_PCT:
             continue
