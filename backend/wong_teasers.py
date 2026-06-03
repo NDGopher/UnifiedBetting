@@ -15,10 +15,12 @@ BetBCK NFL Teaser Odds:
   6pt 2-team: -110   6pt 3-team: +160   6pt 4-team: +300   6pt 5-team: +450
   10pt 3-team: -120, ties lose
 
-EV Calculation (per combo, historical-rate-anchored):
-  projected_leg_prob = historical_rate
-                       + 0.01 if game_total ≤ 49 (low-total bonus)
-                       + (main_line_ev_pct / 100) * 0.5 (EV-table legs only)
+EV Calculation (per combo, NVP-adjusted):
+  base_historical    = hist_rate + 0.01  if game_total ≤ 49  else hist_rate
+  nvp_implied_prob   = _parse_nvp_prob(pin_nvp)  or 0.50
+  projected_leg_prob = base_historical + (0.50 - nvp_implied_prob) * 0.30
+    • NVP near -105 (≈51%) → tiny penalty (-0.4pp); NVP near -145 (≈59%) → larger penalty (-2.7pp)
+    • Underdogs priced at +120 (≈45%) → bonus (+1.5pp); balanced spread (-110) → -0.3pp
   teaser_win_prob    = product of all projected_leg_probs
   EV% = (teaser_win_prob * decimal_payout - 1) * 100
 
@@ -91,6 +93,26 @@ def _parse_spread_line(bet: str) -> Optional[float]:
 def _parse_team_from_bet(bet: str) -> str:
     m = re.match(r'^(.+?)\s+[+-]?\d+(?:\.\d+)?\s*$', bet.strip())
     return m.group(1).strip() if m else bet.strip()
+
+
+def _proj_leg_prob(leg: Dict, historical_rate: float) -> float:
+    """
+    Per-leg projected win probability (NVP-adjusted).
+
+    base = historical_rate + 0.01 if low total (≤49), else historical_rate
+    nvp_p = implied probability of the qualifying spread (from pin_nvp odds)
+    result = base + (0.50 - nvp_p) * 0.30
+
+    Rationale: a spread priced near even money (-110 → 52.4%) reflects balanced
+    uncertainty — the teaser math works at its historical rate.  A spread priced
+    heavily toward one side (e.g. -145 → 59.2%) implies the line has a lot of
+    market juice; the teaser is crossing fewer truly uncertain key numbers, so we
+    discount slightly.  Conversely, an underdog priced at +120 (implied 45.5%)
+    gets a small boost since the market already favours the other side.
+    """
+    base = (historical_rate + 0.01) if leg.get('low_total') else historical_rate
+    nvp_p = _parse_nvp_prob(leg.get('pin_nvp') or '') or 0.50
+    return base + (0.50 - nvp_p) * 0.30
 
 
 def _parse_nvp_prob(pin_nvp: str) -> Optional[float]:
@@ -332,16 +354,12 @@ def _generate_combos(
             min_limit   = min(l['pin_limit'] for l in combo_legs)
             n_priority  = sum(1 for l in combo_legs if l.get('priority'))
 
-            # Per-leg projected probabilities (true per-combo differentiation)
-            #   base: historical_rate (0.758 / 0.83)
-            #   +0.01 if game has a low total (≤49) — ~1% historically per leg
-            #   + small EV-table main-line-EV adjustment (0 for betbck-direct legs)
+            # Per-leg projected probabilities — _proj_leg_prob() applies:
+            #   base = hist_rate + 0.01 if low_total, then +/- (0.50 - NVP_p)*0.30
             legs_out = []
             proj_probs = []
             for l in combo_legs:
-                low_total_bonus = 0.01 if l.get('low_total') else 0.0
-                ev_adj = l.get('main_line_ev_pct', 0.0) / 100.0 * 0.5
-                proj_p = historical_rate + low_total_bonus + ev_adj
+                proj_p = _proj_leg_prob(l, historical_rate)
                 proj_probs.append(proj_p)
                 legs_out.append({
                     'matchup':            l['matchup'],
@@ -350,7 +368,7 @@ def _generate_combos(
                     'teased_line':        l['teased_line'],
                     'pin_nvp':            l['pin_nvp'],
                     'main_line_ev_pct':   l.get('main_line_ev_pct', 0.0),
-                    'projected_prob_pct': round(proj_p * 100.0, 1),
+                    'projected_prob_pct': round(proj_p * 100.0, 2),
                     'pin_limit':          l['pin_limit'],
                     'is_road':            l['is_road'],
                     'game_total':         l['game_total'],
@@ -549,14 +567,20 @@ def calculate_wong_teasers(
         'qualifying_legs_6pt':  len(legs_6pt),
         'qualifying_legs_10pt': len(legs_10pt),
         'legs_6pt': [
-            {k: v for k, v in l.items() if k != 'priority'}
+            {
+                **{k: v for k, v in l.items() if k != 'priority'},
+                'projected_prob_pct': round(_proj_leg_prob(l, WONG_6PT_WIN_RATE) * 100.0, 2),
+            }
             for l in legs_6pt
         ],
         'legs_10pt': [
-            {k: v for k, v in l.items() if k != 'priority'}
+            {
+                **{k: v for k, v in l.items() if k != 'priority'},
+                'projected_prob_pct': round(_proj_leg_prob(l, WONG_10PT_WIN_RATE) * 100.0, 2),
+            }
             for l in legs_10pt
         ],
-        'combos_6pt':  _balanced_combos(combos_6pt, per_size=15),
+        'combos_6pt':  combos_6pt,
         'combos_10pt': combos_10pt[:20],
         'breakeven':   breakeven,
         'config': {
@@ -566,6 +590,6 @@ def calculate_wong_teasers(
             'ev_flag_6pt':        ev_flag_6pt,
             'ev_flag_10pt':       ev_flag_10pt,
             'teaser_type':        'sides only, no totals (NFL full-game spreads)',
-            'ev_method':          'historical_rate + 0.01*(low_total) + (main_line_ev_pct/100)*0.5 per leg',
+            'ev_method':          '(hist_rate + 0.01*low_total) + (0.50 - NVP_implied_prob)*0.30 per leg',
         },
     }

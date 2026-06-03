@@ -1052,6 +1052,11 @@ const BuckeyeScraper: React.FC = () => {
                             {leg.pin_nvp && (
                               <Box sx={{ fontSize: '0.68rem', color: '#888', fontFamily: 'monospace' }}>NVP {leg.pin_nvp}</Box>
                             )}
+                            {leg.projected_prob_pct != null && (
+                              <Box sx={{ fontSize: '0.68rem', color: '#4CAF50', fontFamily: 'monospace', fontWeight: 600 }}>
+                                proj {leg.projected_prob_pct}%
+                              </Box>
+                            )}
                           </Box>
                           <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap' }}>
                             {leg.is_road && <Box sx={{ fontSize: '0.65rem', color: '#64B5F6', px: 0.75, py: 0.25, bgcolor: 'rgba(100,181,246,0.1)', borderRadius: 0.75 }}>🏈 Road</Box>}
