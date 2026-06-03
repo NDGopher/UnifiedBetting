@@ -1844,7 +1844,10 @@ async def run_streaming_pipeline_background(sport_filters=None):
         global current_teaser_results
         try:
             from wong_teasers import calculate_wong_teasers
-            current_teaser_results = calculate_wong_teasers(streaming_results)
+            current_teaser_results = calculate_wong_teasers(
+                streaming_results,
+                betbck_games=betbck_games if isinstance(betbck_games, list) else None,
+            )
             logger.info(
                 f"[WONG] Teaser scan complete: "
                 f"{current_teaser_results.get('qualifying_legs_6pt', 0)} 6pt legs, "

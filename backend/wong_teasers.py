@@ -51,6 +51,16 @@ TEN_PT_FAV_LINES = {-9.5, -10.0, -10.5}
 
 NFL_KEYWORDS = {'nfl', 'national football league'}
 
+# CFL team keywords — exclude from betbck direct scan (CFL goes through Pinnacle matching)
+CFL_KEYWORDS = {
+    'alouettes', 'blue bombers', 'stampeders', 'redblacks', 'elks',
+    'roughriders', 'argonauts', 'tiger-cats', 'tigers', 'lions',
+    'eskimos', 'ticats',
+}
+
+# BetBCK default limit for NFL games that aren't yet matched to Pinnacle
+NFL_BETBCK_DEFAULT_LIMIT = 10000
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -178,6 +188,115 @@ def _deduplicate_legs(legs: List[Dict]) -> List[Dict]:
     return list(best.values())
 
 
+def _is_cfl_team(team_name: str) -> bool:
+    """Return True if the team name matches a known CFL franchise."""
+    tl = team_name.lower()
+    return any(kw in tl for kw in CFL_KEYWORDS)
+
+
+def _scan_betbck_for_nfl(
+    betbck_games: List[Dict],
+    seen_matchups: set,
+) -> Tuple[List[Dict], List[Dict]]:
+    """
+    Scan raw BetBCK football games directly for Wong qualifying spreads.
+    Used when NFL future lines haven't yet been matched to Pinnacle.
+
+    Rules:
+    - sport == 'football' only
+    - Exclude CFL teams
+    - site_top_team_spreads  → away (road) team
+    - site_bottom_team_spreads → home team
+    - Take the FIRST qualifying spread per team/side (the main line)
+    - NVP proxy = BetBCK spread odds; pin_limit = NFL_BETBCK_DEFAULT_LIMIT
+
+    seen_matchups: normalised matchup strings already found via the EV table
+                   (avoids adding the same game twice from different sources).
+    """
+    legs_6pt:  List[Dict] = []
+    legs_10pt: List[Dict] = []
+
+    for game in betbck_games:
+        if (game.get('sport') or '').lower() != 'football':
+            continue
+
+        home_team = (game.get('betbck_site_home_team') or '').strip()
+        away_team = (game.get('betbck_site_away_team') or '').strip()
+        if not home_team or not away_team:
+            continue
+
+        # Skip CFL franchises (they come through Pinnacle matching separately)
+        if _is_cfl_team(home_team) or _is_cfl_team(away_team):
+            continue
+
+        matchup = f"{home_team} vs {away_team}"
+        matchup_norm = matchup.lower()
+        if matchup_norm in seen_matchups:
+            continue   # already covered by the EV-table scan
+
+        game_id   = str(game.get('betbck_game_id', id(game)))
+        start_dt  = str(game.get('event_datetime', ''))
+        odds_data = game.get('betbck_site_odds') or {}
+
+        # away team = road = site_top; home team = site_bottom
+        team_sides = [
+            (away_team, odds_data.get('site_top_team_spreads') or [],    True),
+            (home_team, odds_data.get('site_bottom_team_spreads') or [], False),
+        ]
+
+        for team, spreads, is_road in team_sides:
+            found_6pt  = False
+            found_10pt = False
+
+            for entry in spreads:
+                try:
+                    line     = float(entry['line'])
+                    odds_str = str(entry.get('odds', ''))
+                except (KeyError, TypeError, ValueError):
+                    continue
+
+                line_sign = '+' if line > 0 else ''
+                bet_str   = f"{team} {line_sign}{line:g}"
+
+                leg_base = {
+                    'matchup':     matchup,
+                    'bet':         bet_str,
+                    'spread_line': line,
+                    'pin_nvp':     odds_str,          # BetBCK odds as NVP proxy
+                    'pin_limit':   NFL_BETBCK_DEFAULT_LIMIT,
+                    'is_road':     is_road,
+                    'game_total':  None,
+                    'low_total':   False,
+                    'start_time':  start_dt,
+                    'event_id':    game_id,
+                    'league':      'NFL',
+                }
+
+                # 6pt qualification — take first qualifying spread (main line)
+                if not found_6pt:
+                    is_fav_6pt = WONG_FAV_MIN <= line <= WONG_FAV_MAX
+                    is_dog_6pt = WONG_DOG_MIN <= line <= WONG_DOG_MAX
+                    if is_fav_6pt or is_dog_6pt:
+                        teased   = round(line + 6.0, 1)
+                        role     = 'favorite' if line < 0 else 'underdog'
+                        priority = bool(is_road)  # no game_total available
+                        legs_6pt.append({**leg_base, 'teased_line': teased, 'role': role, 'priority': priority})
+                        found_6pt = True
+
+                # 10pt qualification — road teams only, first qualifying spread
+                if not found_10pt and is_road:
+                    if line in TEN_PT_DOG_LINES or line in TEN_PT_FAV_LINES:
+                        teased   = round(line + 10.0, 1)
+                        role     = 'favorite' if line < 0 else 'underdog'
+                        legs_10pt.append({**leg_base, 'teased_line': teased, 'role': role, 'priority': False})
+                        found_10pt = True
+
+                if found_6pt and found_10pt:
+                    break
+
+    return legs_6pt, legs_10pt
+
+
 # ── Combo generator ───────────────────────────────────────────────────────────
 
 def _generate_combos(
@@ -264,10 +383,12 @@ def calculate_wong_teasers(
     min_pin_limit: int = MIN_PINNACLE_LIMIT,
     ev_flag_6pt: float = EV_FLAG_6PT,
     ev_flag_10pt: float = EV_FLAG_10PT,
+    betbck_games: Optional[List[Dict]] = None,
 ) -> Dict[str, Any]:
     """
     Scan the Buckeye EV table for +EV Wong teaser combinations.
     Input : flat list of bet dicts from calculate_ev_table_async.
+            betbck_games: raw BetBCK game list for scanning unmatched NFL futures.
     Output: dict with qualifying legs, combo lists, break-even analysis.
     """
     # Index all rows by event_id for fast game-total lookup
@@ -336,13 +457,26 @@ def calculate_wong_teasers(
             priority = low_total
             legs_10pt_raw.append({**leg_base, 'teased_line': teased, 'role': role, 'priority': priority})
 
-    # Deduplicate: one leg per (event_id, role) — highest Pinnacle limit = main line
+    # Deduplicate EV-table legs: one per (event_id, role) — highest limit = main line
     legs_6pt  = _deduplicate_legs(legs_6pt_raw)
     legs_10pt = _deduplicate_legs(legs_10pt_raw)
 
+    # ── Direct BetBCK scan for unmatched NFL lines ────────────────────────────
+    # Collects NFL futures/early-week lines that aren't yet matched to Pinnacle.
+    if betbck_games:
+        seen_matchups = {l['matchup'].lower() for l in legs_6pt + legs_10pt}
+        b6, b10 = _scan_betbck_for_nfl(betbck_games, seen_matchups)
+        if b6:
+            logger.info(f"[WONG] +{len(b6)} betbck-direct 6pt legs (unmatched NFL)")
+        if b10:
+            logger.info(f"[WONG] +{len(b10)} betbck-direct 10pt legs (unmatched NFL)")
+        # Merge and re-deduplicate (betbck legs have unique game_ids so no conflicts)
+        legs_6pt  = legs_6pt  + _deduplicate_legs(b6)
+        legs_10pt = legs_10pt + _deduplicate_legs(b10)
+
     logger.info(
         f"[WONG] {len(legs_6pt)} qualifying 6pt legs "
-        f"({len(legs_6pt_raw)} raw → deduped), "
+        f"({len(legs_6pt_raw)} ev-table raw), "
         f"{len(legs_10pt)} qualifying 10pt legs "
         f"(NFL, pin_limit≥{min_pin_limit})"
     )
