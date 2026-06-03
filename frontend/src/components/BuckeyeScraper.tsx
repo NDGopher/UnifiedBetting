@@ -299,24 +299,37 @@ const BuckeyeScraper: React.FC = () => {
     setAceMarkets([]);    // Clear ACE results so only Buckeye shows
     setAceLastUpdate(null);
     try {
-      console.log('[BuckeyeScraper] Starting streaming Buckeye pipeline...');
       const body = selectedSports.length > 0 ? { sport_filters: selectedSports } : {};
-      const res = await fetch(`${API_BASE}/api/run-streaming-pipeline`, { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      const data = await res.json();
+
+      // Auto-retry once on network errors (transient proxy drops in Replit)
+      let res: Response | null = null;
+      let lastNetworkErr: any = null;
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          console.log(`[BuckeyeScraper] Starting streaming pipeline (attempt ${attempt})...`);
+          res = await fetch(`${API_BASE}/api/run-streaming-pipeline`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+          lastNetworkErr = null;
+          break;
+        } catch (netErr) {
+          lastNetworkErr = netErr;
+          if (attempt < 2) {
+            console.warn('[BuckeyeScraper] Network error on pipeline start, retrying in 2s...', netErr);
+            await new Promise(r => setTimeout(r, 2000));
+          }
+        }
+      }
+      if (lastNetworkErr) throw lastNetworkErr;
+
+      const data = await res!.json();
       console.log('[BuckeyeScraper] Streaming pipeline start response:', data);
-      
+
       if (data.status === 'success') {
         setMessage(data.message || 'Streaming pipeline started - results will appear in real-time');
-        console.log('[BuckeyeScraper] Streaming pipeline started successfully - watching for real-time updates...');
-        
-        // Connect WebSocket for real-time updates
         connectWebSocket();
-        
-        // Start polling for results while pipeline runs (fallback)
         startPolling();
       } else {
         // Backend rejected (e.g. already running) — restore button state
@@ -325,8 +338,8 @@ const BuckeyeScraper: React.FC = () => {
         setPipelineRunning(false);
       }
     } catch (err) {
-      console.error('[BuckeyeScraper] Error starting streaming pipeline:', err);
-      setError('Failed to start streaming pipeline');
+      console.error('[BuckeyeScraper] Error starting streaming pipeline after retries:', err);
+      setError('Connection to server failed — please tap Run EV Bets again');
       setBuckeyeMarkets([]);
       setPipelineRunning(false);
     } finally {
