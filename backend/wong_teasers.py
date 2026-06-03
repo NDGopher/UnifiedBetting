@@ -97,22 +97,15 @@ def _parse_team_from_bet(bet: str) -> str:
 
 def _proj_leg_prob(leg: Dict, historical_rate: float) -> float:
     """
-    Per-leg projected win probability (NVP-adjusted).
+    Per-leg win probability for Wong teasers.
 
-    base = historical_rate + 0.01 if low total (≤49), else historical_rate
-    nvp_p = implied probability of the qualifying spread (from pin_nvp odds)
-    result = base + (0.50 - nvp_p) * 0.30
-
-    Rationale: a spread priced near even money (-110 → 52.4%) reflects balanced
-    uncertainty — the teaser math works at its historical rate.  A spread priced
-    heavily toward one side (e.g. -145 → 59.2%) implies the line has a lot of
-    market juice; the teaser is crossing fewer truly uncertain key numbers, so we
-    discount slightly.  Conversely, an underdog priced at +120 (implied 45.5%)
-    gets a small boost since the market already favours the other side.
+    Uses the historical backtest rate directly, plus a 1pp bonus for
+    low-total games (O/U ≤49 historically cross key numbers at a slightly
+    higher rate).  No NVP adjustment — the Wong edge comes from crossing
+    key numbers 3 & 7, not from market mispricing of the spread, so the
+    NVP-implied probability does not independently add to the edge.
     """
-    base = (historical_rate + 0.01) if leg.get('low_total') else historical_rate
-    nvp_p = _parse_nvp_prob(leg.get('pin_nvp') or '') or 0.50
-    return base + (0.50 - nvp_p) * 0.30
+    return (historical_rate + 0.01) if leg.get('low_total') else historical_rate
 
 
 def _parse_nvp_prob(pin_nvp: str) -> Optional[float]:

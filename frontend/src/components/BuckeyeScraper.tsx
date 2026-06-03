@@ -1112,12 +1112,15 @@ const BuckeyeScraper: React.FC = () => {
                           {combo.n_teams}T {combo.book_odds}
                         </Typography>
                         <Typography sx={{ fontSize: '0.7rem', color: '#4CAF50', fontWeight: 700 }}>
-                          +{combo.ev_blended_pct ?? combo.ev_pct}% blended
+                          +{combo.ev_hist_pct ?? combo.ev_blended_pct ?? combo.ev_pct}% EV
                         </Typography>
                       </Box>
-                      <Box sx={{ display: 'flex' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography sx={{ fontSize: '0.62rem', color: '#666' }}>
                           Lim {(combo.min_pin_limit / 1000).toFixed(0)}k+
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.62rem', color: '#888', fontFamily: 'monospace' }}>
+                          {combo.combined_prob_hist_pct ?? combo.combined_prob_blended_pct}% to win
                         </Typography>
                       </Box>
                     </Box>
@@ -1181,8 +1184,8 @@ const BuckeyeScraper: React.FC = () => {
               <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
                 Historical win rates: 75.8%/leg (6pt, 2003+ data) · 83%/leg (10pt, road only, 3-team -120).
                 Qualifiers cross key numbers 3 & 7 (6pt) or 3, 7 & 10 (10pt).
-                <strong style={{ color: '#555' }}> Blended EV</strong> = per-combo: (hist + 0.01 if O/U ≤49) + (0.50 − NVP_implied) × 0.30, multiplied across legs.
-                Hist EV = flat historical rate (reference). Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game (main line only).
+                <strong style={{ color: '#555' }}> EV</strong> = hist win rate (+ 1pp for O/U ≤49) raised to n_legs, × book payout − 1.
+                "X% to win" = the actual probability all legs hit. Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game.
               </Typography>
             </Box>
           </Collapse>
