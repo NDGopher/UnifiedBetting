@@ -1209,26 +1209,11 @@ const BuckeyeScraper: React.FC = () => {
           PARLAYS
       ══════════════════════════════════════════════════════════════════ */}
       {parlays && (() => {
-        // ── 24h helper — prefer backend flag, fall back to client-side parse ──
-        const isWithin24hStr = (startTimeStr: string): boolean => {
-          if (!startTimeStr) return false;
-          const m = startTimeStr.match(/(\d{4}-\d{2}-\d{2})\s+(\d+:\d+)\s*(AM|PM)?/i);
-          if (!m) return false;
-          const [, datePart, timePart, ampm] = m;
-          let [hrs, mins] = timePart.split(':').map(Number);
-          if (ampm) {
-            if (ampm.toUpperCase() === 'PM' && hrs !== 12) hrs += 12;
-            if (ampm.toUpperCase() === 'AM' && hrs === 12) hrs = 0;
-          }
-          const startDate = new Date(`${datePart}T${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:00`);
-          const now = new Date();
-          return startDate >= now && startDate <= new Date(now.getTime() + 24 * 3600 * 1000);
-        };
-        const allLegs24h = (p: any) =>
-          p.all_within_24h === true ||
-          (p.legs || []).every((l: any) => isWithin24hStr(l.start_time));
-        const parlayList: any[] = parlays.parlays || [];
-        const count24h = parlays.counts_24h ?? parlayList.filter(allLegs24h).length;
+        // Two independent pools — switch entirely when 24h is active
+        const parlayList: any[]  = parlayNext24h
+          ? (parlays.parlays_24h || [])
+          : (parlays.parlays    || []);
+        const count24h: number = (parlays.parlays_24h || []).length;
 
         return (
         <Box sx={{ mt: 1.5 }}>
@@ -1287,9 +1272,11 @@ const BuckeyeScraper: React.FC = () => {
           <Collapse in={parlaysExpanded}>
             <Box sx={{ border: '1px solid rgba(100,181,246,0.25)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
 
-              {(parlays.parlays || []).length === 0 ? (
+              {parlayList.length === 0 ? (
                 <Typography sx={{ color: '#555', fontSize: '0.82rem', fontStyle: 'italic' }}>
-                  No qualifying parlays found (need pin_limit ≥ 1,000, leg EV ≥ −1%, odds ≤ +150).
+                  {parlayNext24h
+                    ? 'No qualifying parlays with games in the next 24 hours (need pin_limit ≥ 1,000, leg EV ≥ −1%, odds ≤ +150).'
+                    : 'No qualifying parlays found (need pin_limit ≥ 1,000, leg EV ≥ −1%, odds ≤ +150).'}
                 </Typography>
               ) : (
                 <>
@@ -1298,8 +1285,8 @@ const BuckeyeScraper: React.FC = () => {
                     {(['all', 2, 3, 4] as const).map(f => {
                       const label = f === 'all' ? 'All' : `${f}-leg`;
                       const count = f === 'all'
-                        ? (parlays.parlays || []).length
-                        : (parlays.parlays || []).filter((p: any) => p.n_legs === f).length;
+                        ? parlayList.length
+                        : parlayList.filter((p: any) => p.n_legs === f).length;
                       const active = parlayLegFilter === f;
                       return count > 0 ? (
                         <Box
@@ -1321,14 +1308,16 @@ const BuckeyeScraper: React.FC = () => {
                       ) : null;
                     })}
                     <Typography sx={{ ml: 'auto', fontSize: '0.7rem', color: '#444' }}>
-                      {parlays.total_combos?.toLocaleString() ?? '?'} total combos · {parlays.eligible_legs} eligible legs
+                      {parlayNext24h
+                        ? `${(parlays.total_combos_24h ?? 0).toLocaleString()} combos · ${parlays.eligible_legs_24h ?? 0} legs (24h)`
+                        : `${(parlays.total_combos ?? 0).toLocaleString()} combos · ${parlays.eligible_legs ?? 0} legs`}
                     </Typography>
                   </Box>
 
                   {/* Parlay cards */}
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                     {parlayList
-                      .filter((p: any) => (parlayLegFilter === 'all' || p.n_legs === parlayLegFilter) && (!parlayNext24h || allLegs24h(p)))
+                      .filter((p: any) => parlayLegFilter === 'all' || p.n_legs === parlayLegFilter)
                       .map((parlay: any, pi: number) => (
                       <Box key={pi} sx={{
                         p: 1.5,
