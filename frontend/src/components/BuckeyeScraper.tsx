@@ -44,6 +44,16 @@ const BuckeyeScraper: React.FC = () => {
   const [pipelineRunning, setPipelineRunning] = useState(false);
   const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const [showSportSelection, setShowSportSelection] = useState(false);
+  const [wongTeasers, setWongTeasers] = useState<any | null>(null);
+  const [wongExpanded, setWongExpanded] = useState(false);
+  const [wongTeaserType, setWongTeaserType] = useState<'6pt' | '10pt'>('6pt');
+  const [wongComboView, setWongComboView] = useState<'best' | 'grouped'>('grouped');
+  const [combosExpanded, setCombosExpanded] = useState(false);
+  const [parlays, setParlays] = useState<any | null>(null);
+  const [parlaysExpanded, setParlaysExpanded] = useState(false);
+  const [parlayLegFilter, setParlayLegFilter] = useState<'all' | 2 | 3 | 4>('all');
+  const [parlayNext24h, setParlayNext24h] = useState(false);
+  const [evNext24h, setEvNext24h] = useState(false);
 
   // EV range filter (display only)
   const EV_MAX_SLIDER = 20;
@@ -144,11 +154,17 @@ const BuckeyeScraper: React.FC = () => {
             setMessage(`Streaming: ${batch_completed}/${total_batches} batches completed (${total_events} events)`);
           }
         } else if (data.type === 'buckeye_complete') {
-          const { events, total_events, last_run, total_matched } = data.data;
+          const { events, total_events, last_run, total_matched, teaser_results, parlay_results } = data.data;
           if (events && events.length > 0) {
             setBuckeyeMarkets(events);
             setBuckeyeLastUpdate(last_run);
             setMessage(`Buckeye done: ${total_matched} games matched, ${total_events} events found`);
+          }
+          if (teaser_results) {
+            setWongTeasers(teaser_results);
+          }
+          if (parlay_results) {
+            setParlays(parlay_results);
           }
           setPipelineRunning(false);
           stopPolling();
@@ -221,6 +237,12 @@ const BuckeyeScraper: React.FC = () => {
         setBuckeyeLastUpdate(data.data.last_update || null);
         const allMarkets = (data.data.markets || []).slice(0, 150);
         setBuckeyeMarkets(allMarkets);
+        if (data.data.teaser_results) {
+          setWongTeasers(data.data.teaser_results);
+        }
+        if (data.data.parlay_results) {
+          setParlays(data.data.parlay_results);
+        }
       } else {
         setError(data.message || 'Failed to fetch results');
         setBuckeyeMarkets([]);
@@ -263,41 +285,65 @@ const BuckeyeScraper: React.FC = () => {
   };
 
   const handleRunCalculations = async () => {
+    // Immediately disable the button before any async work — prevents double-click
+    if (pipelineRunning) return;
+    setPipelineRunning(true);
     setLoading(true);
     setError(null);
     setMessage(null);
     setBuckeyeMarkets([]); // Clear Buckeye data
     setBuckeyeLastUpdate(null);
+    setWongTeasers(null);        // Clear Wong Teaser results
+    setParlays(null);            // Clear Parlay results
+    setParlaysExpanded(false);   // Always start collapsed for new run
+    setParlayNext24h(false);     // Reset 24h filter for new run
+    setEvNext24h(false);         // Reset EV table 24h filter for new run
     setAceMarkets([]);    // Clear ACE results so only Buckeye shows
     setAceLastUpdate(null);
     try {
-      console.log('[BuckeyeScraper] Starting streaming Buckeye pipeline...');
       const body = selectedSports.length > 0 ? { sport_filters: selectedSports } : {};
-      const res = await fetch(`${API_BASE}/api/run-streaming-pipeline`, { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      const data = await res.json();
+
+      // Auto-retry once on network errors (transient proxy drops in Replit)
+      let res: Response | null = null;
+      let lastNetworkErr: any = null;
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          console.log(`[BuckeyeScraper] Starting streaming pipeline (attempt ${attempt})...`);
+          res = await fetch(`${API_BASE}/api/run-streaming-pipeline`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+          lastNetworkErr = null;
+          break;
+        } catch (netErr) {
+          lastNetworkErr = netErr;
+          if (attempt < 2) {
+            console.warn('[BuckeyeScraper] Network error on pipeline start, retrying in 2s...', netErr);
+            await new Promise(r => setTimeout(r, 2000));
+          }
+        }
+      }
+      if (lastNetworkErr) throw lastNetworkErr;
+
+      const data = await res!.json();
       console.log('[BuckeyeScraper] Streaming pipeline start response:', data);
-      
+
       if (data.status === 'success') {
         setMessage(data.message || 'Streaming pipeline started - results will appear in real-time');
-        console.log('[BuckeyeScraper] Streaming pipeline started successfully - watching for real-time updates...');
-        
-        // Connect WebSocket for real-time updates
         connectWebSocket();
-        
-        // Start polling for results while pipeline runs (fallback)
         startPolling();
       } else {
+        // Backend rejected (e.g. already running) — restore button state
         setError(data.message || 'Failed to start streaming pipeline');
         setBuckeyeMarkets([]);
+        setPipelineRunning(false);
       }
     } catch (err) {
-      console.error('[BuckeyeScraper] Error starting streaming pipeline:', err);
-      setError('Failed to start streaming pipeline');
+      console.error('[BuckeyeScraper] Error starting streaming pipeline after retries:', err);
+      setError('Connection to server failed — please tap Run EV Bets again');
       setBuckeyeMarkets([]);
+      setPipelineRunning(false);
     } finally {
       setLoading(false);
     }
@@ -446,7 +492,13 @@ const BuckeyeScraper: React.FC = () => {
     const v = parseFloat(row.ev?.replace('%', '') || '0');
     const passMin = v >= minEv;
     const passMax = maxEv >= EV_MAX_SLIDER ? true : v <= maxEv;
-    return passMin && passMax;
+    if (!passMin || !passMax) return false;
+    if (evNext24h) {
+      const start = parseStartTime(row.start_time);
+      const isSoon = !!start && start.isAfter(dayjs()) && start.diff(dayjs(), 'hour') <= 24;
+      if (!isSoon) return false;
+    }
+    return true;
   });
 
   const sliderSx = {
@@ -672,13 +724,30 @@ const BuckeyeScraper: React.FC = () => {
             )}
           </Box>
           {topMarkets.length > 0 && (
-            <Typography variant="body2" sx={{ color: '#555', fontSize: '0.75rem' }}>
-              Showing {filteredMarkets.length} of {topMarkets.length} bets
-              {aceMarkets.length > 0 && buckeyeMarkets.length > 0 && (
-                <Box component="span" sx={{ color: '#555', ml: 0.5 }}>({aceMarkets.length} Ace + {buckeyeMarkets.length} Buckeye)</Box>
-              )}
-              {(minEv > 0 || maxEv < EV_MAX_SLIDER) && <Box component="span" sx={{ color: '#2E7D32', ml: 0.5 }}>(filtered)</Box>}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {/* 24h toggle for EV table */}
+              <Box
+                onClick={() => setEvNext24h(v => !v)}
+                sx={{
+                  px: 1, py: 0.25,
+                  fontSize: '0.7rem', fontWeight: evNext24h ? 700 : 400,
+                  color: evNext24h ? '#FFB300' : '#555',
+                  bgcolor: evNext24h ? 'rgba(255,179,0,0.1)' : 'transparent',
+                  border: `1px solid ${evNext24h ? 'rgba(255,179,0,0.4)' : 'rgba(255,255,255,0.06)'}`,
+                  borderRadius: 1,
+                  cursor: 'pointer', userSelect: 'none',
+                }}
+              >
+                ⏱ 24h
+              </Box>
+              <Typography variant="body2" sx={{ color: '#555', fontSize: '0.75rem' }}>
+                Showing {filteredMarkets.length} of {topMarkets.length} bets
+                {aceMarkets.length > 0 && buckeyeMarkets.length > 0 && (
+                  <Box component="span" sx={{ color: '#555', ml: 0.5 }}>({aceMarkets.length} Ace + {buckeyeMarkets.length} Buckeye)</Box>
+                )}
+                {(minEv > 0 || maxEv < EV_MAX_SLIDER || evNext24h) && <Box component="span" sx={{ color: '#2E7D32', ml: 0.5 }}>(filtered)</Box>}
+              </Typography>
+            </Box>
           )}
         </Box>
       )}
@@ -886,6 +955,476 @@ const BuckeyeScraper: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* ── Wong Teaser Scanner ─────────────────────────────────────────── */}
+      {wongTeasers && (
+        <Box sx={{ mt: 3 }}>
+          {/* Header row */}
+          <Box
+            onClick={() => setWongExpanded(e => !e)}
+            sx={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              cursor: 'pointer', userSelect: 'none',
+              px: 2, py: 1.25,
+              bgcolor: 'rgba(26,26,26,0.9)',
+              border: '1px solid rgba(255,165,0,0.25)',
+              borderRadius: wongExpanded ? '8px 8px 0 0' : 2,
+              '&:hover': { borderColor: 'rgba(255,165,0,0.5)' },
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Analytics sx={{ fontSize: '1rem', color: '#FFA500' }} />
+              <Typography sx={{ color: '#FFA500', fontWeight: 600, fontSize: '0.9rem' }}>
+                Wong Teaser Scanner
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 0.75 }}>
+                {wongTeasers.qualifying_legs_6pt > 0 && (
+                  <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,165,0,0.15)', border: '1px solid rgba(255,165,0,0.3)', borderRadius: 1, fontSize: '0.72rem', color: '#FFA500' }}>
+                    {wongTeasers.qualifying_legs_6pt} × 6pt leg{wongTeasers.qualifying_legs_6pt !== 1 ? 's' : ''}
+                  </Box>
+                )}
+                {wongTeasers.qualifying_legs_10pt > 0 && (
+                  <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,200,0,0.12)', border: '1px solid rgba(255,200,0,0.3)', borderRadius: 1, fontSize: '0.72rem', color: '#FFD700' }}>
+                    {wongTeasers.qualifying_legs_10pt} × 10pt leg{wongTeasers.qualifying_legs_10pt !== 1 ? 's' : ''}
+                  </Box>
+                )}
+                {wongTeasers.qualifying_legs_6pt === 0 && wongTeasers.qualifying_legs_10pt === 0 && (
+                  <Box sx={{ px: 1, py: 0.25, fontSize: '0.72rem', color: '#666' }}>No qualifying legs this week</Box>
+                )}
+              </Box>
+            </Box>
+            {wongExpanded ? <ExpandLess sx={{ color: '#FFA500', fontSize: '1.1rem' }} /> : <ExpandMore sx={{ color: '#FFA500', fontSize: '1.1rem' }} />}
+          </Box>
+
+          <Collapse in={wongExpanded}>
+            <Box sx={{ border: '1px solid rgba(255,165,0,0.25)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
+
+              {/* ── Type toggle ────────────────────────────────────────────── */}
+              {(wongTeasers.qualifying_legs_6pt > 0 || wongTeasers.qualifying_legs_10pt > 0) && (
+                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                  {(['6pt', '10pt'] as const).map(t => (
+                    <Button
+                      key={t}
+                      size="small"
+                      onClick={() => setWongTeaserType(t)}
+                      sx={{
+                        fontSize: '0.78rem', textTransform: 'none', borderRadius: 1.5,
+                        px: 2, py: 0.4,
+                        color: wongTeaserType === t ? '#FFA500' : '#666',
+                        border: `1px solid ${wongTeaserType === t ? 'rgba(255,165,0,0.5)' : 'rgba(255,255,255,0.08)'}`,
+                        bgcolor: wongTeaserType === t ? 'rgba(255,165,0,0.08)' : 'transparent',
+                        '&:hover': { borderColor: 'rgba(255,165,0,0.4)', color: '#FFA500' },
+                      }}
+                    >
+                      {t}
+                    </Button>
+                  ))}
+                </Box>
+              )}
+
+              {/* ── Qualifying legs list ──────────────────────────────────── */}
+              {wongTeaserType === '6pt' && wongTeasers.qualifying_legs_6pt === 0 && (
+                <Typography sx={{ color: '#555', fontSize: '0.82rem', mb: 2, fontStyle: 'italic' }}>
+                  No 6pt qualifying legs found in current slate (need NFL spreads between ±7.5–8.5 or ±1.5–2.5 with Pin limit ≥ 2,000).
+                </Typography>
+              )}
+              {wongTeaserType === '10pt' && wongTeasers.qualifying_legs_10pt === 0 && (
+                <Typography sx={{ color: '#555', fontSize: '0.82rem', mb: 2, fontStyle: 'italic' }}>
+                  No 10pt qualifying legs found (need NFL road-team spreads at ±1.5/2/2.5 or ±9.5/10/10.5 with Pin limit ≥ 2,000).
+                </Typography>
+              )}
+
+              {/* Legs grid */}
+              {(() => {
+                const rawLegs = wongTeaserType === '6pt'
+                  ? (wongTeasers.legs_6pt || [])
+                  : (wongTeasers.legs_10pt || []);
+                if (rawLegs.length === 0) return null;
+                // Sort: priority (road + low total) first, then by underlying Pinnacle EV desc
+                const legs = [...rawLegs].sort((a: any, b: any) => {
+                  const aPri = (a.is_road && a.low_total) ? 1 : 0;
+                  const bPri = (b.is_road && b.low_total) ? 1 : 0;
+                  if (bPri !== aPri) return bPri - aPri;
+                  return (b.main_line_ev_pct ?? 0) - (a.main_line_ev_pct ?? 0);
+                });
+                return (
+                  <Box sx={{ mb: 2.5 }}>
+                    <Typography sx={{ fontSize: '0.74rem', color: '#666', mb: 1, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Qualifying Legs ({legs.length}) — ranked by priority then spread EV
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {legs.map((leg: any, i: number) => (
+                        <Box key={i} sx={{
+                          px: 1.5, py: 1,
+                          bgcolor: 'rgba(255,165,0,0.05)',
+                          border: `1px solid ${leg.low_total && leg.is_road ? 'rgba(255,165,0,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                          borderRadius: 1.5,
+                          minWidth: 200,
+                          flex: '0 1 auto',
+                        }}>
+                          <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 1 }}>
+                            <Typography sx={{ fontSize: '0.78rem', color: '#ddd', fontWeight: 600, lineHeight: 1.3 }}>
+                              {leg.bet}
+                            </Typography>
+                            {leg.main_line_ev_pct != null && leg.main_line_ev_pct !== 0 && (
+                              <Box sx={{ fontSize: '0.68rem', color: leg.main_line_ev_pct >= 0 ? '#4CAF50' : '#aaa', fontFamily: 'monospace', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                                {leg.main_line_ev_pct >= 0 ? '+' : ''}{leg.main_line_ev_pct.toFixed(2)}% EV
+                              </Box>
+                            )}
+                          </Box>
+                          <Typography sx={{ fontSize: '0.7rem', color: '#777', lineHeight: 1.3 }}>
+                            {leg.matchup}
+                          </Typography>
+                          <Box sx={{ display: 'flex', gap: 0.75, mt: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
+                            <Box sx={{ fontSize: '0.68rem', color: '#FFA500', fontFamily: 'monospace' }}>
+                              → teased to {leg.teased_line > 0 ? '+' : ''}{leg.teased_line}
+                            </Box>
+                            {leg.pin_nvp && (
+                              <Box sx={{ fontSize: '0.68rem', color: '#888', fontFamily: 'monospace' }}>NVP {leg.pin_nvp}</Box>
+                            )}
+                          </Box>
+                          <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap' }}>
+                            {leg.is_road && <Box sx={{ fontSize: '0.65rem', color: '#64B5F6', px: 0.75, py: 0.25, bgcolor: 'rgba(100,181,246,0.1)', borderRadius: 0.75 }}>🏈 Road</Box>}
+                            {leg.low_total && <Box sx={{ fontSize: '0.65rem', color: '#81C784', px: 0.75, py: 0.25, bgcolor: 'rgba(129,199,132,0.1)', borderRadius: 0.75 }}>↓ O/U {leg.game_total}</Box>}
+                            {leg.pin_limit >= 5000 && <Box sx={{ fontSize: '0.65rem', color: '#CE93D8', px: 0.75, py: 0.25, bgcolor: 'rgba(206,147,216,0.08)', borderRadius: 0.75 }}>Lim {(leg.pin_limit/1000).toFixed(0)}k</Box>}
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                );
+              })()}
+
+              {/* ── Combos ────────────────────────────────────────────────── */}
+              {(() => {
+                const combos: any[] = wongTeaserType === '6pt'
+                  ? (wongTeasers.combos_6pt || [])
+                  : (wongTeasers.combos_10pt || []);
+                if (combos.length === 0) return null;
+
+                const bySize: Record<number, any[]> = {};
+                combos.forEach(c => { (bySize[c.n_teams] = bySize[c.n_teams] || []).push(c); });
+
+                // Balanced "best picks": top 2 per size bucket (avoids 5-leggers monopolising the list)
+                const bestPicks: any[] = [];
+                Object.keys(bySize).sort((a, b) => Number(a) - Number(b)).forEach(n => {
+                  const sorted = [...bySize[Number(n)]].sort((a, b) => (b.ev_blended_pct ?? b.ev_pct) - (a.ev_blended_pct ?? a.ev_pct));
+                  bestPicks.push(...sorted.slice(0, 2));
+                });
+
+                const ComboCard = ({ combo, ci }: { combo: any; ci: number }) => (
+                  <Box key={ci} sx={{
+                    p: 1.5,
+                    bgcolor: combo.flagged ? 'rgba(255,165,0,0.07)' : 'rgba(255,255,255,0.03)',
+                    border: `1px solid ${combo.flagged ? 'rgba(255,165,0,0.35)' : 'rgba(255,255,255,0.07)'}`,
+                    borderRadius: 1.5,
+                    minWidth: 220,
+                    flex: '0 1 auto',
+                    position: 'relative',
+                  }}>
+                    {combo.flagged && (
+                      <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.62rem', color: '#FFA500', fontWeight: 700 }}>★ EDGE</Box>
+                    )}
+                    {combo.priority_score > 0 && (
+                      <Box sx={{ position: 'absolute', top: combo.flagged ? 20 : 6, right: 8, fontSize: '0.62rem', color: '#64B5F6' }}>
+                        {'⬆'.repeat(combo.priority_score)} priority
+                      </Box>
+                    )}
+                    {combo.legs.map((leg: any, li: number) => (
+                      <Box key={li} sx={{ mb: li < combo.legs.length - 1 ? 0.75 : 0 }}>
+                        <Typography sx={{ fontSize: '0.76rem', color: '#ddd', fontWeight: 600, lineHeight: 1.2, pr: combo.flagged || combo.priority_score > 0 ? 4 : 0 }}>
+                          {leg.bet}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', flexWrap: 'wrap' }}>
+                          <Typography sx={{ fontSize: '0.68rem', color: '#FFA500', fontFamily: 'monospace' }}>
+                            → {leg.teased_line > 0 ? '+' : ''}{leg.teased_line}
+                          </Typography>
+                          {leg.is_road && <Box component="span" sx={{ fontSize: '0.62rem', color: '#64B5F6' }}>road</Box>}
+                          {leg.low_total && <Box component="span" sx={{ fontSize: '0.62rem', color: '#81C784' }}>O/U {leg.game_total}</Box>}
+                        </Box>
+                      </Box>
+                    ))}
+                    <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography sx={{ fontSize: '0.65rem', color: '#888', fontFamily: 'monospace' }}>
+                          {combo.n_teams}T {combo.book_odds}
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.7rem', color: '#4CAF50', fontWeight: 700 }}>
+                          +{combo.ev_hist_pct ?? combo.ev_blended_pct ?? combo.ev_pct}% EV
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography sx={{ fontSize: '0.62rem', color: '#666' }}>
+                          Lim {(combo.min_pin_limit / 1000).toFixed(0)}k+
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.62rem', color: '#888', fontFamily: 'monospace' }}>
+                          {combo.combined_prob_hist_pct ?? combo.combined_prob_blended_pct}% to win
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+
+                return (
+                  <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: combosExpanded ? 1.5 : 0 }}>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 0.75, cursor: 'pointer', userSelect: 'none' }}
+                        onClick={() => setCombosExpanded(v => !v)}
+                      >
+                        {combosExpanded
+                          ? <ExpandLess sx={{ fontSize: '0.9rem', color: '#666' }} />
+                          : <ExpandMore sx={{ fontSize: '0.9rem', color: '#666' }} />}
+                        <Typography sx={{ fontSize: '0.74rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          Best Combinations ({combos.length} total)
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 0.75 }}>
+                        {(['best', 'grouped'] as const).map(v => (
+                          <Button key={v} size="small" onClick={() => setWongComboView(v)} sx={{
+                            fontSize: '0.7rem', textTransform: 'none', borderRadius: 1.5, px: 1.5, py: 0.3,
+                            color: wongComboView === v ? '#FFA500' : '#555',
+                            border: `1px solid ${wongComboView === v ? 'rgba(255,165,0,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                            bgcolor: wongComboView === v ? 'rgba(255,165,0,0.07)' : 'transparent',
+                            '&:hover': { borderColor: 'rgba(255,165,0,0.3)', color: '#FFA500' },
+                          }}>
+                            {v === 'best' ? 'Best Picks' : 'By Size'}
+                          </Button>
+                        ))}
+                      </Box>
+                    </Box>
+
+                    {combosExpanded && wongComboView === 'best' && (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {bestPicks.map((combo, ci) => <ComboCard key={ci} combo={combo} ci={ci} />)}
+                      </Box>
+                    )}
+
+                    {combosExpanded && wongComboView === 'grouped' && Object.entries(bySize).sort(([a], [b]) => Number(a) - Number(b)).map(([n, grpCombos]) => (
+                      <Box key={n} sx={{ mb: 2 }}>
+                        <Typography sx={{ fontSize: '0.76rem', color: '#888', fontWeight: 600, mb: 1 }}>
+                          {n}-Team {wongTeaserType} &nbsp;
+                          <span style={{ color: '#FFA500', fontFamily: 'monospace' }}>{grpCombos[0].book_odds}</span>
+                          &nbsp;· Break-even <span style={{ color: '#999' }}>{grpCombos[0].break_even_pct}%/leg</span>
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {grpCombos.slice(0, 8).map((combo: any, ci: number) => (
+                            <ComboCard key={ci} combo={combo} ci={ci} />
+                          ))}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                );
+              })()}
+
+              {/* Footer note */}
+              <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
+                Historical win rates: 75.8%/leg (6pt, 2003+ data) · 83%/leg (10pt, road only, 3-team -120).
+                Qualifiers cross key numbers 3 & 7 (6pt) or 3, 7 & 10 (10pt).
+                <strong style={{ color: '#555' }}> EV</strong> = hist win rate (+ 1pp for O/U ≤49) raised to n_legs, × book payout − 1.
+                "X% to win" = the actual probability all legs hit. Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game.
+              </Typography>
+            </Box>
+          </Collapse>
+        </Box>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════
+          PARLAYS
+      ══════════════════════════════════════════════════════════════════ */}
+      {parlays && (() => {
+        // Two independent pools — switch entirely when 24h is active
+        const parlayList: any[]  = parlayNext24h
+          ? (parlays.parlays_24h || [])
+          : (parlays.parlays    || []);
+        const count24h: number = (parlays.parlays_24h || []).length;
+
+        return (
+        <Box sx={{ mt: 1.5 }}>
+          {/* Header row */}
+          <Box
+            onClick={() => setParlaysExpanded(v => !v)}
+            sx={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              px: 2, py: 1.25,
+              bgcolor: 'rgba(20,20,20,0.95)',
+              border: '1px solid rgba(100,181,246,0.25)',
+              borderRadius: parlaysExpanded ? '8px 8px 0 0' : '8px',
+              cursor: 'pointer', userSelect: 'none',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Typography sx={{ color: '#64B5F6', fontWeight: 600, fontSize: '0.9rem' }}>
+                🎲 Parlays
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center' }}>
+                {([2, 3, 4] as const).map(n => {
+                  const count = parlayList.filter((p: any) => p.n_legs === n).length;
+                  return count > 0 ? (
+                    <Box key={n} sx={{ px: 1, py: 0.25, bgcolor: 'rgba(100,181,246,0.12)', border: '1px solid rgba(100,181,246,0.25)', borderRadius: 1, fontSize: '0.72rem', color: '#64B5F6' }}>
+                      {n}-leg ×{count}
+                    </Box>
+                  ) : null;
+                })}
+                {parlays.eligible_legs != null && (
+                  <Box sx={{ px: 1, py: 0.25, fontSize: '0.72rem', color: '#555' }}>
+                    {parlays.eligible_legs} eligible legs
+                  </Box>
+                )}
+                {/* 24h toggle */}
+                <Box
+                  onClick={(e) => { e.stopPropagation(); setParlayNext24h(v => !v); }}
+                  sx={{
+                    px: 1, py: 0.25,
+                    fontSize: '0.7rem', fontWeight: parlayNext24h ? 700 : 400,
+                    color: parlayNext24h ? '#FFB300' : '#555',
+                    bgcolor: parlayNext24h ? 'rgba(255,179,0,0.1)' : 'transparent',
+                    border: `1px solid ${parlayNext24h ? 'rgba(255,179,0,0.4)' : 'rgba(255,255,255,0.06)'}`,
+                    borderRadius: 1,
+                    cursor: 'pointer', userSelect: 'none',
+                  }}
+                >
+                  ⏱ 24h {parlayNext24h && count24h > 0 ? `(${count24h})` : ''}
+                </Box>
+              </Box>
+            </Box>
+            {parlaysExpanded
+              ? <ExpandLess sx={{ color: '#64B5F6', fontSize: '1.1rem' }} />
+              : <ExpandMore sx={{ color: '#64B5F6', fontSize: '1.1rem' }} />}
+          </Box>
+
+          <Collapse in={parlaysExpanded}>
+            <Box sx={{ border: '1px solid rgba(100,181,246,0.25)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
+
+              {parlayList.length === 0 ? (
+                <Typography sx={{ color: '#555', fontSize: '0.82rem', fontStyle: 'italic' }}>
+                  {parlayNext24h
+                    ? 'No qualifying parlays with games in the next 24 hours (need pin_limit ≥ 1,000, leg EV ≥ −1%, odds ≤ +150).'
+                    : 'No qualifying parlays found (need pin_limit ≥ 1,000, leg EV ≥ −1%, odds ≤ +150).'}
+                </Typography>
+              ) : (
+                <>
+                  {/* Size filter tabs */}
+                  <Box sx={{ display: 'flex', gap: 0.75, mb: 1.5, alignItems: 'center' }}>
+                    {(['all', 2, 3, 4] as const).map(f => {
+                      const label = f === 'all' ? 'All' : `${f}-leg`;
+                      const count = f === 'all'
+                        ? parlayList.length
+                        : parlayList.filter((p: any) => p.n_legs === f).length;
+                      const active = parlayLegFilter === f;
+                      return count > 0 ? (
+                        <Box
+                          key={String(f)}
+                          onClick={() => setParlayLegFilter(f)}
+                          sx={{
+                            px: 1.25, py: 0.3,
+                            fontSize: '0.72rem', fontWeight: active ? 600 : 400,
+                            color: active ? '#64B5F6' : '#666',
+                            bgcolor: active ? 'rgba(100,181,246,0.12)' : 'transparent',
+                            border: `1px solid ${active ? 'rgba(100,181,246,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                            borderRadius: 1,
+                            cursor: 'pointer',
+                            userSelect: 'none',
+                          }}
+                        >
+                          {label} {count > 0 && <Box component="span" sx={{ opacity: 0.6 }}>({count})</Box>}
+                        </Box>
+                      ) : null;
+                    })}
+                    <Typography sx={{ ml: 'auto', fontSize: '0.7rem', color: '#444' }}>
+                      {parlayNext24h
+                        ? `${(parlays.total_combos_24h ?? 0).toLocaleString()} combos · ${parlays.eligible_legs_24h ?? 0} legs (24h)`
+                        : `${(parlays.total_combos ?? 0).toLocaleString()} combos · ${parlays.eligible_legs ?? 0} legs`}
+                    </Typography>
+                  </Box>
+
+                  {/* Parlay cards */}
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {parlayList
+                      .filter((p: any) => parlayLegFilter === 'all' || p.n_legs === parlayLegFilter)
+                      .map((parlay: any, pi: number) => (
+                      <Box key={pi} sx={{
+                        p: 1.5,
+                        bgcolor: parlay.ev_blended_pct >= 0 ? 'rgba(100,181,246,0.05)' : 'rgba(255,255,255,0.02)',
+                        border: `1px solid ${parlay.same_sport ? 'rgba(100,181,246,0.3)' : 'rgba(255,255,255,0.07)'}`,
+                        borderRadius: 1.5,
+                        minWidth: 230,
+                        maxWidth: 310,
+                        flex: '0 1 auto',
+                        position: 'relative',
+                      }}>
+                        {parlay.same_sport && (
+                          <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.6rem', color: '#64B5F6', fontWeight: 700, letterSpacing: '0.05em' }}>
+                            ◆ SAME
+                          </Box>
+                        )}
+
+                        {/* Legs */}
+                        {(parlay.legs || []).map((leg: any, li: number) => (
+                          <Box key={li} sx={{ mb: li < parlay.legs.length - 1 ? 0.9 : 0 }}>
+                            {/* Bet name */}
+                            <Typography sx={{ fontSize: '0.76rem', color: '#ddd', fontWeight: 600, lineHeight: 1.25, pr: parlay.same_sport ? 4 : 0 }}>
+                              {leg.bet}
+                            </Typography>
+                            {/* Matchup context */}
+                            {leg.matchup && leg.matchup.trim() && (
+                              <Typography sx={{ fontSize: '0.61rem', color: '#aaa', lineHeight: 1.25, mb: 0.25 }}>
+                                {leg.matchup}
+                              </Typography>
+                            )}
+                            {/* Stats row */}
+                            <Box sx={{ display: 'flex', gap: 0.6, alignItems: 'center', flexWrap: 'wrap' }}>
+                              <Box component="span" sx={{ fontSize: '0.62rem', color: '#888', fontFamily: 'monospace' }}>
+                                {leg.betbck_odds}
+                              </Box>
+                              {leg.league && (
+                                <Box component="span" sx={{ fontSize: '0.6rem', color: '#64B5F6', px: 0.5, py: 0.1, bgcolor: 'rgba(100,181,246,0.08)', borderRadius: 0.5 }}>
+                                  {leg.league}
+                                </Box>
+                              )}
+                              <Box component="span" sx={{ fontSize: '0.62rem', color: leg.ev_pct >= 0 ? '#4CAF50' : '#aaa', fontFamily: 'monospace' }}>
+                                {leg.ev_pct >= 0 ? '+' : ''}{leg.ev_pct}% EV
+                              </Box>
+                              <Box component="span" sx={{ fontSize: '0.6rem', color: '#555' }}>
+                                Lim {(leg.pin_limit / 1000).toFixed(0)}k
+                              </Box>
+                            </Box>
+                          </Box>
+                        ))}
+
+                        {/* Footer */}
+                        <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography sx={{ fontSize: '0.67rem', color: '#888', fontFamily: 'monospace', fontWeight: 600 }}>
+                              {parlay.n_legs}L &nbsp;{parlay.parlay_odds}
+                            </Typography>
+                            <Typography sx={{ fontSize: '0.72rem', color: parlay.ev_blended_pct >= 0 ? '#4CAF50' : '#aaa', fontWeight: 700 }}>
+                              {parlay.ev_blended_pct >= 0 ? '+' : ''}{parlay.ev_blended_pct}% EV
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Typography sx={{ fontSize: '0.62rem', color: '#555' }}>
+                              win {parlay.win_prob_pct}%
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+
+                  {/* Footer note */}
+                  <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
+                    Parlay EV = ∏(1 + leg_EV) − 1 · Parlay odds = product of BetBCK decimal odds · Top 10 per size shown.
+                    Ranked highest EV to lowest · Pin limit ≥ 1,000 · Leg EV ≥ −1% · Odds ≤ +150 · Max 3 +money legs · One leg per game.
+                  </Typography>
+                </>
+              )}
+            </Box>
+          </Collapse>
+        </Box>
+        );
+      })()}
     </>
   );
 };
