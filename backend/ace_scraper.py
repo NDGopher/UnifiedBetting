@@ -306,49 +306,133 @@ class AceScraper:
         safe_print(f"[ACE DEBUG] get_active_league_ids returning: {league_ids_str}")
         return league_ids_str
 
-    # Exact league IDs from the user's verified NewSchedule.aspx browser request:
-    # https://backend.action23.ag/wager/NewSchedule.aspx?lg=<IDs>&WT=0
-    # Sending only these 47 IDs keeps the request pattern natural (matches a real
-    # logged-in user's selection) and avoids hitting IDs that don't exist on ACE.
-    # ACE automatically omits leagues with no active games from the JSON response,
-    # so inactive leagues cost nothing extra.
+    # Full set of leagues we want to query on Ace (action23.ag).
+    # This is the union of:
+    #   - User-curated list verified to match Pinnacle
+    #     (from NewSchedule.aspx?lg=416,417,418,...&WT=1 browser request)
+    #   - Previously verified soccer league IDs
+    # At runtime we intersect this with whatever ActiveLeaguesHelper.aspx says
+    # is currently active, so we never waste a query on a dormant league.
     _KNOWN_LEAGUE_IDS = [
         # ── MLB ───────────────────────────────────────────────────────────────
-        "416",          # MLB - GAME LINES
-        "419",          # MLB - ALT LINES (confirmed from payload)
+        "416",   # MLB - GAME LINES
+        "417",   # MLB - 1ST HALF
+        "418",   # MLB - 5 INNINGS
+        "419",   # MLB - ALT LINES
         # ── Basketball ────────────────────────────────────────────────────────
-        "535",
+        "535",   # NBA
+        "443",   # College basketball or similar
+        "626",
         # ── Football ──────────────────────────────────────────────────────────
-        "298", "7",
+        "298",   # NFL
+        "7",
+        "1756",
         # ── Hockey ────────────────────────────────────────────────────────────
-        "211", "544",
-        # ── Other (sport resolved from Description at runtime) ────────────────
+        "211",   # NHL
+        "544",
+        # ── Other ─────────────────────────────────────────────────────────────
         "685", "442", "539",
-        # ── Soccer ────────────────────────────────────────────────────────────
-        "2521", "515", "537", "2887", "3483", "3231", "3694", "439", "934",
-        "4286", "574", "948", "519", "1064", "3114", "585", "936", "3487",
-        "2203", "2251", "1183", "483", "2153", "545", "962", "4757", "333",
-        "2929", "1180", "546", "2330", "1193", "1839", "286", "4411", "3016",
-        "691",
+        # ── Soccer (user-curated matchable leagues) ───────────────────────────
+        "2521", "515", "762", "4237", "3744", "3745", "3749",
+        "333",  "2929", "437",  "1076", "2429", "1189", "1840",
+        "4759", "1165", "2865", "1569", "746",  "930",  "3254", "446",
+        # ── Soccer (additional verified leagues) ──────────────────────────────
+        "537",  "2887", "3483", "3231", "3694", "439",  "934",
+        "4286", "574",  "948",  "519",  "1064", "3114", "585",  "936",
+        "3487", "2203", "2251", "1183", "483",  "2153", "545",  "962",
+        "4757", "1180", "546",  "2330", "1193", "1839", "286",  "4411",
+        "3016", "691",
     ]
+
+    def _fetch_active_leagues_from_api(self) -> List[str]:
+        """Call ActiveLeaguesHelper.aspx?WT=1 to get the live set of active
+        league IDs on Ace right now.  Returns a list of string IDs, or an
+        empty list if the call fails or is not yet authenticated."""
+        if not self.logged_in:
+            return []
+        try:
+            url = f"{self.base_url}/wager/ActiveLeaguesHelper.aspx"
+            headers = {
+                'Accept': 'application/json, text/plain, */*',
+                'Referer': f'{self.base_url}/wager/CreateSports.aspx?WT=1',
+                'Accept-Encoding': 'gzip, deflate, br',
+            }
+            resp = self.session.get(url, params={'WT': '1'}, headers=headers, timeout=15)
+            if resp.status_code != 200:
+                safe_print(f"[ACE DEBUG] ActiveLeaguesHelper returned {resp.status_code}")
+                return []
+            try:
+                data = resp.json()
+            except Exception:
+                # Try stripping BOM / whitespace
+                text = resp.content.decode('utf-8-sig', errors='replace').strip()
+                if not text:
+                    return []
+                import json as _json
+                data = _json.loads(text)
+
+            ids: List[str] = []
+            # Handle the various shapes the endpoint might return:
+            #   [{id:..., name:...}, ...]
+            #   {leagues:[{id:..., ...}]}
+            #   [[{id:..., ...}], ...]    (nested like NewScheduleHelper)
+            #   [416, 417, ...]           (plain int array)
+            def _extract(obj):
+                if isinstance(obj, int):
+                    ids.append(str(obj))
+                elif isinstance(obj, str) and obj.isdigit():
+                    ids.append(obj)
+                elif isinstance(obj, dict):
+                    for key in ('id', 'Id', 'ID', 'idlg', 'LeagueId', 'league_id', 'lgid'):
+                        val = obj.get(key)
+                        if val is not None:
+                            _extract(val)
+                            break
+                    else:
+                        for v in obj.values():
+                            _extract(v)
+                elif isinstance(obj, list):
+                    for item in obj:
+                        _extract(item)
+
+            _extract(data)
+            unique_ids = list(dict.fromkeys(ids))  # preserve order, deduplicate
+            safe_print(f"[ACE DEBUG] ActiveLeaguesHelper returned {len(unique_ids)} active league IDs")
+            return unique_ids
+        except Exception as e:
+            safe_print(f"[ACE DEBUG] ActiveLeaguesHelper call failed: {e}")
+            return []
 
     def _fetch_active_leagues(self) -> List[str]:
         """Return the league IDs to request from ACE.
 
-        First call in a session: use the full verified 47-ID list so ACE can
-        tell us which leagues have active games right now.
-
-        Subsequent calls: use only the IDs that actually came back in the first
-        response (cached by _parse_json_response).  This ensures we never send
-        IDs for leagues that are currently inactive, and varies the request
-        naturally rather than always sending the same static 47-ID string.
+        Strategy:
+          1. Call ActiveLeaguesHelper.aspx?WT=1 to get what's live right now.
+          2. Intersect those IDs with _KNOWN_LEAGUE_IDS (the curated matchable
+             set) so we don't accidentally query unrelated or unmatchable leagues.
+          3. If the API call fails or returns nothing, fall back to the full
+             _KNOWN_LEAGUE_IDS list (ACE silently omits inactive leagues from
+             the JSON response anyway, so this is safe).
         """
-        if self._session_active_league_ids:
-            safe_print(f"[ACE DEBUG] Using {len(self._session_active_league_ids)} "
-                       f"session-cached active league IDs (from last response)")
-            return list(self._session_active_league_ids)
-        safe_print(f"[ACE DEBUG] First fetch — using all {len(self._KNOWN_LEAGUE_IDS)} "
-                   f"verified league IDs to discover active leagues")
+        active_from_api = self._fetch_active_leagues_from_api()
+        known_set = set(self._KNOWN_LEAGUE_IDS)
+
+        if active_from_api:
+            active_set = set(active_from_api)
+            intersection = [lg for lg in self._KNOWN_LEAGUE_IDS if lg in active_set]
+            if intersection:
+                safe_print(
+                    f"[ACE DEBUG] Active leagues from API: {len(active_from_api)}  "
+                    f"Known/matchable: {len(known_set)}  "
+                    f"Intersection (will query): {len(intersection)}"
+                )
+                return intersection
+            safe_print(
+                f"[ACE DEBUG] ActiveLeaguesHelper/KNOWN intersection is empty — "
+                f"falling back to full KNOWN list"
+            )
+
+        safe_print(f"[ACE DEBUG] Using full KNOWN list: {len(self._KNOWN_LEAGUE_IDS)} leagues")
         return list(self._KNOWN_LEAGUE_IDS)
     
     def get_combined_league_ids(self) -> str:
@@ -378,7 +462,7 @@ class AceScraper:
 
                 # Step 1: Navigate to CreateSports.aspx first (as per workflow)
                 safe_print("[ACE DEBUG] Step 1: Navigating to CreateSports.aspx...")
-                create_sports_url = f"{self.base_url}/wager/CreateSports.aspx?WT=0"
+                create_sports_url = f"{self.base_url}/wager/CreateSports.aspx?WT=1"
                 create_response = self.session.get(create_sports_url, allow_redirects=False)
                 safe_print(f"[ACE DEBUG] CreateSports response status: {create_response.status_code}")
                 safe_print(f"[ACE DEBUG] CreateSports response URL: {create_response.url}")
@@ -411,7 +495,7 @@ class AceScraper:
                 # Step 2: Fetch odds data from correct URL (NewScheduleHelper.aspx)
                 odds_url = f"{self.base_url}/wager/NewScheduleHelper.aspx"
                 params = {
-                    'WT': '0',
+                    'WT': '1',
                     'lg': league_ids
                 }
                 safe_print(f"[ACE DEBUG] Step 2: Fetching odds from: {odds_url} with params: {params} (attempt {attempt + 1}/{max_retries})")
@@ -428,7 +512,7 @@ class AceScraper:
                     'Sec-Fetch-Dest': 'empty',
                     'Sec-Fetch-Mode': 'cors',
                     'Sec-Fetch-Site': 'same-origin',
-                    'Referer': f'{self.base_url}/wager/CreateSports.aspx?WT=0'
+                    'Referer': f'{self.base_url}/wager/CreateSports.aspx?WT=1'
                 }
                 
                 # Update session headers

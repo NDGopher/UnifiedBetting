@@ -1,2 +1,3 @@
-- [Pinnacle spread key mapping](pinnacle-spread-key-mapping.md) — hdp = home team's handicap; key selection must be driven by pinnacle home/away identity, not BetBCK top/bottom order.
-- [Ace ALT lines matching](ace-alt-lines-matching.md) — multiple ALT entries per game must NOT block each other via processed_pinnacle_keys
+- [Ace pipeline league expansion](ace-league-expansion.md) — WT=1 required for both CreateSports and NewScheduleHelper; 70-league KNOWN list is the reliable fallback when ActiveLeaguesHelper returns empty.
+- [Match games time filter](match-games-time-filter.md) — 24h filter silently dropped valid Ace games; widened to 72h; TIME-SKIP is now logger.info so drops are visible.
+- [ALT lines matching fix](alt-lines-matching.md) — only non-ALT games should add to processed_pinnacle_keys; ALT lines for same game must all be processed.

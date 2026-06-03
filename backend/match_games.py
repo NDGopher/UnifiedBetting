@@ -521,9 +521,14 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                     pinnacle_dt = datetime.fromisoformat(pinnacle_time.replace('Z', '+00:00'))
                     time_diff = abs((betbck_dt - pinnacle_dt).total_seconds())
                     
-                    # Only match games within 24 hours of each other
-                    if time_diff > 86400:  # 24 hours in seconds
-                        logger.debug(f"[TIME-SKIP] Time diff too large: {time_diff/3600:.1f}h")
+                    # Match games within 72 hours of each other.
+                    # 24h is too aggressive — it silently drops valid Ace games
+                    # whose times are parsed in a different timezone offset than
+                    # the Pinnacle UTC times.  The frontend 24h toggle handles
+                    # display-level filtering; the matching layer just needs to
+                    # avoid obviously wrong cross-day / cross-week false positives.
+                    if time_diff > 259200:  # 72 hours in seconds
+                        logger.info(f"[TIME-SKIP] Time diff too large ({time_diff/3600:.1f}h) — skipping: {betbck_time} vs {pinnacle_time}")
                         continue
                     else:
                         logger.debug(f"[TIME-MATCH] Time difference acceptable: {time_diff/3600:.1f} hours between {betbck_time} and {pinnacle_time}")
