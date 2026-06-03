@@ -291,8 +291,9 @@ const BuckeyeScraper: React.FC = () => {
     setMessage(null);
     setBuckeyeMarkets([]); // Clear Buckeye data
     setBuckeyeLastUpdate(null);
-    setWongTeasers(null); // Clear Wong Teaser results
-    setParlays(null);     // Clear Parlay results
+    setWongTeasers(null);        // Clear Wong Teaser results
+    setParlays(null);            // Clear Parlay results
+    setParlaysExpanded(false);   // Always start collapsed for new run
     setAceMarkets([]);    // Clear ACE results so only Buckeye shows
     setAceLastUpdate(null);
     try {
