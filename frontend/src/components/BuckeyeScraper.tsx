@@ -53,6 +53,7 @@ const BuckeyeScraper: React.FC = () => {
   const [parlaysExpanded, setParlaysExpanded] = useState(false);
   const [parlayLegFilter, setParlayLegFilter] = useState<'all' | 2 | 3 | 4>('all');
   const [parlayNext24h, setParlayNext24h] = useState(false);
+  const [evNext24h, setEvNext24h] = useState(false);
 
   // EV range filter (display only)
   const EV_MAX_SLIDER = 20;
@@ -296,6 +297,7 @@ const BuckeyeScraper: React.FC = () => {
     setParlays(null);            // Clear Parlay results
     setParlaysExpanded(false);   // Always start collapsed for new run
     setParlayNext24h(false);     // Reset 24h filter for new run
+    setEvNext24h(false);         // Reset EV table 24h filter for new run
     setAceMarkets([]);    // Clear ACE results so only Buckeye shows
     setAceLastUpdate(null);
     try {
@@ -490,7 +492,13 @@ const BuckeyeScraper: React.FC = () => {
     const v = parseFloat(row.ev?.replace('%', '') || '0');
     const passMin = v >= minEv;
     const passMax = maxEv >= EV_MAX_SLIDER ? true : v <= maxEv;
-    return passMin && passMax;
+    if (!passMin || !passMax) return false;
+    if (evNext24h) {
+      const start = parseStartTime(row.start_time);
+      const isSoon = !!start && start.isAfter(dayjs()) && start.diff(dayjs(), 'hour') <= 24;
+      if (!isSoon) return false;
+    }
+    return true;
   });
 
   const sliderSx = {
@@ -716,13 +724,30 @@ const BuckeyeScraper: React.FC = () => {
             )}
           </Box>
           {topMarkets.length > 0 && (
-            <Typography variant="body2" sx={{ color: '#555', fontSize: '0.75rem' }}>
-              Showing {filteredMarkets.length} of {topMarkets.length} bets
-              {aceMarkets.length > 0 && buckeyeMarkets.length > 0 && (
-                <Box component="span" sx={{ color: '#555', ml: 0.5 }}>({aceMarkets.length} Ace + {buckeyeMarkets.length} Buckeye)</Box>
-              )}
-              {(minEv > 0 || maxEv < EV_MAX_SLIDER) && <Box component="span" sx={{ color: '#2E7D32', ml: 0.5 }}>(filtered)</Box>}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {/* 24h toggle for EV table */}
+              <Box
+                onClick={() => setEvNext24h(v => !v)}
+                sx={{
+                  px: 1, py: 0.25,
+                  fontSize: '0.7rem', fontWeight: evNext24h ? 700 : 400,
+                  color: evNext24h ? '#FFB300' : '#555',
+                  bgcolor: evNext24h ? 'rgba(255,179,0,0.1)' : 'transparent',
+                  border: `1px solid ${evNext24h ? 'rgba(255,179,0,0.4)' : 'rgba(255,255,255,0.06)'}`,
+                  borderRadius: 1,
+                  cursor: 'pointer', userSelect: 'none',
+                }}
+              >
+                ⏱ 24h
+              </Box>
+              <Typography variant="body2" sx={{ color: '#555', fontSize: '0.75rem' }}>
+                Showing {filteredMarkets.length} of {topMarkets.length} bets
+                {aceMarkets.length > 0 && buckeyeMarkets.length > 0 && (
+                  <Box component="span" sx={{ color: '#555', ml: 0.5 }}>({aceMarkets.length} Ace + {buckeyeMarkets.length} Buckeye)</Box>
+                )}
+                {(minEv > 0 || maxEv < EV_MAX_SLIDER || evNext24h) && <Box component="span" sx={{ color: '#2E7D32', ml: 0.5 }}>(filtered)</Box>}
+              </Typography>
+            </Box>
           )}
         </Box>
       )}

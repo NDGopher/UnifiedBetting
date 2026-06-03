@@ -89,16 +89,21 @@ def _is_within_24h(start_time_str: str) -> bool:
     if not start_time_str or start_time_str in ('-', 'N/A'):
         return False
     try:
-        dt = datetime.strptime(start_time_str, '%Y-%m-%d %I:%M %p')
+        dt_naive = datetime.strptime(start_time_str, '%Y-%m-%d %I:%M %p')
+        # Determine CDT vs CST offset (CDT = UTC-5, Mar-Nov; CST = UTC-6 otherwise)
         try:
             import pytz
             central_tz = pytz.timezone('America/Chicago')
-            dt_central = central_tz.localize(dt)
-        except ImportError:
-            dt_central = dt.replace(tzinfo=timezone(timedelta(hours=-5)))
+            dt_aware = central_tz.localize(dt_naive)
+            dt_utc = dt_aware.astimezone(timezone.utc)
+        except Exception:
+            month = dt_naive.month
+            offset_h = -5 if 3 <= month <= 11 else -6
+            dt_utc = dt_naive.replace(tzinfo=timezone(timedelta(hours=offset_h))) \
+                             .astimezone(timezone.utc)
         now_utc = datetime.now(timezone.utc)
-        delta = (dt_central - now_utc.astimezone(dt_central.tzinfo)).total_seconds()
-        return 0 <= delta <= 24 * 3600
+        delta = (dt_utc - now_utc).total_seconds()
+        return 0 < delta <= 24 * 3600
     except Exception:
         return False
 
