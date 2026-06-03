@@ -2066,6 +2066,28 @@ async def run_ace_streaming_pipeline_background():
         logger.info(f"[ACE-PIPELINE] Step 4 done: {n_matched} games matched")
         print(f"[ACE-PIPELINE] Step 4 done: {n_matched} matched")
 
+        # ── Log unmatched Ace games for diagnosis ────────────────────────────
+        if matched is not None and ace_games_betbck:
+            matched_ids = {
+                m.get('betbck_game', {}).get('betbck_game_id', '') for m in matched
+            }
+            unmatched_ace = [
+                g for g in ace_games_betbck
+                if g.get('betbck_game_id', '') not in matched_ids
+            ]
+            n_unmatched = len(unmatched_ace)
+            n_total = len(ace_games_betbck)
+            logger.info(f"[ACE-PIPELINE] Unmatched: {n_unmatched}/{n_total} games failed Pinnacle match")
+            print(f"[ACE-PIPELINE] Unmatched: {n_unmatched}/{n_total} games")
+            for g in unmatched_ace:
+                home = g.get('betbck_site_home_team', '?')
+                away = g.get('betbck_site_away_team', '?')
+                sport = g.get('sport', '?')
+                league = g.get('league', '?')
+                mk = g.get('market_suffix') or 'main'
+                logger.info(f"[ACE-UNMATCHED] {home} vs {away} | sport={sport} | league={league} | market={mk}")
+                print(f"[ACE-UNMATCHED] {home} vs {away} | sport={sport} | league={league} | market={mk}")
+
         if not matched:
             logger.warning("[ACE-PIPELINE] No games matched Pinnacle events")
             print("[ACE-PIPELINE] WARNING: No games matched")

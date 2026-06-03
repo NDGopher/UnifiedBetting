@@ -1,0 +1,82 @@
+Request URL
+https://backend.action23.ag/wager/NewSchedule.aspx?lg=416,417,418,535,443,626,298,7,1756,211,544,2521,515,762,4237,3744,3745,3749,333,2929,437,1076,2429,1189,1840,4759,1165,2865,1569,442,746,930,539,3254,446&WT=1
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+104.21.38.253:443
+Referrer Policy
+strict-origin-when-cross-origin
+alt-svc
+h3=":443"; ma=86400
+cache-control
+private
+cf-cache-status
+DYNAMIC
+cf-ray
+a060c5295923b979-OMA
+content-encoding
+zstd
+content-type
+text/html; charset=utf-8
+date
+Wed, 03 Jun 2026 18:30:38 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+priority
+u=0,i
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=s5WIu229wLwqkRHfVsUWZTnoJPJtEBi8VBm6llIzU7Iig5YQsVeUHCrxtfl4JTqtnUE%2BKkH8SBfSFQ4aEX61suDP%2FEWvFI4XPJEgTEKj6%2B7pPXSXBzcZubD07CGVXJoZ0ZCkiISc"}]}
+server
+cloudflare
+server-timing
+cfCacheStatus;desc="DYNAMIC"
+server-timing
+cfEdge;dur=3,cfOrigin;dur=108
+server-timing
+cfExtPri
+vary
+Accept-Encoding
+x-aspnet-version
+4.0.30319
+x-powered-by
+ASP.NET
+:authority
+backend.action23.ag
+:method
+GET
+:path
+/wager/NewSchedule.aspx?lg=416,417,418,535,443,626,298,7,1756,211,544,2521,515,762,4237,3744,3745,3749,333,2929,437,1076,2429,1189,1840,4759,1165,2865,1569,442,746,930,539,3254,446&WT=1
+:scheme
+https
+accept
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-US,en;q=0.9
+cookie
+ASP.NET_SessionId=1rz42ckh0ryawt04lboqnzrj; pl=
+priority
+u=0, i
+referer
+https://backend.action23.ag/wager/CreateSports.aspx?WT=1
+sec-ch-ua
+"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+document
+sec-fetch-mode
+navigate
+sec-fetch-site
+same-origin
+sec-fetch-user
+?1
+upgrade-insecure-requests
+1
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
