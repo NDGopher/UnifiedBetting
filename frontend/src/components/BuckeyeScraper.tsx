@@ -47,6 +47,7 @@ const BuckeyeScraper: React.FC = () => {
   const [wongTeasers, setWongTeasers] = useState<any | null>(null);
   const [wongExpanded, setWongExpanded] = useState(false);
   const [wongTeaserType, setWongTeaserType] = useState<'6pt' | '10pt'>('6pt');
+  const [wongComboView, setWongComboView] = useState<'top8' | 'grouped'>('top8');
 
   // EV range filter (display only)
   const EV_MAX_SLIDER = 20;
@@ -945,44 +946,6 @@ const BuckeyeScraper: React.FC = () => {
           <Collapse in={wongExpanded}>
             <Box sx={{ border: '1px solid rgba(255,165,0,0.25)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
 
-              {/* ── Break-even analysis ──────────────────────────────────── */}
-              <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: '#999', mb: 1, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                Profitability Analysis (using historical win rates)
-              </Typography>
-              <Box sx={{ overflowX: 'auto', mb: 2.5 }}>
-                <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.8rem' }}>
-                  <thead>
-                    <tr>
-                      {['Type', 'Teams', 'Book Odds', 'Break-even/leg', 'Historical Rate', 'EV @ Historical', ''].map(h => (
-                        <th key={h} style={{ color: '#777', fontWeight: 500, padding: '4px 12px 8px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.07)', whiteSpace: 'nowrap' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(wongTeasers.breakeven || []).map((row: any, i: number) => (
-                      <tr key={i}>
-                        <td style={{ padding: '5px 12px', textAlign: 'center', color: row.type === '6pt' ? '#FFA500' : '#FFD700', fontWeight: 600 }}>{row.type}</td>
-                        <td style={{ padding: '5px 12px', textAlign: 'center', color: '#ccc' }}>{row.teams}-team</td>
-                        <td style={{ padding: '5px 12px', textAlign: 'center', color: '#ccc', fontFamily: 'monospace' }}>{row.book_odds}</td>
-                        <td style={{ padding: '5px 12px', textAlign: 'center', color: '#aaa' }}>{row.break_even_pct}%</td>
-                        <td style={{ padding: '5px 12px', textAlign: 'center', color: '#aaa' }}>{row.historical_rate_pct}%</td>
-                        <td style={{ padding: '5px 12px', textAlign: 'center' }}>
-                          <span style={{
-                            color: row.ev_at_historical_pct > 0 ? '#4CAF50' : '#f44336',
-                            fontWeight: 700,
-                          }}>
-                            {row.ev_at_historical_pct > 0 ? '+' : ''}{row.ev_at_historical_pct}%
-                          </span>
-                        </td>
-                        <td style={{ padding: '5px 12px', textAlign: 'center' }}>
-                          {row.profitable && <span style={{ color: '#4CAF50', fontSize: '0.7rem' }}>✔ +EV</span>}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </Box>
-
               {/* ── Type toggle ────────────────────────────────────────────── */}
               {(wongTeasers.qualifying_legs_6pt > 0 || wongTeasers.qualifying_legs_10pt > 0) && (
                 <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
@@ -1080,69 +1043,98 @@ const BuckeyeScraper: React.FC = () => {
                 const bySize: Record<number, any[]> = {};
                 combos.forEach(c => { (bySize[c.n_teams] = bySize[c.n_teams] || []).push(c); });
 
+                const top8 = [...combos].sort((a, b) => (b.ev_blended_pct ?? b.ev_pct) - (a.ev_blended_pct ?? a.ev_pct)).slice(0, 8);
+
+                const ComboCard = ({ combo, ci }: { combo: any; ci: number }) => (
+                  <Box key={ci} sx={{
+                    p: 1.5,
+                    bgcolor: combo.flagged ? 'rgba(255,165,0,0.07)' : 'rgba(255,255,255,0.03)',
+                    border: `1px solid ${combo.flagged ? 'rgba(255,165,0,0.35)' : 'rgba(255,255,255,0.07)'}`,
+                    borderRadius: 1.5,
+                    minWidth: 220,
+                    flex: '0 1 auto',
+                    position: 'relative',
+                  }}>
+                    {combo.flagged && (
+                      <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.62rem', color: '#FFA500', fontWeight: 700 }}>★ EDGE</Box>
+                    )}
+                    {combo.priority_score > 0 && (
+                      <Box sx={{ position: 'absolute', top: combo.flagged ? 20 : 6, right: 8, fontSize: '0.62rem', color: '#64B5F6' }}>
+                        {'⬆'.repeat(combo.priority_score)} priority
+                      </Box>
+                    )}
+                    {combo.legs.map((leg: any, li: number) => (
+                      <Box key={li} sx={{ mb: li < combo.legs.length - 1 ? 0.75 : 0 }}>
+                        <Typography sx={{ fontSize: '0.76rem', color: '#ddd', fontWeight: 600, lineHeight: 1.2, pr: combo.flagged || combo.priority_score > 0 ? 4 : 0 }}>
+                          {leg.bet}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', flexWrap: 'wrap' }}>
+                          <Typography sx={{ fontSize: '0.68rem', color: '#FFA500', fontFamily: 'monospace' }}>
+                            → {leg.teased_line > 0 ? '+' : ''}{leg.teased_line}
+                          </Typography>
+                          {leg.is_road && <Box component="span" sx={{ fontSize: '0.62rem', color: '#64B5F6' }}>road</Box>}
+                          {leg.low_total && <Box component="span" sx={{ fontSize: '0.62rem', color: '#81C784' }}>O/U {leg.game_total}</Box>}
+                        </Box>
+                      </Box>
+                    ))}
+                    <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography sx={{ fontSize: '0.65rem', color: '#888', fontFamily: 'monospace' }}>
+                          {combo.n_teams}T {combo.book_odds}
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.7rem', color: '#4CAF50', fontWeight: 700 }}>
+                          +{combo.ev_blended_pct ?? combo.ev_pct}% blended
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography sx={{ fontSize: '0.62rem', color: '#666' }}>
+                          Lim {(combo.min_pin_limit / 1000).toFixed(0)}k+
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.62rem', color: '#666' }}>
+                          hist: +{combo.ev_hist_pct}%
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+
                 return (
                   <Box>
-                    <Typography sx={{ fontSize: '0.74rem', color: '#666', mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Best Combinations ({combos.length} total)
-                    </Typography>
-                    {Object.entries(bySize).sort(([a], [b]) => Number(a) - Number(b)).map(([n, grpCombos]) => (
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+                      <Typography sx={{ fontSize: '0.74rem', color: '#666', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Best Combinations ({combos.length} total)
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 0.75 }}>
+                        {(['top8', 'grouped'] as const).map(v => (
+                          <Button key={v} size="small" onClick={() => setWongComboView(v)} sx={{
+                            fontSize: '0.7rem', textTransform: 'none', borderRadius: 1.5, px: 1.5, py: 0.3,
+                            color: wongComboView === v ? '#FFA500' : '#555',
+                            border: `1px solid ${wongComboView === v ? 'rgba(255,165,0,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                            bgcolor: wongComboView === v ? 'rgba(255,165,0,0.07)' : 'transparent',
+                            '&:hover': { borderColor: 'rgba(255,165,0,0.3)', color: '#FFA500' },
+                          }}>
+                            {v === 'top8' ? 'Top 8 Overall' : 'By Size'}
+                          </Button>
+                        ))}
+                      </Box>
+                    </Box>
+
+                    {wongComboView === 'top8' && (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {top8.map((combo, ci) => <ComboCard key={ci} combo={combo} ci={ci} />)}
+                      </Box>
+                    )}
+
+                    {wongComboView === 'grouped' && Object.entries(bySize).sort(([a], [b]) => Number(a) - Number(b)).map(([n, grpCombos]) => (
                       <Box key={n} sx={{ mb: 2 }}>
                         <Typography sx={{ fontSize: '0.76rem', color: '#888', fontWeight: 600, mb: 1 }}>
-                          {n}-Team {wongTeaserType} Teaser &nbsp;
+                          {n}-Team {wongTeaserType} &nbsp;
                           <span style={{ color: '#FFA500', fontFamily: 'monospace' }}>{grpCombos[0].book_odds}</span>
-                          &nbsp;· Blended EV <span style={{ color: '#4CAF50', fontWeight: 700 }}>+{grpCombos[0].ev_blended_pct ?? grpCombos[0].ev_pct}%</span>
-                          &nbsp;· Win prob <span style={{ color: '#ccc' }}>{grpCombos[0].combined_prob_blended_pct ?? grpCombos[0].combined_prob_pct}%</span>
                           &nbsp;· Break-even <span style={{ color: '#999' }}>{grpCombos[0].break_even_pct}%/leg</span>
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                          {grpCombos.slice(0, 12).map((combo: any, ci: number) => (
-                            <Box key={ci} sx={{
-                              p: 1.5,
-                              bgcolor: combo.flagged ? 'rgba(255,165,0,0.07)' : 'rgba(255,255,255,0.03)',
-                              border: `1px solid ${combo.flagged ? 'rgba(255,165,0,0.35)' : 'rgba(255,255,255,0.07)'}`,
-                              borderRadius: 1.5,
-                              minWidth: 220,
-                              flex: '0 1 auto',
-                              position: 'relative',
-                            }}>
-                              {combo.flagged && (
-                                <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.62rem', color: '#FFA500', fontWeight: 700 }}>★ EDGE</Box>
-                              )}
-                              {combo.priority_score > 0 && (
-                                <Box sx={{ position: 'absolute', top: combo.flagged ? 20 : 6, right: 8, fontSize: '0.62rem', color: '#64B5F6' }}>
-                                  {'⬆'.repeat(combo.priority_score)} priority
-                                </Box>
-                              )}
-                              {combo.legs.map((leg: any, li: number) => (
-                                <Box key={li} sx={{ mb: li < combo.legs.length - 1 ? 0.75 : 0 }}>
-                                  <Typography sx={{ fontSize: '0.76rem', color: '#ddd', fontWeight: 600, lineHeight: 1.2, pr: combo.flagged || combo.priority_score > 0 ? 4 : 0 }}>
-                                    {leg.bet}
-                                  </Typography>
-                                  <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', flexWrap: 'wrap' }}>
-                                    <Typography sx={{ fontSize: '0.68rem', color: '#FFA500', fontFamily: 'monospace' }}>
-                                      → {leg.teased_line > 0 ? '+' : ''}{leg.teased_line}
-                                    </Typography>
-                                    {leg.is_road && <Box component="span" sx={{ fontSize: '0.62rem', color: '#64B5F6' }}>road</Box>}
-                                    {leg.low_total && <Box component="span" sx={{ fontSize: '0.62rem', color: '#81C784' }}>O/U {leg.game_total}</Box>}
-                                  </Box>
-                                </Box>
-                              ))}
-                              <Box sx={{ mt: 1, pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                  <Typography sx={{ fontSize: '0.65rem', color: '#666' }}>
-                                    Lim {(combo.min_pin_limit / 1000).toFixed(0)}k+
-                                  </Typography>
-                                  <Typography sx={{ fontSize: '0.7rem', color: '#4CAF50', fontWeight: 700 }}>
-                                    +{combo.ev_blended_pct ?? combo.ev_pct}% blended
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                  <Typography sx={{ fontSize: '0.62rem', color: '#666' }}>
-                                    hist: +{combo.ev_hist_pct}%
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </Box>
+                          {grpCombos.slice(0, 6).map((combo: any, ci: number) => (
+                            <ComboCard key={ci} combo={combo} ci={ci} />
                           ))}
                         </Box>
                       </Box>
@@ -1155,8 +1147,8 @@ const BuckeyeScraper: React.FC = () => {
               <Typography sx={{ mt: 2, fontSize: '0.68rem', color: '#444', lineHeight: 1.6 }}>
                 Historical win rates: 75.8%/leg (6pt, 2003+ data) · 83%/leg (10pt, road only, 3-team -120).
                 Qualifiers cross key numbers 3 & 7 (6pt) or 3, 7 & 10 (10pt).
-                <strong style={{ color: '#555' }}> EV</strong> = per-combo: baseline 75.8% + 1% if O/U ≤49 + small main-line-EV adj, multiplied across legs.
-                Hist EV = blanket historical flat rate (reference only). Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game (main line only).
+                <strong style={{ color: '#555' }}> Blended EV</strong> = per-combo: (hist + 0.01 if O/U ≤49) + (0.50 − NVP_implied) × 0.30, multiplied across legs.
+                Hist EV = flat historical rate (reference). Pin limit ≥ 2,000. Road + O/U ≤49 prioritized. One line per game (main line only).
               </Typography>
             </Box>
           </Collapse>
