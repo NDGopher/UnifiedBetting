@@ -145,21 +145,21 @@ def _teaser_ev_hist(n_teams: int, win_rate: float, american_odds: int) -> float:
 
 
 def _combo_ev_blended(
-    nvp_probs: List[float],
+    main_line_evs: List[float],
     historical_rate: float,
     american_odds: int,
 ) -> Tuple[float, float]:
     """
-    Per-combo EV using historical win rate as the base, with a tiny
-    NVP market-signal adjustment per leg:
-      projected_leg_prob = historical_rate + (0.50 - nvp_prob) * 0.25
-    This anchors to the backtest rate (0.758 / 0.83) and nudges it
-    slightly when the market prices a leg away from 50/50.
+    Per-combo EV using historical win rate as the base, with a per-leg
+    adjustment driven by the main line EV% (BetBCK odds vs Pinnacle NVP):
+      projected_leg_prob = historical_rate + (main_line_ev_pct / 100) * 0.5
+    A leg with +6% main-line EV gets a +3pp boost over the baseline 75.8%.
+    Legs with no Pinnacle match (main_line_ev = 0) use exactly historical_rate.
       teaser_win_prob = product of projected probs
       EV% = (teaser_win_prob * decimal - 1) * 100
     Returns (ev_pct, teaser_win_prob_pct).
     """
-    projected = [historical_rate + (0.50 - p) * 0.25 for p in nvp_probs]
+    projected = [historical_rate + (ev / 100.0) * 0.5 for ev in main_line_evs]
     teaser_win_prob = 1.0
     for p in projected:
         teaser_win_prob *= p
@@ -262,17 +262,18 @@ def _scan_betbck_for_nfl(
                 bet_str   = f"{team} {line_sign}{line:g}"
 
                 leg_base = {
-                    'matchup':     matchup,
-                    'bet':         bet_str,
-                    'spread_line': line,
-                    'pin_nvp':     odds_str,          # BetBCK odds as NVP proxy
-                    'pin_limit':   NFL_BETBCK_DEFAULT_LIMIT,
-                    'is_road':     is_road,
-                    'game_total':  None,
-                    'low_total':   False,
-                    'start_time':  start_dt,
-                    'event_id':    game_id,
-                    'league':      'NFL',
+                    'matchup':          matchup,
+                    'bet':              bet_str,
+                    'spread_line':      line,
+                    'pin_nvp':          odds_str,   # BetBCK odds (display only)
+                    'pin_limit':        NFL_BETBCK_DEFAULT_LIMIT,
+                    'is_road':          is_road,
+                    'game_total':       None,
+                    'low_total':        False,
+                    'start_time':       start_dt,
+                    'event_id':         game_id,
+                    'league':           'NFL',
+                    'main_line_ev_pct': 0.0,        # no Pinnacle match → baseline
                 }
 
                 # 6pt qualification — take first qualifying spread (main line)
@@ -329,25 +330,22 @@ def _generate_combos(
             min_limit   = min(l['pin_limit'] for l in combo_legs)
             n_priority  = sum(1 for l in combo_legs if l.get('priority'))
 
-            # Per-leg NVP implied probabilities (fallback to historical if missing)
-            nvp_probs = []
-            for l in combo_legs:
-                p = _parse_nvp_prob(l['pin_nvp'])
-                nvp_probs.append(p if p is not None else historical_rate)
+            # Per-leg main line EV% (0.0 for betbck-direct legs without Pinnacle match)
+            main_line_evs = [l.get('main_line_ev_pct', 0.0) for l in combo_legs]
 
-            blended_ev, win_prob_blended = _combo_ev_blended(nvp_probs, historical_rate, american)
+            blended_ev, win_prob_blended = _combo_ev_blended(main_line_evs, historical_rate, american)
 
             # Build per-leg detail with individual projected probs
             legs_out = []
-            for l, nvp_p in zip(combo_legs, nvp_probs):
-                proj_p = historical_rate + (0.50 - nvp_p) * 0.25
+            for l, leg_ev in zip(combo_legs, main_line_evs):
+                proj_p = historical_rate + (leg_ev / 100.0) * 0.5
                 legs_out.append({
                     'matchup':           l['matchup'],
                     'bet':               l['bet'],
                     'spread_line':       l['spread_line'],
                     'teased_line':       l['teased_line'],
                     'pin_nvp':           l['pin_nvp'],
-                    'nvp_prob_pct':      round(nvp_p * 100.0, 1),
+                    'main_line_ev_pct':  leg_ev,
                     'projected_prob_pct': round(proj_p * 100.0, 1),
                     'pin_limit':         l['pin_limit'],
                     'is_road':           l['is_road'],
@@ -429,17 +427,18 @@ def calculate_wong_teasers(
         low_total  = game_total is not None and game_total <= 49.0
 
         leg_base = {
-            'matchup':    matchup,
-            'bet':        row.get('bet', ''),
-            'spread_line': spread_line,
-            'pin_nvp':    row.get('pinnacle_nvp', ''),
-            'pin_limit':  int(pin_limit),
-            'is_road':    is_road,
-            'game_total': game_total,
-            'low_total':  low_total,
-            'start_time': row.get('start_time', ''),
-            'event_id':   str(row.get('event_id', '')),
-            'league':     row.get('league', ''),
+            'matchup':         matchup,
+            'bet':             row.get('bet', ''),
+            'spread_line':     spread_line,
+            'pin_nvp':         row.get('pinnacle_nvp', ''),
+            'pin_limit':       int(pin_limit),
+            'is_road':         is_road,
+            'game_total':      game_total,
+            'low_total':       low_total,
+            'start_time':      row.get('start_time', ''),
+            'event_id':        str(row.get('event_id', '')),
+            'league':          row.get('league', ''),
+            'main_line_ev_pct': float(row.get('ev_pct') or 0.0),
         }
 
         # ── 6pt qualification ──────────────────────────────────────────────
@@ -542,6 +541,6 @@ def calculate_wong_teasers(
             'ev_flag_6pt':        ev_flag_6pt,
             'ev_flag_10pt':       ev_flag_10pt,
             'teaser_type':        'sides only, no totals (NFL full-game spreads)',
-            'ev_method':          'historical_rate + (0.50 - NVP_prob) * 0.25 per leg',
+            'ev_method':          'historical_rate + (main_line_ev_pct / 100) * 0.5 per leg',
         },
     }
