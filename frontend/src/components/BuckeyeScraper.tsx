@@ -1209,8 +1209,8 @@ const BuckeyeScraper: React.FC = () => {
           PARLAYS
       ══════════════════════════════════════════════════════════════════ */}
       {parlays && (() => {
-        // ── 24h helper ──────────────────────────────────────────────────────
-        const isWithin24h = (startTimeStr: string): boolean => {
+        // ── 24h helper — prefer backend flag, fall back to client-side parse ──
+        const isWithin24hStr = (startTimeStr: string): boolean => {
           if (!startTimeStr) return false;
           const m = startTimeStr.match(/(\d{4}-\d{2}-\d{2})\s+(\d+:\d+)\s*(AM|PM)?/i);
           if (!m) return false;
@@ -1224,9 +1224,11 @@ const BuckeyeScraper: React.FC = () => {
           const now = new Date();
           return startDate >= now && startDate <= new Date(now.getTime() + 24 * 3600 * 1000);
         };
-        const allLegs24h = (p: any) => (p.legs || []).every((l: any) => isWithin24h(l.start_time));
+        const allLegs24h = (p: any) =>
+          p.all_within_24h === true ||
+          (p.legs || []).every((l: any) => isWithin24hStr(l.start_time));
         const parlayList: any[] = parlays.parlays || [];
-        const count24h = parlayList.filter(allLegs24h).length;
+        const count24h = parlays.counts_24h ?? parlayList.filter(allLegs24h).length;
 
         return (
         <Box sx={{ mt: 1.5 }}>

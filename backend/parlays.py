@@ -25,6 +25,7 @@ Sorting priority:
 
 import itertools
 import logging
+from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
@@ -195,6 +196,7 @@ def calculate_parlays(
             leagues    = [l['league'] for l in combo]
             same_sport = len(set(leagues)) == 1
 
+            all_within_24h = all(_is_within_24h(l['start_time']) for l in combo)
             parlays.append({
                 'n_legs':         n,
                 'parlay_odds':    _decimal_to_american_str(decimal_payout),
@@ -202,6 +204,7 @@ def calculate_parlays(
                 'ev_blended_pct': round(ev_pct, 2),
                 'same_sport':     same_sport,
                 'n_plus_legs':    n_plus,
+                'all_within_24h': all_within_24h,
                 'legs': [
                     {
                         'bet':           l['bet'],
@@ -218,8 +221,10 @@ def calculate_parlays(
                 ],
             })
 
-    # ── 3. Sort by EV desc, then bucket top N per leg-count ──────────────────
-    parlays.sort(key=lambda x: -x['ev_blended_pct'])
+    # ── 3. Sort: within-24h first, then by EV desc — bucket top N per leg-count
+    # This guarantees today's games always get slots before far-future games
+    # (e.g. NFL season openers priced months in advance won't crowd out MLB today)
+    parlays.sort(key=lambda x: (not x['all_within_24h'], -x['ev_blended_pct']))
 
     # Take top TOP_PER_SIZE from each size (guarantees 2L / 3L / 4L variety)
     by_size: Dict[int, list] = {2: [], 3: [], 4: []}
@@ -228,24 +233,47 @@ def calculate_parlays(
         if n in by_size and len(by_size[n]) < TOP_PER_SIZE:
             by_size[n].append(p)
 
-    # Merge buckets and re-sort by EV so final list is still EV-ordered
+    # Merge buckets: keep 24h-first ordering so toggle works correctly
     top: List[Dict] = []
     for n in [2, 3, 4]:
         top.extend(by_size[n])
-    top.sort(key=lambda x: -x['ev_blended_pct'])
+    top.sort(key=lambda x: (not x['all_within_24h'], -x['ev_blended_pct']))
 
     counts = {n: len(by_size[n]) for n in [2, 3, 4]}
+    counts_24h = sum(1 for p in top if p['all_within_24h'])
     logger.info(
         f"[PARLAYS] {len(parlays)} raw combos → "
-        f"2L:{counts[2]}  3L:{counts[3]}  4L:{counts[4]}  total:{len(top)}"
+        f"2L:{counts[2]}  3L:{counts[3]}  4L:{counts[4]}  total:{len(top)}  within-24h:{counts_24h}"
     )
     return {
-        'parlays':       top,
-        'total_combos':  len(parlays),
-        'eligible_legs': len(eligible),
+        'parlays':        top,
+        'total_combos':   len(parlays),
+        'eligible_legs':  len(eligible),
         'counts_by_size': counts,
-        'config':        _config(min_pin_limit),
+        'counts_24h':     counts_24h,
+        'config':         _config(min_pin_limit),
     }
+
+
+def _is_within_24h(start_time_str: str) -> bool:
+    """Return True if start_time (Central Time, format 'YYYY-MM-DD HH:MM AM/PM') is within the next 24 hours."""
+    if not start_time_str or start_time_str in ('-', 'N/A'):
+        return False
+    try:
+        dt = datetime.strptime(start_time_str, '%Y-%m-%d %I:%M %p')
+        try:
+            import pytz
+            central_tz = pytz.timezone('America/Chicago')
+            dt_central = central_tz.localize(dt)
+        except ImportError:
+            # Fallback: treat as CDT (UTC-5)
+            dt_central = dt.replace(tzinfo=timezone(timedelta(hours=-5)))
+        now_utc = datetime.now(timezone.utc)
+        now_central = now_utc.astimezone(dt_central.tzinfo)
+        delta = (dt_central - now_central).total_seconds()
+        return 0 <= delta <= 24 * 3600
+    except Exception:
+        return False
 
 
 def _config(min_pin_limit: int) -> Dict:
