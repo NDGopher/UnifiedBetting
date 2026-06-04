@@ -677,11 +677,29 @@ def strip_pod_league_suffix(name: str) -> str:
     # Only strip when preceded by a lowercase letter (not already a space)
     name = _re_ls.sub(r'([a-zA-Z])W$', r'\1', name)
 
+    # Tennis market-type parentheticals combined with a tournament suffix:
+    # "Timo Legout (Games)ATP Challenger Tyler" → "Timo Legout"
+    # "Novak Djokovic (Sets)WTA 1000 Rome"      → "Novak Djokovic"
+    # Handle this FIRST in one pass so the two pieces are removed together.
+    name = _re_ls.sub(
+        r'\s*\((Games|Sets|Points|Aces|Breaks)\)(WTA|ATP|ITF)(\s+\S+)*\s*$',
+        '', name, flags=_re_ls.IGNORECASE
+    ).strip()
+
+    # Remaining standalone parentheticals (no tournament suffix after them):
+    # "Timo Legout (Games)" → "Timo Legout"
+    name = _re_ls.sub(
+        r'\s*\((Games|Sets|Points|Aces|Breaks)\)\s*$',
+        '', name, flags=_re_ls.IGNORECASE
+    ).strip()
+
     # Tennis tournament suffixes: POD concatenates WTA/ATP/ITF event info directly
-    # onto player names with no space (e.g. "Linda FruhvirtovaWTA 125K Birmingham").
-    # Strip everything from WTA/ATP/ITF onwards when it appears after an alpha char.
+    # onto player names (e.g. "Linda FruhvirtovaWTA 125K Birmingham").
+    # Also handles space-separated leftovers after the (Games) strip above.
+    # Strip everything from WTA/ATP/ITF to end whenever it is not at position 0.
+    # No .isalpha() requirement — preceding char can be alpha, space, or ')'.
     _m_tennis = _re_ls.search(r'(WTA|ATP|ITF)(\s+\S+)*\s*$', name, _re_ls.IGNORECASE)
-    if _m_tennis and _m_tennis.start() > 0 and name[_m_tennis.start() - 1].isalpha():
+    if _m_tennis and _m_tennis.start() > 0:
         name = name[:_m_tennis.start()].strip()
 
     return name.strip()
