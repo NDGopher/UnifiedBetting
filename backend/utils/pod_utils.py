@@ -596,6 +596,16 @@ def strip_pod_league_suffix(name: str) -> str:
         'National Football League',
         'National Basketball Association',
         'National Hockey League',
+        # NCAA sport suffixes POD concatenates directly onto team names
+        # e.g. "AuburnNCAA Baseball" → "Auburn"
+        'NCAA Baseball',
+        'NCAA Football',
+        'NCAA Basketball',
+        'NCAA Softball',
+        'NCAA Soccer',
+        'NCAA Volleyball',
+        'NCAA Hockey',
+        'NCAA Lacrosse',
     )
     for mw_suffix in _MULTIWORD_SUFFIXES:
         if name.endswith(mw_suffix) and len(name) > len(mw_suffix):
