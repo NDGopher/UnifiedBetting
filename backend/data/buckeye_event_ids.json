@@ -1,0 +1,6095 @@
+{
+  "date": "2026-06-06",
+  "event_ids": [
+    {
+      "event_id": 1631632035,
+      "home_team": "Georgia",
+      "away_team": "Mississippi State",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "NCAA Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631688589,
+      "home_team": "Cal Poly",
+      "away_team": "West Virginia",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "NCAA Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571339,
+      "home_team": "Texas Rangers",
+      "away_team": "Cleveland Guardians",
+      "starts": "2026-06-06T23:35:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549967,
+      "home_team": "Arizona Diamondbacks",
+      "away_team": "Washington Nationals",
+      "starts": "2026-06-06T20:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631581287,
+      "home_team": "NC Dinos",
+      "away_team": "LG Twins",
+      "starts": "2026-06-07T08:00:00Z",
+      "league": "Korea Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549587,
+      "home_team": "St. Louis Cardinals",
+      "away_team": "Cincinnati Reds",
+      "starts": "2026-06-06T18:15:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571338,
+      "home_team": "New York Yankees",
+      "away_team": "Boston Red Sox",
+      "starts": "2026-06-06T23:35:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631566914,
+      "home_team": "Colorado Rockies",
+      "away_team": "Milwaukee Brewers",
+      "starts": "2026-06-07T01:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549114,
+      "home_team": "Miami Marlins",
+      "away_team": "Tampa Bay Rays",
+      "starts": "2026-06-06T20:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631581498,
+      "home_team": "Doosan Bears",
+      "away_team": "Kiwoom Heroes",
+      "starts": "2026-06-07T08:00:00Z",
+      "league": "Korea Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631693275,
+      "home_team": "USC",
+      "away_team": "North Carolina",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "NCAA Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631632037,
+      "home_team": "Texas",
+      "away_team": "Oregon",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "NCAA Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549939,
+      "home_team": "Chicago Cubs",
+      "away_team": "San Francisco Giants",
+      "starts": "2026-06-06T18:20:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549966,
+      "home_team": "Atlanta Braves",
+      "away_team": "Pittsburgh Pirates",
+      "starts": "2026-06-06T20:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549089,
+      "home_team": "Minnesota Twins",
+      "away_team": "Kansas City Royals",
+      "starts": "2026-06-06T18:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549113,
+      "home_team": "Philadelphia Phillies",
+      "away_team": "Chicago White Sox",
+      "starts": "2026-06-06T20:05:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571446,
+      "home_team": "Tokyo Yakult Swallows",
+      "away_team": "Hokkaido Nippon-Ham Fighters",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Nippon Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571464,
+      "home_team": "SSG Landers",
+      "away_team": "KT Wiz",
+      "starts": "2026-06-07T08:00:00Z",
+      "league": "Korea Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549574,
+      "home_team": "Detroit Tigers",
+      "away_team": "Seattle Mariners",
+      "starts": "2026-06-06T17:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571444,
+      "home_team": "Yokohama Bay Stars",
+      "away_team": "Fukuoka Softbank Hawks",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Nippon Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571445,
+      "home_team": "Hanshin Tigers",
+      "away_team": "Tohoku Rakuten Golden Eagles",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Nippon Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631632036,
+      "home_team": "Kansas",
+      "away_team": "Oklahoma",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "NCAA Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571349,
+      "home_team": "Los Angeles Dodgers",
+      "away_team": "Los Angeles Angels",
+      "starts": "2026-06-07T02:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631688590,
+      "home_team": "Mississippi",
+      "away_team": "Auburn",
+      "starts": "2026-06-06T21:00:00Z",
+      "league": "NCAA Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549611,
+      "home_team": "Houston Astros",
+      "away_team": "Athletics",
+      "starts": "2026-06-06T20:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631581288,
+      "home_team": "Lotte Giants",
+      "away_team": "Hanwha Eagles",
+      "starts": "2026-06-07T08:00:00Z",
+      "league": "Korea Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631581289,
+      "home_team": "Kia Tigers",
+      "away_team": "Samsung Lions",
+      "starts": "2026-06-07T08:00:00Z",
+      "league": "Korea Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631549103,
+      "home_team": "Toronto Blue Jays",
+      "away_team": "Baltimore Orioles",
+      "starts": "2026-06-06T19:07:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631566938,
+      "home_team": "Chunichi Dragons",
+      "away_team": "Saitama Seibu Lions",
+      "starts": "2026-06-07T04:30:00Z",
+      "league": "Nippon Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631693276,
+      "home_team": "Arkansas Little Rock",
+      "away_team": "Troy",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "NCAA Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571371,
+      "home_team": "Hiroshima Toyo Carp",
+      "away_team": "Orix Buffaloes",
+      "starts": "2026-06-07T04:30:00Z",
+      "league": "Nippon Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571350,
+      "home_team": "San Diego Padres",
+      "away_team": "New York Mets",
+      "starts": "2026-06-07T02:10:00Z",
+      "league": "MLB",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631632038,
+      "home_team": "Alabama",
+      "away_team": "St John's",
+      "starts": "2026-06-07T01:00:00Z",
+      "league": "NCAA Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631571374,
+      "home_team": "Yomiuri Giants",
+      "away_team": "Chiba Lotte Marines",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Nippon Professional Baseball",
+      "sport": "Baseball"
+    },
+    {
+      "event_id": 1631723206,
+      "home_team": "Zorg En Zekerheid Leiden",
+      "away_team": "Landstede Hammers",
+      "starts": "2026-06-07T13:30:00Z",
+      "league": "Europe - BNXT League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631599513,
+      "home_team": "Nantes Atlantique",
+      "away_team": "Poitiers",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "France - Championnat Pro B",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631549952,
+      "home_team": "Maccabi Raanana",
+      "away_team": "Elitzur Netanya",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Israel - Premier League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631566907,
+      "home_team": "New York Liberty",
+      "away_team": "Indiana Fever",
+      "starts": "2026-06-07T00:02:00Z",
+      "league": "WNBA",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631581555,
+      "home_team": "Sesi Araraquara",
+      "away_team": "Sampaio Basquete",
+      "starts": "2026-06-07T14:00:00Z",
+      "league": "Brazil - LBF Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631688511,
+      "home_team": "Santiagueno",
+      "away_team": "Santa Ana",
+      "starts": "2026-06-07T01:00:00Z",
+      "league": "El Salvador - Liga Mayor de Baloncesto",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631610598,
+      "home_team": "BC Oostende",
+      "away_team": "Antwerp Giants",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Europe - BNXT League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631571392,
+      "home_team": "Southern Districts Spartans",
+      "away_team": "Townsville Heat",
+      "starts": "2026-06-07T06:00:00Z",
+      "league": "Australia - NBL1",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631660584,
+      "home_team": "Real Madrid",
+      "away_team": "La Laguna Tenerife",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Spain - ACB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631549061,
+      "home_team": "Minnesota Lynx",
+      "away_team": "Seattle Storm",
+      "starts": "2026-06-06T17:02:00Z",
+      "league": "WNBA",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631631876,
+      "home_team": "Sagesse",
+      "away_team": "Homenetmen",
+      "starts": "2026-06-06T17:45:00Z",
+      "league": "Lebanon - Lebanese Basketball League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631586505,
+      "home_team": "Cholet Basket",
+      "away_team": "Paris",
+      "starts": "2026-06-07T17:00:00Z",
+      "league": "France - Championnat Pro A",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631702617,
+      "home_team": "Serbia",
+      "away_team": "Netherlands",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "3x3 - FIBA World Cup",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631660562,
+      "home_team": "UCAM Murcia",
+      "away_team": "Barcelona",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Spain - ACB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631571343,
+      "home_team": "Mets de Guaynabo",
+      "away_team": "Vaqueros de Bayamon",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "Puerto Rico - Superior Nacional",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631653096,
+      "home_team": "Santiago Morning Quilicura",
+      "away_team": "Colegio Los Leones",
+      "starts": "2026-06-07T22:00:00Z",
+      "league": "Chile - LNB Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631693224,
+      "home_team": "Hidrocarburos De Caracas",
+      "away_team": "Costaneras Puerto Cabello",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Venezuela - Superliga Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631712728,
+      "home_team": "Nanterre",
+      "away_team": "AS Monaco",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "France - Championnat Pro A",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631586809,
+      "home_team": "Titanes del Distrito Nacional",
+      "away_team": "Indios de San Francisco de Macoris",
+      "starts": "2026-06-07T21:30:00Z",
+      "league": "Dominican Republic - LNB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631651905,
+      "home_team": "Antranik",
+      "away_team": "Club Antonin Sportif",
+      "starts": "2026-06-07T13:45:00Z",
+      "league": "Lebanon - Lebanese Basketball League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631549938,
+      "home_team": "CB Estudiantes",
+      "away_team": "Oviedo BC",
+      "starts": "2026-06-06T18:15:00Z",
+      "league": "Spain - Liga FEB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631631989,
+      "home_team": "Sergio Ceppi",
+      "away_team": "Sportiva Italiana",
+      "starts": "2026-06-06T21:00:00Z",
+      "league": "Chile - LNB Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631632097,
+      "home_team": "Azul y Rojo",
+      "away_team": "Universidad De Concepcion",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "Chile - LNB Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631655250,
+      "home_team": "BC Zalgiris Kaunas",
+      "away_team": "BC Juventus Utena",
+      "starts": "2026-06-07T13:50:00Z",
+      "league": "Lithuania - Lietuvos Krepsinio Lyga",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631707163,
+      "home_team": "France",
+      "away_team": "USA",
+      "starts": "2026-06-06T18:25:00Z",
+      "league": "3x3 - FIBA World Cup",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631581272,
+      "home_team": "Ipswich Force",
+      "away_team": "Rockhampton Rockets",
+      "starts": "2026-06-07T06:00:00Z",
+      "league": "Australia - NBL1",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631596146,
+      "home_team": "Waverley Falcons",
+      "away_team": "Diamond Valley Eagles",
+      "starts": "2026-06-08T10:00:00Z",
+      "league": "Australia - NBL1",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631653108,
+      "home_team": "Waverley Falcons",
+      "away_team": "Diamond Valley Eagles",
+      "starts": "2026-06-08T08:00:00Z",
+      "league": "Australia - NBL1 Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631719025,
+      "home_team": "BC Neptunas Klaipeda",
+      "away_team": "BC Lietkabelis Panevezys",
+      "starts": "2026-06-06T13:50:00Z",
+      "league": "Lithuania - Lietuvos Krepsinio Lyga",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631610354,
+      "home_team": "Reyer Venezia",
+      "away_team": "Virtus Bologna",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Italy - Lega A",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631688602,
+      "home_team": "Latvia",
+      "away_team": "Lithuania",
+      "starts": "2026-06-06T16:25:00Z",
+      "league": "3x3 - FIBA World Cup",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631693288,
+      "home_team": "Australia",
+      "away_team": "Ukraine",
+      "starts": "2026-06-06T15:25:00Z",
+      "league": "3x3 - FIBA World Cup Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631566910,
+      "home_team": "CD Colegio Los Leones",
+      "away_team": "CD Universidad De Concepcion",
+      "starts": "2026-06-07T00:30:00Z",
+      "league": "Chile - LNB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631629420,
+      "home_team": "New York Knicks",
+      "away_team": "San Antonio Spurs",
+      "starts": "2026-06-09T00:30:00Z",
+      "league": "NBA",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631660591,
+      "home_team": "Brose Bamberg",
+      "away_team": "Alba Berlin",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "Germany - Bundesliga",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631712056,
+      "home_team": "Baskonia Vitoria Gasteiz",
+      "away_team": "Club Joventut Badalona",
+      "starts": "2026-06-07T17:00:00Z",
+      "league": "Spain - ACB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631632049,
+      "home_team": "Ipswich Force",
+      "away_team": "Rockhampton Cyclones",
+      "starts": "2026-06-07T04:00:00Z",
+      "league": "Australia - NBL1 Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631675677,
+      "home_team": "Southern Districts Spartans",
+      "away_team": "Townsville Flames",
+      "starts": "2026-06-07T04:00:00Z",
+      "league": "Australia - NBL1 Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631676741,
+      "home_team": "Franca Basquetbol Clube",
+      "away_team": "EC Pinheiros SP",
+      "starts": "2026-06-07T20:00:00Z",
+      "league": "Brazil - Novo Basquete Brasil",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631586425,
+      "home_team": "Santo Andre",
+      "away_team": "ADRM Maringa",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "Brazil - LBF Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631571352,
+      "home_team": "Wellington Saints",
+      "away_team": "Otago Nuggets",
+      "starts": "2026-06-07T03:00:00Z",
+      "league": "New Zealand - NBL",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631723934,
+      "home_team": "OC Khouribga",
+      "away_team": "ASA Al Hoceima",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Morocco - 1st Division",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631581296,
+      "home_team": "Taoyuan Pauian Pilots",
+      "away_team": "Taipei Fubon Braves",
+      "starts": "2026-06-07T09:00:00Z",
+      "league": "Chinese Taipei - P League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631571393,
+      "home_team": "Southland Sharks",
+      "away_team": "Franklin Bulls",
+      "starts": "2026-06-07T06:00:00Z",
+      "league": "New Zealand - NBL",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631651906,
+      "home_team": "Urunday Universitario",
+      "away_team": "Cordon",
+      "starts": "2026-06-07T21:00:00Z",
+      "league": "Uruguay - Liga Femenina",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631549642,
+      "home_team": "Marne",
+      "away_team": "IA Larre Borges",
+      "starts": "2026-06-06T22:30:00Z",
+      "league": "Uruguay - Metro League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631586480,
+      "home_team": "Piratas de Quebradillas",
+      "away_team": "Indios de Mayaguez",
+      "starts": "2026-06-07T22:00:00Z",
+      "league": "Puerto Rico - Superior Nacional",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631723940,
+      "home_team": "Phoenix Hagen",
+      "away_team": "VFL Kirchheim Knights",
+      "starts": "2026-06-07T14:00:00Z",
+      "league": "Germany - Pro A",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631599505,
+      "home_team": "Olympiakos BC",
+      "away_team": "Panathinaikos BC",
+      "starts": "2026-06-08T18:00:00Z",
+      "league": "Greek Basket League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631685595,
+      "home_team": "Asociacion Atletica Quimsa",
+      "away_team": "Club Gimnasia & Esgrima Comodoro Rivadavia",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "Argentina - Liga Nacional",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631632025,
+      "home_team": "Aguada",
+      "away_team": "CA Penarol",
+      "starts": "2026-06-10T00:15:00Z",
+      "league": "Uruguay - Liga",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631586422,
+      "home_team": "Scaligera Basket Verona",
+      "away_team": "Rinascita Basket Rimini",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "Italy - Serie A2",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631549598,
+      "home_team": "Las Vegas Aces",
+      "away_team": "Golden State Valkyries",
+      "starts": "2026-06-06T19:02:00Z",
+      "league": "WNBA",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631584158,
+      "home_team": "Caneros del Este",
+      "away_team": "Reales de la Vega",
+      "starts": "2026-06-07T22:00:00Z",
+      "league": "Dominican Republic - LNB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631712057,
+      "home_team": "Anadolu Efes SK",
+      "away_team": "Fenerbahce",
+      "starts": "2026-06-07T17:00:00Z",
+      "league": "Turkey - Super League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631714423,
+      "home_team": "Leyma Basquet Coruna",
+      "away_team": "CD Maristas Palencia",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "Spain - Liga FEB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631631814,
+      "home_team": "BC Dubai",
+      "away_team": "KK Partizan Belgrade",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "ABA - Adriatic League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631675882,
+      "home_team": "Kapfenberg Bulls",
+      "away_team": "Oberwart Gunners",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Austria - SuperLiga",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631675826,
+      "home_team": "Basket Brno",
+      "away_team": "BK Opava",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Czech Republic - NBL",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631566909,
+      "home_team": "Leones de Ponce",
+      "away_team": "Aguada Santeros",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "Puerto Rico - Superior Nacional",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631571425,
+      "home_team": "Osos de Manati",
+      "away_team": "Cangrejeros de Santurce",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "Puerto Rico - Superior Nacional",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631688593,
+      "home_team": "Vera Cruz Campinas",
+      "away_team": "Salvador Basketball",
+      "starts": "2026-06-06T20:30:00Z",
+      "league": "Brazil - LBF Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631685572,
+      "home_team": "Colegio de Abogados",
+      "away_team": "SC Grecia",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "Costa Rica Liga Superior",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631702629,
+      "home_team": "Germany",
+      "away_team": "Austria",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "3x3 - FIBA World Cup",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631584086,
+      "home_team": "BK Pardubice",
+      "away_team": "Basketball Nymburk",
+      "starts": "2026-06-07T17:00:00Z",
+      "league": "Czech Republic - NBL",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631708613,
+      "home_team": "Orleans Loiret Basket",
+      "away_team": "Pau Lacq Orthez",
+      "starts": "2026-06-06T13:45:00Z",
+      "league": "France - Championnat Pro B",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631549958,
+      "home_team": "Hapoel Galil Elion",
+      "away_team": "Ironi Ness Ziona",
+      "starts": "2026-06-06T17:50:00Z",
+      "league": "Israel - Premier League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631632098,
+      "home_team": "Puente Alto",
+      "away_team": "Gimnastico",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Chile - LNB Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631584159,
+      "home_team": "Heroes de Moca",
+      "away_team": "Metros de Santiago",
+      "starts": "2026-06-07T21:00:00Z",
+      "league": "Dominican Republic - LNB",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631723981,
+      "home_team": "Geraldton Buccaneers",
+      "away_team": "Willetton Tigers",
+      "starts": "2026-06-07T06:00:00Z",
+      "league": "Australia - NBL1",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631651876,
+      "home_team": "Halcones de Obregon",
+      "away_team": "Frayles de Guasave",
+      "starts": "2026-06-07T02:15:00Z",
+      "league": "Mexico - CIBACOPA",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631586458,
+      "home_team": "Capitanes de Arecibo",
+      "away_team": "Atleticos de San German",
+      "starts": "2026-06-08T00:00:00Z",
+      "league": "Puerto Rico - Superior Nacional",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631621544,
+      "home_team": "SL Benfica",
+      "away_team": "FC Porto",
+      "starts": "2026-06-07T15:00:00Z",
+      "league": "Portugal - Liga Portuguesa de Basquetebol",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631655248,
+      "home_team": "Yale",
+      "away_team": "Malvin",
+      "starts": "2026-06-07T22:00:00Z",
+      "league": "Uruguay - Liga Femenina",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631581335,
+      "home_team": "Sodie Mesquita",
+      "away_team": "Recife",
+      "starts": "2026-06-07T14:30:00Z",
+      "league": "Brazil - LBF Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631655247,
+      "home_team": "Lagomar",
+      "away_team": "Defensor Sporting",
+      "starts": "2026-06-07T00:15:00Z",
+      "league": "Uruguay - Liga Femenina",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631707154,
+      "home_team": "Germany",
+      "away_team": "Azerbaijan",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "3x3 - FIBA World Cup Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631571511,
+      "home_team": "Bahcesehir Koleji",
+      "away_team": "Besiktas JK",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "Turkey - Super League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631640182,
+      "home_team": "KK Cibona",
+      "away_team": "KK Zadar",
+      "starts": "2026-06-07T16:00:00Z",
+      "league": "Croatia - A1 Liga",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631584137,
+      "home_team": "Barangay Ginebra",
+      "away_team": "Tropang Giga",
+      "starts": "2026-06-07T11:30:00Z",
+      "league": "Philippines - PBA Commissioners Cup",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631549623,
+      "home_team": "Atlanta Dream",
+      "away_team": "Washington Mystics",
+      "starts": "2026-06-06T22:02:00Z",
+      "league": "WNBA",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631581548,
+      "home_team": "Lokomotiv Kuban",
+      "away_team": "Zenit St Petersburg",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "Europe - VTB United League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631632028,
+      "home_team": "Cocodrilos de Caracas",
+      "away_team": "Guaiqueries De Margarita",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "Venezuela - Superliga",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631651855,
+      "home_team": "Astros de Jalisco",
+      "away_team": "Angeles CD Mexico",
+      "starts": "2026-06-07T01:15:00Z",
+      "league": "Mexico - CIBACOPA",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631702618,
+      "home_team": "Netherlands",
+      "away_team": "Hungary",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "3x3 - FIBA World Cup Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631707155,
+      "home_team": "France",
+      "away_team": "USA",
+      "starts": "2026-06-06T17:25:00Z",
+      "league": "3x3 - FIBA World Cup Women",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1631676758,
+      "home_team": "Hapoel Tel-Aviv",
+      "away_team": "Hapoel Jerusalem",
+      "starts": "2026-06-07T17:50:00Z",
+      "league": "Israel - Premier League",
+      "sport": "Basketball"
+    },
+    {
+      "event_id": 1624410600,
+      "home_team": "Mike Tyson",
+      "away_team": "Floyd Mayweather Jr",
+      "starts": "2026-06-26T03:00:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631610413,
+      "home_team": "Chris Billam-Smith",
+      "away_team": "Ryan Rozicki",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631676792,
+      "home_team": "Shori Umezu",
+      "away_team": "Keita Kurihara",
+      "starts": "2026-06-06T04:00:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1624794220,
+      "home_team": "Manny Pacquiao",
+      "away_team": "Floyd Mayweather Jr",
+      "starts": "2026-09-20T03:00:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631676794,
+      "home_team": "Leon Hughes",
+      "away_team": "Mario Vergiev",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631676795,
+      "home_team": "Harvey Dykes",
+      "away_team": "Ivan Dychko",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631685584,
+      "home_team": "Stephen McKenna",
+      "away_team": "Casey James Streeter",
+      "starts": "2026-06-06T17:45:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631604041,
+      "home_team": "Masamichi Yabuki",
+      "away_team": "Rene Calixto Bibiano",
+      "starts": "2026-06-06T07:30:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631610921,
+      "home_team": "Jack Massey",
+      "away_team": "Cheavon Clarke",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631676796,
+      "home_team": "Aaron Bowen",
+      "away_team": "Troy Coleman",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631603546,
+      "home_team": "Josh Padley",
+      "away_team": "Aqib Fiaz",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631675694,
+      "home_team": "Lee Cutler",
+      "away_team": "Aaron Sutton",
+      "starts": "2026-06-06T18:20:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631603638,
+      "home_team": "Ibrahim Nadim",
+      "away_team": "Ibraheem Sulaimaan",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Boxing Matches",
+      "sport": "Boxing"
+    },
+    {
+      "event_id": 1631603497,
+      "home_team": "Durham",
+      "away_team": "Northamptonshire Steelbacks",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "United Kingdom - Vitality T20 Blast",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631693218,
+      "home_team": "Leicestershire",
+      "away_team": "Yorkshire",
+      "starts": "2026-06-07T13:30:00Z",
+      "league": "United Kingdom - Vitality T20 Blast",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631712121,
+      "home_team": "Canada",
+      "away_team": "USA",
+      "starts": "2026-06-06T14:30:00Z",
+      "league": "Cricket World Cup League 2",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631675668,
+      "home_team": "Gloucestershire County",
+      "away_team": "Worcestershire",
+      "starts": "2026-06-07T13:30:00Z",
+      "league": "United Kingdom - Vitality T20 Blast",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631653050,
+      "home_team": "West Indies",
+      "away_team": "Sri Lanka",
+      "starts": "2026-06-06T19:30:00Z",
+      "league": "One Day International",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631501005,
+      "home_team": "England",
+      "away_team": "New Zealand",
+      "starts": "2026-06-04T10:00:00Z",
+      "league": "Test Match",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631520742,
+      "home_team": "India",
+      "away_team": "Afghanistan",
+      "starts": "2026-06-06T04:00:00Z",
+      "league": "Test Match",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631651846,
+      "home_team": "Middlesex",
+      "away_team": "Essex County",
+      "starts": "2026-06-07T14:30:00Z",
+      "league": "United Kingdom - Vitality T20 Blast",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631676776,
+      "home_team": "Nottinghamshire",
+      "away_team": "Derbyshire",
+      "starts": "2026-06-07T14:00:00Z",
+      "league": "United Kingdom - Vitality T20 Blast",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631707166,
+      "home_team": "Somerset",
+      "away_team": "Warwickshire",
+      "starts": "2026-06-07T14:30:00Z",
+      "league": "United Kingdom - Vitality T20 Blast",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631675908,
+      "home_team": "Sussex Sharks",
+      "away_team": "Kent",
+      "starts": "2026-06-07T13:30:00Z",
+      "league": "United Kingdom - Vitality T20 Blast",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631675910,
+      "home_team": "Lancashire",
+      "away_team": "Glamorgan",
+      "starts": "2026-06-07T13:30:00Z",
+      "league": "United Kingdom - Vitality T20 Blast",
+      "sport": "Cricket"
+    },
+    {
+      "event_id": 1631191365,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-12T23:00:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631191348,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631191357,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631191432,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-13T23:00:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1628037902,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-04T23:30:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631191450,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-13T23:00:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631191368,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-06T01:00:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631603496,
+      "home_team": "Ottawa Redblacks",
+      "away_team": "Edmonton Elks",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631191351,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-04T23:30:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631191354,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-04T23:30:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631191342,
+      "home_team": "Unknown",
+      "away_team": "Unknown",
+      "starts": "2026-06-06T01:00:00Z",
+      "league": "Canadian Football",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630865288,
+      "home_team": "Seattle Seahawks",
+      "away_team": "New England Patriots",
+      "starts": "2026-09-10T00:20:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630865289,
+      "home_team": "Carolina Panthers",
+      "away_team": "Chicago Bears",
+      "starts": "2026-09-13T17:00:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630865291,
+      "home_team": "Los Angeles Chargers",
+      "away_team": "Arizona Cardinals",
+      "starts": "2026-09-13T20:25:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630877987,
+      "home_team": "Los Angeles Rams",
+      "away_team": "San Francisco 49ers",
+      "starts": "2026-09-11T00:35:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630877992,
+      "home_team": "Tennessee Titans",
+      "away_team": "New York Jets",
+      "starts": "2026-09-13T17:00:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630889901,
+      "home_team": "Philadelphia Eagles",
+      "away_team": "Washington Commanders",
+      "starts": "2026-09-13T20:25:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630877991,
+      "home_team": "Houston Texans",
+      "away_team": "Buffalo Bills",
+      "starts": "2026-09-13T17:00:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630889900,
+      "home_team": "Las Vegas Raiders",
+      "away_team": "Miami Dolphins",
+      "starts": "2026-09-13T20:25:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630865293,
+      "home_team": "New York Giants",
+      "away_team": "Dallas Cowboys",
+      "starts": "2026-09-14T00:20:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630865290,
+      "home_team": "Detroit Lions",
+      "away_team": "New Orleans Saints",
+      "starts": "2026-09-13T17:00:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630877989,
+      "home_team": "Cincinnati Bengals",
+      "away_team": "Tampa Bay Buccaneers",
+      "starts": "2026-09-13T17:00:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630877993,
+      "home_team": "Kansas City Chiefs",
+      "away_team": "Denver Broncos",
+      "starts": "2026-09-15T00:15:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630889899,
+      "home_team": "Pittsburgh Steelers",
+      "away_team": "Atlanta Falcons",
+      "starts": "2026-09-13T17:00:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630865292,
+      "home_team": "Minnesota Vikings",
+      "away_team": "Green Bay Packers",
+      "starts": "2026-09-13T20:25:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630877988,
+      "home_team": "Jacksonville Jaguars",
+      "away_team": "Cleveland Browns",
+      "starts": "2026-09-13T17:00:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1630877990,
+      "home_team": "Indianapolis Colts",
+      "away_team": "Baltimore Ravens",
+      "starts": "2026-09-13T17:00:00Z",
+      "league": "NFL",
+      "sport": "Football"
+    },
+    {
+      "event_id": 1631651877,
+      "home_team": "Wilkes-Barre/Scranton Penguins",
+      "away_team": "Toronto Marlies",
+      "starts": "2026-06-07T22:05:00Z",
+      "league": "USA - American Hockey League",
+      "sport": "Hockey"
+    },
+    {
+      "event_id": 1631660502,
+      "home_team": "Colorado Eagles",
+      "away_team": "Chicago Wolves",
+      "starts": "2026-06-08T00:05:00Z",
+      "league": "USA - American Hockey League",
+      "sport": "Hockey"
+    },
+    {
+      "event_id": 1631629282,
+      "home_team": "Vegas Golden Knights",
+      "away_team": "Carolina Hurricanes",
+      "starts": "2026-06-07T00:05:00Z",
+      "league": "NHL",
+      "sport": "Hockey"
+    },
+    {
+      "event_id": 1631367150,
+      "home_team": "Elisha Ellison",
+      "away_team": "Gable Steveson",
+      "starts": "2026-07-11T21:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631373796,
+      "home_team": "Tom Nolan",
+      "away_team": "Fares Ziam",
+      "starts": "2026-06-07T01:15:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631367163,
+      "home_team": "Yuneisy Duben",
+      "away_team": "Jeisla Chaves",
+      "starts": "2026-06-06T21:45:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631367148,
+      "home_team": "Paddy Pimblett",
+      "away_team": "Benoit Saint-Denis",
+      "starts": "2026-07-11T21:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631599564,
+      "home_team": "Santiago Luna",
+      "away_team": "Bryce Mitchell",
+      "starts": "2026-06-07T00:45:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1625766361,
+      "home_team": "Justin Gaethje",
+      "away_team": "Ilia Topuria",
+      "starts": "2026-06-14T07:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631367001,
+      "home_team": "Junior Tafa",
+      "away_team": "Iwo Baraniewski",
+      "starts": "2026-06-07T00:15:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631373783,
+      "home_team": "Gabriel Bonfim",
+      "away_team": "Belal Muhammad",
+      "starts": "2026-06-07T02:15:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1630074748,
+      "home_team": "Josh Hokit",
+      "away_team": "Derrick Lewis",
+      "starts": "2026-06-15T00:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631367149,
+      "home_team": "Mario Bautista",
+      "away_team": "Cory Sandhagen",
+      "starts": "2026-07-11T21:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631367147,
+      "home_team": "Max Holloway",
+      "away_team": "Conor McGregor",
+      "starts": "2026-07-11T21:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631373781,
+      "home_team": "Lone'er Kavanagh",
+      "away_team": "Brandon Royval",
+      "starts": "2026-07-11T21:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631373793,
+      "home_team": "John Yannis",
+      "away_team": "Marcus McGhee",
+      "starts": "2026-06-06T23:30:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1625753679,
+      "home_team": "Ciryl Gane",
+      "away_team": "Alex Pereira",
+      "starts": "2026-06-14T07:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631373798,
+      "home_team": "Chelsea Chandler",
+      "away_team": "Priscila Cachoeira",
+      "starts": "2026-06-06T22:45:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631373795,
+      "home_team": "Joanderson Brito",
+      "away_team": "Jordan Leavitt",
+      "starts": "2026-06-06T22:15:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631366996,
+      "home_team": "Edmen Shahbazyan",
+      "away_team": "Brendan Allen",
+      "starts": "2026-06-07T01:45:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1625766363,
+      "home_team": "Steve Garcia",
+      "away_team": "Diego Lopes",
+      "starts": "2026-06-15T00:30:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631367162,
+      "home_team": "Ariane Carnelossi",
+      "away_team": "Ketlen Souza",
+      "starts": "2026-06-06T21:15:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631373794,
+      "home_team": "Edgar Chairez",
+      "away_team": "Bruno Silva",
+      "starts": "2026-06-06T23:15:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1625766362,
+      "home_team": "Aiemann Zahabi",
+      "away_team": "Sean O'Malley",
+      "starts": "2026-06-14T07:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631599675,
+      "home_team": "Alessandro Costa",
+      "away_team": "Matt Schnell",
+      "starts": "2026-06-06T23:45:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1625753681,
+      "home_team": "Kyle Daukaus",
+      "away_team": "Bo Nickal",
+      "starts": "2026-06-14T23:00:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1625753680,
+      "home_team": "Michael Chandler",
+      "away_team": "Mauricio Ruffy",
+      "starts": "2026-06-14T07:30:00Z",
+      "league": "UFC",
+      "sport": "Mixed Martial Arts"
+    },
+    {
+      "event_id": 1631282564,
+      "home_team": "USA",
+      "away_team": "Germany",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849621,
+      "home_team": "Portugal",
+      "away_team": "Uzbekistan",
+      "starts": "2026-06-23T17:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581532,
+      "home_team": "Hai Phong",
+      "away_team": "Nam Dinh",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "Vietnam - V League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631700845,
+      "home_team": "TPV",
+      "away_team": "Inter Turku 2",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Ykkonen",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581522,
+      "home_team": "Yeoju Citizen",
+      "away_team": "Siheung Citizen",
+      "starts": "2026-06-07T10:00:00Z",
+      "league": "Korea Republic - K3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849632,
+      "home_team": "Uruguay",
+      "away_team": "Cape Verde",
+      "starts": "2026-06-21T22:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688551,
+      "home_team": "Manthiqueira",
+      "away_team": "Itaquaquecetuba AC",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Paulista Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631700823,
+      "home_team": "Fylkir",
+      "away_team": "Throttur Reykjavik",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 1. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707664,
+      "home_team": "GBK",
+      "away_team": "Vaajakoski",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Kakkonen Group C",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571424,
+      "home_team": "Union Omaha",
+      "away_team": "Fort Wayne",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640294,
+      "home_team": "Cape Town City",
+      "away_team": "Magesi",
+      "starts": "2026-06-10T13:00:00Z",
+      "league": "South Africa - PSL",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729237,
+      "home_team": "Horitschon-Unterpetersdorf",
+      "away_team": "Kohfidisch",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849624,
+      "home_team": "Brazil",
+      "away_team": "Morocco",
+      "starts": "2026-06-13T22:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586791,
+      "home_team": "Austin FC II",
+      "away_team": "Los Angeles FC II",
+      "starts": "2026-06-08T00:30:00Z",
+      "league": "USA - MLS Next Pro League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627257732,
+      "home_team": "England",
+      "away_team": "Ghana",
+      "starts": "2026-06-23T20:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729095,
+      "home_team": "Aarau",
+      "away_team": "Team Ticino",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Switzerland - U19 Elite",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631541479,
+      "home_team": "Mattersburg 2020",
+      "away_team": "Lumitech Jennersdorf",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631584144,
+      "home_team": "Tokushima Vortis",
+      "away_team": "Iwaki FC",
+      "starts": "2026-06-07T04:05:00Z",
+      "league": "Japan - J2/J3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702699,
+      "home_team": "Estrela de Marco",
+      "away_team": "Fluminense de Feira",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Baiano U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729263,
+      "home_team": "SK 1923 Gabcikovo",
+      "away_team": "Druzstevnik Velke Ludince",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707662,
+      "home_team": "MyPa",
+      "away_team": "PPJ",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Kakkonen Group A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571380,
+      "home_team": "Gold Coast United",
+      "away_team": "Wynnum Wolves",
+      "starts": "2026-06-07T05:15:00Z",
+      "league": "Australia - NPL Queensland",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631338310,
+      "home_team": "Japan",
+      "away_team": "Sweden",
+      "starts": "2026-06-25T23:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631651928,
+      "home_team": "Changchun Xidu",
+      "away_team": "Qingdao Red Lions",
+      "starts": "2026-06-07T08:00:00Z",
+      "league": "China - League Two",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733422,
+      "home_team": "Rivers United",
+      "away_team": "Nasarawa United",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Nigeria - Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631566899,
+      "home_team": "Charleston Battery",
+      "away_team": "Pittsburgh Riverhounds",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631712100,
+      "home_team": "Hamrarnir",
+      "away_team": "Keflavik",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Iceland - 5. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685622,
+      "home_team": "Barcelona Capela",
+      "away_team": "Mauaense",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Paulista Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620834898,
+      "home_team": "Ivory Coast",
+      "away_team": "Ecuador",
+      "starts": "2026-06-14T23:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631717062,
+      "home_team": "Criciuma",
+      "away_team": "Londrina",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629161,
+      "home_team": "Nordic United",
+      "away_team": "Ostersunds FK",
+      "starts": "2026-06-09T17:00:00Z",
+      "league": "Sweden - Superettan",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631584141,
+      "home_team": "Tochigi",
+      "away_team": "Giravanz Kitakyushu",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Japan - J2/J3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707193,
+      "home_team": "Envigado",
+      "away_team": "Real Santuario",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Colombia - U19 Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640344,
+      "home_team": "CA Atlas",
+      "away_team": "Club Atletico Fenix",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629329,
+      "home_team": "Ponte Preta",
+      "away_team": "Cuiaba",
+      "starts": "2026-06-09T22:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631288967,
+      "home_team": "Portugal",
+      "away_team": "Chile",
+      "starts": "2026-06-06T17:45:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849631,
+      "home_team": "Spain",
+      "away_team": "Cape Verde",
+      "starts": "2026-06-15T16:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640314,
+      "home_team": "Bolivar",
+      "away_team": "Deportivo Miranda",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Venezuela - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858183,
+      "home_team": "Paraguay",
+      "away_team": "Australia",
+      "starts": "2026-06-26T02:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627256478,
+      "home_team": "Turkiye",
+      "away_team": "Paraguay",
+      "starts": "2026-06-20T03:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549070,
+      "home_team": "Madureira",
+      "away_team": "Pouso Alegre",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Serie D",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631655209,
+      "home_team": "Atletico Oriente",
+      "away_team": "Puente Alto",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Chile - Tercera Division A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733431,
+      "home_team": "Beskid Andrychow",
+      "away_team": "Poprad Muszyna",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631740490,
+      "home_team": "Estonia",
+      "away_team": "Faroe Islands",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "International - Baltic Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631342068,
+      "home_team": "Curacao",
+      "away_team": "Ivory Coast",
+      "starts": "2026-06-25T20:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631282570,
+      "home_team": "Australia",
+      "away_team": "Switzerland",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631740491,
+      "home_team": "Estonia",
+      "away_team": "Faroe Islands",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "International - Baltic Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858185,
+      "home_team": "Mexico",
+      "away_team": "South Africa",
+      "starts": "2026-06-11T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610622,
+      "home_team": "FC Fujizakura Yamanashi",
+      "away_team": "Diosa Izumo FC",
+      "starts": "2026-06-07T03:00:00Z",
+      "league": "Japan - Nadeshiko Division 2 Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728137,
+      "home_team": "Admira Dornbirn",
+      "away_team": "FC Hard",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599691,
+      "home_team": "Oakland Roots",
+      "away_team": "Miami FC",
+      "starts": "2026-06-14T02:00:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631543059,
+      "home_team": "Schwaz",
+      "away_team": "Imst 1933",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Regionalliga West",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640298,
+      "home_team": "Orebro SK",
+      "away_team": "Sundsvall",
+      "starts": "2026-06-10T17:00:00Z",
+      "league": "Sweden - Superettan",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586778,
+      "home_team": "Everton Vina del Mar",
+      "away_team": "Palestino",
+      "starts": "2026-06-13T19:00:00Z",
+      "league": "Chile - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707679,
+      "home_team": "KA Asvellir",
+      "away_team": "Vidir Gardur",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 3. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627256480,
+      "home_team": "Jordan",
+      "away_team": "Algeria",
+      "starts": "2026-06-23T03:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858179,
+      "home_team": "Belgium",
+      "away_team": "Iran",
+      "starts": "2026-06-21T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631329389,
+      "home_team": "Denmark",
+      "away_team": "Ukraine",
+      "starts": "2026-06-07T16:30:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631632087,
+      "home_team": "La Luz",
+      "away_team": "Paysandu FC",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Uruguay - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629257,
+      "home_team": "Sandvikens IF",
+      "away_team": "Falkenbergs",
+      "starts": "2026-06-09T17:00:00Z",
+      "league": "Sweden - Superettan",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733428,
+      "home_team": "Blekitni Ropczyce",
+      "away_team": "Stal Lancut",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571415,
+      "home_team": "Cavalry",
+      "away_team": "HFX Wanderers",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "Canada - Premier League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631660528,
+      "home_team": "Resende",
+      "away_team": "Araruama",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Brazil - Carioca A2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631675695,
+      "home_team": "Edgewater Castle",
+      "away_team": "Rochester",
+      "starts": "2026-06-06T20:59:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631651869,
+      "home_team": "Comunal Cabrero",
+      "away_team": "Constitucion Unido",
+      "starts": "2026-06-06T21:00:00Z",
+      "league": "Chile - Tercera Division A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631541481,
+      "home_team": "VPS",
+      "away_team": "KuPS",
+      "starts": "2026-06-13T14:00:00Z",
+      "league": "Finland - Veikkausliiga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586451,
+      "home_team": "Liverpool Montevideo",
+      "away_team": "Cerro Largo",
+      "starts": "2026-06-08T22:00:00Z",
+      "league": "Uruguay - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707673,
+      "home_team": "KFA",
+      "away_team": "KFG Gardabaer",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 2. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620834893,
+      "home_team": "Germany",
+      "away_team": "Ivory Coast",
+      "starts": "2026-06-20T20:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631543060,
+      "home_team": "Grotta",
+      "away_team": "UMF Grindavik",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 1. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610353,
+      "home_team": "Peru",
+      "away_team": "Spain",
+      "starts": "2026-06-09T02:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627278050,
+      "home_team": "Canada",
+      "away_team": "Bosnia and Herzegovina",
+      "starts": "2026-06-12T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640236,
+      "home_team": "Annapolis Blues",
+      "away_team": "Patuxent Football Athletics",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707200,
+      "home_team": "Tennessee Tempo",
+      "away_team": "UFA Gunners",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "USA - Women Premier Soccer League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596179,
+      "home_team": "Phoenix Rising",
+      "away_team": "Louisville City",
+      "starts": "2026-06-11T02:30:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849629,
+      "home_team": "Iran",
+      "away_team": "New Zealand",
+      "starts": "2026-06-16T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586436,
+      "home_team": "Antofagasta",
+      "away_team": "Magallanes",
+      "starts": "2026-06-07T19:30:00Z",
+      "league": "Chile - Primera B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631289814,
+      "home_team": "England",
+      "away_team": "New Zealand",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849630,
+      "home_team": "Austria",
+      "away_team": "Jordan",
+      "starts": "2026-06-17T04:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620865472,
+      "home_team": "Ghana",
+      "away_team": "Panama",
+      "starts": "2026-06-17T23:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631693259,
+      "home_team": "America Mineiro",
+      "away_team": "Internacional de Minas",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Mineiro U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849623,
+      "home_team": "Belgium",
+      "away_team": "Egypt",
+      "starts": "2026-06-15T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599687,
+      "home_team": "Lexington SC",
+      "away_team": "San Antonio",
+      "starts": "2026-06-13T23:00:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586475,
+      "home_team": "Coquimbo Unido",
+      "away_team": "O'Higgins",
+      "starts": "2026-06-15T00:00:00Z",
+      "league": "Chile - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629430,
+      "home_team": "JS Soualem",
+      "away_team": "Raja Beni Mellal",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Morocco - Botola 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549066,
+      "home_team": "Centro Espanol",
+      "away_team": "Leandro N. Alem",
+      "starts": "2026-06-06T17:30:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631434981,
+      "home_team": "England",
+      "away_team": "Costa Rica",
+      "starts": "2026-06-10T20:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571326,
+      "home_team": "Manhattan",
+      "away_team": "Motown II",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640332,
+      "home_team": "Laredo",
+      "away_team": "Tropezon",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Spain - Tercera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728152,
+      "home_team": "Qviding FIF",
+      "away_team": "Astorps",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - 2nd Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610563,
+      "home_team": "Nublense",
+      "away_team": "Universidad de Concepcion",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "Chile - League Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631541456,
+      "home_team": "Inter Turku",
+      "away_team": "AC Oulu",
+      "starts": "2026-06-13T12:00:00Z",
+      "league": "Finland - Veikkausliiga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729256,
+      "home_team": "Spartak Myjava",
+      "away_team": "FC DAC 1904 Dunajska Streda II",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631542503,
+      "home_team": "Kufstein",
+      "away_team": "Lustenau 1907",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Austria - Regionalliga West",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631499021,
+      "home_team": "Ethiopia",
+      "away_team": "Malawi",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733435,
+      "home_team": "Beskid Andrychow",
+      "away_team": "Poprad Muszyna",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599523,
+      "home_team": "Excursionistas",
+      "away_team": "San Martin Burzaco",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera B Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858178,
+      "home_team": "USA",
+      "away_team": "Paraguay",
+      "starts": "2026-06-13T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596184,
+      "home_team": "Falu",
+      "away_team": "Korsnas",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - 2nd Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631655267,
+      "home_team": "Maldives",
+      "away_team": "Bangladesh U23",
+      "starts": "2026-06-07T16:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631676812,
+      "home_team": "Presidente Hayes",
+      "away_team": "River Plate Asuncion",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Paraguay - Tercera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849627,
+      "home_team": "Scotland",
+      "away_team": "Morocco",
+      "starts": "2026-06-19T22:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631675646,
+      "home_team": "Strasswalchen",
+      "away_team": "Anthering",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631703695,
+      "home_team": "Kyrgyzstan",
+      "away_team": "Palestine",
+      "starts": "2026-06-06T14:30:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631523477,
+      "home_team": "Netherlands",
+      "away_team": "Uzbekistan",
+      "starts": "2026-06-08T18:45:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849626,
+      "home_team": "Norway",
+      "away_team": "Senegal",
+      "starts": "2026-06-23T00:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729271,
+      "home_team": "Belusa",
+      "away_team": "Trencin II",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631676816,
+      "home_team": "Cape Verde",
+      "away_team": "Bermuda",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599635,
+      "home_team": "Argentino de Merlo",
+      "away_team": "Deportivo Camioneros",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera B Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688544,
+      "home_team": "Tuggen",
+      "away_team": "Langenthal",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Switzerland - 1. Liga Classic",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631653053,
+      "home_team": "Aguara",
+      "away_team": "Futuro FC",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Chile - Tercera Division A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631499072,
+      "home_team": "Wexford",
+      "away_team": "Cork City",
+      "starts": "2026-06-12T18:45:00Z",
+      "league": "Ireland - Division 1",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620834899,
+      "home_team": "South Africa",
+      "away_team": "South Korea",
+      "starts": "2026-06-25T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631289775,
+      "home_team": "Romania",
+      "away_team": "Wales",
+      "starts": "2026-06-06T17:45:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640241,
+      "home_team": "Philadelphia Lone Star",
+      "away_team": "LVU Rush",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728145,
+      "home_team": "Mayfield United",
+      "away_team": "Midleton",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Ireland - Munster Senior League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631342069,
+      "home_team": "Jordan",
+      "away_team": "Argentina",
+      "starts": "2026-06-28T02:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631338311,
+      "home_team": "Colombia",
+      "away_team": "Portugal",
+      "starts": "2026-06-27T23:30:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549624,
+      "home_team": "Loudoun United",
+      "away_team": "Richmond Kickers",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599582,
+      "home_team": "Nosaby",
+      "away_team": "Karlskrona",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - 2nd Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733430,
+      "home_team": "Unia Wabrzezno",
+      "away_team": "LKS Start Pruszcz",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631542490,
+      "home_team": "Retz",
+      "away_team": "Favoritner",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Regionalliga Ost",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586779,
+      "home_team": "Colo Colo",
+      "away_team": "Cobresal",
+      "starts": "2026-06-13T21:30:00Z",
+      "league": "Chile - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631541482,
+      "home_team": "Jaro",
+      "away_team": "HJK Helsinki",
+      "starts": "2026-06-13T14:00:00Z",
+      "league": "Finland - Veikkausliiga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549956,
+      "home_team": "Imperatriz",
+      "away_team": "Tuna Luso",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Brazil - Serie D",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581533,
+      "home_team": "Hanoi FC",
+      "away_team": "Cong An Ho Chi Minh",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "Vietnam - V League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629409,
+      "home_team": "Nautico",
+      "away_team": "Fortaleza",
+      "starts": "2026-06-09T22:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581284,
+      "home_team": "Gladesville Ravens",
+      "away_team": "Northern Tigers",
+      "starts": "2026-06-07T05:10:00Z",
+      "league": "Australia - NPL New South Wales Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571418,
+      "home_team": "New York Cosmos",
+      "away_team": "Hartford Athletic",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729258,
+      "home_team": "SK 1923 Gabcikovo",
+      "away_team": "Druzstevnik Velke Ludince",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702069,
+      "home_team": "Armenia",
+      "away_team": "Kazakhstan",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571375,
+      "home_team": "Souths United",
+      "away_team": "Sunshine Coast Wanderers",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Australia - NPL Queensland Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549126,
+      "home_team": "12 de Junio de Villa Hayes",
+      "away_team": "Deportivo Capiata",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "Paraguay - Division Intermedia",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631740698,
+      "home_team": "Estonia",
+      "away_team": "Lithuania",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "International - Baltic Cup U19",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581311,
+      "home_team": "Song Lam Nghe An",
+      "away_team": "PVF-CAND",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "Vietnam - V League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631350200,
+      "home_team": "Senegal",
+      "away_team": "Iraq",
+      "starts": "2026-06-26T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631693216,
+      "home_team": "Westchester Flames",
+      "away_team": "New Jersey Copa",
+      "starts": "2026-06-06T23:30:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631660565,
+      "home_team": "Potencia",
+      "away_team": "Parque de Plata",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Uruguay - Primera Division Amateur",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729086,
+      "home_team": "Dinamo Helfort",
+      "away_team": "1980 Wien",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586471,
+      "home_team": "Universidad Catolica",
+      "away_team": "Universidad de Concepcion",
+      "starts": "2026-06-14T21:30:00Z",
+      "league": "Chile - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627257733,
+      "home_team": "Colombia",
+      "away_team": "DR Congo",
+      "starts": "2026-06-24T02:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640515,
+      "home_team": "Trem",
+      "away_team": "Aguia de Maraba",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Brazil - Serie D",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571345,
+      "home_team": "FC Tulsa",
+      "away_team": "San Antonio",
+      "starts": "2026-06-07T00:30:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702707,
+      "home_team": "Vitoria da Conquista",
+      "away_team": "Jacuipense",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Baiano U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631711766,
+      "home_team": "Vikingur Olafsvik",
+      "away_team": "Kari",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "Iceland - 2. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571422,
+      "home_team": "Colorado Rapids II",
+      "away_team": "St Louis City SC II",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "USA - MLS Next Pro League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631651924,
+      "home_team": "Bulgaria",
+      "away_team": "Albania",
+      "starts": "2026-06-07T07:30:00Z",
+      "league": "International - Friendlies U19",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631342070,
+      "home_team": "Morocco",
+      "away_team": "Haiti",
+      "starts": "2026-06-24T22:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849620,
+      "home_team": "Panama",
+      "away_team": "Croatia",
+      "starts": "2026-06-23T23:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631603568,
+      "home_team": "America Mineiro",
+      "away_team": "Atletico Goianiense",
+      "starts": "2026-06-08T23:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728150,
+      "home_team": "Skiljebo",
+      "away_team": "Enskede",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - 2nd Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627277932,
+      "home_team": "Portugal",
+      "away_team": "DR Congo",
+      "starts": "2026-06-17T17:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596172,
+      "home_team": "Chaco For Ever",
+      "away_team": "Ferro Carril Oeste",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729097,
+      "home_team": "Aarau",
+      "away_team": "Team Ticino",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Switzerland - U19 Elite",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631584116,
+      "home_team": "Defensores de Puerto Vilelas",
+      "away_team": "Boca Unidos",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Torneo Federal A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610597,
+      "home_team": "Atletico Goianiense",
+      "away_team": "Vila Nova",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Brazil - Goiano U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733423,
+      "home_team": "MKS Mazovia Minsk Mazowiecki",
+      "away_team": "Weszlo Warszawa",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729266,
+      "home_team": "Belusa",
+      "away_team": "Trencin II",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631653054,
+      "home_team": "Quintero Unido",
+      "away_team": "Deportes Naval de Talcahuano",
+      "starts": "2026-06-06T21:00:00Z",
+      "league": "Chile - Tercera Division A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549622,
+      "home_team": "Miami AC",
+      "away_team": "Brevard Fire",
+      "starts": "2026-06-06T21:30:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631631909,
+      "home_team": "Moghreb Tetouan",
+      "away_team": "Wydad Fes",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Morocco - Botola 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640589,
+      "home_team": "Monterey Bay",
+      "away_team": "Sporting Club Jacksonville",
+      "starts": "2026-06-11T02:00:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631717060,
+      "home_team": "Criciuma",
+      "away_team": "Londrina",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620834900,
+      "home_team": "Canada",
+      "away_team": "Qatar",
+      "starts": "2026-06-18T22:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599529,
+      "home_team": "The Gap",
+      "away_team": "Virginia United",
+      "starts": "2026-06-07T06:00:00Z",
+      "league": "Australia - Queensland Premier League Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596180,
+      "home_team": "Birmingham Legion",
+      "away_team": "Las Vegas Lights",
+      "starts": "2026-06-14T00:00:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549582,
+      "home_team": "Montevideo City Torque",
+      "away_team": "Deportivo Maldonado",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Uruguay - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631350201,
+      "home_team": "Cape Verde",
+      "away_team": "Saudi Arabia",
+      "starts": "2026-06-27T00:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631566897,
+      "home_team": "Chattanooga",
+      "away_team": "New York Red Bulls II",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - MLS Next Pro League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631604031,
+      "home_team": "LDU Portoviejo",
+      "away_team": "Gualaceo",
+      "starts": "2026-06-06T21:00:00Z",
+      "league": "Ecuador - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631604088,
+      "home_team": "Connecticut Rush",
+      "away_team": "Seacoast United Phantoms",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688524,
+      "home_team": "Oakland County",
+      "away_team": "Lansing City Football",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631693251,
+      "home_team": "UD San Mauro",
+      "away_team": "Pobla de Mafumet",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "Spain - Regional Leagues",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627256479,
+      "home_team": "Switzerland",
+      "away_team": "Bosnia and Herzegovina",
+      "starts": "2026-06-18T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858176,
+      "home_team": "Qatar",
+      "away_team": "Switzerland",
+      "starts": "2026-06-13T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631631872,
+      "home_team": "Tacuarembo",
+      "away_team": "Uruguay Montevideo",
+      "starts": "2026-06-07T21:00:00Z",
+      "league": "Uruguay - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596124,
+      "home_team": "New England FC",
+      "away_team": "Black Rock",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631604078,
+      "home_team": "DR Congo",
+      "away_team": "Colombia",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "International - Maurice Revello Youth Tournament",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627257734,
+      "home_team": "Netherlands",
+      "away_team": "Sweden",
+      "starts": "2026-06-20T17:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571344,
+      "home_team": "Deportes Iquique",
+      "away_team": "Deportes Recoleta",
+      "starts": "2026-06-07T00:30:00Z",
+      "league": "Chile - Primera B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581364,
+      "home_team": "Cerro",
+      "away_team": "Penarol",
+      "starts": "2026-06-07T18:00:00Z",
+      "league": "Uruguay - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631504079,
+      "home_team": "Kerry",
+      "away_team": "Athlone Town",
+      "starts": "2026-06-12T18:45:00Z",
+      "league": "Ireland - Division 1",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571493,
+      "home_team": "Becamex HCMC",
+      "away_team": "Hoang Anh Gia Lai",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "Vietnam - V League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549125,
+      "home_team": "Deportes Rengo",
+      "away_team": "Lota Schwager",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "Chile - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707670,
+      "home_team": "TP-47",
+      "away_team": "JBK",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Kakkonen Group C",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549592,
+      "home_team": "Argentino de Rosario",
+      "away_team": "CA Lugano",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631603671,
+      "home_team": "Vila Nova",
+      "away_team": "Botafogo SP",
+      "starts": "2026-06-08T23:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631499073,
+      "home_team": "Galway United",
+      "away_team": "Dundalk",
+      "starts": "2026-06-12T18:45:00Z",
+      "league": "Ireland - Premier",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732574,
+      "home_team": "Limanovia Limanowa",
+      "away_team": "Unia Tarnow",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549056,
+      "home_team": "Deportes Copiapo",
+      "away_team": "Santiago Wanderers",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "Chile - Primera B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631542476,
+      "home_team": "Ilves",
+      "away_team": "TPS",
+      "starts": "2026-06-13T12:00:00Z",
+      "league": "Finland - Veikkausliiga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596128,
+      "home_team": "Deportivo Moron",
+      "away_team": "Almirante Brown",
+      "starts": "2026-06-07T18:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581550,
+      "home_team": "Sollentuna",
+      "away_team": "Umea",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "Sweden - Division 1 Norra",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549925,
+      "home_team": "Portuguesa SP",
+      "away_team": "Portuguesa RJ",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Serie D",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707854,
+      "home_team": "Jonkopings Sodra",
+      "away_team": "Trollhattan",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - Division 1 Sodra",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620834895,
+      "home_team": "Mexico",
+      "away_team": "South Korea",
+      "starts": "2026-06-19T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729091,
+      "home_team": "Dinamo Helfort",
+      "away_team": "1980 Wien",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631675872,
+      "home_team": "Stilon Gorzow Wielkopolski",
+      "away_team": "Pogon Swierzawa",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631342072,
+      "home_team": "DR Congo",
+      "away_team": "Uzbekistan",
+      "starts": "2026-06-27T23:30:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849625,
+      "home_team": "England",
+      "away_team": "Croatia",
+      "starts": "2026-06-17T20:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631604022,
+      "home_team": "Deportivo Espanol",
+      "away_team": "Claypole",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610370,
+      "home_team": "Tocantinopolis",
+      "away_team": "Oratorio",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Brazil - Serie D",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610366,
+      "home_team": "Deportes La Serena",
+      "away_team": "Union La Calera",
+      "starts": "2026-06-07T16:30:00Z",
+      "league": "Chile - League Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631338313,
+      "home_team": "New Zealand",
+      "away_team": "Belgium",
+      "starts": "2026-06-27T03:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631693254,
+      "home_team": "Manzanares",
+      "away_team": "CD Noblejas",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "Spain - Regional Leagues",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571330,
+      "home_team": "Indy Eleven",
+      "away_team": "Forward Madison",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707668,
+      "home_team": "HJS",
+      "away_team": "EPS",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Kakkonen Group B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549916,
+      "home_team": "Olympique Akbou",
+      "away_team": "Ben Aknoun",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Algeria - Ligue 1",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631731476,
+      "home_team": "Breidablik/Augn/Smari",
+      "away_team": "Thor/THK/Volsungur",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Iceland - U19 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610364,
+      "home_team": "Universidad de Chile",
+      "away_team": "Audax Italiano",
+      "starts": "2026-06-07T16:30:00Z",
+      "league": "Chile - League Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631631857,
+      "home_team": "Chapecoense",
+      "away_team": "Avai",
+      "starts": "2026-06-07T14:00:00Z",
+      "league": "Brazil - Copa Sul-Sudeste",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631731477,
+      "home_team": "Breidablik/Augn/Smari",
+      "away_team": "Thor/THK/Volsungur",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Iceland - U19 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629158,
+      "home_team": "Oddevold",
+      "away_team": "Norrkoping",
+      "starts": "2026-06-09T17:00:00Z",
+      "league": "Sweden - Superettan",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631328987,
+      "home_team": "Greece",
+      "away_team": "Italy",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729260,
+      "home_team": "Raca Bratislava",
+      "away_team": "Banik Prievidza",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571427,
+      "home_team": "Spokane Velocity",
+      "away_team": "Boise",
+      "starts": "2026-06-07T01:00:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728140,
+      "home_team": "Mayfield United",
+      "away_team": "Midleton",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Ireland - Munster Senior League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631584145,
+      "home_team": "Blaublitz Akita",
+      "away_team": "Kagoshima United",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Japan - J2/J3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631723249,
+      "home_team": "Eker Orebro",
+      "away_team": "Syrianska",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - 2nd Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858186,
+      "home_team": "Switzerland",
+      "away_team": "Canada",
+      "starts": "2026-06-24T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685661,
+      "home_team": "Uberabinha",
+      "away_team": "Cruzeiro",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Mineiro U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729096,
+      "home_team": "Twin City Toucans",
+      "away_team": "Houston",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631676804,
+      "home_team": "Vado",
+      "away_team": "Scafatese",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Italy - Serie D",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631631949,
+      "home_team": "UWA Nedlands",
+      "away_team": "Joondalup City",
+      "starts": "2026-06-06T07:00:00Z",
+      "league": "Australia - Western Australia State League 1",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733426,
+      "home_team": "Rivers United",
+      "away_team": "Nasarawa United",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Nigeria - Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631693255,
+      "home_team": "FC Seefeld ZH",
+      "away_team": "FC Uzwil",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Switzerland - 2. Liga Interregional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685662,
+      "home_team": "Servette II",
+      "away_team": "Taverne",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Switzerland - 1. Liga Classic",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599690,
+      "home_team": "Detroit City",
+      "away_team": "El Paso Locomotive",
+      "starts": "2026-06-10T23:30:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631621579,
+      "home_team": "Goias",
+      "away_team": "Gremio Novorizontino",
+      "starts": "2026-06-10T23:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631338308,
+      "home_team": "Croatia",
+      "away_team": "Ghana",
+      "starts": "2026-06-27T21:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707663,
+      "home_team": "HJS",
+      "away_team": "EPS",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Kakkonen Group B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631730075,
+      "home_team": "Gornik Polkowice",
+      "away_team": "Sokol Kleczew",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 2nd Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707198,
+      "home_team": "City London",
+      "away_team": "Patriotas PR",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Paranaense U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640300,
+      "home_team": "Helsingborgs",
+      "away_team": "Landskrona",
+      "starts": "2026-06-11T17:00:00Z",
+      "league": "Sweden - Superettan",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631730073,
+      "home_team": "Gornik Polkowice",
+      "away_team": "Sokol Kleczew",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 2nd Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707678,
+      "home_team": "KFA",
+      "away_team": "KFG Gardabaer",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 2. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732571,
+      "home_team": "Polonia Golina",
+      "away_team": "Ostrovia Ostrow Wielkopolski",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631328986,
+      "home_team": "Croatia",
+      "away_team": "Slovenia",
+      "starts": "2026-06-07T18:45:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610566,
+      "home_team": "Club Mercedes",
+      "away_team": "Deportivo Paraguayo",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627278051,
+      "home_team": "Australia",
+      "away_team": "Turkiye",
+      "starts": "2026-06-14T04:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586745,
+      "home_team": "CRB",
+      "away_team": "Sao Bernardo",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620834896,
+      "home_team": "Argentina",
+      "away_team": "Algeria",
+      "starts": "2026-06-17T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631655207,
+      "home_team": "Rodelindo Roman",
+      "away_team": "Chimbarongo",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Chile - Tercera Division A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631712144,
+      "home_team": "Canada",
+      "away_team": "Japan",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "International - Friendlies U20 Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596131,
+      "home_team": "France",
+      "away_team": "Northern Ireland",
+      "starts": "2026-06-08T19:10:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733424,
+      "home_team": "Blekitni Ropczyce",
+      "away_team": "Stal Lancut",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581281,
+      "home_team": "Western Sydney Wanderers II",
+      "away_team": "Illawarra Stingrays",
+      "starts": "2026-06-07T07:00:00Z",
+      "league": "Australia - NPL New South Wales Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631504078,
+      "home_team": "Finn Harps",
+      "away_team": "University College Dublin",
+      "starts": "2026-06-12T18:45:00Z",
+      "league": "Ireland - Division 1",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610885,
+      "home_team": "CSD Rangers",
+      "away_team": "Santa Cruz",
+      "starts": "2026-06-07T00:30:00Z",
+      "league": "Chile - Primera B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549108,
+      "home_team": "Qatar",
+      "away_team": "El Salvador",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631523476,
+      "home_team": "Brazil",
+      "away_team": "Egypt",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707852,
+      "home_team": "Gefle",
+      "away_team": "Hammarby Talang",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - Division 1 Norra",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631338309,
+      "home_team": "Norway",
+      "away_team": "France",
+      "starts": "2026-06-26T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586466,
+      "home_team": "Orlando City II",
+      "away_team": "Carolina Core",
+      "starts": "2026-06-07T23:00:00Z",
+      "league": "USA - MLS Next Pro League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581508,
+      "home_team": "West Adelaide",
+      "away_team": "Adelaide United II",
+      "starts": "2026-06-07T08:30:00Z",
+      "league": "Australia - NPL South Australia",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631700840,
+      "home_team": "TPV",
+      "away_team": "Inter Turku 2",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Ykkonen",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631338307,
+      "home_team": "Panama",
+      "away_team": "England",
+      "starts": "2026-06-27T21:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599637,
+      "home_team": "Universidad Catolica",
+      "away_team": "Cobresal",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "Chile - League Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631356691,
+      "home_team": "Liechtenstein",
+      "away_team": "Cyprus",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858188,
+      "home_team": "Spain",
+      "away_team": "Saudi Arabia",
+      "starts": "2026-06-21T16:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849635,
+      "home_team": "Brazil",
+      "away_team": "Haiti",
+      "starts": "2026-06-20T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733434,
+      "home_team": "Unia Wabrzezno",
+      "away_team": "LKS Start Pruszcz",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733425,
+      "home_team": "Iskra Ksieginice",
+      "away_team": "Luzyce Luban",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627277929,
+      "home_team": "South Korea",
+      "away_team": "Czechia",
+      "starts": "2026-06-12T02:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599522,
+      "home_team": "Arsenal de Sarandi",
+      "away_team": "Club Sportivo Italiano",
+      "starts": "2026-06-06T17:30:00Z",
+      "league": "Argentina - Primera B Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640250,
+      "home_team": "Atletico Albacete",
+      "away_team": "Manchego Ciudad Real",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Spain - Tercera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586481,
+      "home_team": "Zweigen Kanazawa",
+      "away_team": "Thespa Gunma",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Japan - J2/J3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631703699,
+      "home_team": "Kyrgyzstan",
+      "away_team": "Palestine",
+      "starts": "2026-06-06T14:30:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631631815,
+      "home_team": "Chile",
+      "away_team": "Brazil",
+      "starts": "2026-06-06T21:00:00Z",
+      "league": "International - Friendlies U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629432,
+      "home_team": "US Boujaad",
+      "away_team": "Stade Marocain",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Morocco - Botola 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707667,
+      "home_team": "MyPa",
+      "away_team": "PPJ",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Kakkonen Group A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728154,
+      "home_team": "Qviding FIF",
+      "away_team": "Astorps",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - 2nd Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702417,
+      "home_team": "Iceland",
+      "away_team": "Montenegro",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "UEFA - U19 Euro Championship Qualifiers",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707669,
+      "home_team": "GBK",
+      "away_team": "Vaajakoski",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Kakkonen Group C",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627256477,
+      "home_team": "Czechia",
+      "away_team": "South Africa",
+      "starts": "2026-06-18T16:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549605,
+      "home_team": "Provincial Osorno",
+      "away_team": "Deportes Linares",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Chile - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571492,
+      "home_team": "Kristianstad",
+      "away_team": "Lunds",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "Sweden - Division 1 Sodra",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596141,
+      "home_team": "Colombia",
+      "away_team": "Jordan",
+      "starts": "2026-06-07T23:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631723986,
+      "home_team": "Svogerslev",
+      "away_team": "BK Fremad Valby",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "Denmark - Division 2 Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732569,
+      "home_team": "Polonia Golina",
+      "away_team": "Ostrovia Ostrow Wielkopolski",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728144,
+      "home_team": "UCC",
+      "away_team": "College Corinthians",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Ireland - Munster Senior League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631714774,
+      "home_team": "Croatia",
+      "away_team": "Ireland",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "International - Friendlies U21",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631712136,
+      "home_team": "Club Olympic",
+      "away_team": "Libertad Quillacollo",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Bolivia - Copa Simon Bolivar",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858184,
+      "home_team": "Egypt",
+      "away_team": "Iran",
+      "starts": "2026-06-27T03:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707672,
+      "home_team": "Fjolnir",
+      "away_team": "UMF Selfoss",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 2. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586470,
+      "home_team": "Nublense",
+      "away_team": "Huachipato",
+      "starts": "2026-06-14T00:00:00Z",
+      "league": "Chile - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610392,
+      "home_team": "Pamplona",
+      "away_team": "Izarra",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Spain - Tercera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586472,
+      "home_team": "Deportes Concepcion",
+      "away_team": "Deportes Limache",
+      "starts": "2026-06-14T16:30:00Z",
+      "league": "Chile - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729261,
+      "home_team": "Spartak Myjava",
+      "away_team": "FC DAC 1904 Dunajska Streda II",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549060,
+      "home_team": "MC Oran",
+      "away_team": "USM Alger",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "Algeria - Ligue 1",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586785,
+      "home_team": "Oita Trinita",
+      "away_team": "Montedio Yamagata",
+      "starts": "2026-06-07T07:00:00Z",
+      "league": "Japan - J2/J3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631621553,
+      "home_team": "Indonesia",
+      "away_team": "Vietnam",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "AFF - U19 Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631697320,
+      "home_team": "Vestri",
+      "away_team": "Volsungur",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Iceland - 1. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631693222,
+      "home_team": "Maua",
+      "away_team": "Uniao Mogi",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Paulista Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707671,
+      "home_team": "Fjolnir",
+      "away_team": "UMF Selfoss",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 2. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599578,
+      "home_team": "New Mexico United",
+      "away_team": "Orange County",
+      "starts": "2026-06-14T01:30:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631676813,
+      "home_team": "Perolas Negras",
+      "away_team": "Serrano",
+      "starts": "2026-06-06T17:45:00Z",
+      "league": "Brazil - Carioca A2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631714773,
+      "home_team": "Croatia",
+      "away_team": "Ireland",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "International - Friendlies U21",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631621467,
+      "home_team": "Ceara",
+      "away_team": "Avai",
+      "starts": "2026-06-10T23:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610596,
+      "home_team": "Brusque",
+      "away_team": "Chapecoense",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Catarinense U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629259,
+      "home_team": "Brage",
+      "away_team": "Ljungskile",
+      "starts": "2026-06-09T17:00:00Z",
+      "league": "Sweden - Superettan",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549984,
+      "home_team": "Nacional de Football",
+      "away_team": "Juventud",
+      "starts": "2026-06-06T21:30:00Z",
+      "league": "Uruguay - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549606,
+      "home_team": "Club Fernando de La Mora",
+      "away_team": "Guairena",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Paraguay - Division Intermedia",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858180,
+      "home_team": "Argentina",
+      "away_team": "Austria",
+      "starts": "2026-06-22T17:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599630,
+      "home_team": "San Miguel",
+      "away_team": "Defensores de Belgrano",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631282537,
+      "home_team": "Gibraltar",
+      "away_team": "Cayman Islands",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549917,
+      "home_team": "Dalvik/Reynir",
+      "away_team": "Throttur Vogar",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Iceland - 2. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688538,
+      "home_team": "Tirol",
+      "away_team": "Floresta",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Cearense U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631350202,
+      "home_team": "Turkiye",
+      "away_team": "USA",
+      "starts": "2026-06-26T02:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581534,
+      "home_team": "Pitea IF",
+      "away_team": "Enkopings",
+      "starts": "2026-06-07T12:00:00Z",
+      "league": "Sweden - Division 1 Norra",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631711763,
+      "home_team": "Vikingur Olafsvik",
+      "away_team": "Kari",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "Iceland - 2. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571327,
+      "home_team": "Atlanta United II",
+      "away_team": "Chicago Fire II",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - MLS Next Pro League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549618,
+      "home_team": "Ranheim",
+      "away_team": "Strommen",
+      "starts": "2026-06-07T15:00:00Z",
+      "league": "Norway - 1st Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620834894,
+      "home_team": "France",
+      "away_team": "Senegal",
+      "starts": "2026-06-16T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631740697,
+      "home_team": "Estonia",
+      "away_team": "Lithuania",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "International - Baltic Cup U19",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631660160,
+      "home_team": "Everton de la Plata",
+      "away_team": "Ezeiza",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Argentina - Torneo Promocional Amateur",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599631,
+      "home_team": "Brown de Adrogue",
+      "away_team": "Club Comunicaciones",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Argentina - Primera B Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702420,
+      "home_team": "Iceland",
+      "away_team": "Montenegro",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "UEFA - U19 Euro Championship Qualifiers",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631566900,
+      "home_team": "Sporting Club Jacksonville",
+      "away_team": "Tampa Bay Rowdies",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685654,
+      "home_team": "Baztan",
+      "away_team": "Cantolagua",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Spain - Regional Leagues",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702070,
+      "home_team": "Armenia",
+      "away_team": "Kazakhstan",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620865469,
+      "home_team": "Scotland",
+      "away_team": "Brazil",
+      "starts": "2026-06-24T22:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596160,
+      "home_team": "Slovan Duslo Sala",
+      "away_team": "Petrzalka II",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629428,
+      "home_team": "Rentistas",
+      "away_team": "Colon",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "Uruguay - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702665,
+      "home_team": "JFA Academy Fukushima",
+      "away_team": "Nankatsu",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Japan - Nadeshiko Division 2 Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581282,
+      "home_team": "Sydney University",
+      "away_team": "Apia Leichhardt",
+      "starts": "2026-06-07T07:00:00Z",
+      "league": "Australia - NPL New South Wales Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631730074,
+      "home_team": "Ostrowiec Swietokrzyski",
+      "away_team": "Resovia Rzeszow",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 2nd Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549903,
+      "home_team": "Slovan Galanta",
+      "away_team": "Castkovce",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571378,
+      "home_team": "Blacktown City",
+      "away_team": "Rockdale Ilinden",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Australia - NPL New South Wales",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571376,
+      "home_team": "Namyangju",
+      "away_team": "Geoje Citizen",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Korea Republic - K4 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631504080,
+      "home_team": "Treaty United",
+      "away_team": "Bray Wanderers",
+      "starts": "2026-06-12T18:45:00Z",
+      "league": "Ireland - Division 1",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640297,
+      "home_team": "Varbergs BoIS",
+      "away_team": "Norrby",
+      "starts": "2026-06-10T17:00:00Z",
+      "league": "Sweden - Superettan",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702425,
+      "home_team": "Portugal",
+      "away_team": "Greece",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "UEFA - U19 Euro Championship Qualifiers",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685617,
+      "home_team": "Columbus United",
+      "away_team": "Montgomery",
+      "starts": "2026-06-06T23:40:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688506,
+      "home_team": "Palestine",
+      "away_team": "Malaysia",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "International - Friendlies Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599626,
+      "home_team": "Acassuso",
+      "away_team": "Central Norte Salta",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610391,
+      "home_team": "Itapipoca",
+      "away_team": "Icasa",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Cearense 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629135,
+      "home_team": "SJK Akatemia",
+      "away_team": "JIPPO",
+      "starts": "2026-06-09T16:00:00Z",
+      "league": "Finland - Ykkosliiga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631586473,
+      "home_team": "Union La Calera",
+      "away_team": "Universidad de Chile",
+      "starts": "2026-06-14T19:00:00Z",
+      "league": "Chile - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620865471,
+      "home_team": "Ecuador",
+      "away_team": "Curacao",
+      "starts": "2026-06-21T00:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732579,
+      "home_team": "Limanovia Limanowa",
+      "away_team": "Unia Tarnow",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599689,
+      "home_team": "Pittsburgh Riverhounds",
+      "away_team": "Indy Eleven",
+      "starts": "2026-06-13T23:00:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549570,
+      "home_team": "FC Lahti",
+      "away_team": "SJK",
+      "starts": "2026-06-13T16:00:00Z",
+      "league": "Finland - Veikkausliiga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599644,
+      "home_team": "Castellon",
+      "away_team": "Almeria",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Spain - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858187,
+      "home_team": "Tunisia",
+      "away_team": "Japan",
+      "starts": "2026-06-21T04:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549616,
+      "home_team": "Inter Miami II",
+      "away_team": "New York City II",
+      "starts": "2026-06-06T21:00:00Z",
+      "league": "USA - MLS Next Pro League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732580,
+      "home_team": "Bochnia",
+      "away_team": "Luban Maniowy",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610567,
+      "home_team": "Deportes Limache",
+      "away_team": "Everton Vina del Mar",
+      "starts": "2026-06-07T22:00:00Z",
+      "league": "Chile - League Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596121,
+      "home_team": "Los Andes",
+      "away_team": "Estudiantes de Caseros",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707674,
+      "home_team": "KA Asvellir",
+      "away_team": "Vidir Gardur",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 3. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596156,
+      "home_team": "Sierra Leone",
+      "away_team": "Liberia",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549054,
+      "home_team": "KV Vesturbaer",
+      "away_team": "Tindastoll",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Iceland - 3. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729262,
+      "home_team": "Malacky",
+      "away_team": "MSK Senec",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599643,
+      "home_team": "San Telmo",
+      "away_team": "Deportivo Madryn",
+      "starts": "2026-06-07T18:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631350199,
+      "home_team": "Algeria",
+      "away_team": "Austria",
+      "starts": "2026-06-28T02:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571329,
+      "home_team": "Detroit City",
+      "away_team": "Lexington SC",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631676805,
+      "home_team": "Club Atletico Basanez",
+      "away_team": "Deportivo LSM",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Uruguay - Primera Division Amateur",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685599,
+      "home_team": "12 de Octubre",
+      "away_team": "24 de Setiembre",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Paraguay - Tercera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729239,
+      "home_team": "Horitschon-Unterpetersdorf",
+      "away_team": "Kohfidisch",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549123,
+      "home_team": "Brazil",
+      "away_team": "USA",
+      "starts": "2026-06-06T21:30:00Z",
+      "league": "International - Friendlies Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549945,
+      "home_team": "Estrella del Sur",
+      "away_team": "Sacachispas",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631542491,
+      "home_team": "FV Austria XIII",
+      "away_team": "Red Star Penzing",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571442,
+      "home_team": "Bulls Academy",
+      "away_team": "Hills United",
+      "starts": "2026-06-07T04:40:00Z",
+      "league": "Australia - NPL New South Wales Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581526,
+      "home_team": "Cheonan City",
+      "away_team": "Suwon FC",
+      "starts": "2026-06-07T10:30:00Z",
+      "league": "Korea Republic - K League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688572,
+      "home_team": "Champagne Sport",
+      "away_team": "Terre Sainte",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Switzerland - 2. Liga Interregional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631700819,
+      "home_team": "Fylkir",
+      "away_team": "Throttur Reykjavik",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 1. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707680,
+      "home_team": "Arbaer",
+      "away_team": "Sindri",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 3. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610368,
+      "home_team": "Santiago City",
+      "away_team": "Deportes Colina",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Chile - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728148,
+      "home_team": "Skiljebo",
+      "away_team": "Enskede",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - 2nd Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549102,
+      "home_team": "Decisao",
+      "away_team": "Treze",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Brazil - Serie D",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549094,
+      "home_team": "Leones de Rosario",
+      "away_team": "Sportivo Barracas",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702691,
+      "home_team": "Manacor",
+      "away_team": "Pena Deportiva",
+      "starts": "2026-06-07T10:00:00Z",
+      "league": "Spain - Tercera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685660,
+      "home_team": "Stade Lausanne-Ouchy II",
+      "away_team": "Collex-Bossy",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Switzerland - 2. Liga Interregional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549946,
+      "home_team": "Parana",
+      "away_team": "Paranavai",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Brazil - Paranaense 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549053,
+      "home_team": "IFK Mariehamn",
+      "away_team": "Gnistan",
+      "starts": "2026-06-13T16:00:00Z",
+      "league": "Finland - Veikkausliiga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631655234,
+      "home_team": "Bartolome Mitre",
+      "away_team": "Sarmiento de Resistencia",
+      "starts": "2026-06-06T18:45:00Z",
+      "league": "Argentina - Torneo Federal A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631632089,
+      "home_team": "Miramar Misiones",
+      "away_team": "Oriental",
+      "starts": "2026-06-08T00:00:00Z",
+      "league": "Uruguay - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707675,
+      "home_team": "Arbaer",
+      "away_team": "Sindri",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Iceland - 3. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685653,
+      "home_team": "UD Arenal",
+      "away_team": "CD Sant Jordi",
+      "starts": "2026-06-06T17:30:00Z",
+      "league": "Spain - Regional Leagues",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610552,
+      "home_team": "Fukushima United",
+      "away_team": "Ryukyu",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Japan - J2/J3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729257,
+      "home_team": "Malacky",
+      "away_team": "MSK Senec",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732578,
+      "home_team": "Polonia Piotrkow",
+      "away_team": "Kutno",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631655208,
+      "home_team": "Lautaro de Buin",
+      "away_team": "CDSC Deportes Rancagua",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Chile - Tercera Division A",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581280,
+      "home_team": "Manly United",
+      "away_team": "Macarthur Rams",
+      "starts": "2026-06-07T07:00:00Z",
+      "league": "Australia - NPL New South Wales Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631723935,
+      "home_team": "Union Tarija",
+      "away_team": "Bilbao Rioja",
+      "starts": "2026-06-06T19:30:00Z",
+      "league": "Bolivia - Copa Simon Bolivar",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631660573,
+      "home_team": "Villa Espanola",
+      "away_team": "Sportivo Bella Italia",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Uruguay - Primera Division Amateur",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631693253,
+      "home_team": "Castello",
+      "away_team": "Emmenbrucke",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Switzerland - 2. Liga Interregional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596170,
+      "home_team": "Guemes",
+      "away_team": "Deportivo Maipu",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599519,
+      "home_team": "San Martin de San Juan",
+      "away_team": "Nueva Chicago",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631360497,
+      "home_team": "Argentina",
+      "away_team": "Honduras",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627278053,
+      "home_team": "Iraq",
+      "away_team": "Norway",
+      "starts": "2026-06-16T22:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599530,
+      "home_team": "Ascoli",
+      "away_team": "Brescia",
+      "starts": "2026-06-07T16:00:00Z",
+      "league": "Italy - Serie C",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631697319,
+      "home_team": "Vestri",
+      "away_team": "Volsungur",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Iceland - 1. Deild",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599596,
+      "home_team": "KTP",
+      "away_team": "FC Haka",
+      "starts": "2026-06-08T15:30:00Z",
+      "league": "Finland - Ykkosliiga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620865473,
+      "home_team": "Haiti",
+      "away_team": "Scotland",
+      "starts": "2026-06-14T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732573,
+      "home_team": "Polonia Piotrkow",
+      "away_team": "Kutno",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631329418,
+      "home_team": "Morocco",
+      "away_team": "Norway",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581330,
+      "home_team": "CA Progreso",
+      "away_team": "Albion",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "Uruguay - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631730072,
+      "home_team": "Ostrowiec Swietokrzyski",
+      "away_team": "Resovia Rzeszow",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 2nd Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596122,
+      "home_team": "Tristan Suarez",
+      "away_team": "Almagro",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631566905,
+      "home_team": "FC Naples",
+      "away_team": "Sarasota Paradise",
+      "starts": "2026-06-06T23:30:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571336,
+      "home_team": "Rhode Island",
+      "away_team": "Westchester SC",
+      "starts": "2026-06-06T23:30:00Z",
+      "league": "USA - USL Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631504082,
+      "home_team": "St Patrick\u00b4s Athletic",
+      "away_team": "Drogheda United",
+      "starts": "2026-06-12T18:45:00Z",
+      "league": "Ireland - Premier",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599568,
+      "home_team": "Agropecuario",
+      "away_team": "Patronato",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571426,
+      "home_team": "FC Western",
+      "away_team": "Wellington Phoenix II",
+      "starts": "2026-06-07T00:30:00Z",
+      "league": "New Zealand - Central League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549578,
+      "home_team": "Vitoria ES",
+      "away_team": "Rio Branco VN",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Copa Espirito Santo",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631566943,
+      "home_team": "Marconi Stallions",
+      "away_team": "Wollongong Wolves",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Australia - NPL New South Wales",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571377,
+      "home_team": "Pyeongchang United",
+      "away_team": "Geumsan Insam",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Korea Republic - K4 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631712118,
+      "home_team": "12 De Octubre Santo Domingo",
+      "away_team": "Martin Ledesma",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Paraguay - Tercera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610943,
+      "home_team": "Celta Vigo II",
+      "away_team": "CE Europa",
+      "starts": "2026-06-07T14:15:00Z",
+      "league": "Spain - Primera Federacion",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581276,
+      "home_team": "St George Willawong",
+      "away_team": "Redlands United",
+      "starts": "2026-06-07T06:30:00Z",
+      "league": "Australia - Queensland Premier League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707851,
+      "home_team": "Gefle",
+      "away_team": "Hammarby Talang",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - Division 1 Norra",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707199,
+      "home_team": "Fusion Caribe",
+      "away_team": "Atletico Aracataca",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "Colombia - U19 Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858182,
+      "home_team": "Ecuador",
+      "away_team": "Germany",
+      "starts": "2026-06-25T20:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631621447,
+      "home_team": "Carabobo",
+      "away_team": "Academia Puerto Cabello",
+      "starts": "2026-06-07T22:00:00Z",
+      "league": "Venezuela - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685623,
+      "home_team": "America SP",
+      "away_team": "Tupa",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Paulista Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631342071,
+      "home_team": "Uruguay",
+      "away_team": "Spain",
+      "starts": "2026-06-27T00:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549926,
+      "home_team": "America RJ",
+      "away_team": "Agua Santa",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Serie D",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549107,
+      "home_team": "Canuelas",
+      "away_team": "Club El Porvenir",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631676815,
+      "home_team": "Sao Gon\u00e7alo",
+      "away_team": "Olaria",
+      "starts": "2026-06-06T17:45:00Z",
+      "league": "Brazil - Carioca A2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631675891,
+      "home_team": "FKM Nove Zamky",
+      "away_team": "KFC Komarno II",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728136,
+      "home_team": "SV Wienerberg",
+      "away_team": "Hellas Kagran",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599577,
+      "home_team": "Colorado Springs Switchbacks",
+      "away_team": "Sacramento Republic",
+      "starts": "2026-06-14T01:00:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599636,
+      "home_team": "Deportivo Armenio",
+      "away_team": "Defensores Unidos",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera B Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631542492,
+      "home_team": "LAC-Inter",
+      "away_team": "Stadlau",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620834897,
+      "home_team": "Uzbekistan",
+      "away_team": "Colombia",
+      "starts": "2026-06-18T02:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596171,
+      "home_team": "Godoy Cruz",
+      "away_team": "Club Atletico Mitre",
+      "starts": "2026-06-07T19:30:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599627,
+      "home_team": "CA Atlanta",
+      "away_team": "Gimnasia Jujuy",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581309,
+      "home_team": "Ninh Binh",
+      "away_team": "Hong Linh Ha Tinh",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "Vietnam - V League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631596169,
+      "home_team": "Chacarita Juniors",
+      "away_team": "Temperley",
+      "starts": "2026-06-07T18:30:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581530,
+      "home_team": "AFC Malmo",
+      "away_team": "Eskilsminne",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "Sweden - Division 1 Sodra",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571416,
+      "home_team": "Supra du Quebec",
+      "away_team": "Pacific",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "Canada - Premier League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599678,
+      "home_team": "San Martin de Tucuman",
+      "away_team": "Quilmes",
+      "starts": "2026-06-07T20:30:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581594,
+      "home_team": "Inter Toronto",
+      "away_team": "Forge",
+      "starts": "2026-06-07T18:00:00Z",
+      "league": "Canada - Premier League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702678,
+      "home_team": "Ferroviario",
+      "away_team": "Tiangua EC",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Cearense U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858181,
+      "home_team": "Saudi Arabia",
+      "away_team": "Uruguay",
+      "starts": "2026-06-15T22:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620858177,
+      "home_team": "USA",
+      "away_team": "Australia",
+      "starts": "2026-06-19T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631714373,
+      "home_team": "Kosovo",
+      "away_team": "Luxembourg",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "International - Friendlies U21",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549566,
+      "home_team": "ASKO Klingenbach",
+      "away_team": "SK Pama",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631584121,
+      "home_team": "Defensor Sporting",
+      "away_team": "Boston River",
+      "starts": "2026-06-07T21:30:00Z",
+      "league": "Uruguay - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549101,
+      "home_team": "Aymores",
+      "away_team": "Villa Nova",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Brazil - Mineiro 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733429,
+      "home_team": "Iskra Ksieginice",
+      "away_team": "Luzyce Luban",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571335,
+      "home_team": "East Atlanta",
+      "away_team": "Apotheos",
+      "starts": "2026-06-06T23:30:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631338312,
+      "home_team": "Czechia",
+      "away_team": "Mexico",
+      "starts": "2026-06-25T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685612,
+      "home_team": "Groningen",
+      "away_team": "Jong Sparta Rotterdam",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "Netherlands - Tweede Divisie",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707853,
+      "home_team": "Jonkopings Sodra",
+      "away_team": "Trollhattan",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Sweden - Division 1 Sodra",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685613,
+      "home_team": "Salem City",
+      "away_team": "North Carolina II",
+      "starts": "2026-06-06T23:30:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599646,
+      "home_team": "Las Palmas",
+      "away_team": "Malaga",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "Spain - Segunda Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571486,
+      "home_team": "Gimpo",
+      "away_team": "Jeonnam Dragons",
+      "starts": "2026-06-07T10:30:00Z",
+      "league": "Korea Republic - K League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631621677,
+      "home_team": "Sport Recife",
+      "away_team": "Athletic Club",
+      "starts": "2026-06-11T00:00:00Z",
+      "league": "Brazil - Serie B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631631847,
+      "home_team": "Minneapolis City",
+      "away_team": "Sueno",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599633,
+      "home_team": "Villa Dalmine",
+      "away_team": "Villa San Carlos",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera B Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631707665,
+      "home_team": "TP-47",
+      "away_team": "JBK",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Finland - Kakkonen Group C",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599628,
+      "home_team": "All Boys",
+      "away_team": "Racing de Cordoba",
+      "starts": "2026-06-07T18:30:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732572,
+      "home_team": "Sokol Ostroda",
+      "away_team": "Polonia Lidzbark Warminski",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631360498,
+      "home_team": "Venezuela",
+      "away_team": "Turkiye",
+      "starts": "2026-06-06T22:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631714374,
+      "home_team": "Kosovo",
+      "away_team": "Luxembourg",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "International - Friendlies U21",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599576,
+      "home_team": "Tampa Bay Rowdies",
+      "away_team": "Charleston Battery",
+      "starts": "2026-06-10T23:00:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631282580,
+      "home_team": "Bolivia",
+      "away_team": "Scotland",
+      "starts": "2026-06-06T20:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549067,
+      "home_team": "JJ Urquiza",
+      "away_team": "Puerto Nuevo",
+      "starts": "2026-06-06T17:30:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631584126,
+      "home_team": "FC Cincinnati II",
+      "away_team": "New England Revolution II",
+      "starts": "2026-06-07T22:00:00Z",
+      "league": "USA - MLS Next Pro League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729255,
+      "home_team": "Raca Bratislava",
+      "away_team": "Banik Prievidza",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Slovakia - 3. Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631603630,
+      "home_team": "Caucaia",
+      "away_team": "Alianca",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Brazil - Cearense U20",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610887,
+      "home_team": "Huachipato",
+      "away_team": "Colo Colo",
+      "starts": "2026-06-07T19:00:00Z",
+      "league": "Chile - League Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688564,
+      "home_team": "Torrijos",
+      "away_team": "Sporting de Alcazar CF",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "Spain - Regional Leagues",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631584140,
+      "home_team": "Audax Italiano",
+      "away_team": "Deportes La Serena",
+      "starts": "2026-06-13T00:00:00Z",
+      "league": "Chile - Primera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631660156,
+      "home_team": "Americano",
+      "away_team": "Audax Rio",
+      "starts": "2026-06-06T17:45:00Z",
+      "league": "Brazil - Carioca A2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627278052,
+      "home_team": "Sweden",
+      "away_team": "Tunisia",
+      "starts": "2026-06-15T02:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549093,
+      "home_team": "Yupanqui",
+      "away_team": "Central Cordoba Rosario",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera C Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620865474,
+      "home_team": "Germany",
+      "away_team": "Curacao",
+      "starts": "2026-06-14T17:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599657,
+      "home_team": "Kenya",
+      "away_team": "Lesotho",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631651920,
+      "home_team": "Curacao",
+      "away_team": "Aruba",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599638,
+      "home_team": "Flandria",
+      "away_team": "Argentino de Quilmes",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "Argentina - Primera B Metropolitana",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629431,
+      "home_team": "Mouloudia Oujda",
+      "away_team": "USM Oujda",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "Morocco - Botola 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631729098,
+      "home_team": "Twin City Toucans",
+      "away_team": "Houston",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581310,
+      "home_team": "Viettel",
+      "away_team": "Cong An Ha Noi",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "Vietnam - V League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631542502,
+      "home_team": "USV Halbturn",
+      "away_team": "Siegendorf",
+      "starts": "2026-06-06T15:30:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549572,
+      "home_team": "Puerto Montt",
+      "away_team": "Cobreloa",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "Chile - Primera B",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610886,
+      "home_team": "O'Higgins",
+      "away_team": "Palestino",
+      "starts": "2026-06-07T22:00:00Z",
+      "league": "Chile - League Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849619,
+      "home_team": "Netherlands",
+      "away_team": "Japan",
+      "starts": "2026-06-14T20:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728135,
+      "home_team": "Admira Dornbirn",
+      "away_team": "FC Hard",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631702423,
+      "home_team": "Portugal",
+      "away_team": "Greece",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "UEFA - U19 Euro Championship Qualifiers",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728134,
+      "home_team": "SV Wienerberg",
+      "away_team": "Hellas Kagran",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Austria - Landesliga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685657,
+      "home_team": "Locarno",
+      "away_team": "FC Sursee",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Switzerland - 2. Liga Interregional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631675620,
+      "home_team": "China",
+      "away_team": "Tunisia",
+      "starts": "2026-06-07T16:30:00Z",
+      "league": "International - Maurice Revello Youth Tournament",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631733427,
+      "home_team": "MKS Mazovia Minsk Mazowiecki",
+      "away_team": "Weszlo Warszawa",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849633,
+      "home_team": "New Zealand",
+      "away_team": "Egypt",
+      "starts": "2026-06-22T01:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631499018,
+      "home_team": "Panama",
+      "away_team": "Bosnia and Herzegovina",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1620849622,
+      "home_team": "Tunisia",
+      "away_team": "Netherlands",
+      "starts": "2026-06-25T23:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629416,
+      "home_team": "Portugal",
+      "away_team": "Ivory Coast",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "International - Maurice Revello Youth Tournament",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631543070,
+      "home_team": "Gloggnitz",
+      "away_team": "Wiener Sport-Club",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "Austria - Regionalliga Ost",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631621538,
+      "home_team": "Zamora CF",
+      "away_team": "Villarreal B",
+      "starts": "2026-06-07T16:30:00Z",
+      "league": "Spain - Primera Federacion",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631629255,
+      "home_team": "Osters",
+      "away_team": "Varnamo",
+      "starts": "2026-06-09T17:00:00Z",
+      "league": "Sweden - Superettan",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571483,
+      "home_team": "Mokpo",
+      "away_team": "Yangpyeong",
+      "starts": "2026-06-07T10:00:00Z",
+      "league": "Korea Republic - K3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631581305,
+      "home_team": "Seoul E-Land",
+      "away_team": "Chungbuk Cheongju",
+      "starts": "2026-06-07T10:30:00Z",
+      "league": "Korea Republic - K League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599688,
+      "home_team": "Loudoun United",
+      "away_team": "Rhode Island",
+      "starts": "2026-06-13T22:00:00Z",
+      "league": "USA - USL Championship",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688531,
+      "home_team": "Charlotte Independence II",
+      "away_team": "Charlotte Eagles",
+      "starts": "2026-06-06T23:30:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631685609,
+      "home_team": "Flint City Bucks",
+      "away_team": "Midwest United",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610621,
+      "home_team": "Diavorosso Hiroshima",
+      "away_team": "Kibi University",
+      "starts": "2026-06-07T04:30:00Z",
+      "league": "Japan - Nadeshiko Division 2 Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732575,
+      "home_team": "Bochnia",
+      "away_team": "Luban Maniowy",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631360493,
+      "home_team": "Kosovo",
+      "away_team": "Andorra",
+      "starts": "2026-06-07T18:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631504084,
+      "home_team": "Derry City",
+      "away_team": "Bohemians",
+      "starts": "2026-06-12T18:45:00Z",
+      "league": "Ireland - Premier",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631289783,
+      "home_team": "Albania",
+      "away_team": "Luxembourg",
+      "starts": "2026-06-06T18:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631675879,
+      "home_team": "Okocimski Brzesko",
+      "away_team": "Watra Bialka Tatrzanska",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627256763,
+      "home_team": "France",
+      "away_team": "Iraq",
+      "starts": "2026-06-22T21:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610869,
+      "home_team": "Vanraure Hachinohe",
+      "away_team": "Imabari",
+      "starts": "2026-06-07T04:00:00Z",
+      "league": "Japan - J2/J3 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631640545,
+      "home_team": "Leioa",
+      "away_team": "Derio",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "Spain - Tercera Division",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599567,
+      "home_team": "Colon de Santa Fe",
+      "away_team": "Club Ciudad de Bolivar",
+      "starts": "2026-06-07T20:00:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631728139,
+      "home_team": "UCC",
+      "away_team": "College Corinthians",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Ireland - Munster Senior League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631732570,
+      "home_team": "Sokol Ostroda",
+      "away_team": "Polonia Lidzbark Warminski",
+      "starts": "2026-06-06T14:00:00Z",
+      "league": "Poland - 4th Liga",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631688521,
+      "home_team": "Boston Bolts",
+      "away_team": "AC Connecticut",
+      "starts": "2026-06-06T23:00:00Z",
+      "league": "USA - USL League 2",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599639,
+      "home_team": "Atletico Rafaela",
+      "away_team": "Colegiales",
+      "starts": "2026-06-06T19:30:00Z",
+      "league": "Argentina - Primera B Nacional",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631543022,
+      "home_team": "Singapore",
+      "away_team": "Cambodia",
+      "starts": "2026-06-06T11:00:00Z",
+      "league": "International - Friendlies Women",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631599559,
+      "home_team": "Ecuador",
+      "away_team": "Guatemala",
+      "starts": "2026-06-07T20:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631610942,
+      "home_team": "Atletico Madrid II",
+      "away_team": "Ponferradina",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "Spain - Primera Federacion",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571381,
+      "home_team": "South Melbourne",
+      "away_team": "Altona Magic",
+      "starts": "2026-06-07T05:30:00Z",
+      "league": "Australia - NPL Victoria",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631651923,
+      "home_team": "Afghanistan",
+      "away_team": "Pakistan",
+      "starts": "2026-06-07T11:00:00Z",
+      "league": "International - Friendlies",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631549597,
+      "home_team": "Vitoria",
+      "away_team": "Fortaleza",
+      "starts": "2026-06-06T19:00:00Z",
+      "league": "Brazil - Copa Do Nordeste",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631566941,
+      "home_team": "Jincheon HR",
+      "away_team": "Gijang United",
+      "starts": "2026-06-07T05:00:00Z",
+      "league": "Korea Republic - K4 League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631571417,
+      "home_team": "Ventura County",
+      "away_team": "Houston Dynamo II",
+      "starts": "2026-06-07T02:00:00Z",
+      "league": "USA - MLS Next Pro League",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1627256764,
+      "home_team": "Bosnia and Herzegovina",
+      "away_team": "Qatar",
+      "starts": "2026-06-24T19:00:00Z",
+      "league": "FIFA - World Cup",
+      "sport": "Soccer"
+    },
+    {
+      "event_id": 1631723194,
+      "home_team": "Jodie Burrage",
+      "away_team": "Anna Blinkova",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "WTA London - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702628,
+      "home_team": "Lucia Bronzetti",
+      "away_team": "Leyre Romero Gormaz",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "WTA 125k Foggia - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631723192,
+      "home_team": "Tatjana Maria",
+      "away_team": "Yuriko Lily Miyazaki",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "WTA London - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702710,
+      "home_team": "Jake Delaney",
+      "away_team": "Youssef Kadiri Hassani",
+      "starts": "2026-06-07T00:00:00Z",
+      "league": "ITF Men Harmon - Final",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702690,
+      "home_team": "Nick Hardt",
+      "away_team": "Gonzalo Villanueva",
+      "starts": "2026-06-06T21:30:00Z",
+      "league": "ITF Men Cuiaba - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702650,
+      "home_team": "Camila Romero",
+      "away_team": "Luiza Fullana",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "ITF Women Brasilia - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631693279,
+      "home_team": "Tyra Caterina Grant",
+      "away_team": "Darya Astakhova",
+      "starts": "2026-06-06T15:57:02Z",
+      "league": "WTA 125k Foggia - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631685655,
+      "home_team": "Federica Urgesi",
+      "away_team": "Deborah Chiesa",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "ITF Women Caserta - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631707229,
+      "home_team": "Matthew Dellavedova",
+      "away_team": "Hanyi Liu",
+      "starts": "2026-06-07T02:00:00Z",
+      "league": "ITF Men Luan - Final",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631688508,
+      "home_team": "Otto Virtanen",
+      "away_team": "Kamil Majchrzak",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "ATP Challenger Birmingham - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631693306,
+      "home_team": "Adam Walton",
+      "away_team": "Liam Draxl",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "ATP Challenger Tyler - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631685648,
+      "home_team": "Katerina Siniakova / Taylor Townsend",
+      "away_team": "Anna Danilina / Aleksandra Krunic",
+      "starts": "2026-06-07T09:00:00Z",
+      "league": "WTA French Open Doubles - Final",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631723255,
+      "home_team": "Sebastian Baez",
+      "away_team": "Alex Molcan",
+      "starts": "2026-06-07T09:00:00Z",
+      "league": "ATP Challenger Prostejov - Final",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702652,
+      "home_team": "Whitney Osuigwe",
+      "away_team": "Kristina Liutova",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "ITF Women Sumter - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631723195,
+      "home_team": "Donna Vekic",
+      "away_team": "Carole Monnet",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "WTA London - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631723193,
+      "home_team": "Maddison Inglis",
+      "away_team": "Alycia Parks",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "WTA London - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631712110,
+      "home_team": "Nicolas Oliveira",
+      "away_team": "Carlos Maria Zarate",
+      "starts": "2026-06-06T20:30:00Z",
+      "league": "ITF Men Cuiaba - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631712075,
+      "home_team": "Iiro Vasa",
+      "away_team": "Oliver Ojakaar",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "ITF Men Lakewood - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631719534,
+      "home_team": "Sara Sorribes Tormo",
+      "away_team": "Maria Timofeeva",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "WTA 125K Makarska - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702649,
+      "home_team": "Marjorie Souza",
+      "away_team": "Noelia Zeballos",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "ITF Women Brasilia - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631723191,
+      "home_team": "Ekaterine Gorgodze",
+      "away_team": "Kamilla Rakhimova",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "WTA London - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702662,
+      "home_team": "Karl Poling",
+      "away_team": "Andre Ilagan",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "ATP Challenger Tyler - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631732630,
+      "home_team": "Roman Safiullin",
+      "away_team": "Petr Bar Biryukov",
+      "starts": "2026-06-06T13:30:00Z",
+      "league": "ATP Stuttgart - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702640,
+      "home_team": "Ingrid Gamarra Martins / Ekaterina Ovcharenko",
+      "away_team": "Isabelle Haverlag / Simona Waltert",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "WTA 125K Makarska - Doubles",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631707243,
+      "home_team": "Elsa Jacquemot",
+      "away_team": "Hanyu Guo",
+      "starts": "2026-06-06T16:30:00Z",
+      "league": "WTA London - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631688568,
+      "home_team": "Timofey Skatov",
+      "away_team": "Henrique Rocha",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "ATP Challenger Perugia - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631688574,
+      "home_team": "Flavio Cobolli",
+      "away_team": "Alexander Zverev",
+      "starts": "2026-06-07T13:00:00Z",
+      "league": "ATP French Open - Final",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702679,
+      "home_team": "Reese Brantmeier",
+      "away_team": "Cadence Brace",
+      "starts": "2026-06-06T19:15:00Z",
+      "league": "ITF Women Sumter - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702651,
+      "home_team": "Tatum Evans",
+      "away_team": "Kristina Penickova",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "ITF Women Lakewood - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631693223,
+      "home_team": "Arthur Fery",
+      "away_team": "Yunchaokete Bu",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "ATP Challenger Birmingham - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631716795,
+      "home_team": "Elina Avanesyan",
+      "away_team": "Darja Semenistaja",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "WTA 125K Makarska - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631707174,
+      "home_team": "Dasha Plekhanova",
+      "away_team": "Mayu Crossley",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "ITF Women Lakewood - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631712080,
+      "home_team": "Luca Potenza",
+      "away_team": "Gabriele Piraino",
+      "starts": "2026-06-06T17:00:00Z",
+      "league": "ITF Men Caltanissetta - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631710518,
+      "home_team": "Nastasja Schunk",
+      "away_team": "Alessandra Mazzola",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "ITF Women Caserta - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631707245,
+      "home_team": "Talia Gibson",
+      "away_team": "Alina Charaeva",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "WTA London - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631723962,
+      "home_team": "Xinxin Yao",
+      "away_team": "Yufei Ren",
+      "starts": "2026-06-07T06:00:00Z",
+      "league": "ITF Women Wuning - Final",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631723265,
+      "home_team": "Luka Mikrut",
+      "away_team": "Emilio Nava",
+      "starts": "2026-06-07T09:00:00Z",
+      "league": "ATP Challenger Heilbronn - Final",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631712141,
+      "home_team": "Priscilla Hon",
+      "away_team": "Polina Kudermetova",
+      "starts": "2026-06-06T16:00:00Z",
+      "league": "WTA London - Qualifiers",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631724431,
+      "home_team": "Massimo Giunta",
+      "away_team": "Alexandre Reco",
+      "starts": "2026-06-06T15:00:00Z",
+      "league": "ITF Men Caltanissetta - SF",
+      "sport": "Tennis"
+    },
+    {
+      "event_id": 1631702630,
+      "home_team": "Daniel Merida Aguilar",
+      "away_team": "Andrea Pellegrino",
+      "starts": "2026-06-06T18:30:00Z",
+      "league": "ATP Challenger Perugia - SF",
+      "sport": "Tennis"
+    }
+  ],
+  "count": 761,
+  "timestamp": "2026-06-06T10:54:21.558431"
+}
