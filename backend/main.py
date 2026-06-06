@@ -175,6 +175,62 @@ _event_workers = {}
 refresher_running = False
 refresher_thread = None
 main_event_loop = None
+_watchdog_thread = None
+
+
+def _launch_refresher_thread(label="startup"):
+    """Start the background refresher thread. Safe to call multiple times — each call
+    creates a fresh thread only when the previous one is dead."""
+    global refresher_running, refresher_thread
+
+    def _run():
+        global refresher_running
+        print(f"[BackgroundRefresher] Thread starting ({label})...")
+        logger.info(f"[BackgroundRefresher] Thread starting ({label})...")
+        try:
+            refresher_running = True
+            import asyncio as _asyncio
+            loop = _asyncio.new_event_loop()
+            _asyncio.set_event_loop(loop)
+            loop.run_until_complete(
+                pod_event_manager.background_event_refresher(broadcast_pod_alert_safe)
+            )
+        except Exception as e:
+            print(f"[BackgroundRefresher] Critical error: {e}")
+            logger.error(f"[BackgroundRefresher] Critical error: {e}")
+            import traceback as _tb
+            _tb.print_exc()
+        finally:
+            refresher_running = False
+            print("[BackgroundRefresher] Thread exited.")
+            logger.warning("[BackgroundRefresher] Thread exited — watchdog will restart it.")
+
+    refresher_thread = threading.Thread(target=_run, daemon=True, name="BackgroundRefresher")
+    refresher_thread.start()
+
+
+def _launch_refresher_watchdog():
+    """Daemon thread that watches the refresher and restarts it within 5 s if it dies."""
+    global _watchdog_thread
+
+    def _watch():
+        import time as _time
+        print("[RefresherWatchdog] Started.")
+        logger.info("[RefresherWatchdog] Started.")
+        while True:
+            _time.sleep(5)
+            alive = refresher_thread is not None and refresher_thread.is_alive()
+            if not alive:
+                print("[RefresherWatchdog] Refresher is dead — restarting now.")
+                logger.warning("[RefresherWatchdog] Refresher thread dead — auto-restarting.")
+                try:
+                    _launch_refresher_thread(label="watchdog-restart")
+                except Exception as e:
+                    logger.error(f"[RefresherWatchdog] Failed to restart refresher: {e}")
+
+    _watchdog_thread = threading.Thread(target=_watch, daemon=True, name="RefresherWatchdog")
+    _watchdog_thread.start()
+
 
 # Track last processed time for each event ID to prevent duplicate processing within 2 minutes
 _last_processed_times = {}
@@ -566,33 +622,14 @@ async def startup_event():
     logger.info("Background event refresher started")
 
     # Start the refresher thread for real-time updates
-    def start_background_refresher():
-        global refresher_running
-        print("[BackgroundRefresher] Thread refresher starting from FastAPI startup event...")
-        logger.info("[BackgroundRefresher] Thread refresher starting from FastAPI startup event...")
-        try:
-            print("[BackgroundRefresher] About to call background_event_refresher...")
-            logger.info("[BackgroundRefresher] Calling background_event_refresher...")
-            refresher_running = True
-            # Run the async function in a new event loop for the thread
-            import asyncio
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop.run_until_complete(pod_event_manager.background_event_refresher(broadcast_pod_alert_safe))
-        except Exception as e:
-            print(f"[BackgroundRefresher] Critical error: {e}")
-            logger.error(f"[BackgroundRefresher] Critical error: {e}")
-            refresher_running = False
-            import traceback
-            traceback.print_exc()
-    
     print("About to start refresher thread...")
-    # Create thread instead of async task
-    refresher_thread = threading.Thread(target=start_background_refresher, daemon=True)
-    refresher_thread.start()
+    _launch_refresher_thread()
     print("Refresher thread created and started")
     logger.info("[BackgroundRefresher] Thread launched successfully from FastAPI startup event")
     print("[BackgroundRefresher] Thread launched successfully from FastAPI startup event")
+
+    # Start the watchdog that auto-restarts the refresher if it ever dies
+    _launch_refresher_watchdog()
     
     print("BACKEND STARTUP COMPLETE - Refresher thread should be running!")
     logger.info("BACKEND STARTUP COMPLETE - Refresher thread should be running!")
@@ -2066,6 +2103,28 @@ async def run_ace_streaming_pipeline_background():
         logger.info(f"[ACE-PIPELINE] Step 4 done: {n_matched} games matched")
         print(f"[ACE-PIPELINE] Step 4 done: {n_matched} matched")
 
+        # ── Log unmatched Ace games for diagnosis ────────────────────────────
+        if matched is not None and ace_games_betbck:
+            matched_ids = {
+                m.get('betbck_game', {}).get('betbck_game_id', '') for m in matched
+            }
+            unmatched_ace = [
+                g for g in ace_games_betbck
+                if g.get('betbck_game_id', '') not in matched_ids
+            ]
+            n_unmatched = len(unmatched_ace)
+            n_total = len(ace_games_betbck)
+            logger.info(f"[ACE-PIPELINE] Unmatched: {n_unmatched}/{n_total} games failed Pinnacle match")
+            print(f"[ACE-PIPELINE] Unmatched: {n_unmatched}/{n_total} games")
+            for g in unmatched_ace:
+                home = g.get('betbck_site_home_team', '?')
+                away = g.get('betbck_site_away_team', '?')
+                sport = g.get('sport', '?')
+                league = g.get('league', '?')
+                mk = g.get('market_suffix') or 'main'
+                logger.info(f"[ACE-UNMATCHED] {home} vs {away} | sport={sport} | league={league} | market={mk}")
+                print(f"[ACE-UNMATCHED] {home} vs {away} | sport={sport} | league={league} | market={mk}")
+
         if not matched:
             logger.warning("[ACE-PIPELINE] No games matched Pinnacle events")
             print("[ACE-PIPELINE] WARNING: No games matched")
@@ -2985,32 +3044,10 @@ async def get_refresher_status():
 @app.post("/refresher/start")
 async def start_refresher_manually():
     """Manually start the background refresher"""
-    global refresher_running, refresher_thread
     try:
         if refresher_running and refresher_thread and refresher_thread.is_alive():
             return {"status": "already_running", "message": "Refresher is already running"}
-        
-        def start_background_refresher():
-            global refresher_running
-            print("[BackgroundRefresher] Thread refresher starting manually...")
-            logger.info("[BackgroundRefresher] Thread refresher starting manually...")
-            try:
-                refresher_running = True
-                # Run the async function in a new event loop for the thread
-                import asyncio
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                loop.run_until_complete(pod_event_manager.background_event_refresher(broadcast_pod_alert_safe))
-            except Exception as e:
-                print(f"[BackgroundRefresher] Critical error: {e}")
-                logger.error(f"[BackgroundRefresher] Critical error: {e}")
-                refresher_running = False
-                import traceback
-                traceback.print_exc()
-        
-        refresher_thread = threading.Thread(target=start_background_refresher, daemon=True)
-        refresher_thread.start()
-        
+        _launch_refresher_thread(label="manual")
         return {"status": "started", "message": "Background refresher started manually"}
     except Exception as e:
         return {"status": "error", "error": str(e)}
