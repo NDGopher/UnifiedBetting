@@ -1,0 +1,34 @@
+Ivory CoastInternational @ Portugal
+
+Not Found
+11:01:29 AM
+[ALERT IN]
+Ivory CoastInternational @ Portugal | ? | market=Spread | +186 -> +164 | noVig=+193 | eventId=1631629416 | startTime=?
+[SWORDFISH]
+Swordfish: 'Portugal' vs 'Ivory Coast' | starts=2026-06-06 16:30 UTC | OK
+[SEARCH TERM]
+Using 'portugal' (from 'Portugal' / 'Ivory CoastInternational'): first word of home team 'portugal'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='portugal' -> HTTP 200 (66900 bytes)
+[MATCH]
+[FAIL] BCK 'Chile' vs 'Portugal' <-> POD 'portugal' vs 'ivory coastinternational - maurice revello youth tournament' [token_set_h=100 | token_set_a=10 | partial_h=100 | partial_a=20 | threshold=65]
+[MATCH]
+[FAIL] BCK 'Chile 1H' vs 'Portugal 1H' <-> POD 'portugal' vs 'ivory coastinternational - maurice revello youth tournament' [token_set_h=100 | token_set_a=9 | partial_h=100 | partial_a=38 | threshold=65]
+[MATCH]
+[FAIL] BCK 'Congo DR' vs 'Portugal' <-> POD 'portugal' vs 'ivory coastinternational - maurice revello youth tournament' [token_set_h=100 | token_set_a=18 | partial_h=100 | partial_a=38 | threshold=65]
+[MATCH]
+[FAIL] BCK 'Congo DR 1H' vs 'Portugal 1H' <-> POD 'portugal' vs 'ivory coastinternational - maurice revello youth tournament' [token_set_h=100 | token_set_a=18 | partial_h=100 | partial_a=36 | threshold=65]
+[CLOSEST]
+Closest candidate: BCK 'Congo DR' vs 'Portugal' | home=100/65, away=18/65 (combined=118, needed ≥130)
+[NOT FOUND]
+FAILED TO FIND MATCHING GAME on BetBCK for ivory coastinternational - maurice revello youth tournament @ portugal ()
+[ERROR]
+scrape_betbck_for_game_queued: No matching game found
+[INFO]
+Retrying with away-team search term: 'tournament'
+[SEARCH]
+POST https://betbck.com/Qubic/PlayerGameSelection.php?keyword='tournament' -> HTTP 200 (42951 bytes)
+[ERROR]
+scrape_betbck_for_game_queued: No matching game found
+[NOT FOUND]
+FAILED TO FIND MATCHING GAME on BetBCK for ivory coastinternational - maurice revello youth tournament @ portugal (?)
