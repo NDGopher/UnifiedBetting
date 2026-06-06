@@ -431,8 +431,9 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
         
         # Skip if this BetBCK game was already matched within this run
         betbck_game_id = betbck_game.get('betbck_game_id', f"{betbck_game.get('betbck_site_home_team', '')}_{betbck_game.get('betbck_site_away_team', '')}")
+        _mk_for_skip = betbck_game.get('market_suffix')
         if betbck_game_id in matched_betbck_ids:
-            logger.debug(f"[SKIP] BetBCK game already matched: {betbck_game_id}")
+            logger.info(f"[SKIP-ID] Already matched, skipping: {betbck_game_id!r} market={_mk_for_skip!r} | home={betbck_game.get('betbck_site_home_team')} away={betbck_game.get('betbck_site_away_team')}")
             continue
             
         betbck_home_raw = betbck_game.get("betbck_site_home_team", "")
@@ -464,7 +465,9 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             elif 'football' in _raw_bck_sport or 'american' in _raw_bck_sport: betbck_sport = 'football'
             elif 'soccer' in _raw_bck_sport:     betbck_sport = 'soccer'
             elif 'hockey' in _raw_bck_sport or 'ice' in _raw_bck_sport: betbck_sport = 'hockey'
-            elif 'ufc' in _raw_bck_sport or 'boxing' in _raw_bck_sport: betbck_sport = 'ufc_boxing'
+            elif ('ufc' in _raw_bck_sport or 'boxing' in _raw_bck_sport
+                  or 'fighting' in _raw_bck_sport or 'mma' in _raw_bck_sport
+                  or 'martial' in _raw_bck_sport): betbck_sport = 'ufc_boxing'
             else:                                 betbck_sport = _raw_bck_sport
         else:
             betbck_sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
@@ -475,6 +478,11 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
         if not relevant_events and betbck_sport != 'other':
             relevant_events = events_by_sport.get('other', [])
         logger.debug(f"[MATCH] Found {len(relevant_events)} {betbck_sport} events to match against")
+        
+        # Extra info-level log for ALT MLB games so we can diagnose matching failures
+        _is_alt_mlb = (betbck_game.get('market_suffix') == 'ALT' and betbck_sport == 'mlb')
+        if _is_alt_mlb:
+            logger.info(f"[ALT-DEBUG] Processing ALT game: '{norm_bck_home}' vs '{norm_bck_away}' | relevant_events={len(relevant_events)}")
 
         # Pre-compute betbck_sport_category once per BetBCK game (not per Pinnacle event)
         _bck_league = betbck_game.get('league', '').lower()
@@ -513,9 +521,14 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                     pinnacle_dt = datetime.fromisoformat(pinnacle_time.replace('Z', '+00:00'))
                     time_diff = abs((betbck_dt - pinnacle_dt).total_seconds())
                     
-                    # Only match games within 24 hours of each other
-                    if time_diff > 86400:  # 24 hours in seconds
-                        logger.debug(f"[TIME-SKIP] Time diff too large: {time_diff/3600:.1f}h")
+                    # Match games within 72 hours of each other.
+                    # 24h is too aggressive — it silently drops valid Ace games
+                    # whose times are parsed in a different timezone offset than
+                    # the Pinnacle UTC times.  The frontend 24h toggle handles
+                    # display-level filtering; the matching layer just needs to
+                    # avoid obviously wrong cross-day / cross-week false positives.
+                    if time_diff > 259200:  # 72 hours in seconds
+                        logger.info(f"[TIME-SKIP] Time diff too large ({time_diff/3600:.1f}h) — skipping: {betbck_time} vs {pinnacle_time}")
                         continue
                     else:
                         logger.debug(f"[TIME-MATCH] Time difference acceptable: {time_diff/3600:.1f} hours between {betbck_time} and {pinnacle_time}")
@@ -587,7 +600,15 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 
         if best_match and best_score >= FUZZY_MATCH_THRESHOLD:
             processed_pinnacle_event_ids.add(best_match["event_id"])
-            processed_pinnacle_keys.add((best_match["event_id"], betbck_game.get('market_suffix')))
+            # Don't track ALT games in processed_pinnacle_keys — Ace sends
+            # multiple ALT entries per game (alternate runlines, alternate totals,
+            # etc.) each with a different betbck_game_id, and all of them need
+            # to be able to match the same Pinnacle event.  If we add
+            # (event_id, 'ALT') here, the second ALT entry finds the key already
+            # present, skips the only viable Pinnacle event, and returns
+            # no_candidates.  Main / 1H games still get tracked as before.
+            if betbck_game.get('market_suffix') != 'ALT':
+                processed_pinnacle_keys.add((best_match["event_id"], betbck_game.get('market_suffix')))
             logger.info(f"[MATCHED] SUCCESS: '{betbck_home_raw}' vs '{betbck_away_raw}' <-> '{best_match['home_team']}' vs '{best_match['away_team']}' | Score: {best_score} | Orientation: {'direct' if best_orientation else 'flipped'}")
             
             # Track this BetBCK game as matched within this run (local set, never persists)
@@ -689,7 +710,9 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
     logger.info(f"[MATCH]   [MATCHED] Matched: {len(matched_events)} games")
     logger.info(f"[MATCH]   [UNMATCHED] Unmatched BetBCK: {len(unmatched_betbck)} games")
     logger.info(f"[MATCH]   [UNMATCHED] Unmatched Pinnacle: {len(unmatched_pinnacle)} events")
-    logger.info(f"[MATCH]   [STATS] Match rate: {len(matched_events)}/{len(betbck_games)} = {len(matched_events)/len(betbck_games)*100:.1f}%")
+    total_bck = len(betbck_games)
+    match_rate = (len(matched_events) / total_bck * 100) if total_bck else 0.0
+    logger.info(f"[MATCH]   [STATS] Match rate: {len(matched_events)}/{total_bck} = {match_rate:.1f}%")
     
     # Log unmatched details for debugging
     if unmatched_betbck:
