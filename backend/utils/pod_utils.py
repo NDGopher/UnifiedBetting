@@ -606,6 +606,12 @@ def strip_pod_league_suffix(name: str) -> str:
         'NCAA Volleyball',
         'NCAA Hockey',
         'NCAA Lacrosse',
+        # International friendly/tournament suffix concatenated directly
+        # e.g. "Ivory CoastInternational" → "Ivory Coast"
+        # Preceding-char isalpha() check ensures "FC International" (space before) is NOT stripped
+        'International',
+        'Friendlies',
+        'Friendly',
     )
     for mw_suffix in _MULTIWORD_SUFFIXES:
         if name.endswith(mw_suffix) and len(name) > len(mw_suffix):
