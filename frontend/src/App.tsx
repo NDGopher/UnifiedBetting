@@ -223,10 +223,7 @@ function AutoBetPlacementPanel() {
     <Box sx={{ pt: 5, pb: 5, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-        <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>AB</Box>
-        <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
-          Auto Bet Placement
-        </Typography>
+        <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>AUTO BET PLACEMENT</Box>
         {enabled && (
           <Chip label="ACTIVE" size="small" sx={{ bgcolor: 'rgba(76,175,80,0.15)', color: '#4CAF50', border: '1px solid rgba(76,175,80,0.35)', fontSize: '0.65rem', height: 20, fontWeight: 700, letterSpacing: '0.05em',
             '& .MuiChip-label': { px: 1 } }} />
@@ -460,10 +457,7 @@ function App() {
             {/* POD Alerts Section */}
             <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>PA</Box>
-                <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
-                  POD Alerts
-                </Typography>
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>POD ALERTS</Box>
                 <Box sx={{ flexGrow: 1 }} />
                 <Box sx={{
                   px: 2, py: 0.5, borderRadius: '8px',
@@ -482,10 +476,7 @@ function App() {
             {/* EV Bets Section */}
             <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>EV</Box>
-                <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
-                  EV Bets
-                </Typography>
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>EV BETS</Box>
               </Box>
               <BuckeyeScraper />
             </Box>
@@ -498,10 +489,7 @@ function App() {
             {/* EV Calculator Section */}
             <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 8 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>EVC</Box>
-                <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
-                  EV Calculator
-                </Typography>
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>EV CALCULATOR</Box>
               </Box>
               <EVCalculator />
             </Box>
