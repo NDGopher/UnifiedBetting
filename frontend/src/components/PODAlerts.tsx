@@ -593,14 +593,15 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                         <TableHead>
                           <TableRow sx={{ 
                             '& .MuiTableCell-root': { 
-                              borderBottom: '1px solid rgba(255,255,255,0.06)',
-                              py: 1,
+                              borderBottom: '1px solid rgba(255,255,255,0.05)',
+                              py: 0.625,
                               color: '#6B7280',
                               fontWeight: 600,
                               fontSize: '0.6875rem',
                               textTransform: 'uppercase',
                               letterSpacing: '0.07em',
-                              bgcolor: 'rgba(255,255,255,0.02)',
+                              background: 'transparent',
+                              verticalAlign: 'middle',
                             }
                           }}>
                             <TableCell sx={{ textAlign: 'left', pl: 0, whiteSpace: 'normal' }}>
@@ -648,7 +649,8 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                   },
                                   height: 36,
                                   '& .MuiTableCell-root': { 
-                                    padding: '4px 12px', 
+                                    padding: '3px 12px',
+                                    verticalAlign: 'middle',
                                     fontSize: '0.875rem',
                                     borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
                                   }
