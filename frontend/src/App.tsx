@@ -371,7 +371,7 @@ export const BetbckTabContext = createContext<{ betbckTabRef: React.MutableRefOb
 
 function openBetbckTabOnLoad(betbckTabRef: React.MutableRefObject<Window | null>) {
   if (!betbckTabRef.current || betbckTabRef.current.closed) {
-    betbckTabRef.current = window.open('https://betbck.com', 'betbck_tab');
+    betbckTabRef.current = window.open('https://pinnacleoddsdropper.com', 'pod_tab');
   }
 }
 
