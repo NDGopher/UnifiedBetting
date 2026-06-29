@@ -3,7 +3,7 @@ import { Box, Button, Typography, Table, TableBody, TableCell, TableContainer, T
 import MatchingStats from './MatchingStats';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Analytics, ExpandMore, ExpandLess, TuneRounded, SearchOff, FilterAlt } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, TuneRounded, SearchOff, FilterAlt } from '@mui/icons-material';
 import { API_BASE } from '../utils/apiConfig';
 dayjs.extend(relativeTime);
 
@@ -909,37 +909,36 @@ const BuckeyeScraper: React.FC = () => {
               cursor: 'pointer', userSelect: 'none',
               px: 2, py: 1.25,
               bgcolor: 'rgba(26,26,26,0.9)',
-              border: '1px solid rgba(255,165,0,0.25)',
+              border: '1px solid rgba(255,255,255,0.06)',
               borderRadius: wongExpanded ? '8px 8px 0 0' : 2,
-              '&:hover': { borderColor: 'rgba(255,165,0,0.5)' },
+              '&:hover': { borderColor: 'rgba(255,255,255,0.12)' },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Analytics sx={{ fontSize: '1rem', color: '#FFA500' }} />
-              <Typography sx={{ color: '#FFA500', fontWeight: 600, fontSize: '0.9rem' }}>
+              <Typography sx={{ color: '#9CA3AF', fontWeight: 600, fontSize: '0.875rem', letterSpacing: '0.01em' }}>
                 Wong Teaser Scanner
               </Typography>
               <Box sx={{ display: 'flex', gap: 0.75 }}>
                 {wongTeasers.qualifying_legs_6pt > 0 && (
-                  <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,165,0,0.15)', border: '1px solid rgba(255,165,0,0.3)', borderRadius: 1, fontSize: '0.72rem', color: '#FFA500' }}>
+                  <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 1, fontSize: '0.72rem', color: '#6B7280' }}>
                     {wongTeasers.qualifying_legs_6pt} × 6pt leg{wongTeasers.qualifying_legs_6pt !== 1 ? 's' : ''}
                   </Box>
                 )}
                 {wongTeasers.qualifying_legs_10pt > 0 && (
-                  <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,200,0,0.12)', border: '1px solid rgba(255,200,0,0.3)', borderRadius: 1, fontSize: '0.72rem', color: '#FFD700' }}>
+                  <Box sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 1, fontSize: '0.72rem', color: '#6B7280' }}>
                     {wongTeasers.qualifying_legs_10pt} × 10pt leg{wongTeasers.qualifying_legs_10pt !== 1 ? 's' : ''}
                   </Box>
                 )}
                 {wongTeasers.qualifying_legs_6pt === 0 && wongTeasers.qualifying_legs_10pt === 0 && (
-                  <Box sx={{ px: 1, py: 0.25, fontSize: '0.72rem', color: '#666' }}>No qualifying legs this week</Box>
+                  <Box sx={{ px: 1, py: 0.25, fontSize: '0.72rem', color: '#555' }}>No qualifying legs this week</Box>
                 )}
               </Box>
             </Box>
-            {wongExpanded ? <ExpandLess sx={{ color: '#FFA500', fontSize: '1.1rem' }} /> : <ExpandMore sx={{ color: '#FFA500', fontSize: '1.1rem' }} />}
+            {wongExpanded ? <ExpandLess sx={{ color: '#6B7280', fontSize: '1.1rem' }} /> : <ExpandMore sx={{ color: '#6B7280', fontSize: '1.1rem' }} />}
           </Box>
 
           <Collapse in={wongExpanded}>
-            <Box sx={{ border: '1px solid rgba(255,165,0,0.25)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
+            <Box sx={{ border: '1px solid rgba(255,255,255,0.06)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
 
               {/* ── Type toggle ────────────────────────────────────────────── */}
               {(wongTeasers.qualifying_legs_6pt > 0 || wongTeasers.qualifying_legs_10pt > 0) && (
@@ -952,10 +951,10 @@ const BuckeyeScraper: React.FC = () => {
                       sx={{
                         fontSize: '0.78rem', textTransform: 'none', borderRadius: 1.5,
                         px: 2, py: 0.4,
-                        color: wongTeaserType === t ? '#FFA500' : '#666',
-                        border: `1px solid ${wongTeaserType === t ? 'rgba(255,165,0,0.5)' : 'rgba(255,255,255,0.08)'}`,
-                        bgcolor: wongTeaserType === t ? 'rgba(255,165,0,0.08)' : 'transparent',
-                        '&:hover': { borderColor: 'rgba(255,165,0,0.4)', color: '#FFA500' },
+                        color: wongTeaserType === t ? '#F5F5F5' : '#555',
+                        border: `1px solid ${wongTeaserType === t ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.08)'}`,
+                        bgcolor: wongTeaserType === t ? 'rgba(255,255,255,0.07)' : 'transparent',
+                        '&:hover': { borderColor: 'rgba(255,255,255,0.2)', color: '#D1D5DB' },
                       }}
                     >
                       {t}
@@ -998,8 +997,8 @@ const BuckeyeScraper: React.FC = () => {
                       {legs.map((leg: any, i: number) => (
                         <Box key={i} sx={{
                           px: 1.5, py: 1,
-                          bgcolor: 'rgba(255,165,0,0.05)',
-                          border: `1px solid ${leg.low_total && leg.is_road ? 'rgba(255,165,0,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                          bgcolor: '#151515',
+                          border: '1px solid rgba(255,255,255,0.06)',
                           borderRadius: 1.5,
                           minWidth: 200,
                           flex: '0 1 auto',
@@ -1009,7 +1008,7 @@ const BuckeyeScraper: React.FC = () => {
                               {leg.bet}
                             </Typography>
                             {leg.main_line_ev_pct != null && leg.main_line_ev_pct !== 0 && (
-                              <Box sx={{ fontSize: '0.68rem', color: leg.main_line_ev_pct >= 0 ? '#4CAF50' : '#aaa', fontFamily: 'monospace', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                              <Box sx={{ fontSize: '0.68rem', color: leg.main_line_ev_pct >= 0 ? '#32D74B' : '#aaa', fontFamily: 'monospace', fontWeight: 600, whiteSpace: 'nowrap' }}>
                                 {leg.main_line_ev_pct >= 0 ? '+' : ''}{leg.main_line_ev_pct.toFixed(2)}% EV
                               </Box>
                             )}
@@ -1018,17 +1017,19 @@ const BuckeyeScraper: React.FC = () => {
                             {leg.matchup}
                           </Typography>
                           <Box sx={{ display: 'flex', gap: 0.75, mt: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
-                            <Box sx={{ fontSize: '0.68rem', color: '#FFA500', fontFamily: 'monospace' }}>
+                            <Box sx={{ fontSize: '0.68rem', color: '#F5F5F5', fontFamily: 'monospace' }}>
                               → teased to {leg.teased_line > 0 ? '+' : ''}{leg.teased_line}
                             </Box>
                             {leg.pin_nvp && (
                               <Box sx={{ fontSize: '0.68rem', color: '#888', fontFamily: 'monospace' }}>NVP {leg.pin_nvp}</Box>
                             )}
                           </Box>
-                          <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap' }}>
-                            {leg.is_road && <Box sx={{ fontSize: '0.65rem', color: '#64B5F6', px: 0.75, py: 0.25, bgcolor: 'rgba(100,181,246,0.1)', borderRadius: 0.75 }}>🏈 Road</Box>}
-                            {leg.low_total && <Box sx={{ fontSize: '0.65rem', color: '#81C784', px: 0.75, py: 0.25, bgcolor: 'rgba(129,199,132,0.1)', borderRadius: 0.75 }}>↓ O/U {leg.game_total}</Box>}
-                            {leg.pin_limit >= 5000 && <Box sx={{ fontSize: '0.65rem', color: '#CE93D8', px: 0.75, py: 0.25, bgcolor: 'rgba(206,147,216,0.08)', borderRadius: 0.75 }}>Lim {(leg.pin_limit/1000).toFixed(0)}k</Box>}
+                          <Box sx={{ display: 'flex', gap: 0.75, mt: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
+                            {leg.is_road && <Box component="span" sx={{ fontSize: '0.65rem', color: '#9CA3AF' }}>Road</Box>}
+                            {leg.is_road && (leg.low_total || leg.pin_limit >= 5000) && <Box component="span" sx={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.15)' }}>·</Box>}
+                            {leg.low_total && <Box component="span" sx={{ fontSize: '0.65rem', color: '#9CA3AF' }}>O/U {leg.game_total}</Box>}
+                            {leg.low_total && leg.pin_limit >= 5000 && <Box component="span" sx={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.15)' }}>·</Box>}
+                            {leg.pin_limit >= 5000 && <Box component="span" sx={{ fontSize: '0.65rem', color: '#9CA3AF' }}>Lim {(leg.pin_limit/1000).toFixed(0)}k</Box>}
                           </Box>
                         </Box>
                       ))}
@@ -1057,19 +1058,19 @@ const BuckeyeScraper: React.FC = () => {
                 const ComboCard = ({ combo, ci }: { combo: any; ci: number }) => (
                   <Box key={ci} sx={{
                     p: 1.5,
-                    bgcolor: combo.flagged ? 'rgba(255,165,0,0.07)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${combo.flagged ? 'rgba(255,165,0,0.35)' : 'rgba(255,255,255,0.07)'}`,
+                    bgcolor: '#151515',
+                    border: '1px solid rgba(255,255,255,0.06)',
                     borderRadius: 1.5,
                     minWidth: 220,
                     flex: '0 1 auto',
                     position: 'relative',
                   }}>
                     {combo.flagged && (
-                      <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.62rem', color: '#FFA500', fontWeight: 700 }}>★ EDGE</Box>
+                      <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.62rem', color: '#9CA3AF', fontWeight: 600, letterSpacing: '0.04em' }}>EDGE</Box>
                     )}
                     {combo.priority_score > 0 && (
-                      <Box sx={{ position: 'absolute', top: combo.flagged ? 20 : 6, right: 8, fontSize: '0.62rem', color: '#64B5F6' }}>
-                        {'⬆'.repeat(combo.priority_score)} priority
+                      <Box sx={{ position: 'absolute', top: combo.flagged ? 20 : 6, right: 8, fontSize: '0.62rem', color: '#6B7280' }}>
+                        {'↑'.repeat(combo.priority_score)} pri
                       </Box>
                     )}
                     {combo.legs.map((leg: any, li: number) => (
@@ -1078,11 +1079,11 @@ const BuckeyeScraper: React.FC = () => {
                           {leg.bet}
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center', flexWrap: 'wrap' }}>
-                          <Typography sx={{ fontSize: '0.68rem', color: '#FFA500', fontFamily: 'monospace' }}>
+                          <Typography sx={{ fontSize: '0.68rem', color: '#9CA3AF', fontFamily: 'monospace' }}>
                             → {leg.teased_line > 0 ? '+' : ''}{leg.teased_line}
                           </Typography>
-                          {leg.is_road && <Box component="span" sx={{ fontSize: '0.62rem', color: '#64B5F6' }}>road</Box>}
-                          {leg.low_total && <Box component="span" sx={{ fontSize: '0.62rem', color: '#81C784' }}>O/U {leg.game_total}</Box>}
+                          {leg.is_road && <Box component="span" sx={{ fontSize: '0.62rem', color: '#6B7280' }}>road</Box>}
+                          {leg.low_total && <Box component="span" sx={{ fontSize: '0.62rem', color: '#6B7280' }}>O/U {leg.game_total}</Box>}
                         </Box>
                       </Box>
                     ))}
@@ -1091,7 +1092,7 @@ const BuckeyeScraper: React.FC = () => {
                         <Typography sx={{ fontSize: '0.65rem', color: '#888', fontFamily: 'monospace' }}>
                           {combo.n_teams}T {combo.book_odds}
                         </Typography>
-                        <Typography sx={{ fontSize: '0.7rem', color: '#4CAF50', fontWeight: 700 }}>
+                        <Typography sx={{ fontSize: '0.7rem', color: '#32D74B', fontWeight: 700 }}>
                           +{combo.ev_hist_pct ?? combo.ev_blended_pct ?? combo.ev_pct}% EV
                         </Typography>
                       </Box>
@@ -1125,10 +1126,10 @@ const BuckeyeScraper: React.FC = () => {
                         {(['best', 'grouped'] as const).map(v => (
                           <Button key={v} size="small" onClick={() => setWongComboView(v)} sx={{
                             fontSize: '0.7rem', textTransform: 'none', borderRadius: 1.5, px: 1.5, py: 0.3,
-                            color: wongComboView === v ? '#FFA500' : '#555',
-                            border: `1px solid ${wongComboView === v ? 'rgba(255,165,0,0.4)' : 'rgba(255,255,255,0.07)'}`,
-                            bgcolor: wongComboView === v ? 'rgba(255,165,0,0.07)' : 'transparent',
-                            '&:hover': { borderColor: 'rgba(255,165,0,0.3)', color: '#FFA500' },
+                            color: wongComboView === v ? '#F5F5F5' : '#555',
+                            border: `1px solid ${wongComboView === v ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.07)'}`,
+                            bgcolor: wongComboView === v ? 'rgba(255,255,255,0.07)' : 'transparent',
+                            '&:hover': { borderColor: 'rgba(255,255,255,0.2)', color: '#D1D5DB' },
                           }}>
                             {v === 'best' ? 'Best Picks' : 'By Size'}
                           </Button>
@@ -1146,7 +1147,7 @@ const BuckeyeScraper: React.FC = () => {
                       <Box key={n} sx={{ mb: 2 }}>
                         <Typography sx={{ fontSize: '0.76rem', color: '#888', fontWeight: 600, mb: 1 }}>
                           {n}-Team {wongTeaserType} &nbsp;
-                          <span style={{ color: '#FFA500', fontFamily: 'monospace' }}>{grpCombos[0].book_odds}</span>
+                          <span style={{ color: '#9CA3AF', fontFamily: 'monospace' }}>{grpCombos[0].book_odds}</span>
                           &nbsp;· Break-even <span style={{ color: '#999' }}>{grpCombos[0].break_even_pct}%/leg</span>
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -1190,21 +1191,22 @@ const BuckeyeScraper: React.FC = () => {
             sx={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               px: 2, py: 1.25,
-              bgcolor: 'rgba(20,20,20,0.95)',
-              border: '1px solid rgba(100,181,246,0.25)',
+              bgcolor: 'rgba(26,26,26,0.9)',
+              border: '1px solid rgba(255,255,255,0.06)',
               borderRadius: parlaysExpanded ? '8px 8px 0 0' : '8px',
               cursor: 'pointer', userSelect: 'none',
+              '&:hover': { borderColor: 'rgba(255,255,255,0.12)' },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Typography sx={{ color: '#64B5F6', fontWeight: 600, fontSize: '0.9rem' }}>
-                🎲 Parlays
+              <Typography sx={{ color: '#9CA3AF', fontWeight: 600, fontSize: '0.875rem', letterSpacing: '0.01em' }}>
+                Parlays
               </Typography>
               <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'center' }}>
                 {([2, 3, 4] as const).map(n => {
                   const count = parlayList.filter((p: any) => p.n_legs === n).length;
                   return count > 0 ? (
-                    <Box key={n} sx={{ px: 1, py: 0.25, bgcolor: 'rgba(100,181,246,0.12)', border: '1px solid rgba(100,181,246,0.25)', borderRadius: 1, fontSize: '0.72rem', color: '#64B5F6' }}>
+                    <Box key={n} sx={{ px: 1, py: 0.25, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 1, fontSize: '0.72rem', color: '#6B7280' }}>
                       {n}-leg ×{count}
                     </Box>
                   ) : null;
@@ -1219,25 +1221,25 @@ const BuckeyeScraper: React.FC = () => {
                   onClick={(e) => { e.stopPropagation(); setParlayNext24h(v => !v); }}
                   sx={{
                     px: 1, py: 0.25,
-                    fontSize: '0.7rem', fontWeight: parlayNext24h ? 700 : 400,
-                    color: parlayNext24h ? '#FFB300' : '#555',
-                    bgcolor: parlayNext24h ? 'rgba(255,179,0,0.1)' : 'transparent',
-                    border: `1px solid ${parlayNext24h ? 'rgba(255,179,0,0.4)' : 'rgba(255,255,255,0.06)'}`,
+                    fontSize: '0.7rem', fontWeight: parlayNext24h ? 600 : 400,
+                    color: parlayNext24h ? '#D1D5DB' : '#555',
+                    bgcolor: parlayNext24h ? 'rgba(255,255,255,0.08)' : 'transparent',
+                    border: `1px solid ${parlayNext24h ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.06)'}`,
                     borderRadius: 1,
                     cursor: 'pointer', userSelect: 'none',
                   }}
                 >
-                  ⏱ 24h {parlayNext24h && count24h > 0 ? `(${count24h})` : ''}
+                  24h {parlayNext24h && count24h > 0 ? `(${count24h})` : ''}
                 </Box>
               </Box>
             </Box>
             {parlaysExpanded
-              ? <ExpandLess sx={{ color: '#64B5F6', fontSize: '1.1rem' }} />
-              : <ExpandMore sx={{ color: '#64B5F6', fontSize: '1.1rem' }} />}
+              ? <ExpandLess sx={{ color: '#6B7280', fontSize: '1.1rem' }} />
+              : <ExpandMore sx={{ color: '#6B7280', fontSize: '1.1rem' }} />}
           </Box>
 
           <Collapse in={parlaysExpanded}>
-            <Box sx={{ border: '1px solid rgba(100,181,246,0.25)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
+            <Box sx={{ border: '1px solid rgba(255,255,255,0.06)', borderTop: 'none', borderRadius: '0 0 8px 8px', bgcolor: 'rgba(20,20,20,0.95)', p: 2 }}>
 
               {parlayList.length === 0 ? (
                 <Typography sx={{ color: '#555', fontSize: '0.82rem', fontStyle: 'italic' }}>
@@ -1262,9 +1264,9 @@ const BuckeyeScraper: React.FC = () => {
                           sx={{
                             px: 1.25, py: 0.3,
                             fontSize: '0.72rem', fontWeight: active ? 600 : 400,
-                            color: active ? '#64B5F6' : '#666',
-                            bgcolor: active ? 'rgba(100,181,246,0.12)' : 'transparent',
-                            border: `1px solid ${active ? 'rgba(100,181,246,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                            color: active ? '#F5F5F5' : '#555',
+                            bgcolor: active ? 'rgba(255,255,255,0.08)' : 'transparent',
+                            border: `1px solid ${active ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.08)'}`,
                             borderRadius: 1,
                             cursor: 'pointer',
                             userSelect: 'none',
@@ -1288,8 +1290,8 @@ const BuckeyeScraper: React.FC = () => {
                       .map((parlay: any, pi: number) => (
                       <Box key={pi} sx={{
                         p: 1.5,
-                        bgcolor: parlay.ev_blended_pct >= 0 ? 'rgba(100,181,246,0.05)' : 'rgba(255,255,255,0.02)',
-                        border: `1px solid ${parlay.same_sport ? 'rgba(100,181,246,0.3)' : 'rgba(255,255,255,0.07)'}`,
+                        bgcolor: '#1A1A1A',
+                        border: '1px solid rgba(255,255,255,0.06)',
                         borderRadius: 1.5,
                         minWidth: 230,
                         maxWidth: 310,
@@ -1297,8 +1299,8 @@ const BuckeyeScraper: React.FC = () => {
                         position: 'relative',
                       }}>
                         {parlay.same_sport && (
-                          <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.6rem', color: '#64B5F6', fontWeight: 700, letterSpacing: '0.05em' }}>
-                            ◆ SAME
+                          <Box sx={{ position: 'absolute', top: 6, right: 8, fontSize: '0.6rem', color: '#6B7280', fontWeight: 500, letterSpacing: '0.04em' }}>
+                            ◇ SAME
                           </Box>
                         )}
 
@@ -1321,11 +1323,11 @@ const BuckeyeScraper: React.FC = () => {
                                 {leg.betbck_odds}
                               </Box>
                               {leg.league && (
-                                <Box component="span" sx={{ fontSize: '0.6rem', color: '#64B5F6', px: 0.5, py: 0.1, bgcolor: 'rgba(100,181,246,0.08)', borderRadius: 0.5 }}>
+                                <Box component="span" sx={{ fontSize: '0.6rem', color: '#6B7280' }}>
                                   {leg.league}
                                 </Box>
                               )}
-                              <Box component="span" sx={{ fontSize: '0.62rem', color: leg.ev_pct >= 0 ? '#4CAF50' : '#aaa', fontFamily: 'monospace' }}>
+                              <Box component="span" sx={{ fontSize: '0.62rem', color: leg.ev_pct >= 0 ? '#32D74B' : '#aaa', fontFamily: 'monospace' }}>
                                 {leg.ev_pct >= 0 ? '+' : ''}{leg.ev_pct}% EV
                               </Box>
                               <Box component="span" sx={{ fontSize: '0.6rem', color: '#555' }}>
@@ -1341,7 +1343,7 @@ const BuckeyeScraper: React.FC = () => {
                             <Typography sx={{ fontSize: '0.67rem', color: '#888', fontFamily: 'monospace', fontWeight: 600 }}>
                               {parlay.n_legs}L &nbsp;{parlay.parlay_odds}
                             </Typography>
-                            <Typography sx={{ fontSize: '0.72rem', color: parlay.ev_blended_pct >= 0 ? '#4CAF50' : '#aaa', fontWeight: 700 }}>
+                            <Typography sx={{ fontSize: '0.72rem', color: parlay.ev_blended_pct >= 0 ? '#32D74B' : '#aaa', fontWeight: 700 }}>
                               {parlay.ev_blended_pct >= 0 ? '+' : ''}{parlay.ev_blended_pct}% EV
                             </Typography>
                           </Box>
