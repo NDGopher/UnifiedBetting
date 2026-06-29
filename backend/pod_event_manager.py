@@ -269,14 +269,8 @@ class PodEventManager:
                                 except:
                                     pass
                         
-                        # Expire negative EV alerts after 60 seconds, positive EV alerts after 3 minutes
-                        expiry_time = 60 if all_negative_ev else 180  # 3 minutes for positive EV
-                        
-                        # Stop updating negative EV alerts after 60 seconds, but keep them visible for a bit longer
-                        if all_negative_ev and alert_age > 60:
-                            print(f"[BackgroundRefresher] Event {event_id} is negative EV and older than 60s, skipping updates (age: {alert_age:.1f}s)")
-                            # Don't broadcast updates for old negative EV events
-                            continue
+                        # Expire all alerts after 3 minutes regardless of EV sign
+                        expiry_time = 180  # 3 minutes for all alerts
                         
                         # Remove expired alerts (thread-safe)
                         if alert_age > expiry_time:
