@@ -411,86 +411,78 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
 
   return (
     <Box>
-      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <CheckCircle sx={{ fontSize: 16 }} />
-            Last update: {lastUpdate.toLocaleTimeString()}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-          <Button 
-            startIcon={<RefreshIcon />} 
-            onClick={handleManualRefresh} 
-            disabled={loading} 
-            variant="outlined" 
-            size="small"
-            sx={{ minWidth: 'auto' }}
-          >
-            Refresh
-          </Button>
-          <Button 
-            onClick={testConnection} 
-            variant="outlined" 
-            size="small" 
-            color="secondary"
-            sx={{ minWidth: 'auto' }}
-          >
-            Test
-          </Button>
-        </Box>
-        {/* EV Range filter — shared with Auto-Bettor */}
+      {/* Compact single-row control bar */}
+      <Box sx={{ mb: 1.5, display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+        {/* Last update */}
+        <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexShrink: 0, fontSize: '0.72rem' }}>
+          <CheckCircle sx={{ fontSize: 13 }} />
+          {lastUpdate.toLocaleTimeString()}
+        </Typography>
+        {/* Buttons */}
+        <Button
+          startIcon={<RefreshIcon sx={{ fontSize: '0.85rem !important' }} />}
+          onClick={handleManualRefresh}
+          disabled={loading}
+          variant="outlined"
+          size="small"
+          sx={{ minWidth: 'auto', py: 0.4, px: 1.25, fontSize: '0.72rem' }}
+        >
+          Refresh
+        </Button>
+        <Button
+          onClick={testConnection}
+          variant="outlined"
+          size="small"
+          color="secondary"
+          sx={{ minWidth: 'auto', py: 0.4, px: 1.25, fontSize: '0.72rem' }}
+        >
+          Test
+        </Button>
+        {/* EV Filter — inline horizontal */}
         <Box sx={{
-          display: 'flex', flexDirection: 'column', gap: 1.2,
-          px: 2, py: 1.5, minWidth: 260, maxWidth: 340,
-          bgcolor: '#1A1A1A',
-          borderRadius: '8px',
+          display: 'flex', alignItems: 'center', gap: 1,
+          px: 1.5, py: 0.5,
+          bgcolor: '#1A1A1A', borderRadius: '6px',
+          flexGrow: 1, minWidth: 260, maxWidth: 420,
         }}>
-          <Typography sx={{ fontSize: '0.68rem', color: '#666', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', mb: 0.25 }}>
-            EV Filter
+          <Typography sx={{ fontSize: '0.6rem', color: '#555', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>EV</Typography>
+          <Typography sx={{ fontSize: '0.66rem', color: '#777', flexShrink: 0 }}>Min</Typography>
+          <Slider
+            value={minEv}
+            onChange={(_, val) => setMinEv(val as number)}
+            min={0} max={20} step={0.5} size="small"
+            valueLabelDisplay="auto"
+            valueLabelFormat={v => `${v}%`}
+            sx={{
+              color: 'rgba(255,255,255,0.5)', flexGrow: 1, mx: 0.5,
+              '& .MuiSlider-thumb': { width: 11, height: 11, bgcolor: '#F5F5F5', boxShadow: 'none' },
+              '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
+              '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
+              '& .MuiSlider-valueLabel': { bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.65rem', color: '#F5F5F5' },
+            }}
+          />
+          <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 26, textAlign: 'right', flexShrink: 0, fontFamily: 'monospace', fontWeight: 600 }}>
+            {minEv === 0 ? 'Off' : `+${minEv}%`}
           </Typography>
-          {/* Min EV row */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Typography sx={{ fontSize: '0.72rem', color: '#888', width: 26, flexShrink: 0 }}>Min</Typography>
-            <Slider
-              value={minEv}
-              onChange={(_, val) => setMinEv(val as number)}
-              min={0} max={20} step={0.5} size="small"
-              valueLabelDisplay="auto"
-              valueLabelFormat={v => `${v}%`}
-              sx={{
-                color: 'rgba(255,255,255,0.5)', flexGrow: 1,
-                '& .MuiSlider-thumb': { width: 12, height: 12, bgcolor: '#F5F5F5', boxShadow: 'none' },
-                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
-                '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
-                '& .MuiSlider-valueLabel': { bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.7rem', color: '#F5F5F5' },
-              }}
-            />
-            <Typography sx={{ fontSize: '0.75rem', color: '#9CA3AF', width: 34, textAlign: 'right', flexShrink: 0, fontWeight: 600, fontFamily: 'monospace' }}>
-              {minEv === 0 ? 'Off' : `+${minEv}%`}
-            </Typography>
-          </Box>
-          {/* Max EV row */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Typography sx={{ fontSize: '0.72rem', color: '#888', width: 26, flexShrink: 0 }}>Max</Typography>
-            <Slider
-              value={maxEv}
-              onChange={(_, val) => setMaxEv(val as number)}
-              min={0} max={20} step={0.5} size="small"
-              valueLabelDisplay="auto"
-              valueLabelFormat={v => v >= 20 ? '∞' : `${v}%`}
-              sx={{
-                color: 'rgba(255,255,255,0.5)', flexGrow: 1,
-                '& .MuiSlider-thumb': { width: 12, height: 12, bgcolor: '#F5F5F5', boxShadow: 'none' },
-                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
-                '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
-                '& .MuiSlider-valueLabel': { bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.7rem', color: '#F5F5F5' },
-              }}
-            />
-            <Typography sx={{ fontSize: '0.75rem', color: '#9CA3AF', width: 34, textAlign: 'right', flexShrink: 0, fontWeight: 600, fontFamily: 'monospace' }}>
-              {maxEv >= 20 ? '∞' : `${maxEv}%`}
-            </Typography>
-          </Box>
+          <Box sx={{ width: '1px', height: 12, bgcolor: 'rgba(255,255,255,0.1)', flexShrink: 0, mx: 0.5 }} />
+          <Typography sx={{ fontSize: '0.66rem', color: '#777', flexShrink: 0 }}>Max</Typography>
+          <Slider
+            value={maxEv}
+            onChange={(_, val) => setMaxEv(val as number)}
+            min={0} max={20} step={0.5} size="small"
+            valueLabelDisplay="auto"
+            valueLabelFormat={v => v >= 20 ? '∞' : `${v}%`}
+            sx={{
+              color: 'rgba(255,255,255,0.5)', flexGrow: 1, mx: 0.5,
+              '& .MuiSlider-thumb': { width: 11, height: 11, bgcolor: '#F5F5F5', boxShadow: 'none' },
+              '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
+              '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
+              '& .MuiSlider-valueLabel': { bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.65rem', color: '#F5F5F5' },
+            }}
+          />
+          <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 26, textAlign: 'right', flexShrink: 0, fontFamily: 'monospace', fontWeight: 600 }}>
+            {maxEv >= 20 ? '∞' : `${maxEv}%`}
+          </Typography>
         </Box>
       </Box>
       {error && (
