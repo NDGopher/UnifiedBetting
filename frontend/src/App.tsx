@@ -450,23 +450,23 @@ function App() {
           <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3 } }}>
 
             {/* Alert Log Section */}
-            <Box sx={{ py: 5 }}>
+            <Box sx={{ pt: 2, pb: 1 }}>
               <AlertLog />
             </Box>
 
             {/* POD Alerts Section */}
-            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 2, pb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1.5 }}>
                 <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>POD ALERTS</Box>
                 <Box sx={{ flexGrow: 1 }} />
                 <Box sx={{
-                  px: 2, py: 0.5, borderRadius: '8px',
+                  px: 1.5, py: 0.35, borderRadius: '6px',
                   background: 'rgba(46, 125, 50, 0.1)', border: '1px solid rgba(46, 125, 50, 0.3)',
                   display: 'flex', alignItems: 'center', gap: 0.75,
-                  fontSize: '0.7rem', color: '#2E7D32', fontWeight: 600,
+                  fontSize: '0.65rem', color: '#2E7D32', fontWeight: 600,
                   letterSpacing: '0.06em', textTransform: 'uppercase',
                 }}>
-                  <Box sx={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#2E7D32', animation: 'pulse 2s infinite' }} />
+                  <Box sx={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#2E7D32', animation: 'pulse 2s infinite' }} />
                   LIVE
                 </Box>
               </Box>
@@ -474,8 +474,8 @@ function App() {
             </Box>
 
             {/* EV Bets Section */}
-            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 2, pb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>EV BETS</Box>
               </Box>
               <BuckeyeScraper />
