@@ -414,7 +414,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
       {/* Compact single-row control bar */}
       <Box sx={{ mb: 1.5, display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
         {/* Last update */}
-        <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexShrink: 0, fontSize: '0.72rem' }}>
+        <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexShrink: 0, fontSize: '0.72rem', color: '#6B7280' }}>
           <CheckCircle sx={{ fontSize: 13 }} />
           {lastUpdate.toLocaleTimeString()}
         </Typography>
