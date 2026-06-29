@@ -100,7 +100,9 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
                   backgroundColor: "rgba(255,255,255,0.05)",
                   color: "#32D74B",
                   border: "none",
-                  fontFamily: MONO,
+                  fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
+                  fontWeight: 500,
+                  '& .MuiChip-label': { px: 1 },
                 }}
               />
             ))}
@@ -117,6 +119,9 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
             backgroundColor: "rgba(255,255,255,0.05)",
             color: cfg.color,
             border: "none",
+            fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
+            fontWeight: 500,
+            '& .MuiChip-label': { px: 1 },
           }}
         />
 
