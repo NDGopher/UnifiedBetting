@@ -80,10 +80,8 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
       onClick={() => setExpanded(v => !v)}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, py: 0.5, px: 0.5 }}>
-        {/* Status icon — muted toned color, no left border */}
-        <Box sx={{ color: cfg.color, display: "flex", alignItems: "center", flexShrink: 0 }}>
-          {cfg.icon}
-        </Box>
+        {/* Status dot — pure CSS, no SVG */}
+        <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: cfg.color, flexShrink: 0 }} />
 
         <Typography sx={{ color: "#D1D5DB", fontWeight: 600, flexGrow: 1, fontSize: "0.8rem", lineHeight: 1.3 }}>
           {matchup}
@@ -122,7 +120,7 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
           }}
         />
 
-        <Typography sx={{ color: "#4B5563", fontSize: "0.68rem", whiteSpace: "nowrap" }}>
+        <Typography sx={{ color: "#6B7280", fontSize: "0.68rem", whiteSpace: "nowrap" }}>
           {ts}
         </Typography>
         <IconButton size="small" sx={{ p: 0, color: "#4B5563" }}>
