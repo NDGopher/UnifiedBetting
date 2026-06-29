@@ -268,10 +268,8 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
         sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer", mb: panelOpen ? 1.5 : 0 }}
         onClick={() => setPanelOpen(v => !v)}
       >
-        <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>AL</Box>
-        <Typography sx={{ color: "#9CA3AF", fontWeight: 600, flexGrow: 1, fontSize: "0.6875rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          Alert Log
-        </Typography>
+        <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none', flexShrink: 0 }}>ALERT LOG</Box>
+        <Box sx={{ flexGrow: 1 }} />
 
         {/* Total count badge — neutral */}
         {allRecords.length > 0 && (
