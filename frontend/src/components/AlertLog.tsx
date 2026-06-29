@@ -140,7 +140,7 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
           boxShadow: 'inset 0 1px 8px rgba(0,0,0,0.6)',
         }}>
           {record.steps.map((step, i) => {
-            const isEV = step.tag === "EV";
+            const isEV = step.tag === "EV" && /=>\s*\+/.test(step.message);
             return (
             <Box key={i} sx={{
               display: "flex", gap: 0.75, mb: 0.125,
