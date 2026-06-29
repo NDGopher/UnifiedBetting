@@ -257,15 +257,15 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
   return (
     <Paper
       sx={{
-        mb: 2,
-        p: 2,
+        mb: 1,
+        px: 2, pt: 1.25, pb: 1.25,
         backgroundColor: "#111",
         border: "1px solid rgba(255,255,255,0.06)",
       }}
     >
       {/* ── Header ────────────────────────────────────────────────────── */}
       <Box
-        sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer", mb: panelOpen ? 1.5 : 0 }}
+        sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer", mb: panelOpen ? 1 : 0 }}
         onClick={() => setPanelOpen(v => !v)}
       >
         <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none', flexShrink: 0 }}>ALERT LOG</Box>
