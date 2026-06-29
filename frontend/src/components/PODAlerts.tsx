@@ -25,6 +25,7 @@ import {
   Star as StarIcon,
   Close,
   CheckCircle,
+  NotificationsNone,
 } from "@mui/icons-material";
 import { useWebSocket } from '../hooks/useWebSocket';
 import { showEnhancedNotification } from '../utils/notificationUtils';
@@ -430,9 +431,8 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
         <Box sx={{
           display: 'flex', flexDirection: 'column', gap: 1.2,
           px: 2, py: 1.5, minWidth: 260, maxWidth: 340,
-          bgcolor: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 2,
+          bgcolor: '#1A1A1A',
+          borderRadius: '8px',
         }}>
           <Typography sx={{ fontSize: '0.68rem', color: '#666', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', mb: 0.25 }}>
             EV Filter
@@ -447,13 +447,14 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
               valueLabelDisplay="auto"
               valueLabelFormat={v => `${v}%`}
               sx={{
-                color: '#4caf50', flexGrow: 1,
-                '& .MuiSlider-thumb': { width: 14, height: 14 },
-                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
-                '& .MuiSlider-valueLabel': { bgcolor: '#1a2a1a', border: '1px solid rgba(76,175,80,0.5)', fontSize: '0.7rem', color: '#4caf50' },
+                color: 'rgba(255,255,255,0.5)', flexGrow: 1,
+                '& .MuiSlider-thumb': { width: 12, height: 12, bgcolor: '#F5F5F5', boxShadow: 'none' },
+                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
+                '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
+                '& .MuiSlider-valueLabel': { bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.7rem', color: '#F5F5F5' },
               }}
             />
-            <Typography sx={{ fontSize: '0.78rem', color: '#4caf50', width: 34, textAlign: 'right', flexShrink: 0, fontWeight: 700, fontFamily: 'monospace' }}>
+            <Typography sx={{ fontSize: '0.75rem', color: '#9CA3AF', width: 34, textAlign: 'right', flexShrink: 0, fontWeight: 600, fontFamily: 'monospace' }}>
               {minEv === 0 ? 'Off' : `+${minEv}%`}
             </Typography>
           </Box>
@@ -467,13 +468,14 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
               valueLabelDisplay="auto"
               valueLabelFormat={v => v >= 20 ? '∞' : `${v}%`}
               sx={{
-                color: '#4caf50', flexGrow: 1,
-                '& .MuiSlider-thumb': { width: 14, height: 14 },
-                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
-                '& .MuiSlider-valueLabel': { bgcolor: '#1a2a1a', border: '1px solid rgba(76,175,80,0.5)', fontSize: '0.7rem', color: '#4caf50' },
+                color: 'rgba(255,255,255,0.5)', flexGrow: 1,
+                '& .MuiSlider-thumb': { width: 12, height: 12, bgcolor: '#F5F5F5', boxShadow: 'none' },
+                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
+                '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
+                '& .MuiSlider-valueLabel': { bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.7rem', color: '#F5F5F5' },
               }}
             />
-            <Typography sx={{ fontSize: '0.78rem', color: maxEv >= 20 ? '#555' : '#4caf50', width: 34, textAlign: 'right', flexShrink: 0, fontWeight: 700, fontFamily: 'monospace' }}>
+            <Typography sx={{ fontSize: '0.75rem', color: '#9CA3AF', width: 34, textAlign: 'right', flexShrink: 0, fontWeight: 600, fontFamily: 'monospace' }}>
               {maxEv >= 20 ? '∞' : `${maxEv}%`}
             </Typography>
           </Box>
@@ -489,9 +491,20 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
           <CircularProgress />
         </Box>
       ) : Object.keys(events).length === 0 && !loading && !error && (
-        <Typography variant="body2" sx={{ color: 'gray', textAlign: 'center', fontStyle: 'italic', mt: 2 }}>
-          No active alerts at the moment
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mt: 3, px: 0.5 }}>
+          <NotificationsNone sx={{ fontSize: 18, color: '#374151', mt: 0.1, flexShrink: 0 }} />
+          <Box>
+            <Typography sx={{ fontSize: '0.8125rem', fontWeight: 500, color: '#6B7280', mb: 0.25 }}>
+              No active alerts
+            </Typography>
+            <Typography sx={{ fontSize: '0.75rem', color: '#6B7280' }}>
+              {minEv > 0
+                ? <>EV filter active — min <span style={{ color: '#9CA3AF' }}>+{minEv}%</span>. Lower the threshold or load the POD Chrome Extension to start.</>
+                : <>Listening for POD events. Load the Chrome Extension and open pinnacleoddssdropper.com to start.</>
+              }
+            </Typography>
+          </Box>
+        </Box>
       )}
       {activeEvents.length === 0 && Object.keys(events).length !== 0 ? null : (
         <Grid container spacing={2} wrap="wrap">
@@ -710,7 +723,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                       alignItems: 'center',
                                       gap: 0.5,
                                       borderRadius: 1,
-                                      color: isPositiveEV ? '#2E7D32' : '#B0B0B0',
+                                      color: isPositiveEV ? '#32D74B' : '#6B7280',
                                       textTransform: 'none'
                                     }}
                                   >
