@@ -868,31 +868,31 @@ const BuckeyeScraper: React.FC = () => {
                     }
                   }}
                 >
-                  <TableCell sx={{ color: '#F5F5F5', fontWeight: 500, fontSize: '0.875rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>
+                  <TableCell sx={{ color: '#E5E7EB', fontWeight: 400, fontSize: '0.875rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>
                     {row.matchup}
                   </TableCell>
                   <TableCell sx={{ color: '#9CA3AF', fontWeight: 400, fontSize: '0.8125rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>
                     {row.league}
                   </TableCell>
-                  <TableCell sx={{ color: '#F5F5F5', fontWeight: 500, fontSize: '0.8125rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>
+                  <TableCell sx={{ color: '#E5E7EB', fontWeight: 400, fontSize: '0.8125rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>
                     {row.bet}
                   </TableCell>
-                  <TableCell align="center" sx={{ color: '#9CA3AF', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
+                  <TableCell align="center" sx={{ color: '#D1D5DB', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                     {row.betbck_odds || row.ace_odds || 'N/A'}
                   </TableCell>
-                  <TableCell align="center" sx={{ color: '#9CA3AF', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
+                  <TableCell align="center" sx={{ color: '#D1D5DB', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                     {row.pinnacle_nvp}
                   </TableCell>
                   <TableCell align="center">
                     {parseFloat(row.ev) > 0 ? (
-                      <span style={{ color: '#32D74B', fontWeight: 700, fontSize: '0.875rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
+                      <span style={{ color: '#32D74B', fontWeight: 500, fontSize: '0.875rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                         {row.ev}
                       </span>
                     ) : (
                       <span style={{ color: '#4B5563', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace' }}>{row.ev}</span>
                     )}
                   </TableCell>
-                  <TableCell align="left" sx={{ whiteSpace: 'nowrap', color: '#6B7280', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
+                  <TableCell align="left" sx={{ whiteSpace: 'nowrap', color: '#9CA3AF', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                     {(() => {
                       const parsed = parseStartTime(row.start_time);
                       return parsed ? parsed.format('M/D/YY h:mm A') : (typeof row.start_time === 'string' ? row.start_time : '');
