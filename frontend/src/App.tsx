@@ -3,15 +3,11 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { AppBar, Toolbar, Slider, Switch, TextField, Divider, InputAdornment, Select, MenuItem, FormControl, InputLabel, Chip } from "@mui/material";
 import { 
-  Analytics, 
   Calculate, 
   NotificationsActive,
-  // Build,  // PropBuilder icon — disabled for now
   SportsEsports,
   AutoMode
 } from "@mui/icons-material";
@@ -38,8 +34,8 @@ const modernTheme = createTheme({
       dark: "#616161",
     },
     background: {
-      default: "#0A0A0A", // Deep charcoal
-      paper: "#1A1A1A", // Refined dark gray
+      default: "#0D0D0D",
+      paper: "#151515",
     },
     text: {
       primary: "#FFFFFF",
@@ -92,8 +88,8 @@ const modernTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundColor: "#1A1A1A",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
+          backgroundColor: "#151515",
+          border: "1px solid rgba(255, 255, 255, 0.06)",
           borderRadius: "12px",
           boxShadow: "0 2px 16px rgba(0, 0, 0, 0.4)",
           backdropFilter: "blur(20px)",
@@ -103,9 +99,9 @@ const modernTheme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          background: "rgba(10, 10, 10, 0.95)",
+          background: "rgba(13, 13, 13, 0.95)",
           backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
           boxShadow: "0 1px 8px rgba(0, 0, 0, 0.3)",
         },
       },
@@ -118,22 +114,30 @@ const modernTheme = createTheme({
           textTransform: "none",
           letterSpacing: "0.02em",
           padding: "8px 16px",
+          transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+          '&:hover': {
+            transform: "translateY(-1px)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+          },
+          '&:active': {
+            transform: "translateY(0px)",
+          },
         },
         containedPrimary: {
           backgroundColor: "#2E7D32",
           color: "#FFFFFF",
-          boxShadow: "0 2px 8px rgba(46, 125, 50, 0.3)",
+          boxShadow: "0 2px 8px rgba(46, 125, 50, 0.2)",
           '&:hover': {
             backgroundColor: "#1B5E20",
-            boxShadow: "0 4px 12px rgba(46, 125, 50, 0.4)",
+            boxShadow: "0 6px 16px rgba(46, 125, 50, 0.3)",
           },
         },
         outlined: {
-          borderColor: "rgba(255, 255, 255, 0.2)",
-          color: "#B0B0B0",
+          borderColor: "rgba(255, 255, 255, 0.1)",
+          color: "#9CA3AF",
           '&:hover': {
-            borderColor: "rgba(255, 255, 255, 0.3)",
-            backgroundColor: "rgba(255, 255, 255, 0.05)",
+            borderColor: "rgba(255, 255, 255, 0.2)",
+            backgroundColor: "rgba(255, 255, 255, 0.06)",
           },
         },
       },
@@ -142,7 +146,7 @@ const modernTheme = createTheme({
       styleOverrides: {
         root: {
           '&:hover': {
-            backgroundColor: 'rgba(46, 125, 50, 0.06)',
+            backgroundColor: 'rgba(255,255,255,0.03)',
           },
         },
       },
@@ -180,21 +184,27 @@ const sliderSx = {
   '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
   '& .MuiSlider-track': { bgcolor: '#2E7D32', border: 'none' },
   '& .MuiSlider-valueLabel': {
-    bgcolor: '#1a1a1a', border: '1px solid rgba(46,125,50,0.5)',
+    bgcolor: '#151515', border: '1px solid rgba(46,125,50,0.5)',
     fontSize: '0.75rem', color: '#2E7D32',
   },
 };
 
 const inputSx = {
   '& .MuiOutlinedInput-root': {
-    bgcolor: 'rgba(255,255,255,0.04)',
-    '& fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
-    '&:hover fieldset': { borderColor: 'rgba(46,125,50,0.5)' },
-    '&.Mui-focused fieldset': { borderColor: '#2E7D32' },
+    bgcolor: '#1A1A1A',
+    borderRadius: '6px',
+    '& fieldset': { border: 'none' },
+    '&::after': {
+      content: '""',
+      position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px',
+      bgcolor: 'rgba(255,255,255,0.1)',
+    },
+    '&:hover::after': { bgcolor: 'rgba(255,255,255,0.2)' },
+    '&.Mui-focused::after': { bgcolor: 'rgba(255,255,255,0.3)', height: '1px' },
   },
-  '& .MuiInputLabel-root': { color: '#777', fontSize: '0.8rem' },
-  '& .MuiInputLabel-root.Mui-focused': { color: '#2E7D32' },
-  '& input': { color: '#fff', fontSize: '0.85rem' },
+  '& .MuiInputLabel-root': { color: '#6B7280', fontSize: '0.75rem' },
+  '& .MuiInputLabel-root.Mui-focused': { color: '#9CA3AF' },
+  '& input': { color: '#F5F5F5', fontSize: '0.875rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' },
 };
 
 function AutoBetPlacementPanel() {
@@ -216,19 +226,11 @@ function AutoBetPlacementPanel() {
   };
 
   return (
-    <Paper
-      sx={{
-        p: 4,
-        display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden',
-        border: enabled ? '1px solid rgba(76,175,80,0.25)' : '1px solid rgba(255,255,255,0.08)',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        '&:hover': { boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)', transform: 'translateY(-2px)' },
-      }}
-    >
+    <Box sx={{ pt: 5, pb: 5, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-        <AutoMode sx={{ fontSize: 24, color: enabled ? '#4CAF50' : '#2E7D32' }} />
-        <Typography component="h2" variant="h6" sx={{ color: '#FFFFFF', fontWeight: 500, letterSpacing: '-0.01em' }}>
+        <AutoMode sx={{ fontSize: 16, color: '#9CA3AF' }} />
+        <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
           Auto Bet Placement
         </Typography>
         {enabled && (
@@ -301,13 +303,13 @@ function AutoBetPlacementPanel() {
             </Box>
             <Box sx={{ display: 'grid', gridTemplateColumns: kelly === 'fixed' ? '1fr' : '1fr 1fr', gap: 2 }}>
               <FormControl size="small" fullWidth>
-                <InputLabel sx={{ color: '#777', fontSize: '0.8rem', '&.Mui-focused': { color: '#2E7D32' } }}>Sizing Method</InputLabel>
+                <InputLabel sx={{ color: '#6B7280', fontSize: '0.75rem', '&.Mui-focused': { color: '#9CA3AF' } }}>Sizing Method</InputLabel>
                 <Select value={kelly} onChange={e => setKelly(e.target.value)} label="Sizing Method"
-                  sx={{ bgcolor: 'rgba(255,255,255,0.04)', color: '#fff', fontSize: '0.85rem',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(46,125,50,0.5)' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#2E7D32' },
-                    '& .MuiSvgIcon-root': { color: '#777' } }}>
+                  sx={{ bgcolor: '#1A1A1A', color: '#F5F5F5', fontSize: '0.875rem', borderRadius: '6px',
+                    '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                    '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                    '& .MuiSvgIcon-root': { color: '#6B7280' } }}>
                   <MenuItem value="fixed">Fixed Unit Size</MenuItem>
                   <MenuItem value="quarter_kelly">Quarter Kelly</MenuItem>
                   <MenuItem value="half_kelly">Half Kelly</MenuItem>
@@ -369,7 +371,7 @@ function AutoBetPlacementPanel() {
           Wager POST endpoint pending — configure once BetBCK form selectors are confirmed.
         </Typography>
       </Box>
-    </Paper>
+    </Box>
   );
 }
 
@@ -384,10 +386,21 @@ function openBetbckTabOnLoad(betbckTabRef: React.MutableRefObject<Window | null>
 
 function App() {
   const betbckTabRef = useRef<Window | null>(null);
+  const [now, setNow] = useState(new Date());
 
   React.useEffect(() => {
     openBetbckTabOnLoad(betbckTabRef);
   }, []);
+
+  React.useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const cdtTime = now.toLocaleTimeString('en-US', {
+    timeZone: 'America/Chicago',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+  });
 
   return (
     <BetbckTabContext.Provider value={{ betbckTabRef }}>
@@ -396,237 +409,109 @@ function App() {
         <Box
           sx={{
             minHeight: "100vh",
-            background: "linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%)",
+            background: "#0D0D0D",
           }}
         >
-          {/* Premium Header */}
+          {/* Navigation Bar */}
           <AppBar position="static" elevation={0}>
-            <Toolbar sx={{ py: 3, justifyContent: 'center', minHeight: 80 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                  px: 4,
-                  py: 2,
-                  borderRadius: "20px",
-                  background: "rgba(26, 26, 26, 0.8)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  backdropFilter: "blur(20px)",
-                  maxWidth: 500,
-                  mx: 'auto',
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "12px",
-                    background: "linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 4px 16px rgba(46, 125, 50, 0.3)",
-                  }}
-                >
-                  <Analytics sx={{ fontSize: 24, color: "#FFFFFF" }} />
+            <Toolbar sx={{ px: { xs: 2, sm: 4 }, minHeight: '48px !important', height: 48 }}>
+              {/* Brand lockup */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{
+                  px: 0.875, py: 0.375,
+                  border: '1px solid rgba(255,255,255,0.22)',
+                  borderRadius: '4px',
+                  fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5',
+                  letterSpacing: '0.06em', lineHeight: 1.6,
+                  userSelect: 'none',
+                }}>
+                  UB
                 </Box>
-                <Typography
-                  variant="h4"
-                  component="div"
-                  sx={{
-                    fontWeight: 700,
-                    color: "#FFFFFF",
-                    letterSpacing: "-0.03em",
-                    fontSize: "1.75rem",
-                    background: "linear-gradient(135deg, #FFFFFF 0%, #B0B0B0 100%)",
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
+                <Typography sx={{
+                  fontSize: '0.75rem', fontWeight: 600, color: '#F5F5F5',
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                }}>
                   Unified Betting
                 </Typography>
+              </Box>
+
+              <Box sx={{ flexGrow: 1 }} />
+
+              {/* System status cluster */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5 }}>
+                <Typography sx={{
+                  fontSize: '0.6875rem', color: '#4B5563',
+                  fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace',
+                  letterSpacing: '0.03em',
+                }}>
+                  {cdtTime} CDT
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <Box sx={{ width: 5, height: 5, borderRadius: '50%', bgcolor: '#32D74B', flexShrink: 0 }} />
+                  <Typography sx={{ fontSize: '0.6875rem', color: '#4B5563', letterSpacing: '0.02em' }}>
+                    System: Online
+                  </Typography>
+                </Box>
               </Box>
             </Toolbar>
           </AppBar>
           
-          <Container maxWidth="xl" sx={{ py: 6, px: { xs: 2, sm: 3 } }}>
-            <Grid container spacing={4}>
-              {/* Alert Log Section */}
-              <Grid item xs={12}>
-                <AlertLog />
-              </Grid>
+          <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3 } }}>
 
-              {/* POD Alerts Section */}
-              <Grid item xs={12}>
-                <Paper
-                  sx={{
-                    p: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    overflow: "hidden",
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
-                      transform: 'translateY(-2px)',
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      mb: 3,
-                    }}
-                  >
-                    <NotificationsActive sx={{ fontSize: 24, color: "#2E7D32" }} />
-                    <Typography
-                      component="h2"
-                      variant="h6"
-                      sx={{ 
-                        color: '#FFFFFF', 
-                        fontWeight: 500,
-                        letterSpacing: "-0.01em"
-                      }}
-                    >
-                      POD Alerts
-                    </Typography>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box
-                      sx={{
-                        px: 2,
-                        py: 0.5,
-                        borderRadius: '8px',
-                        background: 'rgba(46, 125, 50, 0.1)',
-                        border: '1px solid rgba(46, 125, 50, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 0.5,
-                        fontSize: '0.75rem',
-                        color: '#2E7D32',
-                        fontWeight: 500,
-                        letterSpacing: "0.05em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: 6,
-                          height: 6,
-                          borderRadius: '50%',
-                          backgroundColor: '#2E7D32',
-                          animation: 'pulse 2s infinite',
-                        }}
-                      />
-                      LIVE
-                    </Box>
-                  </Box>
-                  <PODAlerts />
-                </Paper>
-              </Grid>
-              {/* PropBuilder Section — disabled until prop support is re-enabled
-              <Grid item xs={12}>
-                <Paper sx={{ p: 4, display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                    <Build sx={{ fontSize: 24, color: "#2E7D32" }} />
-                    <Typography component="h2" variant="h6" sx={{ color: '#FFFFFF', fontWeight: 500 }}>
-                      PropBuilder EV
-                    </Typography>
-                  </Box>
-                  <PropBuilder />
-                </Paper>
-              </Grid>
-              */}
-              {/* BuckeyeScraper Section */}
-              <Grid item xs={12}>
-                <Paper
-                  sx={{
-                    p: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    overflow: "hidden",
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
-                      transform: 'translateY(-2px)',
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      mb: 3,
-                    }}
-                  >
-                    <SportsEsports sx={{ fontSize: 24, color: "#2E7D32" }} />
-                    <Typography
-                      component="h2"
-                      variant="h6"
-                      sx={{ 
-                        color: '#FFFFFF', 
-                        fontWeight: 500,
-                        letterSpacing: "-0.01em"
-                      }}
-                    >
-                      EV Bets
-                    </Typography>
-                  </Box>
-                  <BuckeyeScraper />
-                </Paper>
-              </Grid>
-              {/* Auto Bet Placement Section */}
-              <Grid item xs={12}>
-                <AutoBetPlacementPanel />
-              </Grid>
-              
-              {/* EV Calculator at the bottom, centered */}
-              <Grid item xs={12}>
-                <Paper
-                  sx={{
-                    p: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    overflow: "hidden",
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
-                      transform: 'translateY(-2px)',
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      mb: 3,
-                    }}
-                  >
-                    <Calculate sx={{ fontSize: 24, color: "#2E7D32" }} />
-                    <Typography
-                      component="h2"
-                      variant="h6"
-                      sx={{ 
-                        color: '#FFFFFF', 
-                        fontWeight: 500,
-                        letterSpacing: "-0.01em"
-                      }}
-                    >
-                      EV Calculator
-                    </Typography>
-                  </Box>
-                  <EVCalculator />
-                </Paper>
-              </Grid>
-            </Grid>
+            {/* Alert Log Section */}
+            <Box sx={{ py: 5 }}>
+              <AlertLog />
+            </Box>
+
+            {/* POD Alerts Section */}
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                <NotificationsActive sx={{ fontSize: 16, color: "#9CA3AF" }} />
+                <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
+                  POD Alerts
+                </Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                <Box sx={{
+                  px: 2, py: 0.5, borderRadius: '8px',
+                  background: 'rgba(46, 125, 50, 0.1)', border: '1px solid rgba(46, 125, 50, 0.3)',
+                  display: 'flex', alignItems: 'center', gap: 0.75,
+                  fontSize: '0.7rem', color: '#2E7D32', fontWeight: 600,
+                  letterSpacing: '0.06em', textTransform: 'uppercase',
+                }}>
+                  <Box sx={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#2E7D32', animation: 'pulse 2s infinite' }} />
+                  LIVE
+                </Box>
+              </Box>
+              <PODAlerts />
+            </Box>
+
+            {/* EV Bets Section */}
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                <SportsEsports sx={{ fontSize: 16, color: "#9CA3AF" }} />
+                <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
+                  EV Bets
+                </Typography>
+              </Box>
+              <BuckeyeScraper />
+            </Box>
+
+            {/* Auto Bet Placement Section */}
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <AutoBetPlacementPanel />
+            </Box>
+
+            {/* EV Calculator Section */}
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 8 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                <Calculate sx={{ fontSize: 16, color: "#9CA3AF" }} />
+                <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
+                  EV Calculator
+                </Typography>
+              </Box>
+              <EVCalculator />
+            </Box>
+
           </Container>
         </Box>
         
