@@ -174,32 +174,32 @@ const modernTheme = createTheme({
 
 // ─── Auto Bet Placement Panel ────────────────────────────────────────────────
 const sliderSx = {
-  color: '#2E7D32',
-  '& .MuiSlider-thumb': { width: 14, height: 14, bgcolor: '#2E7D32' },
-  '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
-  '& .MuiSlider-track': { bgcolor: '#2E7D32', border: 'none' },
+  color: '#32D74B',
+  height: 2,
+  '& .MuiSlider-thumb': {
+    width: 10, height: 10, bgcolor: '#F5F5F5',
+    boxShadow: 'none',
+    '&:hover': { boxShadow: '0 0 0 6px rgba(255,255,255,0.06)' },
+  },
+  '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.08)', height: 2 },
+  '& .MuiSlider-track': { bgcolor: '#32D74B', border: 'none', height: 2 },
   '& .MuiSlider-valueLabel': {
-    bgcolor: '#151515', border: '1px solid rgba(46,125,50,0.5)',
-    fontSize: '0.75rem', color: '#2E7D32',
+    bgcolor: '#151515', border: '1px solid rgba(50,215,75,0.3)',
+    fontSize: '0.7rem', color: '#32D74B', py: 0.25, px: 0.75,
   },
 };
 
 const inputSx = {
   '& .MuiOutlinedInput-root': {
-    bgcolor: '#1A1A1A',
+    bgcolor: '#151515',
     borderRadius: '6px',
-    '& fieldset': { border: 'none' },
-    '&::after': {
-      content: '""',
-      position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px',
-      bgcolor: 'rgba(255,255,255,0.1)',
-    },
-    '&:hover::after': { bgcolor: 'rgba(255,255,255,0.2)' },
-    '&.Mui-focused::after': { bgcolor: 'rgba(255,255,255,0.3)', height: '1px' },
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.08)', borderRadius: '6px' },
+    '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
+    '&.Mui-focused fieldset': { borderColor: 'rgba(255,255,255,0.22)', borderWidth: '1px' },
   },
-  '& .MuiInputLabel-root': { color: '#6B7280', fontSize: '0.75rem' },
+  '& .MuiInputLabel-root': { color: '#6B7280', fontSize: '0.75rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' },
   '& .MuiInputLabel-root.Mui-focused': { color: '#9CA3AF' },
-  '& input': { color: '#F5F5F5', fontSize: '0.875rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' },
+  '& input': { color: '#E5E7EB', fontSize: '0.875rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums', fontWeight: 400 },
 };
 
 function AutoBetPlacementPanel() {
@@ -256,7 +256,7 @@ function AutoBetPlacementPanel() {
             <Typography sx={{ fontSize: '0.75rem', color: '#777', width: 30, flexShrink: 0 }}>Min</Typography>
             <Slider value={minEv} onChange={(_, v) => setMinEv(v as number)}
               min={0} max={20} step={0.5} valueLabelDisplay="auto" valueLabelFormat={v => `${v}%`} sx={sliderSx} />
-            <Typography sx={{ fontSize: '0.8rem', color: '#2E7D32', width: 36, textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>
+            <Typography sx={{ fontSize: '0.8rem', color: '#32D74B', width: 36, textAlign: 'right', flexShrink: 0, fontWeight: 400, fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
               {minEv}%
             </Typography>
           </Box>
@@ -264,11 +264,11 @@ function AutoBetPlacementPanel() {
             <Typography sx={{ fontSize: '0.75rem', color: '#777', width: 30, flexShrink: 0 }}>Max</Typography>
             <Slider value={maxEv} onChange={(_, v) => setMaxEv(v as number)}
               min={0} max={20} step={0.5} valueLabelDisplay="auto" valueLabelFormat={v => v >= 20 ? '∞' : `${v}%`} sx={sliderSx} />
-            <Typography sx={{ fontSize: '0.8rem', color: maxEv >= 20 ? '#555' : '#2E7D32', width: 36, textAlign: 'right', flexShrink: 0, fontWeight: 600 }}>
+            <Typography sx={{ fontSize: '0.8rem', color: maxEv >= 20 ? '#4B5563' : '#32D74B', width: 36, textAlign: 'right', flexShrink: 0, fontWeight: 400, fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
               {maxEv >= 20 ? '∞' : `${maxEv}%`}
             </Typography>
           </Box>
-          <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 1.5, lineHeight: 1.5 }}>
+          <Typography sx={{ fontSize: '0.6875rem', color: '#6B7280', mt: 1.5, lineHeight: 1.5 }}>
             Only bets with EV between {minEv}% and {maxEv >= 20 ? '∞' : `${maxEv}%`} will be placed automatically when a POD alert fires.
           </Typography>
         </Box>
@@ -297,10 +297,12 @@ function AutoBetPlacementPanel() {
               <FormControl size="small" fullWidth>
                 <InputLabel sx={{ color: '#6B7280', fontSize: '0.75rem', '&.Mui-focused': { color: '#9CA3AF' } }}>Sizing Method</InputLabel>
                 <Select value={kelly} onChange={e => setKelly(e.target.value)} label="Sizing Method"
-                  sx={{ bgcolor: '#1A1A1A', color: '#F5F5F5', fontSize: '0.875rem', borderRadius: '6px',
-                    '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                    '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                  sx={{ bgcolor: '#151515', color: '#E5E7EB', fontSize: '0.875rem', borderRadius: '6px',
+                    fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace',
+                    fontVariantNumeric: 'tabular-nums', fontWeight: 400,
+                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.08)', borderRadius: '6px' },
+                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.22)', borderWidth: '1px' },
                     '& .MuiSvgIcon-root': { color: '#6B7280' } }}>
                   <MenuItem value="fixed">Fixed Unit Size</MenuItem>
                   <MenuItem value="quarter_kelly">Quarter Kelly</MenuItem>
@@ -314,11 +316,11 @@ function AutoBetPlacementPanel() {
                   InputProps={{ startAdornment: <InputAdornment position="start"><Typography sx={{ color: '#777', fontSize: '0.8rem' }}>$</Typography></InputAdornment> }}
                   sx={inputSx}
                   helperText="Max bet regardless of Kelly size"
-                  FormHelperTextProps={{ sx: { color: '#555', fontSize: '0.65rem' } }}
+                  FormHelperTextProps={{ sx: { color: '#6B7280', fontSize: '0.6875rem' } }}
                 />
               )}
             </Box>
-            <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 1, lineHeight: 1.5 }}>
+            <Typography sx={{ fontSize: '0.6875rem', color: '#6B7280', mt: 1, lineHeight: 1.5 }}>
               {kellyDesc[kelly]}
             </Typography>
           </Box>
@@ -334,17 +336,17 @@ function AutoBetPlacementPanel() {
                 placeholder="-300"
                 sx={inputSx}
                 helperText="Shortest (e.g. -300)"
-                FormHelperTextProps={{ sx: { color: '#555', fontSize: '0.65rem' } }}
+                FormHelperTextProps={{ sx: { color: '#6B7280', fontSize: '0.6875rem' } }}
               />
               <TextField
                 label="Max Odds" value={maxOdds} onChange={e => setMaxOdds(e.target.value)} size="small"
                 placeholder="+400"
                 sx={inputSx}
                 helperText="Longest (e.g. +400)"
-                FormHelperTextProps={{ sx: { color: '#555', fontSize: '0.65rem' } }}
+                FormHelperTextProps={{ sx: { color: '#6B7280', fontSize: '0.6875rem' } }}
               />
             </Box>
-            <Typography sx={{ fontSize: '0.7rem', color: '#555', mt: 0.5, lineHeight: 1.5 }}>
+            <Typography sx={{ fontSize: '0.6875rem', color: '#6B7280', mt: 0.5, lineHeight: 1.5 }}>
               Skip bets with BetBCK odds outside this range. Avoids very short favourites and long shots.
             </Typography>
           </Box>
@@ -356,10 +358,10 @@ function AutoBetPlacementPanel() {
 
       {/* Status footer */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
-        <Typography sx={{ fontSize: '0.72rem', color: '#555' }}>
+        <Typography sx={{ fontSize: '0.6875rem', color: '#6B7280' }}>
           ⚑ Duplicate protection is always on — each game/market combination is only bet once per session.
         </Typography>
-        <Typography sx={{ fontSize: '0.72rem', color: '#444', fontStyle: 'italic' }}>
+        <Typography sx={{ fontSize: '0.6875rem', color: '#4B5563', fontStyle: 'italic' }}>
           Wager POST endpoint pending — configure once BetBCK form selectors are confirmed.
         </Typography>
       </Box>
