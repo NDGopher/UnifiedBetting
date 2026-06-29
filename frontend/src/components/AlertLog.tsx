@@ -140,8 +140,18 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
           p: 1.25,
           boxShadow: 'inset 0 1px 8px rgba(0,0,0,0.6)',
         }}>
-          {record.steps.map((step, i) => (
-            <Box key={i} sx={{ display: "flex", gap: 0.75, mb: 0.125 }}>
+          {record.steps.map((step, i) => {
+            const isEV = step.tag === "EV";
+            return (
+            <Box key={i} sx={{
+              display: "flex", gap: 0.75, mb: 0.125,
+              ...(isEV && {
+                bgcolor: 'rgba(50,215,75,0.06)',
+                borderRadius: '3px',
+                px: 0.5,
+                mx: -0.5,
+              }),
+            }}>
               {/* [TAG] with dim brackets and light keyword */}
               <Typography sx={{
                 fontSize: "0.75rem",
@@ -151,20 +161,23 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
                 fontFamily: MONO,
                 flexShrink: 0,
               }}>
-                <Box component="span" sx={{ color: '#6B7280' }}>[</Box>
-                <Box component="span" sx={{ color: '#D1D5DB', fontWeight: 500 }}>{step.tag}</Box>
-                <Box component="span" sx={{ color: '#6B7280' }}>]</Box>
+                <Box component="span" sx={{ color: isEV ? 'rgba(50,215,75,0.5)' : '#6B7280' }}>[</Box>
+                <Box component="span" sx={{ color: isEV ? '#32D74B' : '#D1D5DB', fontWeight: 600 }}>{step.tag}</Box>
+                <Box component="span" sx={{ color: isEV ? 'rgba(50,215,75,0.5)' : '#6B7280' }}>]</Box>
               </Typography>
               <Typography sx={{
-                color: "#9CA3AF",
+                color: isEV ? 'rgba(50,215,75,0.85)' : "#9CA3AF",
                 fontSize: "0.75rem",
                 lineHeight: 1.5,
                 wordBreak: "break-word",
                 fontFamily: MONO,
+                fontWeight: isEV ? 500 : 400,
               }}>
                 {step.message}
               </Typography>
             </Box>
+            );
+          })
           ))}
         </Box>
       </Collapse>
