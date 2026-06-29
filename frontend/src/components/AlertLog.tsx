@@ -6,7 +6,6 @@ import {
   Collapse,
   IconButton,
   Paper,
-  Badge,
   Divider,
   Button,
   CircularProgress,
@@ -14,8 +13,8 @@ import {
 import {
   ExpandMore,
   ExpandLess,
-  CheckCircle,
-  Error,
+  CheckCircleOutline,
+  ErrorOutline,
   Search,
   NotInterested,
   HelpOutline,
@@ -47,35 +46,17 @@ interface AlertRecord {
 }
 
 const RESULT_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
-  ev_found:                  { label: "EV Found",       color: "#2E7D32", icon: <CheckCircle sx={{ fontSize: 14 }} /> },
-  found_no_ev:               { label: "No EV",          color: "#FF9800", icon: <Search sx={{ fontSize: 14 }} /> },
-  not_found:                 { label: "Not Found",      color: "#F44336", icon: <Error sx={{ fontSize: 14 }} /> },
-  error:                     { label: "Error",          color: "#F44336", icon: <Error sx={{ fontSize: 14 }} /> },
-  skipped_prop:              { label: "Skipped",        color: "#9E9E9E", icon: <NotInterested sx={{ fontSize: 14 }} /> },
-  dropped_suspect_event_id:  { label: "Wrong Fixture",  color: "#FF5722", icon: <Error sx={{ fontSize: 14 }} /> },
-  completed:                 { label: "Completed",      color: "#2196F3", icon: <CheckCircle sx={{ fontSize: 14 }} /> },
-  pending:                   { label: "Pending",        color: "#9E9E9E", icon: <HelpOutline sx={{ fontSize: 14 }} /> },
+  ev_found:                  { label: "EV Found",      color: "#32D74B", icon: <CheckCircleOutline sx={{ fontSize: 14 }} /> },
+  found_no_ev:               { label: "No EV",         color: "#F4B740", icon: <Search sx={{ fontSize: 14 }} /> },
+  not_found:                 { label: "Not Found",     color: "#EF4444", icon: <ErrorOutline sx={{ fontSize: 14 }} /> },
+  error:                     { label: "Error",         color: "#EF4444", icon: <ErrorOutline sx={{ fontSize: 14 }} /> },
+  skipped_prop:              { label: "Skipped",       color: "#6B7280", icon: <NotInterested sx={{ fontSize: 14 }} /> },
+  dropped_suspect_event_id:  { label: "Wrong Fixture", color: "#EF4444", icon: <ErrorOutline sx={{ fontSize: 14 }} /> },
+  completed:                 { label: "Completed",     color: "#32D74B", icon: <CheckCircleOutline sx={{ fontSize: 14 }} /> },
+  pending:                   { label: "Pending",       color: "#6B7280", icon: <HelpOutline sx={{ fontSize: 14 }} /> },
 };
 
-const TAG_COLORS: Record<string, string> = {
-  "ALERT IN":    "#2196F3",
-  "SWORDFISH":   "#00BCD4",
-  "SEARCH TERM": "#9E9E9E",
-  "SEARCH":      "#9E9E9E",
-  "MATCH":       "#FF9800",
-  "FOUND":       "#2E7D32",
-  "ORIENT":      "#FFB300",
-  "BCK DATE":    "#78909C",
-  "NOT FOUND":   "#F44336",
-  "CLOSEST":     "#FF6F00",
-  "ODDS":        "#9E9E9E",
-  "EV":          "#4CAF50",
-  "ERROR":       "#F44336",
-  "WARNING":     "#FF5722",
-  "SKIP":        "#9E9E9E",
-  "INFO":        "#9E9E9E",
-};
-
+const MONO = '"JetBrains Mono", "Fira Code", "Consolas", monospace';
 const PAGE_SIZE = 20;
 
 function AlertEntry({ record, historical }: { record: AlertRecord; historical?: boolean }) {
@@ -90,21 +71,26 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
   return (
     <Box
       sx={{
-        borderLeft: `3px solid ${cfg.color}`,
-        pl: 1.5,
-        mb: 1,
+        pl: 0,
+        mb: 0.5,
         cursor: "pointer",
-        opacity: historical ? 0.75 : 1,
+        opacity: historical ? 0.65 : 1,
+        borderRadius: '4px',
+        '&:hover': { bgcolor: 'rgba(255,255,255,0.02)' },
       }}
       onClick={() => setExpanded(v => !v)}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, py: 0.5 }}>
-        <Box sx={{ color: cfg.color, display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1, py: 0.5, px: 0.5 }}>
+        {/* Status icon — muted toned color, no left border */}
+        <Box sx={{ color: cfg.color, display: "flex", alignItems: "center", flexShrink: 0 }}>
           {cfg.icon}
         </Box>
-        <Typography variant="body2" sx={{ color: "#E0E0E0", fontWeight: 500, flexGrow: 1, fontSize: "0.8rem" }}>
+
+        <Typography sx={{ color: "#D1D5DB", fontWeight: 500, flexGrow: 1, fontSize: "0.8rem", lineHeight: 1.3, fontFamily: MONO }}>
           {matchup}
         </Typography>
+
+        {/* EV badges — flat bg, green text only */}
         {positiveEvs.length > 0 && (
           <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
             {positiveEvs.map((e, i) => (
@@ -112,51 +98,71 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
                 key={i}
                 label={`+${e.ev_pct.toFixed(1)}% ${e.market}`}
                 size="small"
-                sx={{ fontSize: "0.65rem", height: 18, backgroundColor: "rgba(46,125,50,0.2)", color: "#4CAF50" }}
+                sx={{
+                  fontSize: "0.65rem", height: 18,
+                  backgroundColor: "rgba(255,255,255,0.05)",
+                  color: "#32D74B",
+                  border: "none",
+                  fontFamily: MONO,
+                }}
               />
             ))}
           </Box>
         )}
+
+        {/* Status badge — flat bg, colored text only, no border */}
         <Chip
           label={cfg.label}
           size="small"
           sx={{
             fontSize: "0.65rem",
             height: 18,
-            backgroundColor: `${cfg.color}22`,
+            backgroundColor: "rgba(255,255,255,0.05)",
             color: cfg.color,
-            border: `1px solid ${cfg.color}44`,
+            border: "none",
+            fontFamily: MONO,
           }}
         />
-        <Typography variant="caption" sx={{ color: "#666", fontSize: "0.7rem", whiteSpace: "nowrap" }}>
+
+        <Typography sx={{ color: "#4B5563", fontSize: "0.68rem", whiteSpace: "nowrap", fontFamily: MONO }}>
           {ts}
         </Typography>
-        <IconButton size="small" sx={{ p: 0, color: "#666" }}>
-          {expanded ? <ExpandLess sx={{ fontSize: 16 }} /> : <ExpandMore sx={{ fontSize: 16 }} />}
+        <IconButton size="small" sx={{ p: 0, color: "#4B5563" }}>
+          {expanded ? <ExpandLess sx={{ fontSize: 14 }} /> : <ExpandMore sx={{ fontSize: 14 }} />}
         </IconButton>
       </Box>
 
+      {/* ── Expanded console ─────────────────────────────────────────── */}
       <Collapse in={expanded}>
-        <Box sx={{ mt: 0.5, mb: 1, pl: 0.5 }}>
+        <Box sx={{
+          mx: 0.5, mb: 0.75,
+          bgcolor: '#0A0A0A',
+          borderRadius: '6px',
+          p: 1.25,
+          boxShadow: 'inset 0 1px 8px rgba(0,0,0,0.6)',
+        }}>
           {record.steps.map((step, i) => (
-            <Box key={i} sx={{ display: "flex", gap: 1, mb: 0.25 }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: TAG_COLORS[step.tag] || "#9E9E9E",
-                  fontWeight: 600,
-                  fontSize: "0.68rem",
-                  minWidth: 72,
-                  whiteSpace: "nowrap",
-                  fontFamily: "monospace",
-                }}
-              >
-                [{step.tag}]
+            <Box key={i} sx={{ display: "flex", gap: 0.75, mb: 0.125 }}>
+              {/* [TAG] with dim brackets and light keyword */}
+              <Typography sx={{
+                fontSize: "0.75rem",
+                lineHeight: 1.5,
+                whiteSpace: "nowrap",
+                minWidth: 80,
+                fontFamily: MONO,
+                flexShrink: 0,
+              }}>
+                <Box component="span" sx={{ color: '#6B7280' }}>[</Box>
+                <Box component="span" sx={{ color: '#D1D5DB', fontWeight: 500 }}>{step.tag}</Box>
+                <Box component="span" sx={{ color: '#6B7280' }}>]</Box>
               </Typography>
-              <Typography
-                variant="caption"
-                sx={{ color: "#B0B0B0", fontSize: "0.68rem", lineHeight: 1.4, wordBreak: "break-word" }}
-              >
+              <Typography sx={{
+                color: "#9CA3AF",
+                fontSize: "0.75rem",
+                lineHeight: 1.5,
+                wordBreak: "break-word",
+                fontFamily: MONO,
+              }}>
                 {step.message}
               </Typography>
             </Box>
@@ -213,24 +219,18 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
           }
         } catch {}
       };
-      es.onerror = () => {
-        // EventSource auto-reconnects
-      };
+      es.onerror = () => {};
     }
 
     connect();
-    return () => {
-      es?.close();
-    };
+    return () => { es?.close(); };
   }, [addRecord]);
 
   const visibleRecords = allRecords.slice(0, visibleCount);
   const hasMore = visibleCount < allRecords.length;
   const positiveCount = allRecords.filter(r => r.result === "ev_found").length;
 
-  const handleLoadMore = () => {
-    setVisibleCount(prev => prev + PAGE_SIZE);
-  };
+  const handleLoadMore = () => setVisibleCount(prev => prev + PAGE_SIZE);
 
   const handleClearLog = useCallback(async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -253,6 +253,7 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
         border: "1px solid rgba(255,255,255,0.06)",
       }}
     >
+      {/* ── Header ────────────────────────────────────────────────────── */}
       <Box
         sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer", mb: panelOpen ? 1.5 : 0 }}
         onClick={() => setPanelOpen(v => !v)}
@@ -261,11 +262,21 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
         <Typography sx={{ color: "#9CA3AF", fontWeight: 600, flexGrow: 1, fontSize: "0.6875rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
           Alert Log
         </Typography>
+
+        {/* Total count badge — neutral */}
         {allRecords.length > 0 && (
-          <Badge badgeContent={allRecords.length} color="primary" sx={{ mr: 1 }}>
-            <Box />
-          </Badge>
+          <Box sx={{
+            px: 0.875, py: 0.1,
+            bgcolor: 'rgba(255,255,255,0.05)',
+            borderRadius: '4px',
+            fontSize: '0.65rem', color: '#6B7280',
+            fontFamily: MONO, lineHeight: 1.6,
+          }}>
+            {allRecords.length}
+          </Box>
         )}
+
+        {/* EV hit count badge — neutral bg, green text */}
         {positiveCount > 0 && (
           <Chip
             label={`${positiveCount} EV`}
@@ -273,39 +284,41 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
             sx={{
               fontSize: "0.65rem",
               height: 18,
-              backgroundColor: "rgba(46,125,50,0.2)",
-              color: "#4CAF50",
-              border: "1px solid rgba(46,125,50,0.4)",
-              mr: 0.5,
+              backgroundColor: "rgba(255,255,255,0.05)",
+              color: "#32D74B",
+              border: "none",
+              fontFamily: MONO,
             }}
           />
         )}
-        <Typography variant="caption" sx={{ color: "#555", fontSize: "0.7rem", mr: 0.5 }}>
+
+        <Typography sx={{ color: "#4B5563", fontSize: "0.68rem", mr: 0.5, fontFamily: MONO }}>
           {allRecords.length === 0 ? "waiting for alerts..." : `${allRecords.length} alerts`}
         </Typography>
+
         {allRecords.length > 0 && (
           <Button
             size="small"
-            startIcon={clearing ? <CircularProgress size={10} sx={{ color: "#F44336" }} /> : <DeleteSweep sx={{ fontSize: 14 }} />}
+            startIcon={clearing ? <CircularProgress size={10} sx={{ color: "#EF4444" }} /> : <DeleteSweep sx={{ fontSize: 13 }} />}
             onClick={handleClearLog}
             disabled={clearing}
             sx={{
               fontSize: "0.65rem",
-              color: "#555",
+              color: "#4B5563",
               textTransform: "none",
               minWidth: "auto",
               px: 0.75,
               py: 0.25,
               mr: 0.5,
-              border: "1px solid rgba(244,67,54,0.2)",
+              border: "1px solid rgba(255,255,255,0.07)",
               borderRadius: 1,
-              "&:hover": { color: "#F44336", borderColor: "rgba(244,67,54,0.5)", bgcolor: "rgba(244,67,54,0.06)" },
+              "&:hover": { color: "#EF4444", borderColor: "rgba(239,68,68,0.35)", bgcolor: "rgba(239,68,68,0.05)" },
             }}
           >
             Clear
           </Button>
         )}
-        <IconButton size="small" sx={{ p: 0, color: "#555" }}>
+        <IconButton size="small" sx={{ p: 0, color: "#4B5563" }}>
           {panelOpen ? <ExpandLess sx={{ fontSize: 16 }} /> : <ExpandMore sx={{ fontSize: 16 }} />}
         </IconButton>
       </Box>
@@ -315,12 +328,12 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
         {loadingHistory && allRecords.length === 0 ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <CircularProgress size={12} sx={{ color: "#555" }} />
-            <Typography variant="caption" sx={{ color: "#555", fontSize: "0.75rem" }}>
+            <Typography sx={{ color: "#555", fontSize: "0.75rem", fontFamily: MONO }}>
               Loading alert history...
             </Typography>
           </Box>
         ) : allRecords.length === 0 ? (
-          <Typography variant="caption" sx={{ color: "#555", fontSize: "0.75rem" }}>
+          <Typography sx={{ color: "#4B5563", fontSize: "0.75rem", fontFamily: MONO }}>
             No alerts processed yet. Load the POD Chrome Extension and open pinnacleoddsdropper.com to start.
           </Typography>
         ) : (
@@ -336,13 +349,14 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
               <Box sx={{ textAlign: "center", pt: 1 }}>
                 <Button
                   size="small"
-                  startIcon={<History sx={{ fontSize: 14 }} />}
+                  startIcon={<History sx={{ fontSize: 13 }} />}
                   onClick={e => { e.stopPropagation(); handleLoadMore(); }}
                   sx={{
-                    fontSize: "0.7rem",
-                    color: "#666",
+                    fontSize: "0.68rem",
+                    color: "#4B5563",
                     textTransform: "none",
-                    "&:hover": { color: "#999" },
+                    fontFamily: MONO,
+                    "&:hover": { color: "#9CA3AF" },
                   }}
                 >
                   Load more ({allRecords.length - visibleCount} remaining)
