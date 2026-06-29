@@ -104,7 +104,7 @@ const modernTheme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: 500,
-          borderRadius: 8,
+          borderRadius: '6px',
           textTransform: "none",
           letterSpacing: "0.02em",
           padding: "8px 16px",
