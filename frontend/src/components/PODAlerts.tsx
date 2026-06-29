@@ -670,7 +670,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                         )}
                                       </Typography>
                                     </Tooltip>
-                                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 500, color: '#F5F5F5', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>{selectionDisplay}</Typography>
+                                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 400, color: '#E5E7EB', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>{selectionDisplay}</Typography>
                                   </Box>
                                 </TableCell>
                                 <TableCell align="center" sx={{ fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums', fontWeight: 400, fontSize: '0.8125rem', color: '#9CA3AF' }}>
@@ -705,7 +705,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                       alignItems: 'center',
                                       gap: 0.5,
                                       borderRadius: 1,
-                                      color: isPositiveEV ? '#32D74B' : '#6B7280',
+                                      color: isPositiveEV ? '#32D74B' : '#9CA3AF',
                                       textTransform: 'none'
                                     }}
                                   >
