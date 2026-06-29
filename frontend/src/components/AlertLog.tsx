@@ -344,7 +344,13 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
             No alerts processed yet. Load the POD Chrome Extension and open pinnacleoddsdropper.com to start.
           </Typography>
         ) : (
-          <Box sx={{ maxHeight: 320, overflowY: "auto" }}>
+          <Box sx={{
+            maxHeight: 180,
+            overflowY: "auto",
+            '&::-webkit-scrollbar': { width: 4 },
+            '&::-webkit-scrollbar-track': { bgcolor: '#151515' },
+            '&::-webkit-scrollbar-thumb': { bgcolor: '#333333', borderRadius: '2px' },
+          }}>
             {visibleRecords.map((rec, i) => (
               <AlertEntry
                 key={`${rec.event_id}-${rec.timestamp}-${i}`}
