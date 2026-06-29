@@ -86,7 +86,7 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
           {cfg.icon}
         </Box>
 
-        <Typography sx={{ color: "#D1D5DB", fontWeight: 500, flexGrow: 1, fontSize: "0.8rem", lineHeight: 1.3, fontFamily: MONO }}>
+        <Typography sx={{ color: "#D1D5DB", fontWeight: 600, flexGrow: 1, fontSize: "0.8rem", lineHeight: 1.3 }}>
           {matchup}
         </Typography>
 
@@ -120,11 +120,10 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
             backgroundColor: "rgba(255,255,255,0.05)",
             color: cfg.color,
             border: "none",
-            fontFamily: MONO,
           }}
         />
 
-        <Typography sx={{ color: "#4B5563", fontSize: "0.68rem", whiteSpace: "nowrap", fontFamily: MONO }}>
+        <Typography sx={{ color: "#4B5563", fontSize: "0.68rem", whiteSpace: "nowrap" }}>
           {ts}
         </Typography>
         <IconButton size="small" sx={{ p: 0, color: "#4B5563" }}>
@@ -270,7 +269,7 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
             bgcolor: 'rgba(255,255,255,0.05)',
             borderRadius: '4px',
             fontSize: '0.65rem', color: '#6B7280',
-            fontFamily: MONO, lineHeight: 1.6,
+            lineHeight: 1.6,
           }}>
             {allRecords.length}
           </Box>
@@ -287,12 +286,11 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
               backgroundColor: "rgba(255,255,255,0.05)",
               color: "#32D74B",
               border: "none",
-              fontFamily: MONO,
             }}
           />
         )}
 
-        <Typography sx={{ color: "#4B5563", fontSize: "0.68rem", mr: 0.5, fontFamily: MONO }}>
+        <Typography sx={{ color: "#4B5563", fontSize: "0.68rem", mr: 0.5 }}>
           {allRecords.length === 0 ? "waiting for alerts..." : `${allRecords.length} alerts`}
         </Typography>
 
@@ -328,12 +326,12 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
         {loadingHistory && allRecords.length === 0 ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <CircularProgress size={12} sx={{ color: "#555" }} />
-            <Typography sx={{ color: "#555", fontSize: "0.75rem", fontFamily: MONO }}>
+            <Typography sx={{ color: "#555", fontSize: "0.75rem" }}>
               Loading alert history...
             </Typography>
           </Box>
         ) : allRecords.length === 0 ? (
-          <Typography sx={{ color: "#4B5563", fontSize: "0.75rem", fontFamily: MONO }}>
+          <Typography sx={{ color: "#4B5563", fontSize: "0.75rem" }}>
             No alerts processed yet. Load the POD Chrome Extension and open pinnacleoddsdropper.com to start.
           </Typography>
         ) : (
@@ -355,7 +353,6 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
                     fontSize: "0.68rem",
                     color: "#4B5563",
                     textTransform: "none",
-                    fontFamily: MONO,
                     "&:hover": { color: "#9CA3AF" },
                   }}
                 >
