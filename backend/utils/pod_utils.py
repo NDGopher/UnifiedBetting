@@ -612,6 +612,9 @@ def strip_pod_league_suffix(name: str) -> str:
         'International',
         'Friendlies',
         'Friendly',
+        'Club Friendlies',
+        # MMA/combat promotions concatenated to fighter names
+        'Cage Warriors',
     )
     for mw_suffix in _MULTIWORD_SUFFIXES:
         if name.endswith(mw_suffix) and len(name) > len(mw_suffix):

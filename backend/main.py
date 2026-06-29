@@ -755,7 +755,8 @@ async def handle_pod_alert(request: Request):
                 'Asian Games', 'African Games', 'Mediterranean Games', 'Baltic Games',
                 'Nordic Games', 'Balkan Games', 'Caribbean Games', 'Central American Games',
                 'South American Games', 'Pacific Games', 'Indian Ocean Games', 'Arctic Games',
-                'Island Games', 'Microstate Games', 'Small States Games'
+                'Island Games', 'Microstate Games', 'Small States Games',
+                'Club Friendlies', 'Cage Warriors'
             ]
             for suffix in suffixes_to_remove:
                 if name.endswith(suffix):
