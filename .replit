@@ -23,10 +23,6 @@ args = "Backend API"
 task = "workflow.run"
 args = "Start application"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "GitHub Auto-Sync"
-
 [[workflows.workflow]]
 name = "Backend API"
 author = "agent"
@@ -50,17 +46,6 @@ waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
-
-[[workflows.workflow]]
-name = "GitHub Auto-Sync"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python scripts/github_autosync.py"
-
-[workflows.workflow.metadata]
-outputType = "console"
 
 [[ports]]
 localPort = 5000
