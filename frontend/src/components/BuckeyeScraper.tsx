@@ -592,7 +592,7 @@ const BuckeyeScraper: React.FC = () => {
             lineHeight: 1.2,
             bgcolor: pipelineRunning ? 'rgba(50,215,75,0.06)' : 'rgba(255,255,255,0.04)',
             '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.2)', color: '#F5F5F5' },
-            '&.Mui-disabled': { color: '#32D74B', borderColor: 'rgba(50,215,75,0.3)', opacity: 1 },
+            '&.Mui-disabled': { color: '#32D74B', borderColor: 'rgba(50,215,75,0.3)', opacity: 1, borderRadius: '6px' },
           }}
           onClick={handleRunCalculations}
         >
@@ -754,16 +754,27 @@ const BuckeyeScraper: React.FC = () => {
       )}
       {loading && <CircularProgress sx={{ mb: 2 }} />}
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {message && (
+      {message && !pipelineRunning && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 1.5 }}>
           <Box component="span" sx={{ color: '#32D74B', fontSize: '0.75rem', lineHeight: 1 }}>✓</Box>
           <Typography sx={{ color: '#9CA3AF', fontSize: '0.75rem' }}>{message}</Typography>
         </Box>
       )}
       {pipelineRunning && (
-        <Alert severity="info" sx={{ mb: 2 }}>
-          Streaming pipeline is running... Results will appear in real-time as matches are found.
-        </Alert>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+          <Box sx={{
+            '@keyframes buckeye-pulse': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0.15 },
+            },
+            width: 6, height: 6, borderRadius: '50%', bgcolor: '#32D74B',
+            animation: 'buckeye-pulse 1.5s ease-in-out infinite',
+            flexShrink: 0,
+          }} />
+          <Typography sx={{ color: '#9CA3AF', fontSize: '0.75rem' }}>
+            Streaming pipeline active{selectedSports.length > 0 ? ` (${selectedSports.length} sport${selectedSports.length !== 1 ? 's' : ''})` : ' (all sports)'}... awaiting real-time matches.
+          </Typography>
+        </Box>
       )}
       <TableContainer sx={{ 
         background: 'transparent', 
