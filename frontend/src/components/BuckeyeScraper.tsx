@@ -531,7 +531,7 @@ const BuckeyeScraper: React.FC = () => {
           sx={{
             color: '#9CA3AF',
             borderColor: 'rgba(255,255,255,0.1)',
-            borderRadius: 1.5,
+            borderRadius: '6px',
             fontWeight: 500,
             px: 2,
             py: 0.5,
@@ -559,7 +559,7 @@ const BuckeyeScraper: React.FC = () => {
           sx={{
             color: showSportSelection ? '#F5F5F5' : '#9CA3AF',
             borderColor: showSportSelection ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)',
-            borderRadius: 1.5,
+            borderRadius: '6px',
             fontWeight: 500,
             px: 2,
             py: 0.5,
@@ -581,7 +581,7 @@ const BuckeyeScraper: React.FC = () => {
           sx={{
             color: pipelineRunning ? '#32D74B' : '#9CA3AF',
             borderColor: pipelineRunning ? 'rgba(50,215,75,0.3)' : 'rgba(255,255,255,0.1)',
-            borderRadius: 1.5,
+            borderRadius: '6px',
             fontWeight: 500,
             px: 2,
             py: 0.5,
@@ -604,7 +604,7 @@ const BuckeyeScraper: React.FC = () => {
           sx={{
             color: '#9CA3AF',
             borderColor: 'rgba(255,255,255,0.1)',
-            borderRadius: 1.5,
+            borderRadius: '6px',
             fontWeight: 500,
             px: 2,
             py: 0.5,
@@ -754,7 +754,12 @@ const BuckeyeScraper: React.FC = () => {
       )}
       {loading && <CircularProgress sx={{ mb: 2 }} />}
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
+      {message && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 1.5 }}>
+          <Box component="span" sx={{ color: '#32D74B', fontSize: '0.75rem', lineHeight: 1 }}>✓</Box>
+          <Typography sx={{ color: '#9CA3AF', fontSize: '0.75rem' }}>{message}</Typography>
+        </Box>
+      )}
       {pipelineRunning && (
         <Alert severity="info" sx={{ mb: 2 }}>
           Streaming pipeline is running... Results will appear in real-time as matches are found.
