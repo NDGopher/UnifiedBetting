@@ -542,8 +542,8 @@ async def event_alert_worker(event_id):
                                 has_positive_ev = any(float(b.get("ev", "0").replace('%','')) > 0 for b in realistic_bets)
                                 betbck_data["potential_bets_analyzed"] = realistic_bets
 
-                                if not betbck_data or not realistic_bets:
-                                    logger.warning(f"[PerEventQueue] No valid betting data for event {event_id}, skipping broadcast")
+                                if not betbck_data:
+                                    logger.warning(f"[PerEventQueue] No BetBCK data for event {event_id}, skipping broadcast")
                                 else:
                                     cleaned_payload = payload.copy()
                                     cleaned_payload["homeTeam"] = strip_team_name_for_display(payload.get("homeTeam", ""))
