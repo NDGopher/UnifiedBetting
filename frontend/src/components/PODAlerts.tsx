@@ -524,20 +524,14 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
               return (
                 <Grid item xs={12} sm={12} md={6} key={eventId} sx={{ maxWidth: 900, width: '100%' }}>
                   <Paper sx={{ 
-                    p: 3, 
-                    mb: 3, 
-                    borderRadius: 2, 
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                    border: '1px solid rgba(46, 125, 50, 0.2)',
-                    background: 'rgba(26, 26, 26, 0.8)',
-                    backdropFilter: 'blur(20px)',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      boxShadow: '0 8px 32px rgba(46, 125, 50, 0.15)',
-                      transform: 'translateY(-2px)',
-                    }
+                    p: 2,
+                    mb: 2,
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: '#151515',
+                    boxShadow: 'none',
                   }} className="event-container">
-                    <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3}>
+                    <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
                       <Box sx={{ flex: 1, minWidth: 0 }}>
                         <Typography variant="subtitle1" sx={{ 
                           color: '#FFFFFF', 
@@ -599,48 +593,23 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                         <TableHead>
                           <TableRow sx={{ 
                             '& .MuiTableCell-root': { 
-                              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                              py: 1.5
+                              borderBottom: '1px solid rgba(255,255,255,0.06)',
+                              py: 1,
+                              color: '#6B7280',
+                              fontWeight: 600,
+                              fontSize: '0.6875rem',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.07em',
+                              bgcolor: 'rgba(255,255,255,0.02)',
                             }
                           }}>
-                            <TableCell sx={{ 
-                              fontWeight: 600, 
-                              textAlign: 'left', 
-                              pl: 0, 
-                              whiteSpace: 'normal',
-                              color: '#B0B0B0',
-                              fontSize: '0.875rem'
-                            }}>
+                            <TableCell sx={{ textAlign: 'left', pl: 0, whiteSpace: 'normal' }}>
                               Market / Selection
                             </TableCell>
-                            <TableCell align="center" sx={{ 
-                              fontWeight: 600,
-                              color: '#B0B0B0',
-                              fontSize: '0.875rem'
-                            }}>
-                              Line
-                            </TableCell>
-                            <TableCell align="center" sx={{ 
-                              fontWeight: 600,
-                              color: '#B0B0B0',
-                              fontSize: '0.875rem'
-                            }}>
-                              Pinnacle NVP
-                            </TableCell>
-                            <TableCell align="center" sx={{ 
-                              fontWeight: 600,
-                              color: '#B0B0B0',
-                              fontSize: '0.875rem'
-                            }}>
-                              BetBCK Odds
-                            </TableCell>
-                            <TableCell align="center" sx={{ 
-                              fontWeight: 600,
-                              color: '#B0B0B0',
-                              fontSize: '0.875rem'
-                            }}>
-                              EV %
-                            </TableCell>
+                            <TableCell align="center">Line</TableCell>
+                            <TableCell align="center">Pinnacle NVP</TableCell>
+                            <TableCell align="center">BetBCK Odds</TableCell>
+                            <TableCell align="center">EV %</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -692,37 +661,44 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                       placement="top"
                                       disableHoverListener={!market.pinnacle_period}
                                     >
-                                      <Typography variant="caption" sx={{ color: '#7e9fc5', display: 'block', fontSize: '0.7rem', lineHeight: 1.2, cursor: market.pinnacle_period ? 'help' : 'default' }}>
+                                      <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', fontSize: '0.68rem', lineHeight: 1.2, cursor: market.pinnacle_period ? 'help' : 'default' }}>
                                         {market.market}
                                         {market.pinnacle_period && market.pinnacle_period !== 'num_0' && (
-                                          <span style={{ marginLeft: 4, color: '#64b5f6' }}>●</span>
+                                          <span style={{ marginLeft: 4, color: '#6B7280' }}>●</span>
                                         )}
                                       </Typography>
                                     </Tooltip>
-                                    <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>{selectionDisplay}</Typography>
+                                    <Typography sx={{ fontSize: '0.875rem', fontWeight: 500, color: '#F5F5F5', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>{selectionDisplay}</Typography>
                                   </Box>
                                 </TableCell>
-                                <TableCell align="center">{market.market.toLowerCase() === 'total' ? formatTotal(lineDisplay) : lineDisplay}</TableCell>
+                                <TableCell align="center" sx={{ fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums', fontWeight: 400, fontSize: '0.8125rem', color: '#9CA3AF' }}>
+                                  {market.market.toLowerCase() === 'total' ? formatTotal(lineDisplay) : lineDisplay}
+                                </TableCell>
                                 <TableCell 
                                   align="center"
                                   className={nvpFlash[`${eventId}_${market.market}_${market.selection}_${market.line}`] ? 'nvp-flash' : ''}
+                                  sx={{ fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums', fontWeight: 400, fontSize: '0.8125rem', color: '#9CA3AF' }}
                                 >
                                   {market.pinnacle_nvp && !market.pinnacle_nvp.startsWith('-') && !market.pinnacle_nvp.startsWith('+') ? `+${market.pinnacle_nvp}` : market.pinnacle_nvp}
                                 </TableCell>
-                                <TableCell align="center">{market.betbck_odds}</TableCell>
+                                <TableCell align="center" sx={{ fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums', fontWeight: 400, fontSize: '0.8125rem', color: '#9CA3AF' }}>
+                                  {market.betbck_odds}
+                                </TableCell>
                                 <TableCell align="center">
                                   <Button
                                     variant="text"
                                     color={isPositiveEV ? 'success' : 'inherit'}
                                     onClick={() => handleEVClick(event, market)}
                                     sx={{
-                                      fontWeight: isBestEV ? 700 : isPositiveEV ? 600 : 500,
+                                      fontWeight: isBestEV ? 700 : 400,
+                                      fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace',
+                                      fontVariantNumeric: 'tabular-nums',
                                       '&:hover': {
                                         background: isBestEV ? 'rgba(46, 125, 50, 0.15)' : isPositiveEV ? 'rgba(46, 125, 50, 0.08)' : 'rgba(255, 255, 255, 0.04)'
                                       },
                                       minWidth: 0,
                                       padding: '4px 8px',
-                                      fontSize: '0.875rem',
+                                      fontSize: '0.8125rem',
                                       display: 'flex',
                                       alignItems: 'center',
                                       gap: 0.5,
