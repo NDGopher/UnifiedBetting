@@ -155,15 +155,15 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
     }
   }, [lastMessage]);
 
-  // Polling fallback: only poll if not connected to WebSocket
-  const fetchEvents = useCallback(async () => {
+  // Polling fallback + safety net
+  const fetchEvents = useCallback(async (silent = false) => {
     try {
-      setError(null);
+      if (!silent) setError(null);
       const res = await fetch(`${API_BASE}/get_active_events_data`);
       if (res.ok) {
         const data = await res.json() as { [eventId: string]: EventData };
         setEvents(data);
-        // Un-dismiss events that the backend still considers active
+        // Un-dismiss any events the backend still considers active
         setDismissed(prev => {
           const next = new Set(prev);
           Object.keys(data).forEach(id => next.delete(id));
@@ -173,25 +173,37 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
         setRetryCount(0);
         setLoading(false);
       } else {
-        const errorText = await res.text();
-        throw new Error(`Failed to fetch events data: ${errorText}`);
+        if (!silent) {
+          const errorText = await res.text();
+          throw new Error(`Failed to fetch events data: ${errorText}`);
+        }
       }
     } catch (e) {
-      const newRetryCount = retryCount + 1;
-      setRetryCount(newRetryCount);
-      if (newRetryCount >= MAX_RETRIES) {
-        setError(`Error fetching events data: ${e instanceof Error ? e.message : 'Unknown error'}`);
-        setLoading(false);
+      if (!silent) {
+        const newRetryCount = retryCount + 1;
+        setRetryCount(newRetryCount);
+        if (newRetryCount >= MAX_RETRIES) {
+          setError(`Error fetching events data: ${e instanceof Error ? e.message : 'Unknown error'}`);
+          setLoading(false);
+        }
       }
     }
   }, [retryCount]);
 
+  // Fast poll when WebSocket is disconnected
   useEffect(() => {
-    if (isConnected) return; // Don't poll if WebSocket is connected
+    if (isConnected) return;
     fetchEvents();
     const poller = setInterval(fetchEvents, POLL_INTERVAL);
     return () => clearInterval(poller);
   }, [fetchEvents, isConnected]);
+
+  // Safety net: always sync from backend every 30s regardless of WS state.
+  // Catches any alert card that was missed due to a dropped WS/SSE message.
+  useEffect(() => {
+    const safetyPoll = setInterval(() => fetchEvents(true), 30_000);
+    return () => clearInterval(safetyPoll);
+  }, [fetchEvents]);
 
   // NVP flash effect
   useEffect(() => {
