@@ -5,12 +5,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { AppBar, Toolbar, Slider, Switch, TextField, Divider, InputAdornment, Select, MenuItem, FormControl, InputLabel, Chip } from "@mui/material";
-import { 
-  Calculate, 
-  NotificationsActive,
-  SportsEsports,
-  AutoMode
-} from "@mui/icons-material";
 import PODAlerts from "./components/PODAlerts";
 import EVCalculator from "./components/EVCalculator";
 // import PropBuilder from "./components/PropBuilder"; // Props disabled for now
@@ -229,7 +223,7 @@ function AutoBetPlacementPanel() {
     <Box sx={{ pt: 5, pb: 5, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-        <AutoMode sx={{ fontSize: 16, color: '#9CA3AF' }} />
+        <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>AB</Box>
         <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
           Auto Bet Placement
         </Typography>
@@ -466,7 +460,7 @@ function App() {
             {/* POD Alerts Section */}
             <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                <NotificationsActive sx={{ fontSize: 16, color: "#9CA3AF" }} />
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>PA</Box>
                 <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
                   POD Alerts
                 </Typography>
@@ -488,7 +482,7 @@ function App() {
             {/* EV Bets Section */}
             <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                <SportsEsports sx={{ fontSize: 16, color: "#9CA3AF" }} />
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>EV</Box>
                 <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
                   EV Bets
                 </Typography>
@@ -504,7 +498,7 @@ function App() {
             {/* EV Calculator Section */}
             <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 8 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                <Calculate sx={{ fontSize: 16, color: "#9CA3AF" }} />
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.06em', lineHeight: 1.6, userSelect: 'none' }}>EVC</Box>
                 <Typography component="h2" sx={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9CA3AF' }}>
                   EV Calculator
                 </Typography>
