@@ -848,16 +848,17 @@ const BuckeyeScraper: React.FC = () => {
                     '& .MuiTableCell-root': {
                       borderBottom: '1px solid rgba(255,255,255,0.04)',
                       py: 1.25,
+                      verticalAlign: 'middle',
                     }
                   }}
                 >
-                  <TableCell sx={{ color: '#F5F5F5', fontWeight: 600, fontSize: '0.9375rem' }}>
+                  <TableCell sx={{ color: '#F5F5F5', fontWeight: 500, fontSize: '0.875rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>
                     {row.matchup}
                   </TableCell>
-                  <TableCell sx={{ color: '#9CA3AF', fontWeight: 400, fontSize: '0.8125rem' }}>
+                  <TableCell sx={{ color: '#9CA3AF', fontWeight: 400, fontSize: '0.8125rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>
                     {row.league}
                   </TableCell>
-                  <TableCell sx={{ color: '#F5F5F5', fontWeight: 500, fontSize: '0.875rem' }}>
+                  <TableCell sx={{ color: '#F5F5F5', fontWeight: 500, fontSize: '0.8125rem', fontFamily: '"Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif' }}>
                     {row.bet}
                   </TableCell>
                   <TableCell align="center" sx={{ color: '#9CA3AF', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
