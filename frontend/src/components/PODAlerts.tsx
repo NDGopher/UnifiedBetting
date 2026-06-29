@@ -59,7 +59,7 @@ interface EventData {
 }
 
 const POLL_INTERVAL = 2000; // 2 seconds for fast POD alert updates
-const NEGATIVE_EV_DISMISS_MS = 60 * 1000; // 1 minute for negative EV alerts
+const NEGATIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for negative EV alerts (match positive)
 const POSITIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for positive EV alerts
 const MAX_RETRIES = 3; // Maximum number of retries before showing error
 
