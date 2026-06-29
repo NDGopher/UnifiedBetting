@@ -3,7 +3,7 @@ import { Box, Button, Typography, Table, TableBody, TableCell, TableContainer, T
 import MatchingStats from './MatchingStats';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Analytics, ExpandMore, ExpandLess, TuneRounded } from '@mui/icons-material';
+import { Analytics, ExpandMore, ExpandLess, TuneRounded, SearchOff, FilterAlt } from '@mui/icons-material';
 import { API_BASE } from '../utils/apiConfig';
 dayjs.extend(relativeTime);
 
@@ -510,15 +510,15 @@ const BuckeyeScraper: React.FC = () => {
   });
 
   const sliderSx = {
-    color: '#2E7D32',
-    '& .MuiSlider-thumb': { width: 14, height: 14, bgcolor: '#2E7D32' },
-    '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.15)' },
-    '& .MuiSlider-track': { bgcolor: '#2E7D32', border: 'none' },
+    color: 'rgba(255,255,255,0.5)',
+    '& .MuiSlider-thumb': { width: 12, height: 12, bgcolor: '#F5F5F5', boxShadow: 'none', '&:hover': { boxShadow: '0 0 0 6px rgba(255,255,255,0.08)' } },
+    '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
+    '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
     '& .MuiSlider-valueLabel': {
       bgcolor: '#1a1a1a',
-      border: '1px solid rgba(46,125,50,0.5)',
-      fontSize: '0.75rem',
-      color: '#2E7D32',
+      border: '1px solid rgba(255,255,255,0.12)',
+      fontSize: '0.7rem',
+      color: '#F5F5F5',
     },
   };
 
@@ -529,27 +529,25 @@ const BuckeyeScraper: React.FC = () => {
           variant="outlined"
           size="small"
           sx={{
-            color: '#2E7D32',
-            borderColor: '#2E7D32',
-            borderRadius: 2,
+            color: '#9CA3AF',
+            borderColor: 'rgba(255,255,255,0.1)',
+            borderRadius: 1.5,
             fontWeight: 500,
             px: 2,
             py: 0.5,
-            fontSize: '0.875rem',
+            fontSize: '0.75rem',
             minWidth: 'auto',
-            height: 36,
+            height: 32,
             textTransform: 'none',
             lineHeight: 1.2,
-            '&:hover': {
-              bgcolor: 'rgba(46, 125, 50, 0.1)',
-              borderColor: '#2E7D32',
-            },
+            bgcolor: 'rgba(255,255,255,0.04)',
+            '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.2)', color: '#F5F5F5' },
           }}
           onClick={handleGetEventIds}
         >
           Get Event IDs
           {eventIdsLastRun && (
-            <Box component="span" sx={{ ml: 0.75, fontSize: '0.7rem', color: 'rgba(46,125,50,0.7)', fontWeight: 400 }}>
+            <Box component="span" sx={{ ml: 0.75, fontSize: '0.65rem', color: '#666', fontWeight: 400 }}>
               ({dayjs(eventIdsLastRun).fromNow()})
             </Box>
           )}
@@ -559,69 +557,64 @@ const BuckeyeScraper: React.FC = () => {
           size="small"
           onClick={() => setShowSportSelection(!showSportSelection)}
           sx={{
-            color: showSportSelection ? '#2E7D32' : '#B0B0B0',
-            borderColor: showSportSelection ? '#2E7D32' : 'rgba(255, 255, 255, 0.2)',
-            borderRadius: 2,
+            color: showSportSelection ? '#F5F5F5' : '#9CA3AF',
+            borderColor: showSportSelection ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)',
+            borderRadius: 1.5,
             fontWeight: 500,
             px: 2,
             py: 0.5,
-            fontSize: '0.875rem',
+            fontSize: '0.75rem',
             minWidth: 'auto',
-            height: 36,
+            height: 32,
             textTransform: 'none',
             lineHeight: 1.2,
-            '&:hover': {
-              bgcolor: 'rgba(46, 125, 50, 0.1)',
-              borderColor: '#2E7D32',
-            },
+            bgcolor: showSportSelection ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)',
+            '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.2)', color: '#F5F5F5' },
           }}
         >
-          {showSportSelection ? <ExpandLess /> : <ExpandMore />} Select Sports
+          {showSportSelection ? <ExpandLess sx={{ fontSize: 16 }} /> : <ExpandMore sx={{ fontSize: 16 }} />} Select Sports
         </Button>
         <Button
           variant="outlined"
           size="small"
           disabled={pipelineRunning}
           sx={{
-            color: pipelineRunning ? '#2E7D32' : (selectedSports.length > 0 ? '#2E7D32' : '#B0B0B0'),
-            borderColor: pipelineRunning ? '#2E7D32' : (selectedSports.length > 0 ? '#2E7D32' : 'rgba(255, 255, 255, 0.2)'),
-            borderRadius: 2,
+            color: pipelineRunning ? '#32D74B' : '#9CA3AF',
+            borderColor: pipelineRunning ? 'rgba(50,215,75,0.3)' : 'rgba(255,255,255,0.1)',
+            borderRadius: 1.5,
             fontWeight: 500,
             px: 2,
             py: 0.5,
-            fontSize: '0.875rem',
+            fontSize: '0.75rem',
             minWidth: 'auto',
-            height: 36,
+            height: 32,
             textTransform: 'none',
             lineHeight: 1.2,
-            '&:hover': {
-              bgcolor: pipelineRunning ? 'rgba(46, 125, 50, 0.1)' : (selectedSports.length > 0 ? 'rgba(46, 125, 50, 0.1)' : 'rgba(255, 255, 255, 0.05)'),
-              borderColor: pipelineRunning ? '#2E7D32' : (selectedSports.length > 0 ? '#2E7D32' : 'rgba(255, 255, 255, 0.3)'),
-            },
+            bgcolor: pipelineRunning ? 'rgba(50,215,75,0.06)' : 'rgba(255,255,255,0.04)',
+            '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.2)', color: '#F5F5F5' },
+            '&.Mui-disabled': { color: '#32D74B', borderColor: 'rgba(50,215,75,0.3)', opacity: 1 },
           }}
           onClick={handleRunCalculations}
         >
-          {pipelineRunning ? 'Running...' : `Buckeye${selectedSports.length > 0 ? ` (${selectedSports.length})` : ''}`}
+          {pipelineRunning ? 'Running…' : `Buckeye${selectedSports.length > 0 ? ` (${selectedSports.length})` : ''}`}
         </Button>
         <Button
           variant="outlined"
           size="small"
           sx={{
-            color: '#B0B0B0',
-            borderColor: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: 2,
+            color: '#9CA3AF',
+            borderColor: 'rgba(255,255,255,0.1)',
+            borderRadius: 1.5,
             fontWeight: 500,
             px: 2,
             py: 0.5,
-            fontSize: '0.875rem',
+            fontSize: '0.75rem',
             minWidth: 'auto',
-            height: 36,
+            height: 32,
             textTransform: 'none',
             lineHeight: 1.2,
-            '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.05)',
-              borderColor: 'rgba(255, 255, 255, 0.3)',
-            },
+            bgcolor: 'rgba(255,255,255,0.04)',
+            '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.2)', color: '#F5F5F5' },
           }}
           onClick={handleRunAceCalculations}
         >
@@ -632,7 +625,7 @@ const BuckeyeScraper: React.FC = () => {
         <Box sx={{ width: '1px', height: 24, bgcolor: 'rgba(255,255,255,0.12)', mx: 0.5 }} />
 
         {/* EV Filter — always inline, no toggle needed */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 1.5, py: 0.5, border: '1px solid rgba(255,255,255,0.12)', borderRadius: 2, height: 36, minWidth: 260 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 1.5, py: 0.5, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 1.5, height: 32, minWidth: 240 }}>
           <TuneRounded sx={{ fontSize: '0.95rem', color: '#B0B0B0', flexShrink: 0 }} />
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0, flex: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -645,7 +638,7 @@ const BuckeyeScraper: React.FC = () => {
                 valueLabelFormat={v => evLabel(v, false)}
                 sx={{ ...sliderSx, py: 0.5, my: 0 }}
               />
-              <Typography sx={{ fontSize: '0.7rem', color: '#2E7D32', width: 28, textAlign: 'right', flexShrink: 0 }}>
+              <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 28, textAlign: 'right', flexShrink: 0 }}>
                 {evLabel(minEv, false)}
               </Typography>
             </Box>
@@ -659,7 +652,7 @@ const BuckeyeScraper: React.FC = () => {
                 valueLabelFormat={v => evLabel(v, true)}
                 sx={{ ...sliderSx, py: 0.5, my: 0 }}
               />
-              <Typography sx={{ fontSize: '0.7rem', color: maxEv >= EV_MAX_SLIDER ? '#777' : '#2E7D32', width: 28, textAlign: 'right', flexShrink: 0 }}>
+              <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 28, textAlign: 'right', flexShrink: 0 }}>
                 {evLabel(maxEv, true)}
               </Typography>
             </Box>
@@ -753,7 +746,7 @@ const BuckeyeScraper: React.FC = () => {
                 {aceMarkets.length > 0 && buckeyeMarkets.length > 0 && (
                   <Box component="span" sx={{ color: '#555', ml: 0.5 }}>({aceMarkets.length} Ace + {buckeyeMarkets.length} Buckeye)</Box>
                 )}
-                {(minEv > 0 || maxEv < EV_MAX_SLIDER || evNext24h) && <Box component="span" sx={{ color: '#2E7D32', ml: 0.5 }}>(filtered)</Box>}
+                {(minEv > 0 || maxEv < EV_MAX_SLIDER || evNext24h) && <Box component="span" sx={{ color: '#9CA3AF', ml: 0.5 }}>(filtered)</Box>}
               </Typography>
             </Box>
           )}
@@ -768,129 +761,82 @@ const BuckeyeScraper: React.FC = () => {
         </Alert>
       )}
       <TableContainer sx={{ 
-        background: 'rgba(26, 26, 26, 0.8)', 
-        borderRadius: 2, 
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        backdropFilter: 'blur(20px)'
+        background: 'transparent', 
+        borderRadius: 1.5, 
+        border: '1px solid rgba(255,255,255,0.06)',
       }}>
         <Table size="small">
           <TableHead>
             <TableRow sx={{
               '& .MuiTableCell-root': {
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                py: 2
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                py: 1.5,
+                bgcolor: 'rgba(255,255,255,0.02)',
               }
             }}>
-              <TableCell sx={{ 
-                color: '#B0B0B0', 
-                fontWeight: 600, 
-                fontSize: '0.875rem' 
-              }}>
-                Matchup
-              </TableCell>
-              <TableCell sx={{ 
-                color: '#B0B0B0', 
-                fontWeight: 600, 
-                fontSize: '0.875rem' 
-              }}>
-                League
-              </TableCell>
-              <TableCell sx={{ 
-                color: '#B0B0B0', 
-                fontWeight: 600, 
-                fontSize: '0.875rem' 
-              }}>
-                Bet
-              </TableCell>
-              <TableCell align="center" sx={{ 
-                color: '#B0B0B0', 
-                fontWeight: 600, 
-                fontSize: '0.875rem' 
-              }}>
-                Book Odds
-              </TableCell>
-              <TableCell align="center" sx={{ 
-                color: '#B0B0B0', 
-                fontWeight: 600, 
-                fontSize: '0.875rem' 
-              }}>
-                Pinnacle NVP
-              </TableCell>
+              {([
+                { label: 'Matchup', align: 'left' as const },
+                { label: 'League', align: 'left' as const },
+                { label: 'Bet', align: 'left' as const },
+                { label: 'Book Odds', align: 'center' as const },
+                { label: 'Pinnacle NVP', align: 'center' as const },
+              ]).map(col => (
+                <TableCell key={col.label} align={col.align} sx={{
+                  color: '#6B7280',
+                  fontWeight: 600,
+                  fontSize: '0.6875rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.07em',
+                }}>
+                  {col.label}
+                </TableCell>
+              ))}
               <TableCell
                 align="center"
-                onClick={() => {
-                  setSortBy('ev');
-                  setSortDir(d => (sortBy === 'ev' && d === 'desc' ? 'asc' : 'desc'));
-                }}
-                sx={{ 
-                  color: '#B0B0B0', 
-                  fontWeight: 600, 
-                  fontSize: '0.875rem', 
-                  cursor: 'pointer', 
-                  userSelect: 'none',
-                  '&:hover': {
-                    color: '#2E7D32'
-                  }
-                }}
+                onClick={() => { setSortBy('ev'); setSortDir(d => (sortBy === 'ev' && d === 'desc' ? 'asc' : 'desc')); }}
+                sx={{ color: sortBy === 'ev' ? '#F5F5F5' : '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em', cursor: 'pointer', userSelect: 'none', '&:hover': { color: '#F5F5F5' } }}
                 title="Sort by EV"
               >
-                EV
+                EV {sortBy === 'ev' ? (sortDir === 'desc' ? '↓' : '↑') : ''}
               </TableCell>
               <TableCell
-                onClick={() => {
-                  setSortBy('start_time');
-                  setSortDir(d => (sortBy === 'start_time' && d === 'desc' ? 'asc' : 'desc'));
-                }}
-                sx={{ 
-                  color: '#B0B0B0', 
-                  fontWeight: 600, 
-                  fontSize: '0.875rem', 
-                  cursor: 'pointer', 
-                  userSelect: 'none',
-                  '&:hover': {
-                    color: '#2E7D32'
-                  }
-                }}
+                onClick={() => { setSortBy('start_time'); setSortDir(d => (sortBy === 'start_time' && d === 'desc' ? 'asc' : 'desc')); }}
+                sx={{ color: sortBy === 'start_time' ? '#F5F5F5' : '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em', cursor: 'pointer', userSelect: 'none', '&:hover': { color: '#F5F5F5' } }}
                 title="Sort by Start Time"
               >
-                Start Time
+                Start Time {sortBy === 'start_time' ? (sortDir === 'desc' ? '↓' : '↑') : ''}
               </TableCell>
               <TableCell
                 align="right"
-                onClick={() => {
-                  setSortBy('pinnacle_limit');
-                  setSortDir(d => (sortBy === 'pinnacle_limit' && d === 'desc' ? 'asc' : 'desc'));
-                }}
-                sx={{ 
-                  color: '#B0B0B0', 
-                  fontWeight: 600, 
-                  fontSize: '0.875rem', 
-                  whiteSpace: 'nowrap', 
-                  cursor: 'pointer', 
-                  userSelect: 'none',
-                  '&:hover': {
-                    color: '#2E7D32'
-                  }
-                }}
+                onClick={() => { setSortBy('pinnacle_limit'); setSortDir(d => (sortBy === 'pinnacle_limit' && d === 'desc' ? 'asc' : 'desc')); }}
+                sx={{ color: sortBy === 'pinnacle_limit' ? '#F5F5F5' : '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap', cursor: 'pointer', userSelect: 'none', '&:hover': { color: '#F5F5F5' } }}
                 title="Sort by Pin Limit"
               >
-                Pin Limit
+                Pin Limit {sortBy === 'pinnacle_limit' ? (sortDir === 'desc' ? '↓' : '↑') : ''}
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredMarkets.length === 0 && !loading && !error ? (
-              <TableRow>
-                <TableCell colSpan={8} align="center" sx={{ 
-                  color: '#9E9E9E', 
-                  fontStyle: 'italic',
-                  py: 4,
-                  fontSize: '0.875rem'
-                }}>
-                  {topMarkets.length > 0
-                    ? `No bets match the current EV filter (${minEv}%–${maxEv >= EV_MAX_SLIDER ? '∞' : `${maxEv}%`}). Try widening the range.`
-                    : 'No valid markets found. Click RUN CALCULATIONS to populate or check backend filters.'}
+              <TableRow sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
+                <TableCell colSpan={8} sx={{ border: 'none', py: 5, px: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                    {topMarkets.length > 0
+                      ? <FilterAlt sx={{ fontSize: 18, color: '#374151', mt: 0.15, flexShrink: 0, strokeWidth: 1.5 }} />
+                      : <SearchOff sx={{ fontSize: 18, color: '#374151', mt: 0.15, flexShrink: 0, strokeWidth: 1.5 }} />
+                    }
+                    <Box>
+                      <Typography sx={{ fontSize: '0.8125rem', fontWeight: 500, color: '#6B7280', mb: 0.25 }}>
+                        {topMarkets.length > 0 ? 'No bets match the active filters' : 'No markets loaded'}
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.75rem', color: '#6B7280' }}>
+                        {topMarkets.length > 0
+                          ? <>EV range <span style={{ color: '#9CA3AF' }}>{minEv}%–{maxEv >= EV_MAX_SLIDER ? '∞' : `${maxEv}%`}</span>{evNext24h ? <>, next <span style={{ color: '#9CA3AF' }}>24 h</span> only</> : ''}. Widen the range or clear filters to see all {topMarkets.length} bets.</>
+                          : <>Run <span style={{ color: '#9CA3AF' }}>Buckeye</span> or <span style={{ color: '#9CA3AF' }}>Ace</span> to populate the table.</>
+                        }
+                      </Typography>
+                    </Box>
+                  </Box>
                 </TableCell>
               </TableRow>
             ) : (
@@ -898,63 +844,51 @@ const BuckeyeScraper: React.FC = () => {
                 <TableRow 
                   key={idx}
                   sx={{
-                    '&:hover': {
-                      backgroundColor: 'rgba(46, 125, 50, 0.06)'
-                    },
+                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.03)' },
                     '& .MuiTableCell-root': {
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-                      py: 1.5
+                      borderBottom: '1px solid rgba(255,255,255,0.04)',
+                      py: 1.25,
                     }
                   }}
                 >
-                  <TableCell sx={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.875rem' }}>
+                  <TableCell sx={{ color: '#F5F5F5', fontWeight: 600, fontSize: '0.9375rem' }}>
                     {row.matchup}
                   </TableCell>
-                  <TableCell sx={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.875rem' }}>
+                  <TableCell sx={{ color: '#9CA3AF', fontWeight: 400, fontSize: '0.8125rem' }}>
                     {row.league}
                   </TableCell>
-                  <TableCell sx={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.875rem' }}>
+                  <TableCell sx={{ color: '#F5F5F5', fontWeight: 500, fontSize: '0.875rem' }}>
                     {row.bet}
                   </TableCell>
-                  <TableCell align="center" sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
+                  <TableCell align="center" sx={{ color: '#9CA3AF', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                     {row.betbck_odds || row.ace_odds || 'N/A'}
                   </TableCell>
-                  <TableCell align="center" sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
+                  <TableCell align="center" sx={{ color: '#9CA3AF', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                     {row.pinnacle_nvp}
                   </TableCell>
                   <TableCell align="center">
                     {parseFloat(row.ev) > 0 ? (
-                      <Box sx={{
-                        display: 'inline-block',
-                        px: 1.5,
-                        py: 0.5,
-                        border: '2px solid #2E7D32',
-                        borderRadius: 1.5,
-                        color: '#2E7D32',
-                        fontWeight: 700,
-                        fontSize: '0.875rem',
-                        bgcolor: 'rgba(46, 125, 50, 0.1)',
-                      }}>
+                      <span style={{ color: '#32D74B', fontWeight: 700, fontSize: '0.875rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                         {row.ev}
-                      </Box>
+                      </span>
                     ) : (
-                      <span style={{ color: '#9E9E9E', fontSize: '0.875rem' }}>{row.ev}</span>
+                      <span style={{ color: '#4B5563', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace' }}>{row.ev}</span>
                     )}
                   </TableCell>
-                  <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
+                  <TableCell align="left" sx={{ whiteSpace: 'nowrap', color: '#6B7280', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                     {(() => {
                       const parsed = parseStartTime(row.start_time);
-                      return parsed ? parsed.format('M/D/YYYY [at] h:mm A') : (typeof row.start_time === 'string' ? row.start_time : '');
+                      return parsed ? parsed.format('M/D/YY h:mm A') : (typeof row.start_time === 'string' ? row.start_time : '');
                     })()}
                     {(() => {
                       const start = parseStartTime(row.start_time);
                       const isSoon = !!start && start.isAfter(dayjs()) && start.diff(dayjs(), 'hour') <= 24;
                       return isSoon ? (
-                        <Box component="span" sx={{ display: 'inline-block', ml: 1, width: 8, height: 8, bgcolor: '#FFD54F', borderRadius: '50%' }} />
+                        <Box component="span" sx={{ display: 'inline-block', ml: 1, width: 6, height: 6, bgcolor: '#F59E0B', borderRadius: '50%', verticalAlign: 'middle' }} />
                       ) : null;
                     })()}
                   </TableCell>
-                  <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+                  <TableCell align="right" sx={{ whiteSpace: 'nowrap', color: '#6B7280', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums' }}>
                     {row.pinnacle_limit != null ? `${row.pinnacle_limit}` : ''}
                   </TableCell>
                 </TableRow>
