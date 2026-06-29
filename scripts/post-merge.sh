@@ -10,3 +10,7 @@ cd ..
 cd frontend
 npm install --legacy-peer-deps --silent
 cd ..
+
+# Sync changed source files to GitHub
+echo "[post-merge] Syncing to GitHub..."
+python scripts/github_autosync.py
