@@ -257,8 +257,8 @@ export default function AlertLog({ wsRef }: AlertLogProps) {
         sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer", mb: panelOpen ? 1.5 : 0 }}
         onClick={() => setPanelOpen(v => !v)}
       >
-        <Timeline sx={{ fontSize: 18, color: "#2E7D32" }} />
-        <Typography variant="body2" sx={{ color: "#E0E0E0", fontWeight: 600, flexGrow: 1, fontSize: "0.85rem" }}>
+        <Timeline sx={{ fontSize: 14, color: "#9CA3AF" }} />
+        <Typography sx={{ color: "#9CA3AF", fontWeight: 600, flexGrow: 1, fontSize: "0.6875rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
           Alert Log
         </Typography>
         {allRecords.length > 0 && (
