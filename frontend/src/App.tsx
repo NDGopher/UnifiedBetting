@@ -1,10 +1,11 @@
-import React, { createContext, useRef, useState } from "react";
+import React, { createContext, useRef, useState, useCallback } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { AppBar, Toolbar, Slider, Switch, TextField, Divider, InputAdornment, Select, MenuItem, FormControl, InputLabel, Chip } from "@mui/material";
+import { AppBar, Toolbar, Slider, Switch, TextField, Divider, InputAdornment, Select, MenuItem, FormControl, InputLabel, Chip, Collapse, IconButton } from "@mui/material";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import PODAlerts from "./components/PODAlerts";
 import EVCalculator from "./components/EVCalculator";
 // import PropBuilder from "./components/PropBuilder"; // Props disabled for now
@@ -378,6 +379,8 @@ function openBetbckTabOnLoad(betbckTabRef: React.MutableRefObject<Window | null>
 function App() {
   const betbckTabRef = useRef<Window | null>(null);
   const [now, setNow] = useState(new Date());
+  const [evCalcOpen, setEvCalcOpen] = useState(false);
+  const toggleEvCalc = useCallback(() => setEvCalcOpen(v => !v), []);
 
   React.useEffect(() => {
     openBetbckTabOnLoad(betbckTabRef);
@@ -486,12 +489,21 @@ function App() {
               <AutoBetPlacementPanel />
             </Box>
 
-            {/* EV Calculator Section */}
-            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 5, pb: 8 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>EV CALCULATOR</Box>
+            {/* EV Calculator Section — collapsed by default */}
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 2, pb: evCalcOpen ? 4 : 2 }}>
+              <Box
+                onClick={toggleEvCalc}
+                sx={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer', mb: evCalcOpen ? 2 : 0, userSelect: 'none', '&:hover': { opacity: 0.8 } }}
+              >
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6 }}>EV CALCULATOR</Box>
+                <Box sx={{ flexGrow: 1 }} />
+                <IconButton size="small" sx={{ p: 0, color: '#4B5563' }}>
+                  {evCalcOpen ? <ExpandLess sx={{ fontSize: 16 }} /> : <ExpandMore sx={{ fontSize: 16 }} />}
+                </IconButton>
               </Box>
-              <EVCalculator />
+              <Collapse in={evCalcOpen}>
+                <EVCalculator />
+              </Collapse>
             </Box>
 
           </Container>
