@@ -102,19 +102,19 @@ def get_tracked_files() -> list:
         return []
 
 
-def main():
-    if not os.environ.get("GITHUB_TOKEN"):
-        logger.error("GITHUB_TOKEN is not set — cannot sync.")
-        sys.exit(1)
+DAEMON_INTERVAL_SECONDS = 300
 
-    logger.info("Syncing source files to GitHub (%s/%s)...", GITHUB_OWNER, GITHUB_REPO)
+
+def sync_once():
+    """Run a single sync cycle. Returns (uploaded, skipped) counts."""
+    logger.info("Starting sync cycle...")
 
     remote_tree = get_remote_tree()
     tracked = get_tracked_files()
 
     if not tracked:
         logger.warning("No tracked files found.")
-        return
+        return 0, 0
 
     uploaded = 0
     skipped  = 0
@@ -156,6 +156,32 @@ def main():
         logger.info("Done: %d file(s) pushed, %d unchanged.", uploaded, skipped)
     else:
         logger.info("Done: all %d files already up to date on GitHub.", skipped)
+
+    return uploaded, skipped
+
+
+def main():
+    if not os.environ.get("GITHUB_TOKEN"):
+        logger.error("GITHUB_TOKEN is not set — cannot sync.")
+        sys.exit(1)
+
+    daemon_mode = "--daemon" in sys.argv
+
+    if daemon_mode:
+        logger.info(
+            "Daemon mode: syncing immediately, then every %d seconds.",
+            DAEMON_INTERVAL_SECONDS,
+        )
+        while True:
+            try:
+                sync_once()
+            except Exception as exc:
+                logger.error("Sync cycle failed: %s", exc)
+            logger.info("Next sync in %d seconds.", DAEMON_INTERVAL_SECONDS)
+            time.sleep(DAEMON_INTERVAL_SECONDS)
+    else:
+        logger.info("Syncing source files to GitHub (%s/%s)...", GITHUB_OWNER, GITHUB_REPO)
+        sync_once()
 
 
 if __name__ == "__main__":
