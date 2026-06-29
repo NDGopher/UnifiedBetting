@@ -177,8 +177,7 @@ function AlertEntry({ record, historical }: { record: AlertRecord; historical?: 
               </Typography>
             </Box>
             );
-          })
-          ))}
+          })}
         </Box>
       </Collapse>
     </Box>
