@@ -643,9 +643,9 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                               <TableRow
                                 key={idx}
                                 sx={{
-                                  background: isBestEV ? 'rgba(46, 125, 50, 0.15)' : isPositiveEV ? 'rgba(46, 125, 50, 0.08)' : undefined,
+                                  background: isPositiveEV ? 'rgba(50, 215, 75, 0.05)' : undefined,
                                   '&:hover': {
-                                    background: isBestEV ? 'rgba(46, 125, 50, 0.2)' : isPositiveEV ? 'rgba(46, 125, 50, 0.12)' : 'rgba(255, 255, 255, 0.04)'
+                                    background: isPositiveEV ? 'rgba(50, 215, 75, 0.08)' : 'rgba(255, 255, 255, 0.03)'
                                   },
                                   height: 36,
                                   '& .MuiTableCell-root': { 
@@ -692,11 +692,11 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                     color={isPositiveEV ? 'success' : 'inherit'}
                                     onClick={() => handleEVClick(event, market)}
                                     sx={{
-                                      fontWeight: isBestEV ? 700 : 400,
+                                      fontWeight: isPositiveEV ? 500 : 400,
                                       fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace',
                                       fontVariantNumeric: 'tabular-nums',
                                       '&:hover': {
-                                        background: isBestEV ? 'rgba(46, 125, 50, 0.15)' : isPositiveEV ? 'rgba(46, 125, 50, 0.08)' : 'rgba(255, 255, 255, 0.04)'
+                                        background: isPositiveEV ? 'rgba(50, 215, 75, 0.08)' : 'rgba(255, 255, 255, 0.04)'
                                       },
                                       minWidth: 0,
                                       padding: '4px 8px',
@@ -709,7 +709,6 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                       textTransform: 'none'
                                     }}
                                   >
-                                    {isBestEV && <StarIcon fontSize="small" sx={{ color: '#FFD700', mr: 0.5 }} />}
                                     {evDisplay}
                                   </Button>
                                 </TableCell>
