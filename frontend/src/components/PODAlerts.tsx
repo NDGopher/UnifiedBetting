@@ -22,7 +22,6 @@ import {
 } from "@mui/material";
 import { 
   Refresh as RefreshIcon,
-  Star as StarIcon,
   Close,
   CheckCircle,
   NotificationsNone,
@@ -79,9 +78,6 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
   const notifiedEventsRef = useRef<Set<string>>(new Set());
   const { lastMessage, isConnected, reconnectCount } = useWebSocket(`${WS_BASE}/api/ws`);
   const [nvpFlash, setNvpFlash] = useState<{ [key: string]: boolean }>({});
-
-  // Helper to safely convert any value to string
-  const safeString = (val: any) => (val === null || val === undefined ? '' : String(val));
 
   // Helper to get markets from event
   const getMarkets = (event: any) => Array.isArray(event.markets) ? event.markets : [];
@@ -627,7 +623,6 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                           {sortMarkets(event.markets).map((market, idx) => {
                             const ev = parseFloat(market.ev);
                             const isPositiveEV = ev > 0;
-                            const isBestEV = ev === bestEV && isPositiveEV;
                             let homeTeam = '', awayTeam = '';
                             if (event.title && event.title.includes(' vs ')) {
                               [homeTeam, awayTeam] = event.title.split(' vs ');
