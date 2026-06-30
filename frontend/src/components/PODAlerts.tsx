@@ -77,7 +77,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
   const [retryCount, setRetryCount] = useState(0);
   const prevMarketsRef = useRef<{ [eventId: string]: Market[] }>({});
   const notifiedEventsRef = useRef<Set<string>>(new Set());
-  const { lastMessage, isConnected } = useWebSocket(`${WS_BASE}/api/ws`);
+  const { lastMessage, isConnected, reconnectCount } = useWebSocket(`${WS_BASE}/api/ws`);
   const [nvpFlash, setNvpFlash] = useState<{ [key: string]: boolean }>({});
 
   // Helper to safely convert any value to string
@@ -204,6 +204,16 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
     const safetyPoll = setInterval(() => fetchEvents(true), 30_000);
     return () => clearInterval(safetyPoll);
   }, [fetchEvents]);
+
+  // On every SSE reconnect, immediately re-fetch full state so alerts that
+  // arrived while the connection was down are not lost until the 30s safety
+  // poll fires. reconnectCount starts at 0, so skip the initial mount (=0).
+  useEffect(() => {
+    if (reconnectCount === 0) return;
+    console.log(`[PODAlerts] SSE reconnected (count=${reconnectCount}) — syncing state`);
+    fetchEvents(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reconnectCount]);
 
   // NVP flash effect
   useEffect(() => {
