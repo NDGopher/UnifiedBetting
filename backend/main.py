@@ -2407,8 +2407,9 @@ async def sse_events_stream(request: Request):
                     data = await asyncio.wait_for(queue.get(), timeout=25)
                     yield f"data: {data}\n\n"
                 except asyncio.TimeoutError:
-                    # Heartbeat to keep connection alive through proxies
-                    yield ": heartbeat\n\n"
+                    # Named ping event — keeps connection alive AND lets the
+                    # browser detect a truly live connection via onmessage.
+                    yield "event: ping\ndata: {}\n\n"
         finally:
             await sse_manager.remove_client(queue)
 
