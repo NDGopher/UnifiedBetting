@@ -615,6 +615,12 @@ def strip_pod_league_suffix(name: str) -> str:
         'Club Friendlies',
         # MMA/combat promotions concatenated to fighter names
         'Cage Warriors',
+        # NBA development / summer leagues POD concatenates directly onto team names
+        # e.g. "Atlanta HawksNBA Summer League" → "Atlanta Hawks"
+        'NBA Summer League',
+        'NBA G League',
+        'G League',
+        'Summer League',
     )
     for mw_suffix in _MULTIWORD_SUFFIXES:
         if name.endswith(mw_suffix) and len(name) > len(mw_suffix):
