@@ -501,8 +501,10 @@ const BuckeyeScraper: React.FC = () => {
     const passMin = v >= minEv;
     const passMax = maxEv >= EV_MAX_SLIDER ? true : v <= maxEv;
     if (!passMin || !passMax) return false;
+    const start = parseStartTime(row.start_time);
+    // Always hide games that started more than 15 minutes ago — pre-game odds are stale
+    if (start && start.isBefore(dayjs().subtract(15, 'minute'))) return false;
     if (evNext24h) {
-      const start = parseStartTime(row.start_time);
       const isSoon = !!start && start.isAfter(dayjs()) && start.diff(dayjs(), 'hour') <= 24;
       if (!isSoon) return false;
     }
