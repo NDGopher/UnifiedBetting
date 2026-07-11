@@ -583,46 +583,14 @@ def strip_pod_league_suffix(name: str) -> str:
     if not name:
         return name
     import re as _re_ls
+    from utils.league_suffixes import MULTIWORD_SUFFIXES, LEAGUE_ABBREVS, MMA_PROMOTION_ABBREV_RE
     # POD sometimes appends a bare " -" after the competition suffix (e.g. "O'HigginsCONMEBOL -").
     # Strip it first so the endswith() checks below can match the abbrev cleanly.
     name = _re_ls.sub(r'\s*-\s*$', '', name).strip()
     # Multi-word league names concatenated directly with no space separator.
     # e.g. "Montreal AlouettesCanadian Football" → "Montreal Alouettes"
-    _MULTIWORD_SUFFIXES = (
-        'Canadian Football',
-        'Arena Football',
-        'Major League Soccer',
-        'Major League Baseball',
-        'National Football League',
-        'National Basketball Association',
-        'National Hockey League',
-        # NCAA sport suffixes POD concatenates directly onto team names
-        # e.g. "AuburnNCAA Baseball" → "Auburn"
-        'NCAA Baseball',
-        'NCAA Football',
-        'NCAA Basketball',
-        'NCAA Softball',
-        'NCAA Soccer',
-        'NCAA Volleyball',
-        'NCAA Hockey',
-        'NCAA Lacrosse',
-        # International friendly/tournament suffix concatenated directly
-        # e.g. "Ivory CoastInternational" → "Ivory Coast"
-        # Preceding-char isalpha() check ensures "FC International" (space before) is NOT stripped
-        'International',
-        'Friendlies',
-        'Friendly',
-        'Club Friendlies',
-        # MMA/combat promotions concatenated to fighter names
-        'Cage Warriors',
-        # NBA development / summer leagues POD concatenates directly onto team names
-        # e.g. "Atlanta HawksNBA Summer League" → "Atlanta Hawks"
-        'NBA Summer League',
-        'NBA G League',
-        'G League',
-        'Summer League',
-    )
-    for mw_suffix in _MULTIWORD_SUFFIXES:
+    # Source of truth: utils/league_suffixes.py — add new promotions there.
+    for mw_suffix in MULTIWORD_SUFFIXES:
         if name.endswith(mw_suffix) and len(name) > len(mw_suffix):
             preceding = name[-(len(mw_suffix) + 1):-(len(mw_suffix))]
             if preceding.isalpha():
@@ -630,18 +598,20 @@ def strip_pod_league_suffix(name: str) -> str:
                 break
     # Multi-letter uppercase abbreviations concatenated directly (e.g. KnicksNBA)
     # Also includes confederation names that POD appends (e.g. O'HigginsCONMEBOL)
-    _LEAGUE_ABBREVS = (
-        'WNBA', 'NBA', 'NFL', 'NHL', 'MLB', 'MLS', 'NWSL', 'PWHL',
-        'NCAAF', 'NCAAB', 'UFC', 'PFL', 'BKFC', 'ONE', 'RIZIN', 'LFA', 'CFFC',
-        'AFL', 'CFL', 'XFL', 'USFL',
-        'UEFA', 'CONMEBOL', 'CONCACAF', 'AFC', 'OFC', 'FIFA',
-    )
-    for abbrev in _LEAGUE_ABBREVS:
+    # Source of truth: utils/league_suffixes.py — add new abbreviations there.
+    for abbrev in LEAGUE_ABBREVS:
         if name.endswith(abbrev) and len(name) > len(abbrev):
             # Make sure the char before the abbrev is a letter (not a space already)
             if name[-len(abbrev)-1:-(len(abbrev))].rstrip() != '':
                 name = name[:-len(abbrev)].strip()
                 break
+    else:
+        # Regex fallback: catch any unknown 2-6 char all-caps abbreviation glued
+        # directly to the name (no space).  This handles new MMA promotions that
+        # haven't been added to LEAGUE_ABBREVS yet.
+        m = MMA_PROMOTION_ABBREV_RE.search(name)
+        if m:
+            name = name[:m.start()].strip()
 
     # Country names that are ≤4 chars — these are too short for the whitespace-
     # required pattern in normalize_team_name_for_matching so we handle them
