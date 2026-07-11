@@ -21,6 +21,7 @@ from utils import process_event_odds_for_display
 import copy
 from team_utils import match_betbck_to_pinnacle_markets
 from utils.pod_utils import clean_pod_team_name_for_search, american_to_decimal, calculate_ev, decimal_to_american, normalize_team_name_for_matching, is_prop_or_corner_alert, determine_betbck_search_term, strip_team_name_for_display
+from utils.league_suffixes import MULTIWORD_SUFFIXES, LEAGUE_ABBREVS, MMA_PROMOTION_ABBREV_RE
 # from pto_scraper import PTOScraper  # PTO disabled for now
 from thread_safe_manager import event_manager
 import gc
@@ -683,8 +684,10 @@ async def handle_pod_alert(request: Request):
             if not name:
                 return name
             suffixes_to_remove = [
-                # Sports abbreviations
-                'MLB', 'NFL', 'NBA', 'NHL', 'NCAA', 'NCAAF', 'NCAAB', 'Soccer', 'Tennis', 'UFC', 'WNBA', 'AFL', 'CFL', 'MLS',
+                # Sports abbreviations — canonical list lives in utils/league_suffixes.py;
+                # LEAGUE_ABBREVS is imported at module level and merged in below.
+                'Soccer', 'Tennis', 'NCAA',
+                *LEAGUE_ABBREVS,
                 
                 # Full league names
                 'Korea Professional Baseball', 'Korean Professional Baseball', 'KBO',
@@ -744,7 +747,7 @@ async def handle_pod_alert(request: Request):
                 'TCD', 'CAF', 'GAB', 'GNQ', 'BEN', 'TGO', 'BFA', 'MRT',
                 
                 # Regional/League indicators
-                'UEFA', 'CONMEBOL', 'CONCACAF', 'CONCA', 'CAF', 'AFC', 'OFC', 'FIFA',
+                'CONCA',
                 'UEFA Champions League', 'UEFA Europa League', 'UEFA Conference League',
                 'Copa Libertadores', 'Copa Sudamericana', 'CONCACAF Champions League',
                 'AFC Champions League', 'CAF Champions League', 'OFC Champions League',
@@ -756,11 +759,17 @@ async def handle_pod_alert(request: Request):
                 'Nordic Games', 'Balkan Games', 'Caribbean Games', 'Central American Games',
                 'South American Games', 'Pacific Games', 'Indian Ocean Games', 'Arctic Games',
                 'Island Games', 'Microstate Games', 'Small States Games',
-                'Club Friendlies', 'Cage Warriors'
+                # Multi-word promotion/league suffixes — canonical list in utils/league_suffixes.py
+                *MULTIWORD_SUFFIXES,
             ]
             for suffix in suffixes_to_remove:
                 if name.endswith(suffix):
                     return name[:-len(suffix)].strip()
+            # Regex fallback: strip any unknown 2-6 char all-caps abbreviation glued
+            # directly to the name (no space). Catches new MMA promotions automatically.
+            m = MMA_PROMOTION_ABBREV_RE.search(name)
+            if m:
+                return name[:m.start()].strip()
             return name
         
         home_team = clean_team_name_immediate(home_team_raw)
