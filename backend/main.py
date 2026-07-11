@@ -2818,8 +2818,25 @@ def get_buckeye_results():
         global current_results, last_run_time
         if current_results and len(current_results) > 0:
             logger.info(f"[RESULTS] Serving {len(current_results)} events from memory")
+            now = datetime.now()
+            _START_FMTS = ('%Y-%m-%d %I:%M %p', '%Y-%m-%dT%H:%M', '%m/%d/%y %I:%M %p', '%m/%d/%Y %I:%M %p')
+            # Grace: allow games that started up to 15 minutes ago (pre-game odds stay open briefly)
+            _CUTOFF_SECONDS = 15 * 60
+            stale_count = 0
             all_markets = []
             for event in current_results:
+                st_str = event.get("start_time", "")
+                if st_str:
+                    parsed_st = None
+                    for fmt in _START_FMTS:
+                        try:
+                            parsed_st = datetime.strptime(st_str, fmt)
+                            break
+                        except ValueError:
+                            pass
+                    if parsed_st is not None and (now - parsed_st).total_seconds() > _CUTOFF_SECONDS:
+                        stale_count += 1
+                        continue
                 matchup = event.get("matchup", "")
                 league = event.get("league", "")
                 all_markets.append({
@@ -2832,6 +2849,8 @@ def get_buckeye_results():
                     "start_time": event.get("start_time", ""),
                     "pinnacle_limit": event.get("pinnacle_limit")
                 })
+            if stale_count:
+                logger.info(f"[RESULTS] Filtered {stale_count} stale (past) events from memory results")
             return JSONResponse({
                 "status": "success",
                 "data": {
