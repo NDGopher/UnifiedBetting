@@ -88,20 +88,41 @@ def set_market_type_context(value):
 
 # --- Core Scraper Functions ---
 def login_to_betbck(session):
+    import logging as _logging
+    _log = _logging.getLogger(__name__)
+    _log.info("[BetbckScraper] Attempting login to BetBCK...")
     print(f"[BetbckScraper] Attempting login to BetBCK...")
     request_headers = BASE_HEADERS.copy(); request_headers['Referer'] = LOGIN_PAGE_URL
     login_payload = LOGIN_PAYLOAD_TEMPLATE.copy()
     try:
-        session.get(LOGIN_PAGE_URL, headers=request_headers, timeout=10) 
+        session.get(LOGIN_PAGE_URL, headers=request_headers, timeout=10)
         login_response = session.post(LOGIN_ACTION_URL, data=login_payload, headers=request_headers, allow_redirects=True, timeout=10)
-        if ("StraightLoginSportSelection.php" in login_response.url or "MainMenu.php" in login_response.url) and \
-           "Logout" in login_response.text and "Invalid User" not in login_response.text:
-            print(f"[BetbckScraper] Login SUCCESSFUL.")
+        _has_logout = "Logout" in login_response.text
+        _has_invalid = "Invalid User" in login_response.text
+        _good_url = ("StraightLoginSportSelection.php" in login_response.url or
+                     "StraightSportSelection.php" in login_response.url or
+                     "MainMenu.php" in login_response.url)
+        _log.info(
+            f"[BetbckScraper] Login response: status={login_response.status_code} "
+            f"url='{login_response.url}' has_logout={_has_logout} "
+            f"has_invalid={_has_invalid} good_url={_good_url} "
+            f"body_preview='{login_response.text[:200].replace(chr(10),' ')}'"
+        )
+        if _good_url and _has_logout and not _has_invalid:
+            msg = f"[BetbckScraper] Login SUCCESSFUL. Final URL: {login_response.url}"
+            print(msg); _log.info(msg)
             return True
-        print(f"[BetbckScraper] Login FAILED. Status: {login_response.status_code}. URL: {login_response.url}")
+        msg = f"[BetbckScraper] Login FAILED. Status: {login_response.status_code}. URL: {login_response.url} has_logout={_has_logout} has_invalid={_has_invalid} good_url={_good_url}"
+        print(msg); _log.error(msg)
         return False
-    except requests.exceptions.Timeout: print(f"[BetbckScraper] Login process timed out."); return False
-    except Exception as e: print(f"[BetbckScraper] Login process failed: {e}"); return False
+    except requests.exceptions.Timeout:
+        msg = "[BetbckScraper] Login process timed out."
+        print(msg); _logging.getLogger(__name__).error(msg)
+        return False
+    except Exception as e:
+        msg = f"[BetbckScraper] Login process failed: {e}"
+        print(msg); _logging.getLogger(__name__).error(msg)
+        return False
 
 def get_search_prerequisites(session, page_url_with_search_form):
     print(f"[BetbckScraper] Getting search prerequisites from: {page_url_with_search_form}")
