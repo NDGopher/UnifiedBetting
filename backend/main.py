@@ -2676,7 +2676,7 @@ def build_event_object(event_id, entry):
         return None
     
     bet_data = copy.deepcopy(entry.get("betbck_data", {}).get("data", {})) if betbck_data_available else {}
-    pinnacle_data = copy.deepcopy(entry["pinnacle_data_processed"].get("data", {}))
+    pinnacle_data = copy.deepcopy(entry["pinnacle_data_processed"].get("data") or {})
     home_team = normalize_team_name_for_matching(entry.get("cleaned_home_team", ""))
     away_team = normalize_team_name_for_matching(entry.get("cleaned_away_team", ""))
     league = entry.get("league_name", "")
