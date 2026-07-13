@@ -273,7 +273,42 @@ class BetBCKRequestManager:
             if self._is_rate_limited_response(search_results_html, 200):
                 self._handle_rate_limit_detected(search_term, future)
                 return
-            
+
+            # ── Small-response guard: session may have expired mid-interval ────────
+            # BetBCK returns a minimal page (~1961 bytes) when the session cookie has
+            # expired between our 50-minute refresh cycles.  If we see a suspiciously
+            # small response we log the full content (for diagnosis), force-expire the
+            # session, and retry once with a fresh login.
+            SMALL_RESPONSE_THRESHOLD = 5000   # bytes
+            if search_results_html and len(search_results_html) < SMALL_RESPONSE_THRESHOLD:
+                logger.warning(
+                    f"[BetBCK-Manager] *** SMALL RESPONSE ({len(search_results_html)} bytes) for "
+                    f"'{search_term}' — possible expired session. Full content:\n{search_results_html}"
+                )
+                # Force session expiry so _get_or_refresh_session re-logins immediately
+                with self.session_lock:
+                    self.last_session_refresh = 0
+                logger.warning(f"[BetBCK-Manager] Forcing session refresh and retrying '{search_term}'...")
+                session = self._get_or_refresh_session()
+                search_results_html = search_team_and_get_results_html(
+                    session, search_term, self.inet_wager, self.inet_sport_select, event_id
+                )
+                if search_results_html and len(search_results_html) < SMALL_RESPONSE_THRESHOLD:
+                    logger.warning(
+                        f"[BetBCK-Manager] Retry also returned small response ({len(search_results_html)} bytes). "
+                        f"Full retry content:\n{search_results_html}"
+                    )
+                    logger.warning(
+                        f"[BetBCK-Manager] Team '{search_term}' may not be indexed in BetBCK keyword search "
+                        f"(BetBCK may not carry this league, or league not searchable via keyword)."
+                    )
+                else:
+                    logger.info(
+                        f"[BetBCK-Manager] Retry succeeded — got {len(search_results_html) if search_results_html else 0} bytes "
+                        f"(session had expired, now refreshed)."
+                    )
+            # ─────────────────────────────────────────────────────────────────────
+
             # Debug: Log response preview to understand what's being returned
             if search_results_html:
                 logger.info(f"[BetBCK-Manager] Response preview (first 200 chars): {search_results_html[:200]}")
