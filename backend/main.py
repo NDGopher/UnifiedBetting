@@ -290,6 +290,29 @@ async def event_alert_worker(event_id):
                             logger.info(f"[PerEventQueue] Ignoring duplicate alert for Event ID: {event_id}")
                             continue
 
+                    # ── Sanity-check the event ID from the POD extension ─────────────────
+                    # Pinnacle event IDs are ~10 digits (≈1–2 billion).
+                    # If POD sends a 13-digit number it has accidentally sent the game's
+                    # Unix-millisecond start timestamp instead of the real event ID.
+                    # This happens on certain leagues (e.g. Iceland Pepsideild/Premier).
+                    # We log it clearly so the alert log shows the root cause immediately.
+                    try:
+                        _eid_int = int(event_id)
+                        if _eid_int > 1_000_000_000_000:   # 1 trillion → clearly a ms timestamp
+                            import datetime as _dt_eid
+                            _eid_as_dt = _dt_eid.datetime.utcfromtimestamp(_eid_int / 1000)
+                            logger.warning(
+                                f"[PerEventQueue] *** POD SENT TIMESTAMP AS EVENT ID *** "
+                                f"event_id={event_id} looks like a Unix-ms timestamp "
+                                f"({_eid_as_dt.strftime('%Y-%m-%d %H:%M UTC')}), not a Pinnacle event ID. "
+                                f"Swordfish lookup will fail. This is a POD extension data error for "
+                                f"'{payload.get('homeTeam','?')}' vs '{payload.get('awayTeam','?')}' "
+                                f"({payload.get('leagueName','?')}). No EV will be shown."
+                            )
+                    except (ValueError, TypeError):
+                        pass
+                    # ─────────────────────────────────────────────────────────────────────
+
                     pinnacle_api_result = fetch_live_pinnacle_event_odds(event_id)
                     live_pinnacle_odds_processed = process_event_odds_for_display(pinnacle_api_result.get("data"))
                     league_name = live_pinnacle_odds_processed.get("league_name", payload.get("leagueName", "Unknown League"))
