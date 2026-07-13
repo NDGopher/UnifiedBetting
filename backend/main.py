@@ -290,6 +290,29 @@ async def event_alert_worker(event_id):
                             logger.info(f"[PerEventQueue] Ignoring duplicate alert for Event ID: {event_id}")
                             continue
 
+                    # TEAM-PAIR MERGE: if a different event_id is already active for the same teams,
+                    # treat this alert as an update to that card instead of creating a duplicate.
+                    # POD occasionally fires two different event IDs for the same fixture seconds apart.
+                    if event_id not in active_events:
+                        _ph = clean_pod_team_name_for_search(payload.get("homeTeam", ""))
+                        _pa = clean_pod_team_name_for_search(payload.get("awayTeam", ""))
+                        _matching_eid = None
+                        for _existing_eid, _existing_evt in active_events.items():
+                            _eh = _existing_evt.get("cleaned_home_team", "")
+                            _ea = _existing_evt.get("cleaned_away_team", "")
+                            if _ph and _pa and _eh and _ea:
+                                if (_ph == _eh and _pa == _ea) or (_ph == _ea and _pa == _eh):
+                                    _matching_eid = _existing_eid
+                                    break
+                        if _matching_eid:
+                            logger.info(
+                                f"[PerEventQueue] Team-pair match: event {event_id} ({_ph} vs {_pa}) "
+                                f"maps to existing active card {_matching_eid} — treating as update, no new BetBCK scrape."
+                            )
+                            # Route to the existing event's update path by swapping event_id reference
+                            event_id = _matching_eid
+                            active_events = pod_event_manager.get_active_events()
+
                     # ── Sanity-check the event ID from the POD extension ─────────────────
                     # Pinnacle event IDs are ~10 digits (≈1–2 billion).
                     # If POD sends a 13-digit number it has accidentally sent the game's
@@ -843,7 +866,7 @@ async def handle_pod_alert(request: Request):
         _team_key = f"{_home_key}|{_away_key}"
         _last_team_time = _last_processed_teams.get(_team_key, 0)
         _time_since_team = now - _last_team_time
-        if _time_since_team < 60:  # 60 seconds
+        if _time_since_team < 120:  # 120 seconds
             logger.info(f"[PerEventQueue] REJECTING team-duplicate alert: {home_team} vs {away_team} - same matchup processed {_time_since_team:.1f}s ago")
             return JSONResponse({
                 "status": "success",
