@@ -327,7 +327,30 @@ class PodEventManager:
                                     from utils.pod_utils import analyze_markets_for_ev
                                     betbck_data = working_event_data.get("betbck_data", {}).get("data", {})
                                     
-                                    if betbck_data and processed_odds:
+                                    # Guard: skip EV re-analysis if Swordfish returned data for a
+                                    # different game (wrong event ID captured by the extension).
+                                    _sw_raw = pinnacle_api_result.get("data", {}) or {}
+                                    _sw_home = (_sw_raw.get("home") or "").lower().strip()
+                                    _sw_away = (_sw_raw.get("away") or "").lower().strip()
+                                    _ev_home = (working_event_data.get("cleaned_home_team") or "").lower().strip()
+                                    _ev_away = (working_event_data.get("cleaned_away_team") or "").lower().strip()
+                                    _teams_match = True
+                                    if _sw_home and _sw_away and _ev_home and _ev_away:
+                                        # Simple token overlap check — same as Layer 0 in main.py
+                                        def _tok(s): return set(s.replace("-", " ").split())
+                                        _h_overlap = len(_tok(_sw_home) & _tok(_ev_home)) / max(len(_tok(_ev_home)), 1)
+                                        _a_overlap = len(_tok(_sw_away) & _tok(_ev_away)) / max(len(_tok(_ev_away)), 1)
+                                        _h2_overlap = len(_tok(_sw_home) & _tok(_ev_away)) / max(len(_tok(_ev_away)), 1)
+                                        _a2_overlap = len(_tok(_sw_away) & _tok(_ev_home)) / max(len(_tok(_ev_home)), 1)
+                                        _best_fwd = min(_h_overlap, _a_overlap)
+                                        _best_rev = min(_h2_overlap, _a2_overlap)
+                                        if max(_best_fwd, _best_rev) < 0.4:
+                                            _teams_match = False
+                                            print(f"[BackgroundRefresher] SKIPPING EV re-analysis for {event_id}: "
+                                                  f"Swordfish returned '{_sw_home}' vs '{_sw_away}' "
+                                                  f"but expected '{_ev_home}' vs '{_ev_away}'")
+
+                                    if betbck_data and processed_odds and _teams_match:
                                         print(f"[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds")
                                         fresh_potential_bets = analyze_markets_for_ev(betbck_data, processed_odds)
                                         
