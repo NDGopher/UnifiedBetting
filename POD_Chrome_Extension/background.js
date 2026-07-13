@@ -18,7 +18,7 @@ let lastSniffedSwordfishEvent = {
 // Listener for the API call POD makes when an event's details are loaded (after a click)
 chrome.webRequest.onCompleted.addListener(
   (details) => {
-    if (details.url.includes("swordfish-production.up.railway.app/events/")) {
+    if (details.url.includes("swordfish-production.up.railway.app/events/") || details.url.includes("sword.pinnacleoddsdropper.com/events/")) {
       const match = details.url.match(/events\/(\d+)/); // Extracts digits after /events/
       if (match && match[1]) {
         const capturedEventId = match[1];
@@ -36,7 +36,7 @@ chrome.webRequest.onCompleted.addListener(
       }
     }
   },
-  { urls: ["https://swordfish-production.up.railway.app/events/*"] }
+  { urls: ["https://swordfish-production.up.railway.app/events/*", "https://sword.pinnacleoddsdropper.com/events/*"] }
 );
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
