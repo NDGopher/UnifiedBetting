@@ -2503,7 +2503,7 @@ async def open_bet(request: Request):
 @app.get("/api/events/stream")
 async def sse_events_stream(request: Request):
     """Server-Sent Events endpoint — works through all HTTP proxies including webpack dev server."""
-    queue: asyncio.Queue = asyncio.Queue(maxsize=50)
+    queue: asyncio.Queue = asyncio.Queue(maxsize=200)
     await sse_manager.add_client(queue)
 
     # Send current state immediately on connect so reconnects don't miss data
