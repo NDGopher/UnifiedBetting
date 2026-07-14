@@ -702,8 +702,21 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                                 _cand_scores.update({"token_set_h": s_hl, "token_set_a": s_av, "partial_h": p_hl, "partial_a": p_av, "threshold": FUZZY_MATCH_THRESHOLD, "_sum_best": fwd_sum, "_sum_fwd": fwd_sum})
                             if rev_sum > _cand_scores.get("_sum_best", 0):
                                 _cand_scores.update({"token_set_h": s_hv, "token_set_a": s_al, "partial_h": fuzz.partial_ratio(ph, bv), "partial_a": fuzz.partial_ratio(pa, bh), "threshold": FUZZY_MATCH_THRESHOLD, "_sum_best": rev_sum})
+                            # Primary path: both token-set ratios clear the threshold.
                             fwd_passes = s_hl >= FUZZY_MATCH_THRESHOLD and s_av >= FUZZY_MATCH_THRESHOLD
                             rev_passes = s_hv >= FUZZY_MATCH_THRESHOLD and s_al >= FUZZY_MATCH_THRESHOLD
+                            # Partial-ratio fallback: accept when one book truncates/abbreviates
+                            # a team name (e.g. "Gyor" vs "Gyori ETO").  Both partial scores
+                            # must be ≥ 90 AND both token-set scores must be ≥ 50 so we don't
+                            # accidentally accept unrelated teams that share a short substring.
+                            if not fwd_passes and p_hl >= 90 and p_av >= 90 and s_hl >= 50 and s_av >= 50:
+                                fwd_passes = True
+                                print(f"[BetbckParser] Partial-ratio fallback FWD: p_hl={p_hl} p_av={p_av} ts_hl={s_hl} ts_av={s_av} (Event ID: {event_id})")
+                            p_hv_rev = fuzz.partial_ratio(ph, bv)
+                            p_al_rev = fuzz.partial_ratio(pa, bh)
+                            if not rev_passes and p_hv_rev >= 90 and p_al_rev >= 90 and s_hv >= 50 and s_al >= 50:
+                                rev_passes = True
+                                print(f"[BetbckParser] Partial-ratio fallback REV: p_hv={p_hv_rev} p_al={p_al_rev} ts_hv={s_hv} ts_al={s_al} (Event ID: {event_id})")
                             if fwd_passes or rev_passes:
                                 # When BOTH orientations clear the threshold, pick the one
                                 # with the higher total score — not just whichever was checked
