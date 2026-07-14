@@ -25,16 +25,24 @@ class SSEManager:
     async def broadcast(self, message: dict):
         data = json.dumps(message)
         async with self._lock:
-            dead = []
             for queue in self.clients:
                 try:
                     queue.put_nowait(data)
                 except asyncio.QueueFull:
-                    dead.append(queue)
-            for q in dead:
-                self.clients.remove(q)
-        if self.clients or dead:
-            logger.debug(f"[SSE] Broadcast '{message.get('type')}' to {len(self.clients)} clients")
+                    # Sliding-window: drop the oldest item so this client stays
+                    # alive rather than being removed from the list permanently.
+                    # This means a slow client may miss one stale intermediate
+                    # update but will NEVER stop receiving future messages.
+                    try:
+                        queue.get_nowait()
+                    except asyncio.QueueEmpty:
+                        pass
+                    try:
+                        queue.put_nowait(data)
+                    except asyncio.QueueFull:
+                        # Extremely unlikely (race) — just drop this one message.
+                        logger.debug(f"[SSE] Dropped message '{message.get('type')}' for one client (queue still full after drain)")
+        logger.debug(f"[SSE] Broadcast '{message.get('type')}' to {len(self.clients)} clients")
 
 
 sse_manager = SSEManager()
