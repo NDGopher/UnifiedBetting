@@ -373,12 +373,14 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
         });
         
         // Create enhanced notification data
+        const league = event.meta_info?.split(' | ')[0] || '';
+        const betParts = [bestMarket.market, bestMarket.selection, bestMarket.line].filter(Boolean);
+        const betLabel = betParts.join(' ');
         const notificationData = {
-          sport: event.title.split(' - ')[0] || 'Unknown Sport',
-          awayTeam: event.title.split(' - ')[1]?.split(' vs ')[0] || 'Unknown',
-          homeTeam: event.title.split(' - ')[1]?.split(' vs ')[1] || 'Unknown',
+          matchup: event.title,
+          league,
           ev: parseFloat(bestMarket.ev),
-          bet: bestMarket.selection,
+          betLabel,
           odds: bestMarket.betbck_odds,
           nvp: bestMarket.pinnacle_nvp,
           eventId: eventId
