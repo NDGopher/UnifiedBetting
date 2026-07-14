@@ -86,8 +86,14 @@ class EnhancedNotifier {
     this.playSound(ev);
 
     // Create detailed notification
+    const bodyLines = [
+      alert.matchup || 'Unknown Matchup',
+      alert.league || '',
+      `${alert.betLabel || 'N/A'} | ${alert.odds || 'N/A'} vs NVP ${alert.nvp || 'N/A'}`,
+      `EV: ${ev.toFixed(2)}%`,
+    ].filter(Boolean);
     const notification = new Notification(title, {
-      body: `${alert.sport || 'Unknown Sport'}: ${alert.awayTeam || 'Away'} vs ${alert.homeTeam || 'Home'}\nEV: ${ev}%\nBet: ${alert.bet || 'N/A'}\nOdds: ${alert.odds || 'N/A'}\nNVP: ${alert.nvp || 'N/A'}`,
+      body: bodyLines.join('\n'),
       icon: icon,
       requireInteraction: true, // Stays until clicked
       tag: alert.eventId, // Groups similar alerts
