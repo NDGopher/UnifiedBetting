@@ -173,15 +173,15 @@ const BuckeyeScraper: React.FC = () => {
           if (events && events.length > 0) {
             setAceMarkets(events);
             setAceLastUpdate(last_run);
-            setMessage(`Ace: ${total_events} events found`);
           }
+          setMessage(`Ace: ${total_events ?? 0} events found`);
         } else if (data.type === 'ace_complete') {
           const { events, total_events, last_run, total_matched, parlay_results } = data.data;
           if (events && events.length > 0) {
             setAceMarkets(events);
             setAceLastUpdate(last_run);
-            setMessage(`Ace done: ${total_matched} games matched, ${total_events} EV opportunities`);
           }
+          setMessage(`Ace done: ${total_matched ?? 0} games matched, ${total_events ?? 0} EV opportunities`);
           if (parlay_results) {
             setParlays(parlay_results);
           }
