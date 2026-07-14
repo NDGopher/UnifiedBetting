@@ -346,9 +346,17 @@ class PodEventManager:
                                         _best_rev = min(_h2_overlap, _a2_overlap)
                                         if max(_best_fwd, _best_rev) < 0.4:
                                             _teams_match = False
-                                            print(f"[BackgroundRefresher] SKIPPING EV re-analysis for {event_id}: "
+                                            print(f"[BackgroundRefresher] TEAM MISMATCH for {event_id}: "
                                                   f"Swordfish returned '{_sw_home}' vs '{_sw_away}' "
-                                                  f"but expected '{_ev_home}' vs '{_ev_away}'")
+                                                  f"but expected '{_ev_home}' vs '{_ev_away}' — "
+                                                  f"reverting pinnacle_data_processed to prevent cross-game EV")
+                                            # CRITICAL: revert pinnacle_data_processed to the original
+                                            # stub/old data.  The wrong game's Pinnacle NVPs were already
+                                            # written at line 321; if we leave them there, build_event_object
+                                            # will calculate EV by mixing them with this game's BetBCK odds
+                                            # and produce completely false high-EV rows.
+                                            working_event_data["pinnacle_data_processed"] = \
+                                                event_data.get("pinnacle_data_processed", {})
 
                                     if betbck_data and processed_odds and _teams_match:
                                         print(f"[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds")
