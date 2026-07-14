@@ -299,6 +299,69 @@ class AceScraper:
     def _is_excluded_league_or_desc(self, text: str) -> bool:
         return any(term in text.upper() for term in self.EXCLUDED_TERMS)
 
+    def _parse_leagues_from_homepage_html(self, html: str) -> List[Tuple[str, str]]:
+        """Parse ALL league checkboxes from CreateSports.aspx HTML.
+
+        Returns list of (league_id_str, label_text_upper) for every checkbox
+        whose value is numeric (i.e. a real league ID).  Does NOT filter —
+        call _is_excluded_league_or_desc on the label yourself if needed.
+        """
+        results: List[Tuple[str, str]] = []
+        try:
+            soup = BeautifulSoup(html, 'html.parser')
+            checkboxes = soup.find_all('input', attrs={'type': lambda t: t and t.lower() == 'checkbox'})
+            for cb in checkboxes:
+                val = (cb.get('value') or '').strip()
+                if not val or not val.isdigit():
+                    continue
+                # Try multiple strategies to locate the human-readable label.
+                label_text = ''
+                # 1. Immediately following <label> sibling
+                sib = cb.find_next_sibling('label')
+                if sib:
+                    label_text = sib.get_text(' ', strip=True)
+                # 2. Parent <label> wrapping the checkbox
+                if not label_text:
+                    parent_label = cb.find_parent('label')
+                    if parent_label:
+                        label_text = parent_label.get_text(' ', strip=True)
+                # 3. Immediately following text node / <span>/<td> sibling
+                if not label_text:
+                    for sib2 in cb.next_siblings:
+                        txt = ''
+                        if hasattr(sib2, 'get_text'):
+                            txt = sib2.get_text(' ', strip=True)
+                        elif isinstance(sib2, str):
+                            txt = sib2.strip()
+                        if txt:
+                            label_text = txt
+                            break
+                # 4. Parent container text as last resort
+                if not label_text:
+                    parent = cb.parent
+                    if parent:
+                        label_text = parent.get_text(' ', strip=True)
+                results.append((val, label_text.upper()))
+        except Exception as e:
+            safe_print(f"[ACE DEBUG] _parse_leagues_from_homepage_html error: {e}")
+        return results
+
+    def _filter_homepage_leagues(self, parsed: List[Tuple[str, str]]) -> List[str]:
+        """Given output of _parse_leagues_from_homepage_html, apply EXCLUDED_TERMS
+        filter and return a de-duplicated list of league ID strings to query."""
+        seen: set = set()
+        out: List[str] = []
+        for lid, lname in parsed:
+            if lid in seen:
+                continue
+            seen.add(lid)
+            if self._is_excluded_league_or_desc(lname):
+                safe_print(f"[ACE DEBUG] Excluding league {lid} ({lname[:60]})")
+                continue
+            out.append(lid)
+        safe_print(f"[ACE DEBUG] _filter_homepage_leagues: {len(out)} kept / {len(parsed)} total")
+        return out
+
     def get_active_league_ids(self) -> str:
         """Get active league IDs as a comma-separated string"""
         league_ids = self._fetch_active_leagues()
@@ -450,8 +513,9 @@ class AceScraper:
                     safe_print("[ACE DEBUG] Not logged in")
                     return ""
 
-                if not league_ids:
-                    league_ids = self.get_combined_league_ids()
+                # league_ids will be resolved from the CreateSports page below.
+                # Keep the caller-supplied value if one was passed in.
+                _caller_league_ids = league_ids  # may be None
 
                 # Validate session before fetching
                 if not self._validate_session():
@@ -460,7 +524,8 @@ class AceScraper:
                         safe_print("[ACE DEBUG] Failed to re-login")
                         return ""
 
-                # Step 1: Navigate to CreateSports.aspx first (as per workflow)
+                # Step 1: Navigate to CreateSports.aspx first (as per workflow).
+                # We also use this HTML to dynamically discover ALL active league IDs.
                 safe_print("[ACE DEBUG] Step 1: Navigating to CreateSports.aspx...")
                 create_sports_url = f"{self.base_url}/wager/CreateSports.aspx?WT=1"
                 create_response = self.session.get(create_sports_url, allow_redirects=False)
@@ -484,6 +549,33 @@ class AceScraper:
                             return ""
                     else:
                         return ""
+
+                # ── Dynamic league discovery from the homepage ──────────────────
+                # Parse all checkbox league IDs directly from the page we just
+                # loaded.  This replaces the hardcoded _KNOWN_LEAGUE_IDS approach
+                # and captures every sport/league Ace has active right now.
+                if not _caller_league_ids:
+                    try:
+                        parsed_leagues = self._parse_leagues_from_homepage_html(create_response.text)
+                        if parsed_leagues:
+                            discovered_ids = self._filter_homepage_leagues(parsed_leagues)
+                            if discovered_ids:
+                                league_ids = ','.join(discovered_ids)
+                                safe_print(
+                                    f"[ACE DEBUG] Homepage discovery: {len(discovered_ids)} leagues "
+                                    f"(from {len(parsed_leagues)} checkboxes, after exclusions)"
+                                )
+                            else:
+                                safe_print("[ACE DEBUG] Homepage discovery: all leagues excluded — falling back to KNOWN list")
+                                league_ids = self.get_combined_league_ids()
+                        else:
+                            safe_print("[ACE DEBUG] Homepage discovery: no checkboxes found — falling back to KNOWN list")
+                            league_ids = self.get_combined_league_ids()
+                    except Exception as _disc_err:
+                        safe_print(f"[ACE DEBUG] Homepage discovery error: {_disc_err} — falling back to KNOWN list")
+                        league_ids = self.get_combined_league_ids()
+                else:
+                    league_ids = _caller_league_ids
                 
                 # Step 1.5: Also try Welcome.aspx to establish session
                 safe_print("[ACE DEBUG] Step 1.5: Navigating to Welcome.aspx...")
