@@ -1,3 +1,4 @@
 - [Ace pipeline league expansion](ace-league-expansion.md) — WT=1 required for both CreateSports and NewScheduleHelper; 70-league KNOWN list is the reliable fallback when ActiveLeaguesHelper returns empty.
 - [Match games time filter](match-games-time-filter.md) — 24h filter silently dropped valid Ace games; widened to 72h; TIME-SKIP is now logger.info so drops are visible.
 - [ALT lines matching fix](alt-lines-matching.md) — only non-ALT games should add to processed_pinnacle_keys; ALT lines for same game must all be processed.
+- [Swordfish mismatch EV contamination](swordfish-mismatch-ev-contamination.md) — guard must revert pinnacle_data_processed, not just skip analyze_markets_for_ev
