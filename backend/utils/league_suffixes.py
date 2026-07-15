@@ -42,6 +42,7 @@ MULTIWORD_SUFFIXES: tuple = (
     'International',
     'Friendlies',
     'Friendly',
+    'Club Friendlies Women',
     'Club Friendlies',
     # MMA / combat sport promotions (multi-word)
     'Cage Warriors',
