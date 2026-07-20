@@ -332,10 +332,26 @@ class PodEventManager:
                                     _sw_raw = pinnacle_api_result.get("data", {}) or {}
                                     _sw_home = (_sw_raw.get("home") or "").lower().strip()
                                     _sw_away = (_sw_raw.get("away") or "").lower().strip()
+                                    # Fallback: when Swordfish returns 0 markets the raw response may
+                                    # omit home/away; use the team names already stored in the event's
+                                    # pinnacle_data_processed (set during a prior successful fetch).
+                                    if not _sw_home or not _sw_away:
+                                        _stored_pin = event_data.get("pinnacle_data_processed") or {}
+                                        _sw_home = _sw_home or (_stored_pin.get("home") or "").lower().strip()
+                                        _sw_away = _sw_away or (_stored_pin.get("away") or "").lower().strip()
                                     _ev_home = (working_event_data.get("cleaned_home_team") or "").lower().strip()
                                     _ev_away = (working_event_data.get("cleaned_away_team") or "").lower().strip()
                                     _teams_match = True
-                                    if _sw_home and _sw_away and _ev_home and _ev_away:
+                                    # Fast-path: event was already flagged as SUSPECT at intake — the
+                                    # extension captured the wrong Pinnacle event ID.  Never trust any
+                                    # Swordfish data for this event, regardless of what the current API
+                                    # call returns.
+                                    if working_event_data.get("event_id_suspect"):
+                                        _teams_match = False
+                                        print(f"[BackgroundRefresher] SUSPECT event {event_id} — "
+                                              f"skipping EV re-analysis, reverting pinnacle_data_processed to empty stub")
+                                        working_event_data["pinnacle_data_processed"] = {}
+                                    elif _sw_home and _sw_away and _ev_home and _ev_away:
                                         # Simple token overlap check — same as Layer 0 in main.py
                                         def _tok(s): return set(s.replace("-", " ").split())
                                         _h_overlap = len(_tok(_sw_home) & _tok(_ev_home)) / max(len(_tok(_ev_home)), 1)
@@ -350,13 +366,11 @@ class PodEventManager:
                                                   f"Swordfish returned '{_sw_home}' vs '{_sw_away}' "
                                                   f"but expected '{_ev_home}' vs '{_ev_away}' — "
                                                   f"reverting pinnacle_data_processed to prevent cross-game EV")
-                                            # CRITICAL: revert pinnacle_data_processed to the original
-                                            # stub/old data.  The wrong game's Pinnacle NVPs were already
-                                            # written at line 321; if we leave them there, build_event_object
-                                            # will calculate EV by mixing them with this game's BetBCK odds
-                                            # and produce completely false high-EV rows.
-                                            working_event_data["pinnacle_data_processed"] = \
-                                                event_data.get("pinnacle_data_processed", {})
+                                            # CRITICAL: revert to a guaranteed-clean empty stub.
+                                            # Do NOT use event_data.get("pinnacle_data_processed") here —
+                                            # if the wrong data was stored in a previous loop iteration,
+                                            # that would just restore the contaminated data.
+                                            working_event_data["pinnacle_data_processed"] = {}
 
                                     if betbck_data and processed_odds and _teams_match:
                                         print(f"[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds")
@@ -498,7 +512,7 @@ class PodEventManager:
                             snap_home = current_snap.get("cleaned_home_team", "")
                             snap_away = current_snap.get("cleaned_away_team", "")
                             snap_pinnacle = copy.deepcopy(current_snap.get("pinnacle_data_processed", {}))
-                            if snap_home and snap_away:
+                            if snap_home and snap_away and not current_snap.get("event_id_suspect"):
                                 self._betbck_last_refresh[event_id] = current_time
                                 self._betbck_refresh_in_progress.add(event_id)
                                 elapsed = current_time - last_bck
