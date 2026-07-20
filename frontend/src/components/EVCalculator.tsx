@@ -6,7 +6,6 @@ import {
   Typography,
   Grid,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   SelectChangeEvent,
@@ -20,6 +19,71 @@ interface EVResult {
   evPercent: number;
 }
 
+const inputSx = {
+  "& .MuiInputBase-root": {
+    backgroundColor: "#1A1A1A",
+    borderRadius: 0,
+    color: "#FFFFFF",
+    fontSize: "0.875rem",
+  },
+  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+  "& .MuiInputBase-root::before": {
+    content: '""',
+    display: "block",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "1px",
+    backgroundColor: "#333333",
+  },
+  "& .MuiInputBase-root.Mui-focused::after": {
+    content: '""',
+    display: "block",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "1px",
+    backgroundColor: "#9CA3AF",
+  },
+  "& .MuiInputLabel-root": { color: "#9CA3AF", fontSize: "0.75rem" },
+  "& .MuiInputLabel-root.Mui-focused": { color: "#9CA3AF" },
+  "& input[type=number]": { MozAppearance: "textfield" },
+  "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+    WebkitAppearance: "none",
+  },
+};
+
+const selectSx = {
+  backgroundColor: "#1A1A1A",
+  borderRadius: 0,
+  color: "#FFFFFF",
+  fontSize: "0.875rem",
+  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+  "&::before": {
+    content: '""',
+    display: "block",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "1px",
+    backgroundColor: "#333333",
+  },
+  "&.Mui-focused::after": {
+    content: '""',
+    display: "block",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "1px",
+    backgroundColor: "#9CA3AF",
+  },
+  "& .MuiSelect-icon": { color: "#9CA3AF" },
+};
+
 const EVCalculator: React.FC = () => {
   const [betAmount, setBetAmount] = useState<string>("");
   const [betOdds, setBetOdds] = useState<string>("");
@@ -28,7 +92,6 @@ const EVCalculator: React.FC = () => {
   const [result, setResult] = useState<EVResult | null>(null);
 
   useEffect(() => {
-    // Auto-calculate EV as inputs change
     try {
       const betAmountNum = parseFloat(betAmount);
       const betOddsNum = parseFloat(betOdds);
@@ -68,53 +131,87 @@ const EVCalculator: React.FC = () => {
   }, [betAmount, betOdds, trueOdds, oddsFormat]);
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Paper sx={{ 
-        p: 4, 
-        minWidth: 360, 
-        maxWidth: 420, 
-        width: '100%', 
-        textAlign: 'center', 
-        borderRadius: 2, 
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-        background: 'rgba(26, 26, 26, 0.8)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.08)'
-      }}>
-        <Typography variant="h6" sx={{ 
-          mb: 3, 
-          color: '#FFFFFF', 
-          fontWeight: 500,
-          letterSpacing: '-0.01em'
-        }}>
+    <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          minWidth: 360,
+          maxWidth: 420,
+          width: "100%",
+          textAlign: "left",
+          borderRadius: 0,
+          background: "#111111",
+          border: "1px solid #2A2A2A",
+        }}
+      >
+        <Typography
+          sx={{
+            mb: 3,
+            color: "#9CA3AF",
+            fontWeight: 600,
+            fontSize: "0.7rem",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+          }}
+        >
           EV Calculator
         </Typography>
+
         <Grid container spacing={2}>
           <Grid item xs={12}>
+            <Typography
+              sx={{
+                mb: 0.5,
+                color: "#9CA3AF",
+                fontSize: "0.7rem",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+              }}
+            >
+              Odds Format
+            </Typography>
             <FormControl fullWidth>
-              <InputLabel>Odds Format</InputLabel>
               <Select
                 value={oddsFormat}
-                label="Odds Format"
                 onChange={(e: SelectChangeEvent) => setOddsFormat(e.target.value)}
+                sx={selectSx}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: "#1A1A1A",
+                      border: "1px solid #2A2A2A",
+                      borderRadius: 0,
+                      "& .MuiMenuItem-root": {
+                        color: "#E5E5E5",
+                        fontSize: "0.875rem",
+                        "&:hover": { backgroundColor: "#242424" },
+                        "&.Mui-selected": {
+                          backgroundColor: "#242424",
+                          color: "#FFFFFF",
+                        },
+                      },
+                    },
+                  },
+                }}
               >
                 <MenuItem value="american">American</MenuItem>
                 <MenuItem value="decimal">Decimal</MenuItem>
               </Select>
             </FormControl>
           </Grid>
+
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Bet Amount"
+              label="Bet Amount ($)"
               type="number"
               value={betAmount}
               onChange={(e) => setBetAmount(e.target.value)}
-              InputProps={{
-                startAdornment: <Typography>$</Typography>,
-              }}
+              sx={inputSx}
             />
           </Grid>
+
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -122,13 +219,10 @@ const EVCalculator: React.FC = () => {
               type="number"
               value={betOdds}
               onChange={(e) => setBetOdds(e.target.value)}
-              InputProps={{
-                startAdornment: oddsFormat === "american" && (
-                  <Typography>{parseFloat(betOdds) > 0 ? "+" : ""}</Typography>
-                ),
-              }}
+              sx={inputSx}
             />
           </Grid>
+
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -136,59 +230,96 @@ const EVCalculator: React.FC = () => {
               type="number"
               value={trueOdds}
               onChange={(e) => setTrueOdds(e.target.value)}
-              InputProps={{
-                startAdornment: oddsFormat === "american" && (
-                  <Typography>{parseFloat(trueOdds) > 0 ? "+" : ""}</Typography>
-                ),
-              }}
+              sx={inputSx}
             />
           </Grid>
+
           {result && (
             <Grid item xs={12}>
-              <Box sx={{ 
-                mt: 3, 
-                p: 3, 
-                bgcolor: 'rgba(46, 125, 50, 0.1)', 
-                borderRadius: 2,
-                border: '1px solid rgba(46, 125, 50, 0.2)'
-              }}>
-                <Typography variant="subtitle1" sx={{ 
-                  mb: 2, 
-                  color: '#FFFFFF', 
-                  fontWeight: 600 
-                }}>
+              <Box
+                sx={{
+                  mt: 2,
+                  pt: 2,
+                  borderTop: "1px solid #2A2A2A",
+                }}
+              >
+                <Typography
+                  sx={{
+                    mb: 2,
+                    color: "#9CA3AF",
+                    fontSize: "0.7rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
                   Results
                 </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
-                      EV %:
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography sx={{ color: "#9CA3AF", fontSize: "0.8rem" }}>
+                      EV %
                     </Typography>
-                    <Typography sx={{ 
-                      color: result.evPercent > 0 ? '#2E7D32' : '#F44336', 
-                      fontWeight: 700,
-                      fontSize: '1rem'
-                    }}>
-                      {result.evPercent > 0 ? '+' : ''}{result.evPercent.toFixed(2)}%
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
-                      Expected Return:
-                    </Typography>
-                    <Typography sx={{ 
-                      color: result.ev > 0 ? '#2E7D32' : '#F44336', 
-                      fontWeight: 700,
-                      fontSize: '1rem'
-                    }}>
-                      ${result.ev > 0 ? '+' : ''}{result.ev.toFixed(2)}
+                    <Typography
+                      sx={{
+                        color: result.evPercent > 0 ? "#32D74B" : "#EF4444",
+                        fontWeight: 600,
+                        fontSize: "0.875rem",
+                        fontFamily: "monospace",
+                      }}
+                    >
+                      {result.evPercent > 0 ? "+" : ""}
+                      {result.evPercent.toFixed(2)}%
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography sx={{ color: '#B0B0B0', fontSize: '0.875rem' }}>
-                      Implied Probability:
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography sx={{ color: "#9CA3AF", fontSize: "0.8rem" }}>
+                      Expected Return
                     </Typography>
-                    <Typography sx={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.875rem' }}>
+                    <Typography
+                      sx={{
+                        color: result.ev > 0 ? "#32D74B" : "#EF4444",
+                        fontWeight: 600,
+                        fontSize: "0.875rem",
+                        fontFamily: "monospace",
+                      }}
+                    >
+                      {result.ev > 0 ? "+$" : "-$"}
+                      {Math.abs(result.ev).toFixed(2)}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography sx={{ color: "#9CA3AF", fontSize: "0.8rem" }}>
+                      Implied Probability
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: "#E5E5E5",
+                        fontWeight: 500,
+                        fontSize: "0.875rem",
+                        fontFamily: "monospace",
+                      }}
+                    >
                       {result.impliedProbability.toFixed(2)}%
                     </Typography>
                   </Box>
