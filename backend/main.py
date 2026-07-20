@@ -680,7 +680,8 @@ async def event_alert_worker(event_id):
                                         "cleaned_away_team": pod_away_clean,
                                         "betbck_last_update": betbck_last_update,
                                         "has_positive_ev": has_positive_ev,
-                                        "ev_rescrape_done": False
+                                        "ev_rescrape_done": False,
+                                        "event_id_suspect": _event_id_suspect,
                                     }
                                     pod_event_manager.add_active_event(event_id, event_data)
                                     updated_event = pod_event_manager.get_active_events().get(event_id)
@@ -701,17 +702,20 @@ async def event_alert_worker(event_id):
                     else:
                         logger.info(f"[PerEventQueue] Updating existing event {event_id} with fresh Pinnacle data (silent — no new alert log entry).")
                         event = active_events[event_id]
-                        betbck_data = event.get("betbck_data", {}).get("data", {})
-                        potential_bets = betbck_data.get("potential_bets_analyzed", [])
-                        has_positive_ev = event.get("has_positive_ev", False) or any(float(b.get("ev", "0").replace('%','')) > 0 for b in potential_bets)
-                        pod_event_manager.update_event_data(event_id, {
-                            "last_pinnacle_data_update_timestamp": now,
-                            "pinnacle_data_processed": live_pinnacle_odds_processed,
-                            "has_positive_ev": has_positive_ev
-                        })
-                        updated_event = pod_event_manager.get_active_events().get(event_id)
-                        if updated_event:
-                            broadcast_pod_alert_safe(event_id, updated_event)
+                        if event.get("event_id_suspect"):
+                            logger.info(f"[PerEventQueue] SUSPECT event {event_id} — skipping Pinnacle update to prevent cross-game EV contamination")
+                        else:
+                            betbck_data = event.get("betbck_data", {}).get("data", {})
+                            potential_bets = betbck_data.get("potential_bets_analyzed", [])
+                            has_positive_ev = event.get("has_positive_ev", False) or any(float(b.get("ev", "0").replace('%','')) > 0 for b in potential_bets)
+                            pod_event_manager.update_event_data(event_id, {
+                                "last_pinnacle_data_update_timestamp": now,
+                                "pinnacle_data_processed": live_pinnacle_odds_processed,
+                                "has_positive_ev": has_positive_ev
+                            })
+                            updated_event = pod_event_manager.get_active_events().get(event_id)
+                            if updated_event:
+                                broadcast_pod_alert_safe(event_id, updated_event)
                 logger.info(f"[PerEventQueue] Lock released for Event ID: {event_id}")
             except Exception as e:
                 logger.error(f"[PerEventQueue] Error processing alert for {event_id}: {e}")
