@@ -359,7 +359,7 @@ class AceScraper:
                 safe_print(f"[ACE DEBUG] Excluding league {lid} ({lname[:60]})")
                 continue
             out.append(lid)
-        safe_print(f"[ACE DEBUG] _filter_homepage_leagues: {len(out)} kept / {len(parsed)} total")
+        logging.info(f"[ACE] Homepage league filter: {len(out)} kept / {len(parsed)} total checkboxes")
         return out
 
     def get_active_league_ids(self) -> str:
@@ -561,18 +561,18 @@ class AceScraper:
                             discovered_ids = self._filter_homepage_leagues(parsed_leagues)
                             if discovered_ids:
                                 league_ids = ','.join(discovered_ids)
-                                safe_print(
-                                    f"[ACE DEBUG] Homepage discovery: {len(discovered_ids)} leagues "
-                                    f"(from {len(parsed_leagues)} checkboxes, after exclusions)"
+                                logging.info(
+                                    f"[ACE] Homepage discovery: {len(discovered_ids)} leagues queried "
+                                    f"(from {len(parsed_leagues)} checkboxes on CreateSports.aspx, after exclusions)"
                                 )
                             else:
-                                safe_print("[ACE DEBUG] Homepage discovery: all leagues excluded — falling back to KNOWN list")
+                                logging.warning("[ACE] Homepage discovery: all leagues excluded — falling back to KNOWN list")
                                 league_ids = self.get_combined_league_ids()
                         else:
-                            safe_print("[ACE DEBUG] Homepage discovery: no checkboxes found — falling back to KNOWN list")
+                            logging.warning("[ACE] Homepage discovery: no checkboxes found on CreateSports.aspx — falling back to KNOWN list")
                             league_ids = self.get_combined_league_ids()
                     except Exception as _disc_err:
-                        safe_print(f"[ACE DEBUG] Homepage discovery error: {_disc_err} — falling back to KNOWN list")
+                        logging.warning(f"[ACE] Homepage discovery error: {_disc_err} — falling back to KNOWN list")
                         league_ids = self.get_combined_league_ids()
                 else:
                     league_ids = _caller_league_ids
@@ -1540,7 +1540,7 @@ class AceScraper:
                     else:
                         game_dt = datetime.fromisoformat(game_date.replace('Z', '+00:00'))
                     now = datetime.now()
-                    if game_dt > now + timedelta(days=7):
+                    if game_dt > now + timedelta(days=60):
                         safe_print(f"[ACE GAME FILTER] Excluded game due to future date: {away_team} vs {home_team} ({game_date})")
                         return False
                 except Exception as e:
