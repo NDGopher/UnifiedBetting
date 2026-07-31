@@ -102,13 +102,13 @@ def fetch_sports() -> List[Dict[str, Any]]:
     except Exception as e:
         logger.error(f"Error fetching sports: {e}. Using fallback list...")
     
-    # Fallback sports list
+    # Fallback sports list — use matchup_count=-1 so the fetch loop doesn't skip them
     sports = [
-        {"name": "Soccer", "sport_id": 29, "url": "soccer", "matchup_count": 0},
-        {"name": "Basketball", "sport_id": 4, "url": "basketball", "matchup_count": 0},
-        {"name": "American Football", "sport_id": 15, "url": "american-football", "matchup_count": 0},
-        {"name": "Baseball", "sport_id": 3, "url": "baseball", "matchup_count": 0},
-        {"name": "Ice Hockey", "sport_id": 19, "url": "hockey", "matchup_count": 0},
+        {"name": "Soccer", "sport_id": 29, "url": "soccer", "matchup_count": -1},
+        {"name": "Basketball", "sport_id": 4, "url": "basketball", "matchup_count": -1},
+        {"name": "American Football", "sport_id": 15, "url": "american-football", "matchup_count": -1},
+        {"name": "Baseball", "sport_id": 3, "url": "baseball", "matchup_count": -1},
+        {"name": "Ice Hockey", "sport_id": 19, "url": "hockey", "matchup_count": -1},
     ]
     sports = [sport for sport in sports if sport["name"] not in EXCLUDED_SPORTS]
     logger.info(f"Using {len(sports)} fallback sports")
