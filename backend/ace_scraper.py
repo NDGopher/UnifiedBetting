@@ -417,10 +417,10 @@ class AceScraper:
             url = f"{self.base_url}/wager/ActiveLeaguesHelper.aspx"
             headers = {
                 'Accept': 'application/json, text/plain, */*',
-                'Referer': f'{self.base_url}/wager/CreateSports.aspx?WT=1',
+                'Referer': f'{self.base_url}/wager/CreateSports.aspx?WT=0',
                 'Accept-Encoding': 'gzip, deflate, br',
             }
-            resp = self.session.get(url, params={'WT': '1'}, headers=headers, timeout=15)
+            resp = self.session.get(url, params={'WT': '0'}, headers=headers, timeout=15)
             if resp.status_code != 200:
                 safe_print(f"[ACE DEBUG] ActiveLeaguesHelper returned {resp.status_code}")
                 return []
@@ -527,7 +527,7 @@ class AceScraper:
                 # Step 1: Navigate to CreateSports.aspx first (as per workflow).
                 # We also use this HTML to dynamically discover ALL active league IDs.
                 safe_print("[ACE DEBUG] Step 1: Navigating to CreateSports.aspx...")
-                create_sports_url = f"{self.base_url}/wager/CreateSports.aspx?WT=1"
+                create_sports_url = f"{self.base_url}/wager/CreateSports.aspx?WT=0"
                 create_response = self.session.get(create_sports_url, allow_redirects=False)
                 safe_print(f"[ACE DEBUG] CreateSports response status: {create_response.status_code}")
                 safe_print(f"[ACE DEBUG] CreateSports response URL: {create_response.url}")
@@ -587,7 +587,7 @@ class AceScraper:
                 # Step 2: Fetch odds data from correct URL (NewScheduleHelper.aspx)
                 odds_url = f"{self.base_url}/wager/NewScheduleHelper.aspx"
                 params = {
-                    'WT': '1',
+                    'WT': '0',
                     'lg': league_ids
                 }
                 safe_print(f"[ACE DEBUG] Step 2: Fetching odds from: {odds_url} with params: {params} (attempt {attempt + 1}/{max_retries})")
@@ -604,7 +604,7 @@ class AceScraper:
                     'Sec-Fetch-Dest': 'empty',
                     'Sec-Fetch-Mode': 'cors',
                     'Sec-Fetch-Site': 'same-origin',
-                    'Referer': f'{self.base_url}/wager/CreateSports.aspx?WT=1'
+                    'Referer': f'{self.base_url}/wager/CreateSports.aspx?WT=0'
                 }
                 
                 # Update session headers
