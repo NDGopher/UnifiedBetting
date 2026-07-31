@@ -1092,6 +1092,7 @@ class AceScraper:
         if 'mlb' in league_lower or 'baseball' in league_lower:
             return 'baseball'
         elif ('nfl' in league_lower or 'ncaaf' in league_lower
+              or 'ncaa football' in league_lower
               or 'college football' in league_lower
               or 'american football' in league_lower
               or 'canadian football' in league_lower
