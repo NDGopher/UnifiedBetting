@@ -12,13 +12,15 @@ logger = logging.getLogger(__name__)
 # Configuration
 ARCADIA_BASE_URL = "https://guest.api.arcadia.pinnacle.com/0.1"
 
-# Pinnacle now requires Origin/Referer headers that match their own site.
-# Without these the guest API returns 401 "No authorization token provided".
+# NOTE: Do NOT include Origin header — Pinnacle's guest API returns 401 for
+# any request that includes Origin: https://www.pinnacle.com (anti-hotlink
+# protection that blocks same-site origin spoofing).  Omitting Origin keeps
+# the request in the "direct" path and all sport endpoints stay open.
 ARCADIA_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     "Accept": "application/json, text/plain, */*",
-    "Origin": "https://www.pinnacle.com",
     "Referer": "https://www.pinnacle.com/",
+    "Accept-Language": "en-GB,en;q=0.9",
 }
 
 # Sports to exclude
@@ -102,13 +104,17 @@ def fetch_sports() -> List[Dict[str, Any]]:
     except Exception as e:
         logger.error(f"Error fetching sports: {e}. Using fallback list...")
     
-    # Fallback sports list — use matchup_count=-1 so the fetch loop doesn't skip them
+    # Fallback sports list — use matchup_count=-1 so the fetch loop doesn't skip them.
+    # Sport names must match exactly what the live API returns (used in special-case checks).
     sports = [
-        {"name": "Soccer", "sport_id": 29, "url": "soccer", "matchup_count": -1},
-        {"name": "Basketball", "sport_id": 4, "url": "basketball", "matchup_count": -1},
-        {"name": "American Football", "sport_id": 15, "url": "american-football", "matchup_count": -1},
-        {"name": "Baseball", "sport_id": 3, "url": "baseball", "matchup_count": -1},
-        {"name": "Ice Hockey", "sport_id": 19, "url": "hockey", "matchup_count": -1},
+        {"name": "Soccer",             "sport_id": 29, "url": "soccer",            "matchup_count": -1},
+        {"name": "Basketball",         "sport_id":  4, "url": "basketball",        "matchup_count": -1},
+        {"name": "Football",           "sport_id": 15, "url": "american-football", "matchup_count": -1},
+        {"name": "Baseball",           "sport_id":  3, "url": "baseball",          "matchup_count": -1},
+        {"name": "Hockey",             "sport_id": 19, "url": "hockey",            "matchup_count": -1},
+        {"name": "Tennis",             "sport_id": 33, "url": "tennis",            "matchup_count": -1},
+        {"name": "Mixed Martial Arts", "sport_id": 22, "url": "mma",               "matchup_count": -1},
+        {"name": "Boxing",             "sport_id":  6, "url": "boxing",            "matchup_count": -1},
     ]
     sports = [sport for sport in sports if sport["name"] not in EXCLUDED_SPORTS]
     logger.info(f"Using {len(sports)} fallback sports")
