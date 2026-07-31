@@ -1093,7 +1093,9 @@ class AceScraper:
             return 'baseball'
         elif ('nfl' in league_lower or 'ncaaf' in league_lower
               or 'college football' in league_lower
-              or 'american football' in league_lower):
+              or 'american football' in league_lower
+              or 'canadian football' in league_lower
+              or 'cfl' in league_lower):
             return 'football'
         elif ('nba' in league_lower or 'wnba' in league_lower
               or 'ncaab' in league_lower or 'college basketball' in league_lower
@@ -1136,6 +1138,37 @@ class AceScraper:
             'esiliiga', 'meistriliiga',                     # Estonia
             'op league', 'national league',                 # Various
             'football league',                              # Generic
+            # Country-specific leagues commonly seen on Ace
+            'argentina', 'bolivia', 'brazil', 'chile', 'colombia', 'ecuador',
+            'paraguay', 'peru', 'uruguay', 'venezuela',    # South America
+            'mexico', 'costa rica', 'guatemala', 'honduras', 'panama',
+            'el salvador', 'nicaragua',                    # Central America
+            'albania', 'armenia', 'austria', 'azerbaijan', 'belarus',
+            'belgium', 'bulgaria', 'croatia', 'cyprus', 'czech',
+            'denmark', 'estonia', 'faroe', 'finland', 'georgia',
+            'greece', 'hungary', 'iceland', 'israel', 'italy',
+            'kazakhstan', 'kosovo', 'latvia', 'liechtenstein', 'lithuania',
+            'luxembourg', 'malta', 'moldova', 'montenegro', 'netherlands',
+            'north macedonia', 'northern ireland', 'norway', 'poland',
+            'portugal', 'romania', 'russia', 'san marino', 'serbia',
+            'slovakia', 'slovenia', 'spain', 'sweden', 'switzerland',
+            'turkey', 'ukraine', 'wales',                  # Europe
+            'australia', 'new zealand',                    # Oceania
+            'china', 'india', 'indonesia', 'iran', 'iraq', 'japan',
+            'jordan', 'malaysia', 'myanmar', 'oman', 'qatar',
+            'saudi', 'south korea', 'thailand', 'uae', 'uzbekistan',
+            'vietnam',                                     # Asia/Middle East
+            'algeria', 'egypt', 'ghana', 'kenya', 'morocco',
+            'nigeria', 'senegal', 'south africa', 'tunisia',  # Africa
+            'parva league', 'vysshaya', 'liga aguila',     # Specific league names
+        )):
+            return 'soccer'
+        # Broad fallback: "COUNTRY - SOMETHING" pattern on Ace is almost always soccer
+        # (non-soccer sports use explicit sport names like "NBA", "MLB", "NFL", etc.)
+        elif ' - ' in league_lower and not any(kw in league_lower for kw in (
+            'nba', 'nfl', 'mlb', 'nhl', 'ncaa', 'wnba', 'cfl', 'ufl',
+            'mma', 'ufc', 'boxing', 'tennis', 'golf', 'hockey', 'basketball',
+            'baseball', 'football',
         )):
             return 'soccer'
         else:
@@ -1392,19 +1425,18 @@ class AceScraper:
             # Now proceed with scraping
             safe_print("[ACE DEBUG] Starting game scraping...")
 
-            # Get league IDs if not provided
-            if not league_ids:
-                safe_print("[ACE DEBUG] No league IDs provided, getting combined league IDs...")
-                league_ids = self.get_combined_league_ids()
-            safe_print(f"[ACE DEBUG] scrape_games using league IDs: {league_ids}")
-            
-            if not league_ids:
-                safe_print("[ACE DEBUG] No valid leagues to scrape, aborting.")
-                return []
-            
-            safe_print(f"[ACE DEBUG] Using league IDs: {league_ids}")
-            
-            # Fetch odds data
+            # Do NOT pre-fetch league IDs here.  fetch_odds_data() will load
+            # CreateSports.aspx and parse ALL available league checkboxes
+            # (homepage discovery).  Passing league_ids upfront would skip that
+            # block and fall back to the small hardcoded KNOWN list instead.
+            if league_ids:
+                safe_print(f"[ACE DEBUG] Caller-supplied league IDs, using as-is: {league_ids}")
+            else:
+                safe_print("[ACE DEBUG] No league IDs supplied — homepage discovery will run inside fetch_odds_data")
+
+            safe_print(f"[ACE DEBUG] scrape_games using league IDs: {league_ids or '(homepage discovery)'}")
+
+            # Fetch odds data — passes None so homepage discovery fires
             safe_print("[ACE DEBUG] Fetching odds data...")
             odds_data = self.fetch_odds_data(league_ids)
             
