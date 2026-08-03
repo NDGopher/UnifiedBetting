@@ -731,6 +731,35 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                             if not rev_passes and p_hv_rev >= 90 and p_al_rev >= 90 and s_hv >= 50 and s_al >= 50:
                                 rev_passes = True
                                 print(f"[BetbckParser] Partial-ratio fallback REV: p_hv={p_hv_rev} p_al={p_al_rev} ts_hv={s_hv} ts_al={s_al} (Event ID: {event_id})")
+                            # Distinctive-part guard: reject matches that passed
+                            # the threshold purely because both team names share a
+                            # generic soccer suffix (e.g. "town", "city", "united").
+                            # Strip those words and re-check the remaining distinctive
+                            # tokens.  If either stripped pair scores < 55 the
+                            # orientation is killed before we pick a winner.
+                            _DIST_MIN = 55
+                            if fwd_passes and fuzz:
+                                _d_ph = _strip_generic_soccer_words(ph)
+                                _d_pa = _strip_generic_soccer_words(pa)
+                                _d_bh = _strip_generic_soccer_words(bh)
+                                _d_bv = _strip_generic_soccer_words(bv)
+                                if _d_ph and _d_bh and _d_pa and _d_bv:
+                                    _d_hl = fuzz.token_set_ratio(_d_ph, _d_bh)
+                                    _d_av = fuzz.token_set_ratio(_d_pa, _d_bv)
+                                    if _d_hl < _DIST_MIN or _d_av < _DIST_MIN:
+                                        print(f"[BetbckParser] DISTINCTIVE-GUARD FWD rejected '{bh}' vs '{bv}': stripped d_hl={_d_hl} d_av={_d_av} (Event ID: {event_id})")
+                                        fwd_passes = False
+                            if rev_passes and fuzz:
+                                _d_ph = _strip_generic_soccer_words(ph)
+                                _d_pa = _strip_generic_soccer_words(pa)
+                                _d_bh = _strip_generic_soccer_words(bh)
+                                _d_bv = _strip_generic_soccer_words(bv)
+                                if _d_ph and _d_bv and _d_pa and _d_bh:
+                                    _d_hv = fuzz.token_set_ratio(_d_ph, _d_bv)
+                                    _d_al = fuzz.token_set_ratio(_d_pa, _d_bh)
+                                    if _d_hv < _DIST_MIN or _d_al < _DIST_MIN:
+                                        print(f"[BetbckParser] DISTINCTIVE-GUARD REV rejected '{bh}' vs '{bv}': stripped d_hv={_d_hv} d_al={_d_al} (Event ID: {event_id})")
+                                        rev_passes = False
                             if fwd_passes or rev_passes:
                                 # When BOTH orientations clear the threshold, pick the one
                                 # with the higher total score — not just whichever was checked
