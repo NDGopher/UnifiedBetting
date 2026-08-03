@@ -2165,13 +2165,27 @@ async def run_futures_pipeline_background():
                      "last_run": datetime.now().isoformat()},
         })
 
+        _FD_CACHE_FILE = os.path.join(os.path.dirname(__file__), "data/fd_futures_cache.json")
         fd_lines: list = []
         try:
             from futures_scrapers.fanduel_futures import scrape_fanduel_win_totals
             fd_lines = await scrape_fanduel_win_totals()
             logger.info("[FUTURES] FanDuel returned %d win-total records", len(fd_lines))
+            if fd_lines:
+                os.makedirs(os.path.dirname(_FD_CACHE_FILE), exist_ok=True)
+                with open(_FD_CACHE_FILE, "w") as _f:
+                    json.dump(fd_lines, _f)
+                logger.info("[FUTURES] Saved FD cache (%d records)", len(fd_lines))
         except Exception as fd_exc:
             logger.warning("[FUTURES] FanDuel scrape failed: %s", fd_exc)
+
+        if not fd_lines and os.path.exists(_FD_CACHE_FILE):
+            try:
+                with open(_FD_CACHE_FILE) as _f:
+                    fd_lines = json.load(_f)
+                logger.info("[FUTURES] FD returned 0 — loaded %d cached records from previous run", len(fd_lines))
+            except Exception as _ce:
+                logger.warning("[FUTURES] FD cache load failed: %s", _ce)
 
         # ── Step 3  Scrape DraftKings ─────────────────────────────────────────
         logger.info("[FUTURES] Step 3 — scraping DraftKings win totals (Playwright)…")
