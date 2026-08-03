@@ -2661,6 +2661,10 @@ def get_futures_results():
                 "ev":             e.get("ev", "0.0%"),
                 "ev_float":       e.get("ev_float", 0.0),
                 "sharp_books":    e.get("sharp_books", ""),
+                "is_arb":         e.get("is_arb", False),
+                "arb_book":       e.get("arb_book", ""),
+                "arb_opp_odds":   e.get("arb_opp_odds", ""),
+                "arb_roi":        e.get("arb_roi"),
             }
             for e in events
         ]
