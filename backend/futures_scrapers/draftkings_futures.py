@@ -21,10 +21,11 @@ CHROMIUM_PATH = (
 
 # DK URL for each sport's win-totals / futures page
 DK_WIN_TOTAL_PAGES = [
+    # nav_1=all-teams ensures every team's line loads, not just a filtered subset
     (
         "NFL",
         "https://sportsbook.draftkings.com/leagues/football/nfl"
-        "?category=futures&subcategory=wins&nav_1=regular-season-wins",
+        "?category=wins&subcategory=regular-season&nav_1=all-teams",
     ),
     (
         "NCAAF",
