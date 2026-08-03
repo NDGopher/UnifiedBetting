@@ -217,15 +217,17 @@ def _get_fair_prob(
     direction: str,
     fd_idx:  dict,
     dk_idx:  dict,
+    mgm_idx: dict,
 ) -> tuple[Optional[float], list[str], dict[str, Optional[int]]]:
-    """Return (fair_probability, sharp_books_used, {fd_amer, dk_amer}).
+    """Return (fair_probability, sharp_books_used, {fd_amer, dk_amer, mgm_amer}).
 
     We devig each sharp book's OVER+UNDER pair at exactly this line, then
     average across available books to get a consensus fair probability.
     """
-    fd_key   = (canon_team, line)
-    fd_entry = fd_idx.get(fd_key, {})
-    dk_entry = dk_idx.get(fd_key, {})
+    key      = (canon_team, line)
+    fd_entry = fd_idx.get(key, {})
+    dk_entry = dk_idx.get(key, {})
+    mgm_entry = mgm_idx.get(key, {})
 
     fair_probs: list[float] = []
     sharp_books: list[str]  = []
@@ -239,6 +241,9 @@ def _get_fair_prob(
             dk_over  = book_sides["over"]
             dk_under = book_sides["under"]
             break
+
+    mgm_over  = mgm_entry.get("BetMGM", {}).get("over")
+    mgm_under = mgm_entry.get("BetMGM", {}).get("under")
 
     if fd_over and fd_under:
         p_over, p_under = devig_pair(
@@ -254,13 +259,21 @@ def _get_fair_prob(
         fair_probs.append(p_over if direction == "over" else p_under)
         sharp_books.append("DK")
 
+    if mgm_over and mgm_under:
+        p_over, p_under = devig_pair(
+            american_to_decimal(mgm_over), american_to_decimal(mgm_under)
+        )
+        fair_probs.append(p_over if direction == "over" else p_under)
+        sharp_books.append("MGM")
+
     if not fair_probs:
-        return None, [], {"fd_amer": None, "dk_amer": None}
+        return None, [], {"fd_amer": None, "dk_amer": None, "mgm_amer": None}
 
     consensus = sum(fair_probs) / len(fair_probs)
     ref_odds = {
-        "fd_amer":  fd_over  if direction == "over" else fd_under,
-        "dk_amer":  dk_over  if direction == "over" else dk_under,
+        "fd_amer":  fd_over   if direction == "over" else fd_under,
+        "dk_amer":  dk_over   if direction == "over" else dk_under,
+        "mgm_amer": mgm_over  if direction == "over" else mgm_under,
     }
     return consensus, sharp_books, ref_odds
 
@@ -275,18 +288,19 @@ def _check_arb(
     line: float,
     fd_idx: dict,
     dk_idx: dict,
+    mgm_idx: dict,
 ) -> tuple[bool, Optional[int], str]:
     """Check whether BetBCK + reference book opposite side = arb.
 
     Returns (is_arb, best_opposite_amer, book_name).
     Arb condition: 1/decimal(betbck) + 1/decimal(ref_opposite) < 1.0
     """
-    fd_key   = (canon_team, line)
-    fd_entry = fd_idx.get(fd_key, {})
-    dk_entry = dk_idx.get(fd_key, {})
+    key      = (canon_team, line)
+    fd_entry = fd_idx.get(key, {})
+    dk_entry = dk_idx.get(key, {})
+    mgm_entry = mgm_idx.get(key, {})
 
     candidates: list[tuple[int, str]] = []  # (amer, book_label)
-
     opp = opposite_direction  # 'over' or 'under'
 
     fd_opp = fd_entry.get("FanDuel", {}).get(opp)
@@ -299,15 +313,19 @@ def _check_arb(
             candidates.append((dk_opp, "DK"))
             break
 
+    mgm_opp = mgm_entry.get("BetMGM", {}).get(opp)
+    if mgm_opp is not None:
+        candidates.append((mgm_opp, "MGM"))
+
     if not candidates:
         return False, None, ""
 
-    # Find the best (highest payout) opposite-side odds
+    # Use the best (highest payout) opposite-side odds across all books
     best_opp_amer, best_book = max(candidates, key=lambda x: american_to_decimal(x[0]))
 
-    betbck_dec  = american_to_decimal(betbck_amer)
-    opp_dec     = american_to_decimal(best_opp_amer)
-    total_impl  = 1.0 / betbck_dec + 1.0 / opp_dec
+    betbck_dec = american_to_decimal(betbck_amer)
+    opp_dec    = american_to_decimal(best_opp_amer)
+    total_impl = 1.0 / betbck_dec + 1.0 / opp_dec
 
     if total_impl < 1.0:
         return True, best_opp_amer, best_book
@@ -322,61 +340,60 @@ def calculate_futures_ev(
     betbck_lines: list[dict],
     fd_lines: list[dict],
     dk_lines: list[dict],
+    mgm_lines: list[dict] | None = None,
 ) -> list[dict]:
     """For each individual BetBCK win-total bet:
 
-      1. Find the same (team, line, direction) in FD/DK.
-      2. Devig FD and/or DK to get consensus fair probability.
+      1. Find the same (team, line, direction) in FD / DK / BetMGM.
+      2. Devig each available sharp book to get a consensus fair probability.
       3. EV% = (fair_prob × betbck_decimal − 1) × 100.
-      4. Check for arbitrage vs the opposite side on FD/DK.
+      4. Check for arbitrage vs the opposite side on any reference book.
 
     BetBCK's over and under for the same team may be at different lines —
     each bet is evaluated independently.
 
     Returns list of result dicts sorted by EV descending (positive first).
     """
-    fd_idx = build_book_index(fd_lines)
-    dk_idx = build_book_index(dk_lines)
+    fd_idx  = build_book_index(fd_lines)
+    dk_idx  = build_book_index(dk_lines)
+    mgm_idx = build_book_index(mgm_lines or [])
 
     results: list[dict] = []
 
     for bet in betbck_lines:
-        team       = bet["team"]
-        line       = float(bet["line"])
-        direction  = bet["direction"]       # 'over' | 'under'
+        team        = bet["team"]
+        line        = float(bet["line"])
+        direction   = bet["direction"]       # 'over' | 'under'
         betbck_amer = bet["american_odds"]
-        canon      = _canonical(team)
+        canon       = _canonical(team)
 
         fair_prob, sharp_books, ref_odds = _get_fair_prob(
-            canon, line, direction, fd_idx, dk_idx
+            canon, line, direction, fd_idx, dk_idx, mgm_idx
         )
 
         if fair_prob is None:
-            # No sharp-book reference at this exact line — skip
             logger.debug(
-                "[EV] No reference for %s %s %.1f (line not in FD/DK alternates)",
+                "[EV] No reference for %s %s %.1f (line not in FD/DK/MGM)",
                 team, direction, line,
             )
             continue
 
-        betbck_dec  = american_to_decimal(betbck_amer)
-        ev_val      = ev_pct(fair_prob, betbck_dec)
-        fair_amer   = decimal_to_american(1.0 / fair_prob)
+        betbck_dec = american_to_decimal(betbck_amer)
+        ev_val     = ev_pct(fair_prob, betbck_dec)
+        fair_amer  = decimal_to_american(1.0 / fair_prob)
 
         # ── Arb check: BetBCK this side + reference book opposite side ──────
         opp = "under" if direction == "over" else "over"
         is_arb, best_opp_amer, arb_book = _check_arb(
-            betbck_amer, opp, canon, line, fd_idx, dk_idx
+            betbck_amer, opp, canon, line, fd_idx, dk_idx, mgm_idx
         )
 
         arb_roi: Optional[float] = None
         if is_arb and best_opp_amer is not None:
-            # Roy: if we bet 1 unit on BetBCK and stake X on the opposite side
-            # so both pay the same: minimal guaranteed profit
             betbck_dec_v = american_to_decimal(betbck_amer)
             opp_dec_v    = american_to_decimal(best_opp_amer)
             total_impl   = 1.0 / betbck_dec_v + 1.0 / opp_dec_v
-            arb_roi      = round((1.0 / total_impl - 1.0) * 100, 2)  # guaranteed % return
+            arb_roi      = round((1.0 / total_impl - 1.0) * 100, 2)
 
         results.append(
             {
@@ -386,6 +403,7 @@ def calculate_futures_ev(
                 "betbck_odds":    fmt_american(betbck_amer),
                 "fd_odds":        fmt_american(ref_odds.get("fd_amer")),
                 "dk_odds":        fmt_american(ref_odds.get("dk_amer")),
+                "mgm_odds":       fmt_american(ref_odds.get("mgm_amer")),
                 "consensus_fair": fmt_american(fair_amer),
                 "ev":             f"{ev_val:.1f}%",
                 "ev_float":       round(ev_val, 2),
@@ -398,12 +416,10 @@ def calculate_futures_ev(
         )
 
     # Sort: arbs first, then positive EV descending, then all others
-    results.sort(
-        key=lambda x: (not x["is_arb"], -x["ev_float"])
-    )
+    results.sort(key=lambda x: (not x["is_arb"], -x["ev_float"]))
 
-    pos_ev  = sum(1 for r in results if r["ev_float"] > 0)
-    arbs    = sum(1 for r in results if r["is_arb"])
+    pos_ev = sum(1 for r in results if r["ev_float"] > 0)
+    arbs   = sum(1 for r in results if r["is_arb"])
     logger.info(
         "[EV] Results: %d total | %d +EV | %d arb",
         len(results), pos_ev, arbs,
