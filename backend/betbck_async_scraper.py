@@ -461,16 +461,20 @@ class BetBCKAsyncScraper:
                 print(f"   {i+1}. {name}")
             if len(all_checkbox_names) > 20:
                 print(f"   ... and {len(all_checkbox_names) - 20} more")
-            # Single-request path is fastest but BetBCK truncates / times out on very large
-            # payloads (>~20 checkboxes → huge HTML response).  Use concurrent batches instead.
-            is_small_selection = len(checkbox_names) <= 20
+            # Season win total checkboxes generate huge HTML responses (one row per team,
+            # 130+ CFB + 32 NFL teams) that push a combined request past BetBCK's transfer
+            # limit.  Split them out and send as a second sequential request with a natural
+            # pause — same pattern as a user clicking a second tab.  Everything else goes in
+            # the original single request, exactly as it always has.
+            SEASON_WIN_PATTERNS = ("SEAS@20;WIN", "SEA@20;WIN")
+            season_win_names = [n for n in checkbox_names if any(p in n for p in SEASON_WIN_PATTERNS)]
+            main_names       = [n for n in checkbox_names if not any(p in n for p in SEASON_WIN_PATTERNS)]
             MAX_CONCURRENT_BETBCK_REQUESTS = 5  # Reduced from unlimited to 5 concurrent requests
             games_htmls = []
-            
+
             if len(checkbox_names) == 0:
                 logger.error(f"[LOG] ERROR: No checkboxes found for sport filters: {self.sport_filters}")
                 logger.error(f"[LOG] This means no games will be scraped. Check the patterns above.")
-                # Return empty games list instead of None
                 all_games = []
                 deduped_games = self.deduplicate_games(all_games)
                 os.makedirs(os.path.dirname(self.output_file), exist_ok=True)
@@ -478,67 +482,42 @@ class BetBCKAsyncScraper:
                     json.dump(deduped_games, f, indent=2, ensure_ascii=False)
                 print(f"[LOG] Saved 0 games to {self.output_file} (no checkboxes found)")
                 return  # Exit early - no point continuing
-            
-            if is_small_selection:
-                # Fast path for small selections - send ALL checkboxes in ONE request (much faster!)
-                logger.info(f"[LOG] Small selection detected ({len(checkbox_names)} checkboxes) - sending all in one request")
-                logger.info(f"[LOG] Checkbox names: {checkbox_names}")
-                # Build payload with all checkboxes at once
+
+            async def _post_checkboxes(names, label):
+                """Send a single POST for the given checkbox names and return the HTML."""
                 post_payload = {
                     'keyword_search': '',
                     'inetWagerNumber': inet_wager_value,
                     'inetSportSelection': 'sport',
                     'contestType1': '', 'contestType2': '', 'contestType3': '',
-                    'x': random.randint(75, 85), 'y': random.randint(10, 15),  # Randomize coordinates
+                    'x': random.randint(75, 85), 'y': random.randint(10, 15),
                 }
-                # Add all checkboxes to payload
-                for name in checkbox_names:
+                for name in names:
                     post_payload[name] = 'on'
-                
-                logger.info(f"[LOG] Sending POST request with {len(checkbox_names)} checkboxes: {list(checkbox_names)}")
-                # Single request with all checkboxes - much faster!
+                logger.info(f"[LOG] {label}: sending POST with {len(names)} checkboxes")
                 try:
-                    html = await self.fetch_games_page(session, post_payload, delay=True)  # Small delay for the single request
-                    games_htmls.append(html)
-                    logger.info(f"[LOG] Successfully fetched HTML ({len(html)} chars)")
+                    html = await self.fetch_games_page(session, post_payload, delay=True)
+                    logger.info(f"[LOG] {label}: received {len(html)} chars")
+                    return html
                 except Exception as e:
-                    logger.error(f"[BetBCK Async] Error in combined small selection request: {e}")
                     import traceback
-                    logger.error(f"[BetBCK Async] Traceback: {traceback.format_exc()}")
-            else:
-                # Large selection: split into batches of 20 and fetch concurrently.
-                # Sending all checkboxes at once causes BetBCK to return a page so large
-                # it either truncates mid-transfer or times out during body download.
-                MAX_CHECKBOXES_PER_REQUEST = 20
-                semaphore = asyncio.Semaphore(3)  # max 3 simultaneous BetBCK requests
+                    logger.error(f"[BetBCK Async] {label} error: {e}\n{traceback.format_exc()}")
+                    return None
 
-                async def fetch_batch(batch, batch_num, total_batches):
-                    async with semaphore:
-                        logger.info(f"[LOG] Batch {batch_num}/{total_batches}: sending {len(batch)} checkboxes")
-                        post_payload = {
-                            'keyword_search': '',
-                            'inetWagerNumber': inet_wager_value,
-                            'inetSportSelection': 'sport',
-                            'contestType1': '', 'contestType2': '', 'contestType3': '',
-                            'x': random.randint(75, 85), 'y': random.randint(10, 15),
-                        }
-                        for name in batch:
-                            post_payload[name] = 'on'
-                        try:
-                            html = await self.fetch_games_page(session, post_payload, delay=True)
-                            logger.info(f"[LOG] Batch {batch_num}/{total_batches} done ({len(html)} chars)")
-                            return html
-                        except Exception as e:
-                            import traceback
-                            logger.error(f"[BetBCK Async] Batch {batch_num} error: {e}\n{traceback.format_exc()}")
-                            return None
+            # Request 1 — all normal checkboxes (same single request that has always worked)
+            if main_names:
+                html = await _post_checkboxes(main_names, "Main request")
+                if html:
+                    games_htmls.append(html)
 
-                batches = [checkbox_names[i:i + MAX_CHECKBOXES_PER_REQUEST]
-                           for i in range(0, len(checkbox_names), MAX_CHECKBOXES_PER_REQUEST)]
-                total = len(batches)
-                logger.info(f"[LOG] Large selection: {len(checkbox_names)} checkboxes → {total} concurrent batches of ≤{MAX_CHECKBOXES_PER_REQUEST}")
-                results = await asyncio.gather(*[fetch_batch(b, idx + 1, total) for idx, b in enumerate(batches)])
-                games_htmls.extend(html for html in results if html is not None)
+            # Request 2 — season win totals only, sent separately with a human-pace delay
+            if season_win_names:
+                pause = random.uniform(3.0, 6.0)
+                logger.info(f"[LOG] Waiting {pause:.1f}s before season-win-total request...")
+                await asyncio.sleep(pause)
+                html = await _post_checkboxes(season_win_names, "Season-win-totals request")
+                if html:
+                    games_htmls.append(html)
             all_games = []
             for html in games_htmls:
                 all_games.extend(self.parse_games(html))
