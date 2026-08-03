@@ -376,7 +376,8 @@ class BetBCKAsyncScraper:
         # Determine if this is a fast mode run (small sport selection)
         is_fast_mode = len(self.sport_filters) > 0 and len(self.sport_filters) <= 2
         
-        async with aiohttp.ClientSession(headers=self.headers) as session:
+        timeout = aiohttp.ClientTimeout(total=120)  # 2-min hard cap; prevents infinite hangs
+        async with aiohttp.ClientSession(headers=self.headers, timeout=timeout) as session:
             await self.login(session, fast_mode=is_fast_mode)
             selection_html = await self.fetch_selection_page(session, fast_mode=is_fast_mode)
             selection_soup = BeautifulSoup(selection_html, 'html.parser')
