@@ -2776,6 +2776,20 @@ async def run_futures_pipeline():
     return {"status": "success", "message": "Futures pipeline started in background", "data": {}}
 
 
+@app.post("/api/run-futures-pipeline/{market_id}")
+async def run_outright_futures_pipeline(market_id: str):
+    """Start an outright-winner futures pipeline (e.g. epl_winner) in the background."""
+    global _outright_pipeline_running, _outright_pipeline_tasks
+    if _outright_pipeline_running.get(market_id, False):
+        return {"status": "error", "message": f"{market_id} pipeline is already running — please wait.", "data": {}}
+    task = asyncio.create_task(run_futures_outright_pipeline_background(market_id))
+    _outright_pipeline_tasks[market_id] = task
+    def _reset(t):
+        _outright_pipeline_running[market_id] = False
+    task.add_done_callback(_reset)
+    return {"status": "success", "message": f"{market_id} pipeline started in background", "data": {}}
+
+
 @app.get("/api/futures-pipeline-status")
 async def get_futures_pipeline_status():
     """Check whether the futures pipeline is running."""
@@ -2852,6 +2866,56 @@ def get_futures_results():
         return JSONResponse({"status": "success", "data": {"markets": [], "last_update": None}})
     try:
         with open(FUTURES_RESULTS_FILE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        markets = _serialize(data.get("events", []))
+        return JSONResponse({"status": "success", "data": {"markets": markets, "last_update": data.get("last_run")}})
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"status": "error", "message": str(e), "data": {}})
+
+
+@app.get("/buckeye/futures-results/{market_id}")
+def get_outright_futures_results(market_id: str):
+    """Serve outright futures results for the given market_id (e.g. epl_winner)."""
+    global FUTURES_OUTRIGHT_RESULTS, FUTURES_OUTRIGHT_LAST_RUN
+
+    def _serialize(events):
+        return [
+            {
+                "team":           e.get("team", ""),
+                "sport":          e.get("sport", ""),
+                "market_id":      e.get("market_id", market_id),
+                "line":           e.get("line"),
+                "direction":      e.get("direction", "winner"),
+                "betbck_odds":    e.get("betbck_odds", "N/A"),
+                "fd_odds":        e.get("fd_odds", "N/A"),
+                "dk_odds":        e.get("dk_odds", "N/A"),
+                "mgm_odds":       e.get("mgm_odds", "N/A"),
+                "consensus_fair": e.get("consensus_fair", "N/A"),
+                "ev":             e.get("ev", "0.0%"),
+                "ev_float":       e.get("ev_float", 0.0),
+                "sharp_books":    e.get("sharp_books", ""),
+                "signal_count":   e.get("signal_count", 0),
+                "per_book_ev":    e.get("per_book_ev", {}),
+                "all_book_odds":  e.get("all_book_odds", {}),
+                "is_arb":         False,
+                "arb_book":       "",
+                "arb_opp_odds":   "",
+                "arb_roi":        None,
+            }
+            for e in events
+        ]
+
+    # In-memory first
+    if market_id in FUTURES_OUTRIGHT_RESULTS and FUTURES_OUTRIGHT_RESULTS[market_id]:
+        markets = _serialize(FUTURES_OUTRIGHT_RESULTS[market_id])
+        return JSONResponse({"status": "success", "data": {"markets": markets, "last_update": FUTURES_OUTRIGHT_LAST_RUN.get(market_id)}})
+
+    # Fallback to file
+    results_file = os.path.join(os.path.dirname(__file__), f"data/futures_results_{market_id}.json")
+    if not os.path.exists(results_file):
+        return JSONResponse({"status": "success", "data": {"markets": [], "last_update": None}})
+    try:
+        with open(results_file, "r", encoding="utf-8") as f:
             data = json.load(f)
         markets = _serialize(data.get("events", []))
         return JSONResponse({"status": "success", "data": {"markets": markets, "last_update": data.get("last_run")}})
