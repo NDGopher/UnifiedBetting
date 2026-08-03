@@ -97,19 +97,14 @@ async def scrape_fanduel_win_totals() -> list[dict]:
     import random
     from playwright.async_api import async_playwright
 
+    # Windows + Chrome 127/126 pool — more representative of a real US desktop user.
+    # PerimeterX is less suspicious of Chrome/127 Win10 than Mac/Safari or older builds.
     _UA_POOL = [
-        (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
-        ),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
-        ),
-        (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15"
-        ),
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
     ]
 
     captured: dict[str, dict] = {}
@@ -118,18 +113,47 @@ async def scrape_fanduel_win_totals() -> list[dict]:
         browser = await p.chromium.launch(
             executable_path=CHROMIUM_PATH,
             headless=True,
-            args=["--no-sandbox", "--disable-dev-shm-usage"],
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                # Critical: removes the Automation flag that PerimeterX detects
+                "--disable-blink-features=AutomationControlled",
+                "--window-size=1440,900",
+            ],
         )
 
         for sport, url in FD_WIN_TOTAL_PAGES:
             # Fresh isolated context per sport — no shared cookies/fingerprint
             ctx_kwargs = _fresh_context_kwargs()
-            ctx_kwargs["user_agent"] = random.choice(_UA_POOL)
+            ua = random.choice(_UA_POOL)
+            ctx_kwargs["user_agent"] = ua
+            # Match sec-ch-ua to the chosen Chrome version
+            _chrome_ver = "127"
+            if "Chrome/126" in ua:
+                _chrome_ver = "126"
+            elif "Chrome/125" in ua:
+                _chrome_ver = "125"
+            _is_mac = "Macintosh" in ua or "Mac OS" in ua
+            _sec_ch_ua = (
+                f'"Not)A;Brand";v="99", "Google Chrome";v="{_chrome_ver}", "Chromium";v="{_chrome_ver}"'
+                if "Chrome" in ua else
+                '"Not A;Brand";v="99"'
+            )
             context = await browser.new_context(**ctx_kwargs)
             page = await context.new_page()
             await page.add_init_script(
                 "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
             )
+            await page.set_extra_http_headers({
+                "sec-ch-ua":          _sec_ch_ua,
+                "sec-ch-ua-mobile":   "?0",
+                "sec-ch-ua-platform": '"macOS"' if _is_mac else '"Windows"',
+                "sec-fetch-dest":     "document",
+                "sec-fetch-mode":     "navigate",
+                "sec-fetch-site":     "none",
+                "sec-fetch-user":     "?1",
+                "upgrade-insecure-requests": "1",
+            })
 
             all_urls: list[str] = []
 
@@ -148,8 +172,15 @@ async def scrape_fanduel_win_totals() -> list[dict]:
             page.on("response", _on_response)
 
             try:
+                # Random pre-navigation pause — looks more human to PerimeterX
+                await asyncio.sleep(random.uniform(1.5, 4.0))
                 await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
-                await page.wait_for_timeout(15_000)
+                # Simulate human: small mouse movement after load, then wait
+                await page.mouse.move(
+                    random.randint(300, 900),
+                    random.randint(200, 600),
+                )
+                await page.wait_for_timeout(random.randint(12_000, 18_000))
             except Exception as exc:  # pylint: disable=broad-except
                 logger.warning("[FD] Navigation error for %s: %s", sport, exc)
             finally:
@@ -174,6 +205,94 @@ async def scrape_fanduel_win_totals() -> list[dict]:
 
     logger.info("[FD] Total entries: %d across %s", len(results), list(captured))
     return results
+
+
+async def scrape_fanduel_outright(
+    url: str,
+    market_id: str,
+    sport: str,
+    market_type_kw: str = "WINNER",
+) -> list[dict]:
+    """Scrape a FanDuel outright winner page and return records.
+
+    Same Playwright interception approach as win totals but calls
+    parse_fd_outright_page() instead of parse_fd_content_page().
+    """
+    import random as _random
+    from playwright.async_api import async_playwright
+    from futures_ev_outright import parse_fd_outright_page
+
+    _UA_POOL = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    ]
+
+    captured: dict | None = None
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            executable_path=CHROMIUM_PATH,
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
+        )
+        ua = _random.choice(_UA_POOL)
+        context = await browser.new_context(
+            user_agent=ua,
+            viewport={"width": 1440, "height": 900},
+            locale="en-US",
+            timezone_id="America/Chicago",
+        )
+        page = await context.new_page()
+        await page.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+        await page.set_extra_http_headers({
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"' if "Windows" in ua else '"macOS"',
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+        })
+
+        all_urls: list[str] = []
+
+        async def _on_response(r):
+            nonlocal captured
+            all_urls.append(r.url)
+            if "content-managed-page" in r.url and r.status == 200:
+                try:
+                    body = await r.body()
+                    captured = json.loads(body)
+                    logger.info("[FD-OUT] Captured %s content page: %d bytes", market_id, len(body))
+                except json.JSONDecodeError:
+                    logger.warning("[FD-OUT] Could not parse JSON for %s", market_id)
+
+        page.on("response", _on_response)
+
+        try:
+            await asyncio.sleep(_random.uniform(1.5, 3.5))
+            await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
+            await page.mouse.move(_random.randint(300, 900), _random.randint(200, 500))
+            await page.wait_for_timeout(_random.randint(12_000, 18_000))
+        except Exception as exc:
+            logger.warning("[FD-OUT] Navigation error for %s: %s", market_id, exc)
+        finally:
+            if captured is None:
+                api_urls = [u for u in all_urls if "fanduel" in u.lower()]
+                logger.warning("[FD-OUT] %s: content-managed-page NOT found. API URLs (%d):\n%s",
+                               market_id, len(api_urls), "\n".join(f"  {u}" for u in api_urls[:15]))
+            await page.close()
+            await context.close()
+        await browser.close()
+
+    if not captured:
+        return []
+
+    records = parse_fd_outright_page(captured, sport, market_id, market_type_kw)
+    logger.info("[FD-OUT] %s: %d outright records", market_id, len(records))
+    return records
 
 
 if __name__ == "__main__":
