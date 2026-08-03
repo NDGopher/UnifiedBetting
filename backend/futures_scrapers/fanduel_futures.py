@@ -124,8 +124,11 @@ async def scrape_fanduel_win_totals() -> list[dict]:
             page.on("response", _on_response)
 
             try:
-                await page.goto(url, timeout=45_000, wait_until="domcontentloaded")
-                await page.wait_for_timeout(9_000)
+                await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
+                # Give the page time to fire the content-managed-page XHR.
+                # NFL needs a bit longer than NCAAF to trigger the request.
+                wait_ms = 15_000 if sport == "NFL" else 10_000
+                await page.wait_for_timeout(wait_ms)
             except Exception as exc:  # pylint: disable=broad-except
                 logger.warning("[FD] Navigation error for %s: %s", sport, exc)
             finally:
