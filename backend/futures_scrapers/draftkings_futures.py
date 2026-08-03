@@ -29,7 +29,7 @@ DK_WIN_TOTAL_PAGES = [
     (
         "NCAAF",
         "https://sportsbook.draftkings.com/leagues/football/ncaaf"
-        "?category=futures&subcategory=wins",
+        "?category=wins&subcategory=regular-season&nav_1=all-teams",
     ),
 ]
 
@@ -217,14 +217,22 @@ async def scrape_draftkings_win_totals() -> list[dict]:
                 await page.goto(url, timeout=45_000, wait_until="domcontentloaded")
                 await page.wait_for_timeout(3_000)
 
-                # Scroll aggressively to trigger lazy loading for all teams
-                # 80 steps × 250 px = 20 000 px total; 150 ms between steps
-                for _ in range(80):
-                    await page.evaluate("window.scrollBy(0, 250)")
+                # Scroll aggressively to trigger lazy loading for all teams.
+                # NFL has 32 teams × multiple alternate lines — need deep scroll.
+                # 300 steps × 300 px = 90 000 px total; 200 ms between steps.
+                for _ in range(300):
+                    await page.evaluate("window.scrollBy(0, 300)")
+                    await page.wait_for_timeout(200)
+
+                # Scroll back to top then down again to catch any missed loads
+                await page.evaluate("window.scrollTo(0, 0)")
+                await page.wait_for_timeout(1_000)
+                for _ in range(100):
+                    await page.evaluate("window.scrollBy(0, 500)")
                     await page.wait_for_timeout(150)
 
                 # Wait for final API calls to settle
-                await page.wait_for_timeout(3_000)
+                await page.wait_for_timeout(5_000)
 
                 logger.info(
                     "[DK] %s: collected %d records after scroll", sport, len(sport_records)
