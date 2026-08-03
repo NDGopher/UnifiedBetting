@@ -41,6 +41,9 @@ class BetBCKAsyncScraper:
             'nhl': ['HOCKEY_NHL_Game_'],
             'mlb': ['BASEBALL_MLB_Game_'],
             'wnba': ['BASKETBALL_WNBA_Game_', 'BASKETBALL_WNBA_1st@20;Half_'],
+            # Season win totals — exact checkbox names confirmed from BetBCK request log
+            'nfl_season_wins': ['FOOTBALL_NFL@20;SEAS@20;WIN_Game_'],
+            'cfb_season_wins': ['FOOTBALL_NCAA@20;SEA@20;WIN_Game_'],
             'soccer': ['SOCCER_.*?_Game_', 'SOCCER_.*?_1st@20;Half_'],  # All soccer + 1H
             'soccer_major': [  # Major soccer leagues + their 1H lines
                 'SOCCER_UEFA@20;CH@20;LEA_Game_',
@@ -60,10 +63,11 @@ class BetBCKAsyncScraper:
         }
         # Priority order for "all sports" mode - highest priority first
         self.sport_priority = [
-            'nfl', 'nba', 'nhl', 'mlb',  # Major US sports first
-            'ncaa_football', 'ncaa_basketball',  # College sports
-            'soccer_major',  # Major soccer leagues
-            'soccer'  # All other soccer (lowest priority)
+            'nfl', 'nba', 'nhl', 'mlb',            # Major US sports first
+            'ncaa_football', 'ncaa_basketball',      # College sports
+            'nfl_season_wins', 'cfb_season_wins',    # Season win totals
+            'soccer_major',                          # Major soccer leagues
+            'soccer'                                 # All other soccer (lowest priority)
         ]
         self.checkbox_patterns = [
             re.compile(r"SOCCER_.*?_Game_"),
@@ -77,6 +81,8 @@ class BetBCKAsyncScraper:
             re.compile(r"FOOTBALL_NCAAF_Game_"),
             re.compile(r"FOOTBALL_COLLEGE_Game_"),
             re.compile(r"FOOTBALL_CANADIAN_Game_"),
+            re.compile(r"FOOTBALL_NFL@20;SEAS@20;WIN_Game_"),   # NFL season win totals
+            re.compile(r"FOOTBALL_NCAA@20;SEA@20;WIN_Game_"),  # CFB season win totals
             re.compile(r"HOCKEY_NHL_Game_"),
             re.compile(r"BASEBALL_MLB_Game_"),
             re.compile(r"BASEBALL_WBC_Game_"),
