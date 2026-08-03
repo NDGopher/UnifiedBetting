@@ -2173,7 +2173,7 @@ async def run_futures_pipeline_background():
 
         # Step 4 — Calculate EV
         logger.info("[FUTURES] Calculating EV for futures…")
-        from calculate_ev import calculate_ev_table_async, format_ev_table_for_display
+        from calculate_ev_table import calculate_ev_table_async, format_ev_table_for_display
         ev_results = await calculate_ev_table_async(matched_games)
         ev_events  = format_ev_table_for_display(ev_results)
         logger.info(f"[FUTURES] EV calc complete: {len(ev_events)} futures opportunities")
