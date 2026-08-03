@@ -188,11 +188,13 @@ _STRIP_RE  = re.compile(r"[^a-z0-9 ]")
 _SPACES_RE = re.compile(r"\s+")
 
 _ALIASES: dict[str, str] = {
+    # NFL rebrands
     "washington football team":    "washington commanders",
     "washington redskins":         "washington commanders",
     "oakland raiders":             "las vegas raiders",
     "st louis rams":               "los angeles rams",
     "san diego chargers":          "los angeles chargers",
+    # NCAAF abbreviations
     "n illinois":                  "northern illinois",
     "n. illinois":                 "northern illinois",
     "northern ill":                "northern illinois",
@@ -203,7 +205,70 @@ _ALIASES: dict[str, str] = {
     "n carolina st":               "nc state",
     "north carolina st":           "nc state",
     "north carolina state":        "nc state",
+    # BetMGM uses "Team (StateAbbr)" — parenthetical stripped + state abbr resolved
+    "miami fl":                    "miami florida",
+    "miami oh":                    "miami ohio",
+    "florida int":                 "fiu",
+    "florida international":       "fiu",
+    "fla international":           "fiu",
+    "louisiana la":                "louisiana",
+    "ul lafayette":                "louisiana",
+    "la lafayette":                "louisiana",
+    "louisiana lafayette":         "louisiana",
+    "louisiana state":             "lsu",
+    "la state":                    "lsu",
+    "texas el paso":               "utep",
+    "tx el paso":                  "utep",
+    "ut san antonio":              "utsa",
+    "texas san antonio":           "utsa",
+    "alabama birmingham":          "uab",
+    "al birmingham":               "uab",
+    "massachusetts":               "umass",
+    "u mass":                      "umass",
+    "connecticut":                 "uconn",
+    "bowling green st":            "bowling green",
+    "bowling green state":         "bowling green",
+    "central florida":             "ucf",
+    "ga southern":                 "georgia southern",
+    "georgia st":                  "georgia state",
+    "appalachian st":              "appalachian state",
+    "app state":                   "appalachian state",
+    "app st":                      "appalachian state",
+    "middle tenn":                 "middle tennessee",
+    "middle tenn st":              "middle tennessee",
+    "middle tennessee st":         "middle tennessee",
+    "middle tennessee state":      "middle tennessee",
+    "southern miss":               "southern mississippi",
+    "so mississippi":              "southern mississippi",
+    "western kentucky":            "western kentucky",
+    "fla atlantic":                "florida atlantic",
+    "old dominion":                "old dominion",
+    "ut martin":                   "tennessee martin",
+    "san jose st":                 "san jose state",
+    "boise st":                    "boise state",
+    "fresno st":                   "fresno state",
+    "san diego st":                "san diego state",
+    "arizona st":                  "arizona state",
+    "colorado st":                 "colorado state",
+    "utah st":                     "utah state",
+    "oregon st":                   "oregon state",
+    "washington st":               "washington state",
+    "michigan st":                 "michigan state",
+    "ohio st":                     "ohio state",
+    "penn st":                     "penn state",
+    "florida st":                  "florida state",
+    "kansas st":                   "kansas state",
+    "oklahoma st":                 "oklahoma state",
+    "arkansas st":                 "arkansas state",
+    "texas st":                    "texas state",
+    "mississippi st":              "mississippi state",
+    "southern methodist":          "smu",
+    "texas christian":             "tcu",
 }
+
+# BetMGM often appends state abbreviation in parens: "Miami (FL)" → "miami fl"
+# This regex strips the parens so the alias table above can resolve the rest.
+_PAREN_RE = re.compile(r"\s*\([^)]*\)\s*$")
 
 
 def _norm(name: str) -> str:
@@ -212,7 +277,9 @@ def _norm(name: str) -> str:
 
 
 def _canonical(name: str) -> str:
-    n = _norm(name)
+    # Strip trailing parenthetical before normalising (e.g. "Miami (FL)" → "Miami FL")
+    cleaned = _PAREN_RE.sub("", name).strip()
+    n = _norm(cleaned)
     return _ALIASES.get(n, n)
 
 # ---------------------------------------------------------------------------
@@ -365,6 +432,17 @@ def _check_arb(
 # Main EV + arb calculation
 # ---------------------------------------------------------------------------
 
+def _build_buckeye_index(betbck_lines: list[dict]) -> dict:
+    """Return {(canon_team, line) → {over_amer, under_amer}} from BetBCK lines."""
+    idx: dict = {}
+    for bet in betbck_lines:
+        key = (_canonical(bet["team"]), float(bet["line"]))
+        if key not in idx:
+            idx[key] = {}
+        idx[key][bet["direction"]] = bet["american_odds"]
+    return idx
+
+
 def calculate_futures_ev(
     betbck_lines: list[dict],
     fd_lines: list[dict],
@@ -383,9 +461,10 @@ def calculate_futures_ev(
 
     Returns list of result dicts sorted by EV descending (positive first).
     """
-    fd_idx  = build_book_index(fd_lines)
-    dk_idx  = build_book_index(dk_lines)
-    mgm_idx = build_book_index(mgm_lines or [])
+    fd_idx      = build_book_index(fd_lines)
+    dk_idx      = build_book_index(dk_lines)
+    mgm_idx     = build_book_index(mgm_lines or [])
+    buckeye_idx = _build_buckeye_index(betbck_lines)
 
     results: list[dict] = []
 
@@ -473,6 +552,32 @@ def calculate_futures_ev(
             total_impl   = 1.0 / betbck_dec_v + 1.0 / opp_dec_v
             arb_roi      = round((1.0 / total_impl - 1.0) * 100, 2)
 
+        # ── All-book O/U snapshot for row-expand panel ───────────────────────
+        bk_sides   = buckeye_idx.get((canon, line), {})
+        dk_sides   = {}
+        for book_sides in dk_entry.values():
+            dk_sides = book_sides
+            break
+
+        all_book_odds = {
+            "Buckeye": {
+                "over":  fmt_american(bk_sides.get("over")),
+                "under": fmt_american(bk_sides.get("under")),
+            },
+            "FD": {
+                "over":  fmt_american(fd_entry.get("FanDuel", {}).get("over")),
+                "under": fmt_american(fd_entry.get("FanDuel", {}).get("under")),
+            },
+            "DK": {
+                "over":  fmt_american(dk_sides.get("over")),
+                "under": fmt_american(dk_sides.get("under")),
+            },
+            "MGM": {
+                "over":  fmt_american(mgm_entry.get("BetMGM", {}).get("over")),
+                "under": fmt_american(mgm_entry.get("BetMGM", {}).get("under")),
+            },
+        }
+
         results.append(
             {
                 "team":           team,
@@ -489,6 +594,7 @@ def calculate_futures_ev(
                 "sharp_books":    "+".join(sharp_books),
                 "signal_count":   signal_count,
                 "per_book_ev":    per_book_ev,
+                "all_book_odds":  all_book_odds,
                 "is_arb":         is_arb,
                 "arb_book":       arb_book if is_arb else "",
                 "arb_opp_odds":   fmt_american(best_opp_amer) if is_arb else "",
