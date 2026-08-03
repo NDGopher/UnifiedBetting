@@ -1412,6 +1412,12 @@ futures_pipeline_running = False
 futures_pipeline_task    = None
 _last_futures_payload: dict | None = None
 
+# ── Outright-market pipeline globals (EPL winner, etc.) ──────────────────────
+FUTURES_OUTRIGHT_RESULTS = {}   # market_id → list of result dicts
+FUTURES_OUTRIGHT_LAST_RUN = {}  # market_id → ISO timestamp
+_outright_pipeline_running: dict[str, bool] = {}
+_outright_pipeline_tasks:   dict[str, asyncio.Task | None] = {}
+
 async def run_pipeline_background():
     """Background task to run the Buckeye pipeline"""
     global current_results, last_run_time, pipeline_running
@@ -2267,6 +2273,150 @@ async def run_futures_pipeline_background():
     finally:
         futures_pipeline_running = False
         logger.info("[FUTURES] Pipeline task completed, futures_pipeline_running = False")
+
+
+async def run_futures_outright_pipeline_background(market_id: str):
+    """Background pipeline for outright-winner futures markets (EPL, La Liga, etc.)
+
+    Reads market config from futures_config.FUTURES_MARKETS, scrapes BetBCK +
+    FD + DK + MGM, calculates N-way EV, saves results, and broadcasts SSE.
+    """
+    global FUTURES_OUTRIGHT_RESULTS, FUTURES_OUTRIGHT_LAST_RUN, _outright_pipeline_running
+    import time as _time
+    _outright_pipeline_running[market_id] = True
+    run_start = _time.time()
+
+    try:
+        from futures_config import FUTURES_MARKETS, OutrightMarket
+        if market_id not in FUTURES_MARKETS:
+            raise ValueError(f"Unknown futures market: {market_id!r}")
+        cfg = FUTURES_MARKETS[market_id]
+        mc  = cfg.config      # OutrightMarket instance
+        sport = cfg.sport
+
+        logger.info("[OUT-PIPELINE] ═══ OUTRIGHT PIPELINE: %s ('%s') ═══", market_id, cfg.name)
+
+        # ── Step 1  Buckeye ──────────────────────────────────────────────────
+        await sse_manager.broadcast({"type": "futures_update", "data": {
+            "events": [], "message": f"Scraping Buckeye {cfg.name}…",
+            "last_run": datetime.now().isoformat(), "market_id": market_id,
+        }})
+        try:
+            from betbck_async_scraper import _get_betbck_outright_games_async
+            from futures_ev_outright import parse_betbck_outright_winners
+            betbck_raw   = await _get_betbck_outright_games_async(market_id)
+            betbck_lines = parse_betbck_outright_winners(betbck_raw, market_id, sport)
+            logger.info("[OUT-PIPELINE] Buckeye: %d outright records", len(betbck_lines))
+        except Exception as exc:
+            logger.warning("[OUT-PIPELINE] Buckeye scrape failed: %s", exc)
+            betbck_lines = []
+
+        # ── Step 2  FanDuel ──────────────────────────────────────────────────
+        await sse_manager.broadcast({"type": "futures_update", "data": {
+            "events": [], "message": f"Scraping FanDuel {cfg.name} (browser)…",
+            "last_run": datetime.now().isoformat(), "market_id": market_id,
+        }})
+        fd_lines: list = []
+        try:
+            from futures_scrapers.fanduel_futures import scrape_fanduel_outright
+            fd_lines = await scrape_fanduel_outright(
+                mc.fd_url, market_id, sport, mc.fd_market_type_kw,
+            )
+            logger.info("[OUT-PIPELINE] FanDuel: %d outright records", len(fd_lines))
+        except Exception as exc:
+            logger.warning("[OUT-PIPELINE] FanDuel scrape failed: %s", exc)
+
+        # ── Step 3  DraftKings ───────────────────────────────────────────────
+        await sse_manager.broadcast({"type": "futures_update", "data": {
+            "events": [], "message": f"Scraping DraftKings {cfg.name} (browser)…",
+            "last_run": datetime.now().isoformat(), "market_id": market_id,
+        }})
+        dk_lines: list = []
+        try:
+            from futures_scrapers.draftkings_futures import scrape_draftkings_outright
+            dk_lines = await scrape_draftkings_outright(
+                mc.dk_url, market_id, sport, mc.dk_market_type_kw,
+            )
+            logger.info("[OUT-PIPELINE] DraftKings: %d outright records", len(dk_lines))
+        except Exception as exc:
+            logger.warning("[OUT-PIPELINE] DraftKings scrape failed: %s", exc)
+
+        # ── Step 4  BetMGM ───────────────────────────────────────────────────
+        await sse_manager.broadcast({"type": "futures_update", "data": {
+            "events": [], "message": f"Scraping BetMGM {cfg.name}…",
+            "last_run": datetime.now().isoformat(), "market_id": market_id,
+        }})
+        mgm_lines: list = []
+        try:
+            from futures_scrapers.betmgm_futures import scrape_betmgm_outright
+            mgm_lines = await scrape_betmgm_outright(
+                mc.mgm_competition_id, sport, market_id,
+                mc.mgm_game_kw, mc.mgm_sport_path,
+            )
+            logger.info("[OUT-PIPELINE] BetMGM: %d outright records", len(mgm_lines))
+        except Exception as exc:
+            logger.warning("[OUT-PIPELINE] BetMGM scrape failed: %s", exc)
+
+        # ── Step 5  EV calculation ───────────────────────────────────────────
+        await sse_manager.broadcast({"type": "futures_update", "data": {
+            "events": [], "message": f"Calculating EV for {cfg.name}…",
+            "last_run": datetime.now().isoformat(), "market_id": market_id,
+        }})
+        from futures_ev_outright import calculate_outright_ev
+        ev_events = calculate_outright_ev(
+            betbck_lines, fd_lines, dk_lines, mgm_lines, market_id, sport,
+        )
+        logger.info("[OUT-PIPELINE] %s: %d results", market_id, len(ev_events))
+
+        # ── Step 6  Save + broadcast ─────────────────────────────────────────
+        last_run_iso = datetime.now().isoformat()
+        FUTURES_OUTRIGHT_RESULTS[market_id]  = ev_events
+        FUTURES_OUTRIGHT_LAST_RUN[market_id] = last_run_iso
+
+        results_file = os.path.join(os.path.dirname(__file__), f"data/futures_results_{market_id}.json")
+        os.makedirs(os.path.dirname(results_file), exist_ok=True)
+        with open(results_file, "w", encoding="utf-8") as f:
+            json.dump({
+                "events":    ev_events,
+                "last_run":  last_run_iso,
+                "market_id": market_id,
+                "fd_count":  len(fd_lines),
+                "dk_count":  len(dk_lines),
+                "mgm_count": len(mgm_lines),
+                "bck_count": len(betbck_lines),
+            }, f, indent=2)
+        logger.info("[OUT-PIPELINE] Saved %d results to %s", len(ev_events), results_file)
+
+        pos_ev = [e for e in ev_events if e.get("ev_float", 0) > 0]
+        payload = {
+            "type": "futures_complete",
+            "data": {
+                "events":    ev_events,
+                "market_id": market_id,
+                "last_run":  last_run_iso,
+                "elapsed_seconds": round(_time.time() - run_start, 1),
+                "message": (
+                    f"Buckeye: {len(betbck_lines)} | FD: {len(fd_lines)} | "
+                    f"DK: {len(dk_lines)} | MGM: {len(mgm_lines)} | +EV: {len(pos_ev)}"
+                ),
+            },
+        }
+        await sse_manager.broadcast(payload)
+        logger.info("[OUT-PIPELINE] %s done in %.1fs — %d +EV", market_id, _time.time() - run_start, len(pos_ev))
+
+    except Exception as e:
+        import traceback as _tb
+        tb_str = _tb.format_exc()
+        logger.error("[OUT-PIPELINE] %s error: %s\n%s", market_id, e, tb_str)
+        try:
+            await sse_manager.broadcast({"type": "futures_error", "data": {
+                "error": str(e), "market_id": market_id, "message": "Outright pipeline failed",
+            }})
+        except Exception:
+            pass
+    finally:
+        _outright_pipeline_running[market_id] = False
+        logger.info("[OUT-PIPELINE] %s pipeline task completed", market_id)
 
 
 async def run_ace_streaming_pipeline_background():
