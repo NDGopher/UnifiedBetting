@@ -44,6 +44,10 @@ class BetBCKAsyncScraper:
             # Season win totals — exact checkbox names confirmed from BetBCK request log
             'nfl_season_wins': ['FOOTBALL_NFL@20;SEAS@20;WIN_Game_'],
             'cfb_season_wins': ['FOOTBALL_NCAA@20;SEA@20;WIN_Game_'],
+            # Outright futures — league winner props
+            'epl_winner':  ['SOCCER_ENGLAND@20;PREMIER@20;LEAGUE@20;FUTURES_Prop_TO@20;WIN@20;OUTRIGHT'],
+            'la_liga_winner': ['SOCCER_SPAIN@20;LA@20;LIGA@20;FUTURES_Prop_TO@20;WIN@20;OUTRIGHT'],
+            'seria_a_winner': ['SOCCER_ITALY@20;SER@20;A_FUTURES_Prop_TO@20;WIN@20;OUTRIGHT'],
             'soccer': ['SOCCER_.*?_Game_', 'SOCCER_.*?_1st@20;Half_'],  # All soccer + 1H
             'soccer_major': [  # Major soccer leagues + their 1H lines
                 'SOCCER_UEFA@20;CH@20;LEA_Game_',
@@ -180,8 +184,16 @@ class BetBCKAsyncScraper:
                     home = home[:-len(_pfx)].strip()
                     away = away[:-len(_pfx)].strip()
                     break
-            # Robust prop/corner/future filtering
-            if is_prop_market_by_name(home, away):
+            # Robust prop/corner/future filtering.
+            # _allow_outright_props: set to True on the instance by the futures
+            # outright pipeline so that EPL/league-winner rows are not dropped.
+            _is_outright_away = bool(re.search(
+                r"(outright|to\s+win|win\s+outright|league\s+winner|champion)",
+                away, re.IGNORECASE,
+            ))
+            if is_prop_market_by_name(home, away) and not (
+                getattr(self, "_allow_outright_props", False) and _is_outright_away
+            ):
                 continue
             odds_table = gw.find('table', class_='new_tb_cont')
             odds = {
