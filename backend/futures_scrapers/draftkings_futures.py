@@ -324,15 +324,19 @@ async def scrape_draftkings_win_totals() -> list[dict]:
         browser = await p.chromium.launch(
             executable_path=CHROMIUM_PATH,
             headless=True,
-            args=["--no-sandbox", "--disable-dev-shm-usage"],
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-blink-features=AutomationControlled",
+            ],
         )
 
         for sport, url in DK_WIN_TOTAL_PAGES:
             context = await browser.new_context(
                 user_agent=(
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                     "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/138.0.0.0 Safari/537.36"
+                    "Chrome/127.0.0.0 Safari/537.36"
                 ),
                 viewport={"width": 1440, "height": 900},
                 locale="en-US",
@@ -436,6 +440,122 @@ async def scrape_draftkings_win_totals() -> list[dict]:
 
     logger.info("[DK] Total records across all sports: %d", len(all_records))
     return all_records
+
+
+async def scrape_draftkings_outright(
+    url: str,
+    market_id: str,
+    sport: str,
+    market_kw: str = "Winner",
+) -> list[dict]:
+    """Scrape a DraftKings outright winner market.
+
+    Navigates to url, intercepts Nash/sportsbook JSON, parses via
+    parse_dk_outright_response.  Falls back to DOM text extraction.
+    """
+    import random as _random
+    from playwright.async_api import async_playwright
+    from futures_ev_outright import parse_dk_outright_response
+
+    records: list[dict] = []
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            executable_path=CHROMIUM_PATH,
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
+        )
+        context = await browser.new_context(
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
+            ),
+            viewport={"width": 1440, "height": 900},
+            locale="en-US",
+            timezone_id="America/Chicago",
+        )
+        page = await context.new_page()
+        await page.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+        await page.set_extra_http_headers({
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+        })
+
+        captured_jsons: list[dict] = []
+
+        async def _on_response(r):
+            if any(kw in r.url for kw in DK_INTERCEPT_URLS) and r.status == 200:
+                try:
+                    body = await r.body()
+                    data = json.loads(body)
+                    parsed = parse_dk_outright_response(data, sport, market_id, market_kw)
+                    if parsed:
+                        records.extend(parsed)
+                        logger.info("[DK-OUT] Intercepted %d %s outright records from %s", len(parsed), market_id, r.url[:60])
+                    captured_jsons.append(data)
+                except Exception:
+                    pass
+
+        page.on("response", _on_response)
+
+        try:
+            await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
+            for _ in range(80):
+                await page.evaluate("window.scrollBy(0, 400)")
+                await page.wait_for_timeout(120)
+            await page.wait_for_timeout(5_000)
+
+            # DOM fallback if no XHR
+            if not records:
+                dom_text = await page.evaluate("""() => {
+                    const m = document.querySelector('main') || document.body;
+                    return m ? m.innerText : '';
+                }""")
+                if dom_text and market_kw.lower() in dom_text.lower():
+                    # Try to find team names + odds from text
+                    import re as _re
+                    # Pattern: "Arsenal\n+160" or "Arsenal +160"
+                    pattern = _re.compile(r'([A-Z][a-zA-Z &\'-]{2,30})\s*\n?\s*([+-]\d{3,5})', _re.MULTILINE)
+                    seen: set = set()
+                    for m in pattern.finditer(dom_text):
+                        team = m.group(1).strip()
+                        try:
+                            amer = int(m.group(2))
+                        except ValueError:
+                            continue
+                        k = team.lower()
+                        if k not in seen:
+                            seen.add(k)
+                            records.append({
+                                "team": team, "sport": sport, "market_id": market_id,
+                                "direction": "winner", "line": 0.0,
+                                "american_odds": amer, "book": "DraftKings",
+                            })
+                    if records:
+                        logger.info("[DK-OUT] DOM text extraction → %d %s outright records", len(records), market_id)
+
+        except Exception as exc:
+            logger.warning("[DK-OUT] Navigation error for %s: %s", market_id, exc)
+        finally:
+            await page.close()
+            await context.close()
+        await browser.close()
+
+    # Deduplicate
+    from futures_ev_outright import _canonical
+    seen2: set = set()
+    deduped: list[dict] = []
+    for r in records:
+        k = _canonical(r["team"])
+        if k not in seen2:
+            seen2.add(k)
+            deduped.append(r)
+
+    logger.info("[DK-OUT] %s: %d outright records total", market_id, len(deduped))
+    return deduped
 
 
 if __name__ == "__main__":
