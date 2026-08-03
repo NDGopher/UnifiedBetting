@@ -86,6 +86,66 @@ def parse_fd_content_page(data: dict, sport: str) -> list[dict]:
     return results
 
 
+def _parse_fd_dom(html_text: str, sport: str) -> list[dict]:
+    """Parse FD page DOM text into win-total records when API intercept is unavailable.
+
+    FD renders each bet as:
+        Alabama Over 8.5 Wins     ← one line
+        -124                      ← very next non-blank line is the odds
+
+    Same format as DK — reuse the same regex approach.
+    """
+    import re as _re
+
+    BET_RE  = _re.compile(
+        r'^(?P<team>.+?)\s+(?P<dir>Over|Under)\s+(?P<line>[\d.]+)\s+Win[s]?$',
+        _re.IGNORECASE,
+    )
+    ODDS_RE = _re.compile(r'^([+-]\d{2,4})$')
+
+    lines   = [ln.strip() for ln in html_text.splitlines()]
+    records: list[dict] = []
+    seen:    set        = set()
+
+    for i, ln in enumerate(lines):
+        m = BET_RE.match(ln)
+        if not m:
+            continue
+        odds_str: str | None = None
+        for j in range(i + 1, min(i + 6, len(lines))):
+            cand = lines[j]
+            if not cand:
+                continue
+            if ODDS_RE.match(cand):
+                odds_str = cand
+            break
+        if odds_str is None:
+            continue
+        try:
+            amer = int(odds_str)
+        except ValueError:
+            continue
+        team      = m.group("team").strip()
+        direction = m.group("dir").lower()
+        line_val  = float(m.group("line"))
+        if not (1.0 <= line_val <= 20.0) or len(team) < 2 or len(team) > 55:
+            continue
+        key = (team.lower(), line_val, direction)
+        if key in seen:
+            continue
+        seen.add(key)
+        records.append({
+            "team":          team,
+            "sport":         sport,
+            "line":          line_val,
+            "direction":     direction,
+            "american_odds": amer,
+            "market_type":   "REGULAR_SEASON_WINS_DOM",
+            "book":          "FanDuel",
+        })
+    return records
+
+
 async def scrape_fanduel_win_totals() -> list[dict]:
     """Navigate to each FD win-totals page, intercept the content-managed-page
     response, and return parsed records.
@@ -107,7 +167,8 @@ async def scrape_fanduel_win_totals() -> list[dict]:
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
     ]
 
-    captured: dict[str, dict] = {}
+    captured:       dict[str, dict]  = {}
+    dom_fallback:   list[dict]       = []   # records from DOM when API is CAPTCHA'd
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
@@ -191,19 +252,42 @@ async def scrape_fanduel_win_totals() -> list[dict]:
                         sport, len(api_urls),
                         "\n".join(f"  {u}" for u in api_urls[:20]),
                     )
+                    # ── DOM fallback: parse "Team Over X.X Wins\nODDS" directly ──────
+                    try:
+                        dom_text: str = await page.evaluate(
+                            "() => { const m = document.querySelector('main') || document.body; return m ? m.innerText : ''; }"
+                        )
+                        if dom_text and ("Over" in dom_text or "Under" in dom_text):
+                            dom_records = _parse_fd_dom(dom_text, sport)
+                            if dom_records:
+                                logger.info("[FD] %s: DOM fallback → %d records", sport, len(dom_records))
+                                dom_fallback.extend(dom_records)
+                            else:
+                                sample = "\n".join(dom_text.splitlines()[:50])
+                                logger.warning("[FD] %s: DOM fallback returned 0. Sample:\n%s", sport, sample)
+                    except Exception as _de:
+                        logger.warning("[FD] %s: DOM fallback error: %s", sport, _de)
+
                 await page.close()
                 await context.close()
 
         await browser.close()
 
-    # Parse each captured page
+    # Parse each captured API page, then merge any DOM fallback records
     results: list[dict] = []
     for sport, data in captured.items():
         parsed = parse_fd_content_page(data, sport)
         logger.info("[FD] Parsed %d entries for %s", len(parsed), sport)
         results.extend(parsed)
 
-    logger.info("[FD] Total entries: %d across %s", len(results), list(captured))
+    # Deduplicate DOM fallback against API results (API wins if both present for same key)
+    api_keys = {(r["team"].lower(), r["line"], r["direction"]) for r in results}
+    dom_new  = [r for r in dom_fallback if (r["team"].lower(), r["line"], r["direction"]) not in api_keys]
+    if dom_new:
+        logger.info("[FD] Merging %d DOM fallback records (API had %d)", len(dom_new), len(results))
+        results.extend(dom_new)
+
+    logger.info("[FD] Total entries: %d across %s", len(results), list(captured) + (["DOM"] if dom_new else []))
     return results
 
 
