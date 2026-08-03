@@ -152,6 +152,35 @@ def parse_betbck_win_totals(betbck_games: list[dict]) -> list[dict]:
     return deduped
 
 # ---------------------------------------------------------------------------
+# NFL team detection (BetBCK tags all win-total rows as "football")
+# ---------------------------------------------------------------------------
+
+_NFL_TEAMS = frozenset({
+    "arizona cardinals", "atlanta falcons", "baltimore ravens", "buffalo bills",
+    "carolina panthers", "chicago bears", "cincinnati bengals", "cleveland browns",
+    "dallas cowboys", "denver broncos", "detroit lions", "green bay packers",
+    "houston texans", "indianapolis colts", "jacksonville jaguars", "kansas city chiefs",
+    "las vegas raiders", "los angeles chargers", "los angeles rams", "miami dolphins",
+    "minnesota vikings", "new england patriots", "new orleans saints", "new york giants",
+    "new york jets", "philadelphia eagles", "pittsburgh steelers", "san francisco 49ers",
+    "seattle seahawks", "tampa bay buccaneers", "tennessee titans", "washington commanders",
+    # legacy names still sometimes used
+    "oakland raiders", "san diego chargers", "st louis rams", "washington redskins",
+    "washington football team",
+})
+
+
+def _sport_label(team: str, raw_sport: str) -> str:
+    """Return 'NFL' or 'NCAAF' based on team name; fall back to raw_sport."""
+    if _norm(team) in _NFL_TEAMS:
+        return "NFL"
+    # If raw_sport has meaningful info keep it; otherwise default to NCAAF
+    if raw_sport and raw_sport.lower() not in ("football", ""):
+        return raw_sport.upper()
+    return "NCAAF"
+
+
+# ---------------------------------------------------------------------------
 # Team-name normalisation
 # ---------------------------------------------------------------------------
 
@@ -360,8 +389,14 @@ def calculate_futures_ev(
 
     results: list[dict] = []
 
+    # Build a lookup from canonical team to original sport label
+    team_sport: dict[str, str] = {}
+    for bet in betbck_lines:
+        team_sport[_canonical(bet["team"])] = bet.get("sport", "")
+
     for bet in betbck_lines:
         team        = bet["team"]
+        sport       = bet.get("sport", "")
         line        = float(bet["line"])
         direction   = bet["direction"]       # 'over' | 'under'
         betbck_amer = bet["american_odds"]
@@ -382,6 +417,49 @@ def calculate_futures_ev(
         ev_val     = ev_pct(fair_prob, betbck_dec)
         fair_amer  = decimal_to_american(1.0 / fair_prob)
 
+        # ── Per-book EV: how many reference books individually confirm +EV ──
+        # (consensus EV uses averaged fair prob; per-book checks each book solo)
+        key = (canon, line)
+        per_book_ev: dict[str, float] = {}
+        signal_count = 0
+
+        fd_entry  = fd_idx.get(key, {})
+        dk_entry  = dk_idx.get(key, {})
+        mgm_entry = mgm_idx.get(key, {})
+
+        fd_over   = fd_entry.get("FanDuel", {}).get("over")
+        fd_under  = fd_entry.get("FanDuel", {}).get("under")
+        if fd_over and fd_under:
+            p_o, p_u = devig_pair(american_to_decimal(fd_over), american_to_decimal(fd_under))
+            p_fd = p_o if direction == "over" else p_u
+            ev_fd = ev_pct(p_fd, betbck_dec)
+            per_book_ev["FD"] = round(ev_fd, 2)
+            if ev_fd > 0:
+                signal_count += 1
+
+        dk_over = dk_under = None
+        for book_sides in dk_entry.values():
+            if book_sides.get("over") and book_sides.get("under"):
+                dk_over, dk_under = book_sides["over"], book_sides["under"]
+                break
+        if dk_over and dk_under:
+            p_o, p_u = devig_pair(american_to_decimal(dk_over), american_to_decimal(dk_under))
+            p_dk = p_o if direction == "over" else p_u
+            ev_dk = ev_pct(p_dk, betbck_dec)
+            per_book_ev["DK"] = round(ev_dk, 2)
+            if ev_dk > 0:
+                signal_count += 1
+
+        mgm_over  = mgm_entry.get("BetMGM", {}).get("over")
+        mgm_under = mgm_entry.get("BetMGM", {}).get("under")
+        if mgm_over and mgm_under:
+            p_o, p_u = devig_pair(american_to_decimal(mgm_over), american_to_decimal(mgm_under))
+            p_mgm = p_o if direction == "over" else p_u
+            ev_mgm = ev_pct(p_mgm, betbck_dec)
+            per_book_ev["MGM"] = round(ev_mgm, 2)
+            if ev_mgm > 0:
+                signal_count += 1
+
         # ── Arb check: BetBCK this side + reference book opposite side ──────
         opp = "under" if direction == "over" else "over"
         is_arb, best_opp_amer, arb_book = _check_arb(
@@ -398,6 +476,7 @@ def calculate_futures_ev(
         results.append(
             {
                 "team":           team,
+                "sport":          _sport_label(team, sport),
                 "line":           line,
                 "direction":      direction.capitalize(),
                 "betbck_odds":    fmt_american(betbck_amer),
@@ -408,6 +487,8 @@ def calculate_futures_ev(
                 "ev":             f"{ev_val:.1f}%",
                 "ev_float":       round(ev_val, 2),
                 "sharp_books":    "+".join(sharp_books),
+                "signal_count":   signal_count,
+                "per_book_ev":    per_book_ev,
                 "is_arb":         is_arb,
                 "arb_book":       arb_book if is_arb else "",
                 "arb_opp_odds":   fmt_american(best_opp_amer) if is_arb else "",
@@ -415,8 +496,8 @@ def calculate_futures_ev(
             }
         )
 
-    # Sort: arbs first, then positive EV descending, then all others
-    results.sort(key=lambda x: (not x["is_arb"], -x["ev_float"]))
+    # Sort: arbs first, then by signal_count desc, then EV desc
+    results.sort(key=lambda x: (not x["is_arb"], -x["signal_count"], -x["ev_float"]))
 
     pos_ev = sum(1 for r in results if r["ev_float"] > 0)
     arbs   = sum(1 for r in results if r["is_arb"])
