@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Box, Button, Typography, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, CircularProgress, Alert, Slider,
+  TableHead, TableRow, CircularProgress, Alert, Slider, Chip,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -10,17 +10,27 @@ import { API_BASE } from '../utils/apiConfig';
 
 dayjs.extend(relativeTime);
 
+interface FuturesRow {
+  team:           string;
+  line:           number;
+  direction:      string;   // "Over" | "Under"
+  betbck_odds:    string;
+  fd_odds:        string;
+  dk_odds:        string;
+  consensus_fair: string;
+  ev:             string;
+  ev_float:       number;
+  sharp_books:    string;
+}
+
 const FuturesScraper: React.FC = () => {
-  const [markets, setMarkets]               = useState<any[]>([]);
+  const [markets, setMarkets]               = useState<FuturesRow[]>([]);
   const [loading, setLoading]               = useState(false);
   const [error, setError]                   = useState<string | null>(null);
   const [message, setMessage]               = useState<string | null>(null);
   const [lastUpdate, setLastUpdate]         = useState<string | null>(null);
   const [pipelineRunning, setPipelineRunning] = useState(false);
-  const [eventIdsLastRun, setEventIdsLastRun] = useState<string | null>(
-    () => localStorage.getItem('futuresEventIdsLastRun'),
-  );
-  const [sortBy, setSortBy]   = useState<'ev' | 'pinnacle_limit'>('ev');
+  const [sortBy, setSortBy]   = useState<'ev'>('ev');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
   const EV_MAX_SLIDER = 20;
@@ -49,21 +59,23 @@ const FuturesScraper: React.FC = () => {
       try {
         const data = JSON.parse(event.data);
         if (data.type === 'futures_update') {
-          const { events, last_run } = data.data;
+          const { events, last_run, message: msg } = data.data;
           if (events?.length > 0) {
             setMarkets(events);
             setLastUpdate(last_run);
-            setMessage(`Futures: ${events.length} opportunities so far`);
           }
+          if (msg) setMessage(msg);
         } else if (data.type === 'futures_complete') {
-          const { events, last_run, total_matched } = data.data;
+          const { events, last_run, message: msg } = data.data;
           if (events?.length > 0) {
             setMarkets(events);
             setLastUpdate(last_run);
           }
-          setMessage(
-            `Done: ${total_matched ?? 0} teams matched, ${events?.length ?? 0} EV opportunities`,
-          );
+          if (msg) setMessage(msg);
+          setPipelineRunning(false);
+          stopPolling();
+        } else if (data.type === 'futures_error') {
+          setError(data.data?.message || 'Futures pipeline error');
           setPipelineRunning(false);
           stopPolling();
         }
@@ -122,28 +134,6 @@ const FuturesScraper: React.FC = () => {
     } catch {}
   };
 
-  const handleGetEventIds = async () => {
-    setLoading(true);
-    setError(null);
-    setMessage(null);
-    try {
-      const res  = await fetch(`${API_BASE}/buckeye/get-futures-event-ids`, { method: 'POST' });
-      const data = await res.json();
-      if (data.status === 'success') {
-        setMessage(data.message || 'Futures event IDs retrieved');
-        const now = new Date().toISOString();
-        localStorage.setItem('futuresEventIdsLastRun', now);
-        setEventIdsLastRun(now);
-      } else {
-        setError(data.message || 'Failed to get futures event IDs');
-      }
-    } catch {
-      setError('Failed to get futures event IDs');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleRunFutures = async () => {
     if (pipelineRunning) return;
     setPipelineRunning(true);
@@ -173,23 +163,13 @@ const FuturesScraper: React.FC = () => {
 
   // ── Sort / filter ─────────────────────────────────────────────────────────
   const sortedMarkets = useMemo(() => {
-    return [...markets].sort((a, b) => {
-      if (sortBy === 'ev') {
-        const evA = parseFloat(a.ev?.replace('%', '') || '0');
-        const evB = parseFloat(b.ev?.replace('%', '') || '0');
-        return sortDir === 'desc' ? evB - evA : evA - evB;
-      }
-      if (sortBy === 'pinnacle_limit') {
-        return sortDir === 'desc'
-          ? (b.pinnacle_limit ?? -1) - (a.pinnacle_limit ?? -1)
-          : (a.pinnacle_limit ?? -1) - (b.pinnacle_limit ?? -1);
-      }
-      return 0;
-    });
-  }, [markets, sortBy, sortDir]);
+    return [...markets].sort((a, b) =>
+      sortDir === 'desc' ? b.ev_float - a.ev_float : a.ev_float - b.ev_float
+    );
+  }, [markets, sortDir]);
 
   const filteredMarkets = sortedMarkets.filter(row => {
-    const v = parseFloat(row.ev?.replace('%', '') || '0');
+    const v = row.ev_float ?? 0;
     if (v < minEv) return false;
     if (maxEv < EV_MAX_SLIDER && v > maxEv) return false;
     return true;
@@ -225,20 +205,17 @@ const FuturesScraper: React.FC = () => {
     },
   };
 
+  const monoCell = {
+    fontFamily: '"JetBrains Mono","Fira Code","Consolas",monospace',
+    fontVariantNumeric: 'tabular-nums' as const,
+    fontSize: '0.8125rem',
+  };
+
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <>
       {/* Toolbar */}
       <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-        <Button variant="outlined" size="small" sx={btnSx} onClick={handleGetEventIds}>
-          Get Futures Event IDs
-          {eventIdsLastRun && (
-            <Box component="span" sx={{ ml: 0.75, fontSize: '0.65rem', color: '#666', fontWeight: 400 }}>
-              ({dayjs(eventIdsLastRun).fromNow()})
-            </Box>
-          )}
-        </Button>
-
         <Button
           variant="outlined"
           size="small"
@@ -302,7 +279,7 @@ const FuturesScraper: React.FC = () => {
           )}
           {markets.length > 0 && (
             <Typography variant="body2" sx={{ color: '#555', fontSize: '0.75rem' }}>
-              Showing {filteredMarkets.length} of {markets.length} futures
+              Showing {filteredMarkets.length} of {markets.length} bets
             </Typography>
           )}
         </Box>
@@ -324,7 +301,7 @@ const FuturesScraper: React.FC = () => {
             animation: 'futures-pulse 1.5s ease-in-out infinite', flexShrink: 0,
           }} />
           <Typography sx={{ color: '#9CA3AF', fontSize: '0.75rem' }}>
-            Futures pipeline active… matching season win totals.
+            {message || 'Futures pipeline running — scraping BetBCK + FanDuel + DraftKings…'}
           </Typography>
         </Box>
       )}
@@ -340,32 +317,48 @@ const FuturesScraper: React.FC = () => {
               borderBottom: '1px solid rgba(255,255,255,0.06)', py: 1.5,
               bgcolor: 'rgba(255,255,255,0.02)',
             }}}>
-              {(['Team', 'League', 'Bet', 'Book Odds', 'Pinnacle NVP'] as const).map(label => (
-                <TableCell key={label} align={['Book Odds', 'Pinnacle NVP'].includes(label) ? 'center' : 'left'}
-                  sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                  {label}
-                </TableCell>
-              ))}
+              {/* Team */}
+              <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                Team
+              </TableCell>
+              {/* Bet */}
+              <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                Bet
+              </TableCell>
+              {/* BetBCK */}
+              <TableCell align="center" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                BetBCK
+              </TableCell>
+              {/* FD */}
+              <TableCell align="center" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                FanDuel
+              </TableCell>
+              {/* DK */}
+              <TableCell align="center" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                DraftKings
+              </TableCell>
+              {/* Consensus */}
+              <TableCell align="center" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                Fair
+              </TableCell>
+              {/* EV — sortable */}
               <TableCell
                 align="center"
-                onClick={() => { setSortBy('ev'); setSortDir(d => sortBy === 'ev' && d === 'desc' ? 'asc' : 'desc'); }}
-                sx={{ color: sortBy === 'ev' ? '#F5F5F5' : '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em', cursor: 'pointer', userSelect: 'none', '&:hover': { color: '#F5F5F5' } }}
+                onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
+                sx={{ color: '#F5F5F5', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em', cursor: 'pointer', userSelect: 'none', '&:hover': { color: '#fff' } }}
               >
-                EV {sortBy === 'ev' ? (sortDir === 'desc' ? '↓' : '↑') : ''}
+                EV {sortDir === 'desc' ? '↓' : '↑'}
               </TableCell>
-              <TableCell
-                align="right"
-                onClick={() => { setSortBy('pinnacle_limit'); setSortDir(d => sortBy === 'pinnacle_limit' && d === 'desc' ? 'asc' : 'desc'); }}
-                sx={{ color: sortBy === 'pinnacle_limit' ? '#F5F5F5' : '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em', cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap', '&:hover': { color: '#F5F5F5' } }}
-              >
-                Pin Limit {sortBy === 'pinnacle_limit' ? (sortDir === 'desc' ? '↓' : '↑') : ''}
+              {/* Ref */}
+              <TableCell align="right" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                Ref
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredMarkets.length === 0 && !loading ? (
               <TableRow sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
-                <TableCell colSpan={7} sx={{ border: 'none', py: 5, px: 3 }}>
+                <TableCell colSpan={8} sx={{ border: 'none', py: 5, px: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
                     <SearchOff sx={{ fontSize: 18, color: '#374151', mt: 0.15, flexShrink: 0 }} />
                     <Box>
@@ -374,51 +367,94 @@ const FuturesScraper: React.FC = () => {
                       </Typography>
                       <Typography sx={{ fontSize: '0.75rem', color: '#6B7280' }}>
                         {markets.length > 0
-                          ? <>Widen the EV range to see all {markets.length} futures.</>
-                          : <>Get Futures Event IDs, then click <span style={{ color: '#9CA3AF' }}>Run Futures</span> to see season win total EV.</>
+                          ? <>Widen the EV range to see all {markets.length} bets.</>
+                          : <>Click <span style={{ color: '#9CA3AF' }}>Run Futures</span> to scrape BetBCK, FanDuel, and DraftKings win totals.</>
                         }
                       </Typography>
                     </Box>
                   </Box>
                 </TableCell>
               </TableRow>
-            ) : filteredMarkets.map((row, idx) => (
-              <TableRow
-                key={idx}
-                sx={{
-                  '&:hover': { backgroundColor: 'rgba(255,255,255,0.03)' },
-                  '& .MuiTableCell-root': { borderBottom: '1px solid rgba(255,255,255,0.04)', py: 1.25, verticalAlign: 'middle' },
-                }}
-              >
-                <TableCell sx={{ color: '#E5E7EB', fontWeight: 400, fontSize: '0.875rem' }}>
-                  {row.matchup}
-                </TableCell>
-                <TableCell sx={{ color: '#9CA3AF', fontSize: '0.8125rem' }}>
-                  {row.league}
-                </TableCell>
-                <TableCell sx={{ color: '#E5E7EB', fontSize: '0.8125rem' }}>
-                  {row.bet}
-                </TableCell>
-                <TableCell align="center" sx={{ color: '#D1D5DB', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono","Fira Code","Consolas",monospace', fontVariantNumeric: 'tabular-nums' }}>
-                  {row.betbck_odds || 'N/A'}
-                </TableCell>
-                <TableCell align="center" sx={{ color: '#D1D5DB', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono","Fira Code","Consolas",monospace', fontVariantNumeric: 'tabular-nums' }}>
-                  {row.pinnacle_nvp}
-                </TableCell>
-                <TableCell align="center">
-                  {parseFloat(row.ev) > 0 ? (
-                    <span style={{ color: '#32D74B', fontWeight: 500, fontSize: '0.875rem', fontFamily: 'monospace', fontVariantNumeric: 'tabular-nums' }}>
+            ) : filteredMarkets.map((row, idx) => {
+              const evVal  = row.ev_float ?? 0;
+              const evPos  = evVal > 0;
+              const evZero = Math.abs(evVal) < 0.05;
+
+              return (
+                <TableRow
+                  key={idx}
+                  sx={{
+                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.03)' },
+                    '& .MuiTableCell-root': { borderBottom: '1px solid rgba(255,255,255,0.04)', py: 1.25, verticalAlign: 'middle' },
+                  }}
+                >
+                  {/* Team */}
+                  <TableCell sx={{ color: '#E5E7EB', fontWeight: 400, fontSize: '0.875rem', maxWidth: 180, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {row.team}
+                  </TableCell>
+
+                  {/* Bet: "Over 8.5" */}
+                  <TableCell sx={{ color: '#D1D5DB', fontSize: '0.8125rem', whiteSpace: 'nowrap' }}>
+                    <Box component="span" sx={{ color: row.direction === 'Over' ? '#60A5FA' : '#F87171', fontWeight: 500 }}>
+                      {row.direction}
+                    </Box>
+                    {' '}{row.line}
+                  </TableCell>
+
+                  {/* BetBCK odds */}
+                  <TableCell align="center" sx={{ color: '#D1D5DB', ...monoCell }}>
+                    {row.betbck_odds}
+                  </TableCell>
+
+                  {/* FanDuel odds */}
+                  <TableCell align="center" sx={{ color: row.fd_odds === 'N/A' ? '#4B5563' : '#D1D5DB', ...monoCell }}>
+                    {row.fd_odds}
+                  </TableCell>
+
+                  {/* DraftKings odds */}
+                  <TableCell align="center" sx={{ color: row.dk_odds === 'N/A' ? '#4B5563' : '#D1D5DB', ...monoCell }}>
+                    {row.dk_odds}
+                  </TableCell>
+
+                  {/* Consensus fair */}
+                  <TableCell align="center" sx={{ color: '#9CA3AF', ...monoCell }}>
+                    {row.consensus_fair}
+                  </TableCell>
+
+                  {/* EV% */}
+                  <TableCell align="center">
+                    <span style={{
+                      color: evZero ? '#4B5563' : evPos ? '#32D74B' : '#EF4444',
+                      fontWeight: evPos ? 600 : 400,
+                      fontSize: evPos ? '0.9rem' : '0.8125rem',
+                      fontFamily: 'monospace',
+                      fontVariantNumeric: 'tabular-nums',
+                    }}>
                       {row.ev}
                     </span>
-                  ) : (
-                    <span style={{ color: '#4B5563', fontSize: '0.8125rem', fontFamily: 'monospace' }}>{row.ev}</span>
-                  )}
-                </TableCell>
-                <TableCell align="right" sx={{ color: '#6B7280', fontSize: '0.8125rem', fontFamily: '"JetBrains Mono","Fira Code","Consolas",monospace', fontVariantNumeric: 'tabular-nums' }}>
-                  {row.pinnacle_limit != null ? `${row.pinnacle_limit}` : ''}
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+
+                  {/* Sharp books chip */}
+                  <TableCell align="right">
+                    {row.sharp_books && (
+                      <Chip
+                        label={row.sharp_books}
+                        size="small"
+                        sx={{
+                          height: 18,
+                          fontSize: '0.6rem',
+                          fontWeight: 600,
+                          bgcolor: 'rgba(255,255,255,0.06)',
+                          color: '#6B7280',
+                          borderRadius: '4px',
+                          '& .MuiChip-label': { px: 0.75 },
+                        }}
+                      />
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
