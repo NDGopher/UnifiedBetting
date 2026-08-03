@@ -172,6 +172,146 @@ def parse_dk_nash_response(data: dict, sport: str) -> list[dict]:
     return records
 
 
+def _parse_dom_win_totals(html_text: str, sport: str) -> list[dict]:
+    """Parse DK page text content (from DOM) to extract win total over/under records.
+
+    DK renders odds in text like:
+        "Alabama\nOver 8.5\n-120\nUnder 8.5\n+100"
+
+    We look for "Over X.5" / "Under X.5" patterns adjacent to team names and odds.
+    """
+    import re as _re
+
+    # Find all Over/Under occurrences with a line and then an immediately following odds
+    # Pattern: "Over 8.5" or "Under 8.5" then optionally whitespace then an american odds string
+    ou_odds_re = _re.compile(
+        r'(Over|Under)\s+([\d.]+)\s*\n\s*([+-]?\d{3,4})',
+        _re.IGNORECASE,
+    )
+
+    records: list[dict] = []
+    matches = list(ou_odds_re.finditer(html_text))
+    if not matches:
+        return records
+
+    # For each match, try to find the team name by looking backwards in the text
+    # Team names appear on their own line before the Over/Under block
+    lines = html_text.split('\n')
+    line_starts = []
+    pos = 0
+    for ln in lines:
+        line_starts.append(pos)
+        pos += len(ln) + 1
+
+    def _find_team_name(match_start: int) -> str:
+        """Walk backwards from match_start to find the last non-empty line that looks like a team."""
+        # Find which line the match is on
+        idx = 0
+        for i, s in enumerate(line_starts):
+            if s > match_start:
+                idx = i - 1
+                break
+        else:
+            idx = len(lines) - 1
+
+        # Walk back up to 10 lines looking for a non-empty, non-odds line
+        for i in range(idx - 1, max(0, idx - 10), -1):
+            ln = lines[i].strip()
+            if not ln:
+                continue
+            # Skip lines that look like odds (+120, -110) or numbers
+            if _re.match(r'^[+-]?\d{1,4}$', ln):
+                continue
+            # Skip lines that look like "Over X.5" / "Under X.5"
+            if _re.match(r'^(Over|Under)\s+[\d.]+$', ln, _re.IGNORECASE):
+                continue
+            # Skip very short lines (likely scores or labels)
+            if len(ln) < 3:
+                continue
+            return ln
+        return ""
+
+    seen: set = set()
+    for m in matches:
+        direction = m.group(1).lower()
+        try:
+            line_val = float(m.group(2))
+        except ValueError:
+            continue
+        try:
+            amer = int(m.group(3))
+        except ValueError:
+            continue
+
+        team = _find_team_name(m.start())
+        if not team or len(team) > 50:
+            continue
+
+        key = (team.lower(), line_val, direction)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        records.append({
+            "team":          team,
+            "sport":         sport,
+            "line":          line_val,
+            "direction":     direction,
+            "american_odds": amer,
+            "market_type":   "Regular Season Wins (DOM)",
+            "book":          "DraftKings",
+        })
+
+    return records
+
+
+async def _extract_dk_page_records(page, sport: str) -> list[dict]:
+    """Try to extract win-total records from DK page after load.
+
+    Strategy 1: read visible DOM text and parse Over/Under patterns.
+    Strategy 2: walk page.evaluate for any embedded JSON structures.
+    """
+    records: list[dict] = []
+
+    # ── Strategy 1: DOM text content ─────────────────────────────────────────
+    try:
+        dom_text: str = await page.evaluate(
+            """() => {
+                // Get text of the main content area — skip nav/header noise
+                const main = document.querySelector('main') || document.body;
+                return main.innerText || '';
+            }"""
+        )
+        if dom_text:
+            dom_records = _parse_dom_win_totals(dom_text, sport)
+            if dom_records:
+                logger.info("[DK] DOM text extraction → %d %s records", len(dom_records), sport)
+                records.extend(dom_records)
+    except Exception as exc:
+        logger.debug("[DK] DOM text extraction failed: %s", exc)
+
+    # ── Strategy 2: __NEXT_DATA__ server-side props ───────────────────────────
+    if not records:
+        try:
+            next_data = await page.evaluate("() => window.__NEXT_DATA__ || null")
+            if next_data:
+                # DK embeds market data somewhere in the props tree; do a deep search
+                import json as _json
+                blob = _json.dumps(next_data)
+                # Look for patterns with "Regular Season Wins" or "Win Total"
+                if "Regular Season" in blob or "Win Total" in blob:
+                    # Try nash-like parsing on the extracted blob
+                    parsed_blob = _json.loads(blob)
+                    nd_records = parse_dk_nash_response(parsed_blob, sport)
+                    if nd_records:
+                        logger.info("[DK] __NEXT_DATA__ extraction → %d %s records", len(nd_records), sport)
+                        records.extend(nd_records)
+        except Exception as exc:
+            logger.debug("[DK] __NEXT_DATA__ extraction failed: %s", exc)
+
+    return records
+
+
 async def scrape_draftkings_win_totals() -> list[dict]:
     """Navigate to each DK win-totals page, scroll to trigger lazy loading,
     intercept all sportsbook-nash API responses, and return parsed records.
@@ -274,6 +414,12 @@ async def scrape_draftkings_win_totals() -> list[dict]:
 
                 # Wait for final API calls to settle
                 await page.wait_for_timeout(5_000)
+
+                # If XHR interception yielded nothing, fall back to DOM/SSR extraction
+                if not sport_records:
+                    logger.info("[DK] %s: no XHR records — trying DOM/SSR extraction", sport)
+                    fallback = await _extract_dk_page_records(page, sport)
+                    sport_records.extend(fallback)
 
                 logger.info(
                     "[DK] %s: collected %d records after scroll", sport, len(sport_records)
