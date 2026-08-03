@@ -1799,9 +1799,11 @@ def determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw):
 
     parts = pod_home_clean.split()
     if parts:
-        if len(parts) > 1 and len(parts[-1]) > 3 and parts[-1].lower() not in ['fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif', 'kc', 'sr', 'mg', 'us', 'br']:
+        if len(parts) > 1 and len(parts[-1]) > 3 and parts[-1].lower() not in ['fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif', 'kc', 'sr', 'mg', 'us', 'br',
+                                                                                 'town', 'rovers', 'county', 'athletic', 'wanderers', 'vale', 'albion', 'wednesday']:
             return parts[-1]
-        elif len(parts[0]) > 2 and parts[0].lower() not in ['fc', 'sc', 'ac', 'if', 'bk', 'de', 'do', 'aif', 'kc', 'sr', 'mg', 'us', 'br']:
+        elif len(parts[0]) > 2 and parts[0].lower() not in ['fc', 'sc', 'ac', 'if', 'bk', 'de', 'do', 'aif', 'kc', 'sr', 'mg', 'us', 'br',
+                                                              'town', 'rovers', 'county', 'athletic', 'wanderers']:
             return parts[0]
         else:
             return pod_home_clean
