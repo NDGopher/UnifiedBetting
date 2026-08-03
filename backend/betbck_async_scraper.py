@@ -376,7 +376,7 @@ class BetBCKAsyncScraper:
         # Determine if this is a fast mode run (small sport selection)
         is_fast_mode = len(self.sport_filters) > 0 and len(self.sport_filters) <= 2
         
-        timeout = aiohttp.ClientTimeout(total=120)  # 2-min hard cap; prevents infinite hangs
+        timeout = aiohttp.ClientTimeout(total=300)  # 5-min cap; large pages need time to download
         async with aiohttp.ClientSession(headers=self.headers, timeout=timeout) as session:
             await self.login(session, fast_mode=is_fast_mode)
             selection_html = await self.fetch_selection_page(session, fast_mode=is_fast_mode)
@@ -461,10 +461,9 @@ class BetBCKAsyncScraper:
                 print(f"   {i+1}. {name}")
             if len(all_checkbox_names) > 20:
                 print(f"   ... and {len(all_checkbox_names) - 20} more")
-            # Send all checkboxes in a single POST request — BetBCK accepts any number
-            # of checked sport/league boxes in one submission, just as the UI does.
-            # Batching was historically used for caution but costs ~25s per extra batch.
-            is_small_selection = True  # always use the single-request fast path
+            # Single-request path is fastest but BetBCK truncates / times out on very large
+            # payloads (>~20 checkboxes → huge HTML response).  Use concurrent batches instead.
+            is_small_selection = len(checkbox_names) <= 20
             MAX_CONCURRENT_BETBCK_REQUESTS = 5  # Reduced from unlimited to 5 concurrent requests
             games_htmls = []
             
@@ -507,35 +506,39 @@ class BetBCKAsyncScraper:
                     import traceback
                     logger.error(f"[BetBCK Async] Traceback: {traceback.format_exc()}")
             else:
-                # Normal path for larger selections - try to combine checkboxes when possible
-                # BetBCK seems to accept multiple checkboxes in one request, so we'll batch them efficiently
-                # Process in groups of up to 10 checkboxes per request to avoid huge payloads
-                MAX_CHECKBOXES_PER_REQUEST = 10
-                for i in range(0, len(checkbox_names), MAX_CHECKBOXES_PER_REQUEST):
-                    batch = checkbox_names[i:i + MAX_CHECKBOXES_PER_REQUEST]
-                    logger.info(f"[LOG] Processing batch {i//MAX_CHECKBOXES_PER_REQUEST + 1}/{(len(checkbox_names) + MAX_CHECKBOXES_PER_REQUEST - 1)//MAX_CHECKBOXES_PER_REQUEST} ({len(batch)} checkboxes)")
-                    
-                    # Build payload with all checkboxes in this batch
-                    post_payload = {
-                        'keyword_search': '',
-                        'inetWagerNumber': inet_wager_value,
-                        'inetSportSelection': 'sport',
-                        'contestType1': '', 'contestType2': '', 'contestType3': '',
-                        'x': random.randint(75, 85), 'y': random.randint(10, 15),  # Randomize coordinates
-                    }
-                    # Add all checkboxes in this batch to payload
-                    for name in batch:
-                        post_payload[name] = 'on'
-                    
-                    try:
-                        html = await self.fetch_games_page(session, post_payload, delay=True)
-                        games_htmls.append(html)
-                    except Exception as e:
-                        logger.error(f"[BetBCK Async] Error in batch request: {e}")
-                    
-                    # Add delay between batches to avoid rate limiting
-                    if i + MAX_CHECKBOXES_PER_REQUEST < len(checkbox_names):
-                        await asyncio.sleep(random.uniform(2.0, 4.0))
+                # Large selection: split into batches of 20 and fetch concurrently.
+                # Sending all checkboxes at once causes BetBCK to return a page so large
+                # it either truncates mid-transfer or times out during body download.
+                MAX_CHECKBOXES_PER_REQUEST = 20
+                semaphore = asyncio.Semaphore(3)  # max 3 simultaneous BetBCK requests
+
+                async def fetch_batch(batch, batch_num, total_batches):
+                    async with semaphore:
+                        logger.info(f"[LOG] Batch {batch_num}/{total_batches}: sending {len(batch)} checkboxes")
+                        post_payload = {
+                            'keyword_search': '',
+                            'inetWagerNumber': inet_wager_value,
+                            'inetSportSelection': 'sport',
+                            'contestType1': '', 'contestType2': '', 'contestType3': '',
+                            'x': random.randint(75, 85), 'y': random.randint(10, 15),
+                        }
+                        for name in batch:
+                            post_payload[name] = 'on'
+                        try:
+                            html = await self.fetch_games_page(session, post_payload, delay=True)
+                            logger.info(f"[LOG] Batch {batch_num}/{total_batches} done ({len(html)} chars)")
+                            return html
+                        except Exception as e:
+                            import traceback
+                            logger.error(f"[BetBCK Async] Batch {batch_num} error: {e}\n{traceback.format_exc()}")
+                            return None
+
+                batches = [checkbox_names[i:i + MAX_CHECKBOXES_PER_REQUEST]
+                           for i in range(0, len(checkbox_names), MAX_CHECKBOXES_PER_REQUEST)]
+                total = len(batches)
+                logger.info(f"[LOG] Large selection: {len(checkbox_names)} checkboxes → {total} concurrent batches of ≤{MAX_CHECKBOXES_PER_REQUEST}")
+                results = await asyncio.gather(*[fetch_batch(b, idx + 1, total) for idx, b in enumerate(batches)])
+                games_htmls.extend(html for html in results if html is not None)
             all_games = []
             for html in games_htmls:
                 all_games.extend(self.parse_games(html))
