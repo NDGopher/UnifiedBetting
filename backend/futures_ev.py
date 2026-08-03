@@ -276,6 +276,30 @@ def _norm(name: str) -> str:
     return _SPACES_RE.sub(" ", n).strip()
 
 
+def _closest_dk_entry(
+    canon_team: str,
+    line: float,
+    dk_idx: dict,
+    max_delta: float = 1.5,
+) -> dict:
+    """Return the DK index entry for canon_team whose line is closest to `line`.
+
+    Used when DK only carries alternates (multiple lines per team) and the
+    exact line from BetBCK isn't present.  Capped at max_delta wins of
+    difference so we don't accidentally compare wildly different markets.
+    """
+    best_entry: dict = {}
+    best_delta = float("inf")
+    for (t, l), entry in dk_idx.items():
+        if t != canon_team:
+            continue
+        delta = abs(l - line)
+        if delta < best_delta:
+            best_delta = delta
+            best_entry = entry
+    return best_entry if best_delta <= max_delta else {}
+
+
 def _canonical(name: str) -> str:
     # Convert "Miami (FL)" → "Miami FL" (keep the abbreviation, strip only the parens)
     # so the alias table can resolve "miami fl" → "miami florida"
@@ -322,8 +346,8 @@ def _get_fair_prob(
     average across available books to get a consensus fair probability.
     """
     key      = (canon_team, line)
-    fd_entry = fd_idx.get(key, {})
-    dk_entry = dk_idx.get(key, {})
+    fd_entry  = fd_idx.get(key, {})
+    dk_entry  = dk_idx.get(key) or _closest_dk_entry(canon_team, line, dk_idx)
     mgm_entry = mgm_idx.get(key, {})
 
     fair_probs: list[float] = []
@@ -504,7 +528,7 @@ def calculate_futures_ev(
         signal_count = 0
 
         fd_entry  = fd_idx.get(key, {})
-        dk_entry  = dk_idx.get(key, {})
+        dk_entry  = dk_idx.get(key) or _closest_dk_entry(canon, line, dk_idx)
         mgm_entry = mgm_idx.get(key, {})
 
         fd_over   = fd_entry.get("FanDuel", {}).get("over")
