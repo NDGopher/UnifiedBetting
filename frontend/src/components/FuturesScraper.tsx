@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Box, Button, Typography, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, CircularProgress, Alert, Slider, Chip, Tooltip,
+  TableHead, TableRow, Chip, Tooltip, ToggleButtonGroup, ToggleButton,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { TuneRounded, SearchOff } from '@mui/icons-material';
+import { SearchOff } from '@mui/icons-material';
 import { API_BASE } from '../utils/apiConfig';
 
 dayjs.extend(relativeTime);
 
 interface FuturesRow {
   team:           string;
+  sport:          string;   // 'NFL' | 'NCAAF'
   line:           number;
-  direction:      string;   // "Over" | "Under"
+  direction:      string;   // 'Over' | 'Under'
   betbck_odds:    string;
   fd_odds:        string;
   dk_odds:        string;
@@ -22,40 +23,96 @@ interface FuturesRow {
   ev:             string;
   ev_float:       number;
   sharp_books:    string;
+  signal_count:   number;
+  per_book_ev:    Record<string, number>;
   is_arb?:        boolean;
   arb_book?:      string;
   arb_opp_odds?:  string;
   arb_roi?:       number | null;
 }
 
+type SportFilter = 'ALL' | 'NFL' | 'NCAAF';
+
+// ── helpers ──────────────────────────────────────────────────────────────────
+
+const BOOKS = ['FD', 'DK', 'MGM'] as const;
+
+/** Render 1–3 signal dots for a row. Green = that book confirms +EV, grey = available but not +EV, transparent = book doesn't have the line. */
+function SignalDots({ row }: { row: FuturesRow }) {
+  const bookKeys: Record<typeof BOOKS[number], string> = { FD: 'FD', DK: 'DK', MGM: 'MGM' };
+  const oddsKeys: Record<typeof BOOKS[number], string> = { FD: row.fd_odds, DK: row.dk_odds, MGM: row.mgm_odds };
+
+  return (
+    <Box sx={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
+      {BOOKS.map(book => {
+        const hasLine = oddsKeys[book] !== 'N/A' && oddsKeys[book];
+        const evForBook = row.per_book_ev?.[bookKeys[book]];
+        const isPositive = hasLine && evForBook !== undefined && evForBook > 0;
+        const isPresent  = hasLine;
+
+        return (
+          <Tooltip
+            key={book}
+            title={!isPresent ? `${book}: no line` : `${book}: ${evForBook !== undefined ? (evForBook > 0 ? `+${evForBook.toFixed(1)}%` : `${evForBook.toFixed(1)}%`) : 'N/A'} EV`}
+            placement="top"
+            arrow
+          >
+            <Box
+              sx={{
+                width: 8, height: 8, borderRadius: '50%',
+                bgcolor: !isPresent
+                  ? 'rgba(255,255,255,0.06)'
+                  : isPositive
+                    ? '#32D74B'
+                    : 'rgba(255,255,255,0.2)',
+                border: !isPresent ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                flexShrink: 0,
+                cursor: 'default',
+              }}
+            />
+          </Tooltip>
+        );
+      })}
+    </Box>
+  );
+}
+
+/** Render an odds string; green-tinted if +EV for that book. */
+function OddsCell({ odds, evFloat }: { odds: string; evFloat?: number }) {
+  const na      = !odds || odds === 'N/A';
+  const posEv   = !na && evFloat !== undefined && evFloat > 0;
+  return (
+    <span style={{
+      fontFamily: '"JetBrains Mono","Fira Code",monospace',
+      fontVariantNumeric: 'tabular-nums',
+      fontSize: '0.8rem',
+      color: na ? '#374151' : posEv ? '#4ADE80' : '#D1D5DB',
+      fontWeight: posEv ? 600 : 400,
+    }}>
+      {na ? '—' : odds}
+    </span>
+  );
+}
+
+// ── component ─────────────────────────────────────────────────────────────────
+
 const FuturesScraper: React.FC = () => {
-  const [markets, setMarkets]               = useState<FuturesRow[]>([]);
-  const [loading, setLoading]               = useState(false);
-  const [error, setError]                   = useState<string | null>(null);
-  const [message, setMessage]               = useState<string | null>(null);
-  const [lastUpdate, setLastUpdate]         = useState<string | null>(null);
-  const [pipelineRunning, setPipelineRunning] = useState(false);
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+  const [markets, setMarkets]                     = useState<FuturesRow[]>([]);
+  const [loading, setLoading]                     = useState(false);
+  const [message, setMessage]                     = useState<string | null>(null);
+  const [lastUpdate, setLastUpdate]               = useState<string | null>(null);
+  const [pipelineRunning, setPipelineRunning]     = useState(false);
+  const [sportFilter, setSportFilter]             = useState<SportFilter>('ALL');
+  const [showOnlyPositive, setShowOnlyPositive]   = useState(false);
+  const [minSignal, setMinSignal]                 = useState(0);
 
-  const EV_MAX_SLIDER = 20;
-  const [minEv, setMinEv] = useState(0);
-  const [maxEv, setMaxEv] = useState(EV_MAX_SLIDER);
-  const [showAllEv, setShowAllEv] = useState(false);
+  const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const isPolling  = useRef(false);
+  const sseRef     = useRef<EventSource | null>(null);
 
-  const pollingRef  = useRef<NodeJS.Timeout | null>(null);
-  const isPolling   = useRef(false);
-  const sseRef      = useRef<EventSource | null>(null);
+  useEffect(() => { connectSSE(); fetchResults(); return () => { disconnectSSE(); stopPolling(); }; }, []); // eslint-disable-line
 
-  useEffect(() => {
-    connectSSE();
-    fetchResults();
-    return () => {
-      disconnectSSE();
-      stopPolling();
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // ── SSE ──────────────────────────────────────────────────────────────────
+  // ── SSE ────────────────────────────────────────────────────────────────────
   const connectSSE = () => {
     if (sseRef.current) return;
     const es = new EventSource('/api/events/stream');
@@ -71,51 +128,39 @@ const FuturesScraper: React.FC = () => {
           const { events, last_run, message: msg } = data.data;
           if (events?.length > 0) { setMarkets(events); setLastUpdate(last_run); }
           if (msg) setMessage(msg);
-          setPipelineRunning(false);
-          stopPolling();
+          setPipelineRunning(false); stopPolling();
         } else if (data.type === 'futures_error') {
-          setError(data.data?.message || 'Futures pipeline error');
-          setPipelineRunning(false);
-          stopPolling();
+          setPipelineRunning(false); stopPolling();
         }
       } catch {}
     };
-    es.onerror = () => console.warn('[FuturesScraper] SSE error');
+    es.onerror = () => {};
   };
-
   const disconnectSSE = () => { sseRef.current?.close(); sseRef.current = null; };
 
-  // ── Polling ───────────────────────────────────────────────────────────────
+  // ── Polling ────────────────────────────────────────────────────────────────
   const checkStatus = async () => {
     try {
       const res  = await fetch(`${API_BASE}/api/futures-pipeline-status`);
       const data = await res.json();
-      if (data.status === 'success') {
-        const running = data.data.running;
-        setPipelineRunning(running);
-        if (!running && data.data.task_done) { await fetchResults(); stopPolling(); }
+      if (data.status === 'success' && !data.data.running && data.data.task_done) {
+        await fetchResults(); stopPolling();
       }
     } catch {}
   };
-
   const startPolling = () => {
     if (pollingRef.current) clearInterval(pollingRef.current);
     setPipelineRunning(true);
     pollingRef.current = setInterval(() => {
-      if (!isPolling.current) {
-        isPolling.current = true;
-        checkStatus().finally(() => { isPolling.current = false; });
-      }
+      if (!isPolling.current) { isPolling.current = true; checkStatus().finally(() => { isPolling.current = false; }); }
     }, 2000);
   };
-
   const stopPolling = () => {
     if (pollingRef.current) clearInterval(pollingRef.current);
-    pollingRef.current = null;
-    setPipelineRunning(false);
+    pollingRef.current = null; setPipelineRunning(false);
   };
 
-  // ── API calls ─────────────────────────────────────────────────────────────
+  // ── API ─────────────────────────────────────────────────────────────────────
   const fetchResults = async () => {
     try {
       const res  = await fetch(`${API_BASE}/buckeye/futures-results`);
@@ -127,338 +172,369 @@ const FuturesScraper: React.FC = () => {
     } catch {}
   };
 
-  const handleRunFutures = async () => {
+  const handleRun = async () => {
     if (pipelineRunning) return;
-    setPipelineRunning(true);
-    setLoading(true);
-    setError(null);
-    setMessage(null);
-    setMarkets([]);
-    setLastUpdate(null);
+    setPipelineRunning(true); setLoading(true); setMessage(null); setMarkets([]);
     try {
       const res  = await fetch(`${API_BASE}/api/run-futures-pipeline`, { method: 'POST' });
       const data = await res.json();
-      if (data.status === 'success') {
-        setMessage('Futures pipeline started…');
-        connectSSE();
-        startPolling();
-      } else {
-        setError(data.message || 'Failed to start futures pipeline');
-        setPipelineRunning(false);
-      }
-    } catch {
-      setError('Connection failed — try again');
-      setPipelineRunning(false);
-    } finally {
-      setLoading(false);
-    }
+      if (data.status === 'success') { connectSSE(); startPolling(); }
+      else { setPipelineRunning(false); }
+    } catch { setPipelineRunning(false); }
+    finally { setLoading(false); }
   };
 
-  // ── Sort / filter ─────────────────────────────────────────────────────────
-  const sortedMarkets = useMemo(() => {
-    return [...markets].sort((a, b) => {
-      // Arb always floats to top regardless of sort direction
-      if (a.is_arb && !b.is_arb) return -1;
-      if (!a.is_arb && b.is_arb) return 1;
-      return sortDir === 'desc' ? b.ev_float - a.ev_float : a.ev_float - b.ev_float;
+  // ── Filter / sort ───────────────────────────────────────────────────────────
+  const filtered = useMemo(() => {
+    return markets.filter(r => {
+      if (r.is_arb) return true; // arbs always shown
+      if (sportFilter !== 'ALL' && r.sport !== sportFilter) return false;
+      if (showOnlyPositive && r.ev_float <= 0) return false;
+      if (r.signal_count < minSignal) return false;
+      return true;
     });
-  }, [markets, sortDir]);
+  }, [markets, sportFilter, showOnlyPositive, minSignal]);
 
-  const filteredMarkets = useMemo(() => sortedMarkets.filter(row => {
-    if (row.is_arb) return true;         // arbs always visible
-    if (showAllEv) return true;
-    const v = row.ev_float ?? 0;
-    if (v < minEv) return false;
-    if (maxEv < EV_MAX_SLIDER && v > maxEv) return false;
-    return true;
-  }), [sortedMarkets, minEv, maxEv, showAllEv]);
+  // ── Counts ──────────────────────────────────────────────────────────────────
+  const arbCount   = markets.filter(r => r.is_arb).length;
+  const posEvCount = markets.filter(r => !r.is_arb && r.ev_float > 0).length;
+  const nflCount   = markets.filter(r => r.sport === 'NFL').length;
+  const ncaafCount = markets.filter(r => r.sport === 'NCAAF').length;
+  const multi      = markets.filter(r => !r.is_arb && r.signal_count >= 2).length;
 
-  const evLabel = (v: number, isMax: boolean) =>
-    isMax && v >= EV_MAX_SLIDER ? 'All' : `${v}%`;
-
-  const arbCount  = markets.filter(r => r.is_arb).length;
-  const posEvCount = markets.filter(r => !r.is_arb && (r.ev_float ?? 0) > 0).length;
-
-  // ── Styles ────────────────────────────────────────────────────────────────
-  const btnSx = {
-    color: '#9CA3AF', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '6px',
-    fontWeight: 500, px: 2, py: 0.5, fontSize: '0.75rem', minWidth: 'auto',
-    height: 32, textTransform: 'none' as const, lineHeight: 1.2,
-    bgcolor: 'rgba(255,255,255,0.04)',
-    '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.2)', color: '#F5F5F5' },
+  // ── Style helpers ───────────────────────────────────────────────────────────
+  const hdr = {
+    color: '#6B7280', fontWeight: 600, fontSize: '0.625rem',
+    textTransform: 'uppercase' as const, letterSpacing: '0.08em', py: 1.25,
+    borderBottom: '1px solid rgba(255,255,255,0.07)',
+    bgcolor: 'rgba(0,0,0,0.25)',
   };
 
-  const sliderSx = {
-    color: 'rgba(255,255,255,0.5)',
-    '& .MuiSlider-thumb': { width: 12, height: 12, bgcolor: '#F5F5F5', boxShadow: 'none' },
-    '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
-    '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
-    '& .MuiSlider-valueLabel': { bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.7rem', color: '#F5F5F5' },
+  const cell = {
+    borderBottom: '1px solid rgba(255,255,255,0.04)',
+    py: 1, verticalAlign: 'middle',
   };
 
-  const monoSx = {
-    fontFamily: '"JetBrains Mono","Fira Code","Consolas",monospace',
+  const mono = {
+    fontFamily: '"JetBrains Mono","Fira Code",monospace',
     fontVariantNumeric: 'tabular-nums' as const,
-    fontSize: '0.8125rem',
   };
 
-  const hdrSx = {
-    color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem',
-    textTransform: 'uppercase' as const, letterSpacing: '0.07em',
-  };
-
-  // ── Render ────────────────────────────────────────────────────────────────
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <>
-      {/* Toolbar */}
-      <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+      {/* ── Toolbar ─────────────────────────────────────────────────── */}
+      <Box sx={{ display: 'flex', gap: 1.5, mb: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+        {/* Run button */}
         <Button
-          variant="outlined" size="small" disabled={pipelineRunning}
-          onClick={handleRunFutures}
+          variant="outlined" size="small" disabled={pipelineRunning || loading}
+          onClick={handleRun}
           sx={{
-            ...btnSx,
-            color:       pipelineRunning ? '#32D74B' : '#9CA3AF',
-            borderColor: pipelineRunning ? 'rgba(50,215,75,0.3)' : 'rgba(255,255,255,0.1)',
-            bgcolor:     pipelineRunning ? 'rgba(50,215,75,0.06)' : 'rgba(255,255,255,0.04)',
-            '&.Mui-disabled': { color: '#32D74B', borderColor: 'rgba(50,215,75,0.3)', opacity: 1, borderRadius: '6px' },
+            color: pipelineRunning ? '#32D74B' : '#9CA3AF',
+            borderColor: pipelineRunning ? 'rgba(50,215,75,0.35)' : 'rgba(255,255,255,0.1)',
+            bgcolor: pipelineRunning ? 'rgba(50,215,75,0.06)' : 'rgba(255,255,255,0.04)',
+            borderRadius: '6px', fontWeight: 500, px: 2, fontSize: '0.75rem',
+            height: 30, textTransform: 'none', minWidth: 'auto',
+            '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.2)', color: '#F5F5F5' },
+            '&.Mui-disabled': { color: pipelineRunning ? '#32D74B' : undefined, borderColor: pipelineRunning ? 'rgba(50,215,75,0.35)' : undefined, opacity: 1 },
           }}
         >
-          {pipelineRunning ? 'Running…' : 'Run Futures'}
+          {pipelineRunning ? '● Running…' : 'Run Pipeline'}
         </Button>
 
-        {/* Summary badges */}
-        {markets.length > 0 && (
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            {arbCount > 0 && (
-              <Chip
-                label={`${arbCount} ARB`}
-                size="small"
-                sx={{
-                  height: 22, fontSize: '0.7rem', fontWeight: 700,
-                  bgcolor: 'rgba(251,191,36,0.15)', color: '#FBB724',
-                  border: '1px solid rgba(251,191,36,0.35)', borderRadius: '5px',
-                  '& .MuiChip-label': { px: 1 },
-                }}
-              />
-            )}
-            {posEvCount > 0 && (
-              <Chip
-                label={`${posEvCount} +EV`}
-                size="small"
-                sx={{
-                  height: 22, fontSize: '0.7rem', fontWeight: 700,
-                  bgcolor: 'rgba(50,215,75,0.1)', color: '#32D74B',
-                  border: '1px solid rgba(50,215,75,0.25)', borderRadius: '5px',
-                  '& .MuiChip-label': { px: 1 },
-                }}
-              />
-            )}
-          </Box>
-        )}
+        {/* Divider */}
+        <Box sx={{ width: 1, height: 20, bgcolor: 'rgba(255,255,255,0.1)' }} />
 
-        <Box sx={{ width: '1px', height: 24, bgcolor: 'rgba(255,255,255,0.12)', mx: 0.5 }} />
+        {/* Sport filter */}
+        <ToggleButtonGroup
+          value={sportFilter} exclusive size="small"
+          onChange={(_, v) => v && setSportFilter(v)}
+          sx={{
+            height: 30,
+            '& .MuiToggleButton-root': {
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: '#6B7280', fontSize: '0.7rem', fontWeight: 600,
+              px: 1.25, py: 0, textTransform: 'none', lineHeight: 1,
+              '&.Mui-selected': { bgcolor: 'rgba(255,255,255,0.1)', color: '#F5F5F5', borderColor: 'rgba(255,255,255,0.2)' },
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.06)' },
+            },
+          }}
+        >
+          <ToggleButton value="ALL">All {markets.length > 0 ? `(${markets.length})` : ''}</ToggleButton>
+          <ToggleButton value="NFL">NFL {nflCount > 0 ? `(${nflCount})` : ''}</ToggleButton>
+          <ToggleButton value="NCAAF">NCAAF {ncaafCount > 0 ? `(${ncaafCount})` : ''}</ToggleButton>
+        </ToggleButtonGroup>
 
-        {/* EV Range Filter */}
-        {!showAllEv && (
-          <Box sx={{
-            display: 'flex', alignItems: 'center', gap: 1.5,
-            px: 1.5, py: 0.5, border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 1.5, height: 32, minWidth: 240,
-          }}>
-            <TuneRounded sx={{ fontSize: '0.95rem', color: '#B0B0B0', flexShrink: 0 }} />
-            <Box sx={{ flex: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 26, flexShrink: 0 }}>Min</Typography>
-                <Slider value={minEv} onChange={(_, v) => setMinEv(v as number)}
-                  min={0} max={EV_MAX_SLIDER} step={0.5}
-                  valueLabelDisplay="auto" valueLabelFormat={v => evLabel(v, false)}
-                  sx={{ ...sliderSx, py: 0.5, my: 0 }} />
-                <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 28, textAlign: 'right', flexShrink: 0 }}>
-                  {evLabel(minEv, false)}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 26, flexShrink: 0 }}>Max</Typography>
-                <Slider value={maxEv} onChange={(_, v) => setMaxEv(v as number)}
-                  min={0} max={EV_MAX_SLIDER} step={0.5}
-                  valueLabelDisplay="auto" valueLabelFormat={v => evLabel(v, true)}
-                  sx={{ ...sliderSx, py: 0.5, my: 0 }} />
-                <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 28, textAlign: 'right', flexShrink: 0 }}>
-                  {evLabel(maxEv, true)}
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        )}
+        {/* Signal filter */}
+        <Box sx={{ display: 'flex', gap: 0.75 }}>
+          {[0, 1, 2, 3].map(n => (
+            <Button
+              key={n} size="small"
+              onClick={() => setMinSignal(prev => prev === n ? 0 : n)}
+              sx={{
+                minWidth: 0, px: 1.25, height: 30,
+                fontSize: '0.7rem', fontWeight: 600,
+                borderRadius: '6px', textTransform: 'none',
+                border: '1px solid',
+                color: minSignal === n ? '#F5F5F5' : '#6B7280',
+                borderColor: minSignal === n ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.08)',
+                bgcolor: minSignal === n ? 'rgba(255,255,255,0.1)' : 'transparent',
+                '&:hover': { bgcolor: 'rgba(255,255,255,0.07)' },
+              }}
+            >
+              {n === 0 ? 'All signals' : `${n}+ books`}
+            </Button>
+          ))}
+        </Box>
 
-        <Button variant="outlined" size="small" onClick={() => setShowAllEv(v => !v)}
-          sx={{ ...btnSx, ...(showAllEv ? { color: '#F5F5F5', borderColor: 'rgba(255,255,255,0.25)' } : {}) }}>
-          {showAllEv ? 'Filter EV' : 'Show All'}
+        {/* +EV only toggle */}
+        <Button
+          size="small"
+          onClick={() => setShowOnlyPositive(v => !v)}
+          sx={{
+            minWidth: 0, px: 1.25, height: 30,
+            fontSize: '0.7rem', fontWeight: 600,
+            borderRadius: '6px', textTransform: 'none',
+            border: '1px solid',
+            color: showOnlyPositive ? '#32D74B' : '#6B7280',
+            borderColor: showOnlyPositive ? 'rgba(50,215,75,0.35)' : 'rgba(255,255,255,0.08)',
+            bgcolor: showOnlyPositive ? 'rgba(50,215,75,0.06)' : 'transparent',
+            '&:hover': { bgcolor: 'rgba(255,255,255,0.07)' },
+          }}
+        >
+          +EV only
         </Button>
       </Box>
 
-      {/* Meta row */}
-      {(lastUpdate || markets.length > 0) && (
-        <Box sx={{ mb: 1, ml: 0.5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      {/* ── Stats bar ───────────────────────────────────────────────── */}
+      {markets.length > 0 && (
+        <Box sx={{ display: 'flex', gap: 1, mb: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
+          {arbCount > 0 && (
+            <Chip label={`${arbCount} ARB`} size="small" sx={{
+              height: 20, fontSize: '0.65rem', fontWeight: 700,
+              bgcolor: 'rgba(251,191,36,0.15)', color: '#FBB724',
+              border: '1px solid rgba(251,191,36,0.3)', borderRadius: '4px',
+              '& .MuiChip-label': { px: 1 },
+            }} />
+          )}
+          {posEvCount > 0 && (
+            <Chip label={`${posEvCount} +EV`} size="small" sx={{
+              height: 20, fontSize: '0.65rem', fontWeight: 700,
+              bgcolor: 'rgba(50,215,75,0.1)', color: '#32D74B',
+              border: '1px solid rgba(50,215,75,0.22)', borderRadius: '4px',
+              '& .MuiChip-label': { px: 1 },
+            }} />
+          )}
+          {multi > 0 && (
+            <Chip label={`${multi} multi-book`} size="small" sx={{
+              height: 20, fontSize: '0.65rem', fontWeight: 700,
+              bgcolor: 'rgba(96,165,250,0.1)', color: '#60A5FA',
+              border: '1px solid rgba(96,165,250,0.22)', borderRadius: '4px',
+              '& .MuiChip-label': { px: 1 },
+            }} />
+          )}
+          <Box sx={{ flex: 1 }} />
           {lastUpdate && (
-            <Typography variant="body2" sx={{ color: '#aaa', fontSize: '0.8rem' }}>
-              Last run: {dayjs(lastUpdate).format('HH:mm:ss')} ({dayjs(lastUpdate).fromNow()})
+            <Typography sx={{ color: '#4B5563', fontSize: '0.7rem' }}>
+              {dayjs(lastUpdate).format('h:mm a')} · {dayjs(lastUpdate).fromNow()}
             </Typography>
           )}
-          {markets.length > 0 && (
-            <Typography variant="body2" sx={{ color: '#555', fontSize: '0.75rem' }}>
-              Showing {filteredMarkets.length} of {markets.length} bets
-            </Typography>
-          )}
-        </Box>
-      )}
-
-      {loading && <CircularProgress size={20} sx={{ mb: 2 }} />}
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {message && !pipelineRunning && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 1.5 }}>
-          <Box component="span" sx={{ color: '#32D74B', fontSize: '0.75rem', lineHeight: 1 }}>✓</Box>
-          <Typography sx={{ color: '#9CA3AF', fontSize: '0.75rem' }}>{message}</Typography>
-        </Box>
-      )}
-      {pipelineRunning && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-          <Box sx={{
-            '@keyframes futures-pulse': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.15 } },
-            width: 6, height: 6, borderRadius: '50%', bgcolor: '#32D74B',
-            animation: 'futures-pulse 1.5s ease-in-out infinite', flexShrink: 0,
-          }} />
-          <Typography sx={{ color: '#9CA3AF', fontSize: '0.75rem' }}>
-            {message || 'Futures pipeline running — scraping BetBCK + FanDuel + DraftKings + BetMGM…'}
+          <Typography sx={{ color: '#374151', fontSize: '0.7rem' }}>
+            {filtered.length} of {markets.length} shown
           </Typography>
         </Box>
       )}
 
-      {/* EV Table */}
+      {/* ── Live status ─────────────────────────────────────────────── */}
+      {pipelineRunning && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+          <Box sx={{
+            '@keyframes fp': { '0%,100%': { opacity: 1 }, '50%': { opacity: 0.2 } },
+            width: 6, height: 6, borderRadius: '50%', bgcolor: '#32D74B',
+            animation: 'fp 1.4s ease-in-out infinite', flexShrink: 0,
+          }} />
+          <Typography sx={{ color: '#6B7280', fontSize: '0.75rem' }}>
+            {message || 'Scraping BetBCK · FanDuel · DraftKings · BetMGM…'}
+          </Typography>
+        </Box>
+      )}
+      {!pipelineRunning && message && markets.length > 0 && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 1.5 }}>
+          <Box component="span" sx={{ color: '#32D74B', fontSize: '0.75rem' }}>✓</Box>
+          <Typography sx={{ color: '#4B5563', fontSize: '0.75rem' }}>{message}</Typography>
+        </Box>
+      )}
+
+      {/* ── Table ───────────────────────────────────────────────────── */}
       <TableContainer sx={{ background: 'transparent', borderRadius: 1.5, border: '1px solid rgba(255,255,255,0.06)' }}>
         <Table size="small">
           <TableHead>
-            <TableRow sx={{ '& .MuiTableCell-root': {
-              borderBottom: '1px solid rgba(255,255,255,0.06)', py: 1.5,
-              bgcolor: 'rgba(255,255,255,0.02)',
-            }}}>
-              <TableCell sx={hdrSx}>Team</TableCell>
-              <TableCell sx={hdrSx}>Bet</TableCell>
-              <TableCell align="center" sx={hdrSx}>BetBCK</TableCell>
-              <TableCell align="center" sx={hdrSx}>FanDuel</TableCell>
-              <TableCell align="center" sx={hdrSx}>DraftKings</TableCell>
-              <TableCell align="center" sx={hdrSx}>BetMGM</TableCell>
-              <TableCell align="center" sx={hdrSx}>Fair</TableCell>
-              <TableCell
-                align="center"
-                onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
-                sx={{ ...hdrSx, color: '#F5F5F5', cursor: 'pointer', userSelect: 'none', '&:hover': { color: '#fff' } }}
-              >
-                EV {sortDir === 'desc' ? '↓' : '↑'}
+            <TableRow>
+              {/* Signal */}
+              <TableCell sx={{ ...hdr, width: 52, pl: 1.5 }}>
+                <Tooltip title="Dots show per-book EV: green = +EV vs that book, grey = line available, hollow = no line" placement="top" arrow>
+                  <span style={{ cursor: 'help' }}>Signal</span>
+                </Tooltip>
               </TableCell>
-              {/* Arb / Ref combined */}
-              <TableCell align="right" sx={hdrSx}>Info</TableCell>
+              <TableCell sx={{ ...hdr, width: 52 }}>Sport</TableCell>
+              <TableCell sx={hdr}>Team</TableCell>
+              <TableCell sx={hdr}>Bet</TableCell>
+              <TableCell align="center" sx={{ ...hdr, width: 70 }}>
+                <Tooltip title="BetBCK — the book you're betting with" placement="top" arrow>
+                  <span style={{ cursor: 'help' }}>BetBCK</span>
+                </Tooltip>
+              </TableCell>
+              <TableCell align="center" sx={{ ...hdr, width: 62 }}>FD</TableCell>
+              <TableCell align="center" sx={{ ...hdr, width: 62 }}>DK</TableCell>
+              <TableCell align="center" sx={{ ...hdr, width: 62 }}>MGM</TableCell>
+              <TableCell align="center" sx={{ ...hdr, width: 66 }}>
+                <Tooltip title="Consensus fair price — average of deviggged reference books" placement="top" arrow>
+                  <span style={{ cursor: 'help' }}>Fair</span>
+                </Tooltip>
+              </TableCell>
+              <TableCell align="center" sx={{ ...hdr, width: 72, color: '#9CA3AF' }}>EV%</TableCell>
+              <TableCell align="right" sx={{ ...hdr, pr: 1.5, width: 88 }}>Note</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
-            {filteredMarkets.length === 0 && !loading ? (
-              <TableRow sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
-                <TableCell colSpan={9} sx={{ border: 'none', py: 5, px: 3 }}>
+            {filtered.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={11} sx={{ border: 'none', py: 6, px: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
                     <SearchOff sx={{ fontSize: 18, color: '#374151', mt: 0.15, flexShrink: 0 }} />
                     <Box>
-                      <Typography sx={{ fontSize: '0.8125rem', fontWeight: 500, color: '#6B7280', mb: 0.25 }}>
-                        {markets.length > 0 ? 'No futures match the active filters' : 'No futures loaded'}
+                      <Typography sx={{ fontSize: '0.8125rem', fontWeight: 500, color: '#6B7280', mb: 0.3 }}>
+                        {markets.length > 0 ? 'No bets match the active filters' : 'No futures loaded'}
                       </Typography>
-                      <Typography sx={{ fontSize: '0.75rem', color: '#6B7280' }}>
+                      <Typography sx={{ fontSize: '0.75rem', color: '#4B5563' }}>
                         {markets.length > 0
-                          ? <>Widen the EV range or click <b style={{ color: '#9CA3AF' }}>Show All</b> to see all {markets.length} bets.</>
-                          : <>Click <span style={{ color: '#9CA3AF' }}>Run Futures</span> to scrape BetBCK, FanDuel, and DraftKings win totals.</>
+                          ? 'Clear the signal / sport / +EV filters to see more.'
+                          : <>Click <span style={{ color: '#9CA3AF' }}>Run Pipeline</span> to scrape win totals from BetBCK, FanDuel, DraftKings, and BetMGM.</>
                         }
                       </Typography>
                     </Box>
                   </Box>
                 </TableCell>
               </TableRow>
-            ) : filteredMarkets.map((row, idx) => {
-              const evVal  = row.ev_float ?? 0;
-              const evPos  = evVal > 0;
-              const isArb  = row.is_arb === true;
+            ) : filtered.map((row, idx) => {
+              const isArb = row.is_arb === true;
+              const evVal = row.ev_float ?? 0;
+              const evPos = evVal > 0;
+
+              // EV color by magnitude
+              const evColor = evVal === 0 ? '#374151'
+                : evVal >= 8 ? '#4ADE80'
+                : evVal >= 4 ? '#86EFAC'
+                : evVal >= 0 ? '#BBF7D0'
+                : '#EF4444';
 
               return (
                 <TableRow
                   key={idx}
                   sx={{
-                    // Arb rows get a faint amber left border
-                    ...(isArb ? {
-                      borderLeft: '2px solid rgba(251,191,36,0.5)',
-                      bgcolor: 'rgba(251,191,36,0.03)',
-                    } : {}),
-                    '&:hover': { backgroundColor: isArb ? 'rgba(251,191,36,0.06)' : 'rgba(255,255,255,0.03)' },
-                    '& .MuiTableCell-root': { borderBottom: '1px solid rgba(255,255,255,0.04)', py: 1.25, verticalAlign: 'middle' },
+                    ...(isArb ? { bgcolor: 'rgba(251,191,36,0.025)' } : {}),
+                    '&:hover': { bgcolor: isArb ? 'rgba(251,191,36,0.05)' : 'rgba(255,255,255,0.025)' },
+                    ...(isArb ? { borderLeft: '2px solid rgba(251,191,36,0.45)' } : {}),
                   }}
                 >
-                  {/* Team */}
-                  <TableCell sx={{ color: '#E5E7EB', fontSize: '0.875rem', maxWidth: 180, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {row.team}
+                  {/* Signal dots */}
+                  <TableCell sx={{ ...cell, pl: 1.5, pr: 0.5 }}>
+                    <SignalDots row={row} />
                   </TableCell>
 
-                  {/* Bet: "Over 6.5" */}
-                  <TableCell sx={{ color: '#D1D5DB', fontSize: '0.8125rem', whiteSpace: 'nowrap' }}>
-                    <Box component="span" sx={{ color: row.direction === 'Over' ? '#60A5FA' : '#F87171', fontWeight: 500 }}>
+                  {/* Sport tag */}
+                  <TableCell sx={cell}>
+                    <Box
+                      component="span"
+                      sx={{
+                        display: 'inline-block',
+                        fontSize: '0.6rem', fontWeight: 700,
+                        letterSpacing: '0.06em',
+                        px: 0.75, py: 0.25, borderRadius: '3px',
+                        ...(row.sport === 'NFL'
+                          ? { bgcolor: 'rgba(96,165,250,0.12)', color: '#60A5FA' }
+                          : { bgcolor: 'rgba(251,146,60,0.12)', color: '#FB923C' }),
+                      }}
+                    >
+                      {row.sport || '?'}
+                    </Box>
+                  </TableCell>
+
+                  {/* Team */}
+                  <TableCell sx={{ ...cell, maxWidth: 160, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <Typography sx={{ fontSize: '0.875rem', color: '#E5E7EB', fontWeight: 500 }}>
+                      {row.team}
+                    </Typography>
+                  </TableCell>
+
+                  {/* Bet: Over/Under + line */}
+                  <TableCell sx={{ ...cell, whiteSpace: 'nowrap' }}>
+                    <Box component="span" sx={{
+                      fontSize: '0.8rem', fontWeight: 600,
+                      color: row.direction === 'Over' ? '#60A5FA' : '#F87171',
+                      mr: 0.5,
+                    }}>
                       {row.direction}
                     </Box>
-                    {' '}{row.line}
+                    <Box component="span" sx={{ fontSize: '0.8rem', color: '#9CA3AF', ...mono }}>
+                      {row.line}
+                    </Box>
                   </TableCell>
 
-                  {/* BetBCK odds */}
-                  <TableCell align="center" sx={{ color: '#D1D5DB', ...monoSx }}>
-                    {row.betbck_odds}
+                  {/* BetBCK odds — this is the bet you're placing */}
+                  <TableCell align="center" sx={cell}>
+                    <Box component="span" sx={{
+                      ...mono, fontSize: '0.8125rem',
+                      fontWeight: 600, color: '#E5E7EB',
+                    }}>
+                      {row.betbck_odds}
+                    </Box>
                   </TableCell>
 
-                  {/* FanDuel odds */}
-                  <TableCell align="center" sx={{ color: row.fd_odds === 'N/A' ? '#374151' : '#D1D5DB', ...monoSx }}>
-                    {row.fd_odds}
+                  {/* FD */}
+                  <TableCell align="center" sx={cell}>
+                    <OddsCell odds={row.fd_odds} evFloat={row.per_book_ev?.FD} />
                   </TableCell>
 
-                  {/* DraftKings odds */}
-                  <TableCell align="center" sx={{ color: row.dk_odds === 'N/A' ? '#374151' : '#D1D5DB', ...monoSx }}>
-                    {row.dk_odds}
+                  {/* DK */}
+                  <TableCell align="center" sx={cell}>
+                    <OddsCell odds={row.dk_odds} evFloat={row.per_book_ev?.DK} />
                   </TableCell>
 
-                  {/* BetMGM odds */}
-                  <TableCell align="center" sx={{ color: row.mgm_odds === 'N/A' ? '#374151' : '#D1D5DB', ...monoSx }}>
-                    {row.mgm_odds ?? 'N/A'}
+                  {/* MGM */}
+                  <TableCell align="center" sx={cell}>
+                    <OddsCell odds={row.mgm_odds} evFloat={row.per_book_ev?.MGM} />
                   </TableCell>
 
                   {/* Consensus fair */}
-                  <TableCell align="center" sx={{ color: '#9CA3AF', ...monoSx }}>
-                    {row.consensus_fair}
+                  <TableCell align="center" sx={cell}>
+                    <Box component="span" sx={{ ...mono, fontSize: '0.775rem', color: '#6B7280' }}>
+                      {row.consensus_fair}
+                    </Box>
                   </TableCell>
 
-                  {/* EV% */}
-                  <TableCell align="center">
-                    <span style={{
-                      color: evVal === 0 ? '#4B5563' : evPos ? '#32D74B' : '#EF4444',
-                      fontWeight: isArb ? 700 : evPos ? 600 : 400,
-                      fontSize: (evPos || isArb) ? '0.9rem' : '0.8125rem',
-                      fontFamily: 'monospace',
-                      fontVariantNumeric: 'tabular-nums',
+                  {/* EV% — scaled color */}
+                  <TableCell align="center" sx={cell}>
+                    <Box component="span" sx={{
+                      ...mono,
+                      fontSize: evVal >= 6 ? '0.9375rem' : evVal >= 3 ? '0.875rem' : '0.8125rem',
+                      fontWeight: evVal >= 3 ? 700 : evPos ? 600 : 400,
+                      color: evColor,
                     }}>
                       {row.ev}
-                    </span>
+                    </Box>
                   </TableCell>
 
-                  {/* Info: arb badge or sharp-books ref */}
-                  <TableCell align="right">
+                  {/* Note: ARB or signal label */}
+                  <TableCell align="right" sx={{ ...cell, pr: 1.5 }}>
                     {isArb ? (
                       <Tooltip
-                        title={`Arb vs ${row.arb_book} ${row.arb_opp_odds} — guaranteed ${row.arb_roi != null ? `+${row.arb_roi.toFixed(1)}%` : 'profit'} on balanced stakes`}
-                        placement="left"
-                        arrow
+                        title={`Arb vs ${row.arb_book} ${row.arb_opp_odds} · guaranteed +${row.arb_roi?.toFixed(1) ?? '?'}% on balanced stakes`}
+                        placement="left" arrow
                       >
                         <Chip
-                          label={`ARB ${row.arb_roi != null ? `+${row.arb_roi.toFixed(1)}%` : ''}`}
+                          label={`ARB +${row.arb_roi?.toFixed(1) ?? '?'}%`}
                           size="small"
                           sx={{
                             height: 20, fontSize: '0.65rem', fontWeight: 700, cursor: 'help',
@@ -468,19 +544,24 @@ const FuturesScraper: React.FC = () => {
                           }}
                         />
                       </Tooltip>
-                    ) : (
-                      row.sharp_books && (
+                    ) : row.signal_count >= 2 ? (
+                      <Tooltip title={`+EV confirmed by ${row.signal_count} independent books: ${row.sharp_books}`} placement="left" arrow>
                         <Chip
-                          label={row.sharp_books}
+                          label={`${row.signal_count} books`}
                           size="small"
                           sx={{
-                            height: 18, fontSize: '0.6rem', fontWeight: 600,
-                            bgcolor: 'rgba(255,255,255,0.06)', color: '#6B7280',
-                            borderRadius: '4px', '& .MuiChip-label': { px: 0.75 },
+                            height: 20, fontSize: '0.65rem', fontWeight: 700, cursor: 'help',
+                            bgcolor: 'rgba(96,165,250,0.12)', color: '#60A5FA',
+                            border: '1px solid rgba(96,165,250,0.25)', borderRadius: '4px',
+                            '& .MuiChip-label': { px: 0.75 },
                           }}
                         />
-                      )
-                    )}
+                      </Tooltip>
+                    ) : row.sharp_books ? (
+                      <Box component="span" sx={{ fontSize: '0.65rem', color: '#374151', fontWeight: 500 }}>
+                        {row.sharp_books}
+                      </Box>
+                    ) : null}
                   </TableCell>
                 </TableRow>
               );
