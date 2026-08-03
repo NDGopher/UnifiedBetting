@@ -1404,6 +1404,14 @@ _last_buckeye_payload: dict | None = None
 ace_pipeline_running = False
 ace_pipeline_task = None
 
+# ── Futures pipeline globals ──────────────────────────────────────────────────
+FUTURES_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'futures_results.json')
+futures_current_results = None
+futures_last_run_time   = None
+futures_pipeline_running = False
+futures_pipeline_task    = None
+_last_futures_payload: dict | None = None
+
 async def run_pipeline_background():
     """Background task to run the Buckeye pipeline"""
     global current_results, last_run_time, pipeline_running
@@ -2107,6 +2115,116 @@ async def run_streaming_pipeline_background(sport_filters=None):
         print(f"[STREAMING] Pipeline completed, pipeline_running set to False")
 
 
+async def run_futures_pipeline_background():
+    """Futures pipeline: scrape BetBCK season win totals → match Pinnacle → calculate EV → broadcast."""
+    global futures_current_results, futures_last_run_time, futures_pipeline_running, _last_futures_payload
+    import time as _time
+    futures_pipeline_running = True
+    run_start = _time.time()
+
+    try:
+        logger.info("[FUTURES] ═══ FUTURES PIPELINE STARTED ═══")
+
+        # Step 1 — Load futures event IDs (season win totals only)
+        futures_events_file = os.path.join(os.path.dirname(__file__), 'data', 'futures_event_ids.json')
+        if not os.path.exists(futures_events_file):
+            raise FileNotFoundError(
+                "data/futures_event_ids.json not found — click 'Get Futures Event IDs' first."
+            )
+        with open(futures_events_file, 'r', encoding='utf-8') as f:
+            fdata = json.load(f)
+        event_dicts = fdata.get("event_ids", [])
+        logger.info(f"[FUTURES] Loaded {len(event_dicts)} futures event IDs from file")
+
+        if not event_dicts:
+            await broadcast_event({
+                "type": "futures_complete",
+                "data": {
+                    "events": [], "total_matched": 0, "last_run": datetime.now().isoformat(),
+                    "message": "No futures event IDs found — fetch them first.",
+                },
+            })
+            return
+
+        # Step 2 — Scrape BetBCK for season win totals only (2 checkboxes — fast)
+        logger.info("[FUTURES] Scraping BetBCK season win total checkboxes…")
+        await broadcast_event({
+            "type": "futures_update",
+            "data": {"events": [], "message": "Scraping BetBCK season win totals…", "last_run": datetime.now().isoformat()},
+        })
+
+        from betbck_async_scraper import _get_all_betbck_games_async
+        betbck_games = await _get_all_betbck_games_async(
+            sport_filters=['nfl_season_wins', 'cfb_season_wins']
+        )
+        logger.info(f"[FUTURES] BetBCK returned {len(betbck_games)} season win total lines")
+
+        # Step 3 — Match Pinnacle futures events → BetBCK lines
+        logger.info("[FUTURES] Matching Pinnacle futures to BetBCK…")
+        await broadcast_event({
+            "type": "futures_update",
+            "data": {"events": [], "message": f"Matching {len(event_dicts)} futures events → {len(betbck_games)} BetBCK lines…", "last_run": datetime.now().isoformat()},
+        })
+
+        from match_games import match_pinnacle_to_betbck
+        matched_games = match_pinnacle_to_betbck(event_dicts, betbck_games)
+        total_matched = len([g for g in matched_games if g.get('betbck_data')])
+        logger.info(f"[FUTURES] Matched {total_matched} of {len(matched_games)} futures events")
+
+        # Step 4 — Calculate EV
+        logger.info("[FUTURES] Calculating EV for futures…")
+        from calculate_ev import calculate_ev_table_async, format_ev_table_for_display
+        ev_results = await calculate_ev_table_async(matched_games)
+        ev_events  = format_ev_table_for_display(ev_results)
+        logger.info(f"[FUTURES] EV calc complete: {len(ev_events)} futures opportunities")
+
+        # Step 5 — Save to file
+        last_run_iso = datetime.now().isoformat()
+        futures_last_run_time = last_run_iso
+        futures_current_results = ev_events
+
+        os.makedirs(os.path.dirname(FUTURES_RESULTS_FILE), exist_ok=True)
+        with open(FUTURES_RESULTS_FILE, 'w', encoding='utf-8') as f:
+            json.dump({
+                "events": ev_events,
+                "last_run": last_run_iso,
+                "total_matched": total_matched,
+                "betbck_count": len(betbck_games),
+                "pinnacle_count": len(event_dicts),
+            }, f, indent=2)
+        logger.info(f"[FUTURES] Saved results to {FUTURES_RESULTS_FILE}")
+
+        # Step 6 — Broadcast completion
+        payload = {
+            "type": "futures_complete",
+            "data": {
+                "events": ev_events,
+                "total_matched": total_matched,
+                "last_run": last_run_iso,
+                "elapsed_seconds": round(_time.time() - run_start, 1),
+                "message": f"{total_matched} futures matched, {len(ev_events)} EV opportunities",
+            },
+        }
+        _last_futures_payload = payload
+        await broadcast_event(payload)
+        logger.info(f"[FUTURES] Pipeline done in {round(_time.time() - run_start, 1)}s")
+
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        logger.error(f"[FUTURES] Pipeline error: {e}\n{tb}")
+        try:
+            await broadcast_event({
+                "type": "futures_error",
+                "data": {"error": str(e), "message": "Futures pipeline failed", "traceback": tb},
+            })
+        except Exception:
+            pass
+    finally:
+        futures_pipeline_running = False
+        logger.info("[FUTURES] Pipeline task completed, futures_pipeline_running = False")
+
+
 async def run_ace_streaming_pipeline_background():
     """Ace pipeline: scrape action23.ag → convert to BetBCK format → match Pinnacle → calculate EV → broadcast."""
     global ace_pipeline_running
@@ -2450,6 +2568,97 @@ async def get_pipeline_status():
         }
     }
 
+@app.post("/api/run-futures-pipeline")
+async def run_futures_pipeline():
+    """Start the futures (season win totals) pipeline in the background."""
+    global futures_pipeline_running, futures_pipeline_task
+    if futures_pipeline_running or (futures_pipeline_task and not futures_pipeline_task.done()):
+        return {"status": "error", "message": "Futures pipeline is already running — please wait.", "data": {}}
+    futures_pipeline_task = asyncio.create_task(run_futures_pipeline_background())
+    def _reset(task):
+        global futures_pipeline_running
+        futures_pipeline_running = False
+    futures_pipeline_task.add_done_callback(_reset)
+    return {"status": "success", "message": "Futures pipeline started in background", "data": {}}
+
+
+@app.get("/api/futures-pipeline-status")
+async def get_futures_pipeline_status():
+    """Check whether the futures pipeline is running."""
+    global futures_pipeline_running, futures_pipeline_task
+    return {
+        "status": "success",
+        "data": {
+            "running":   futures_pipeline_running,
+            "task_done": futures_pipeline_task.done() if futures_pipeline_task else True,
+        },
+    }
+
+
+@app.post("/buckeye/get-futures-event-ids")
+def get_futures_event_ids_endpoint():
+    """Fetch season win total event IDs from Pinnacle and save to data/futures_event_ids.json."""
+    try:
+        from eventID import get_futures_event_ids, save_futures_event_ids
+        futures = get_futures_event_ids()
+        ok = save_futures_event_ids(futures)
+        if ok:
+            return {
+                "status": "success",
+                "message": f"Retrieved {len(futures)} futures event IDs (season win totals)",
+                "data": {
+                    "event_count": len(futures),
+                    "event_ids": [e["event_id"] for e in futures],
+                },
+            }
+        return JSONResponse(status_code=500, content={"status": "error", "message": "Failed to save futures event IDs", "data": {}})
+    except Exception as e:
+        import traceback
+        return JSONResponse(status_code=500, content={"status": "error", "message": f"Error: {e}", "data": {}})
+
+
+@app.get("/buckeye/futures-results")
+def get_futures_results():
+    """Serve the latest futures EV results from futures_results.json."""
+    global futures_current_results, futures_last_run_time
+    # Serve from memory if available
+    if futures_current_results is not None and len(futures_current_results) > 0:
+        markets = []
+        for event in futures_current_results:
+            markets.append({
+                "matchup":        event.get("matchup", ""),
+                "league":         event.get("league", ""),
+                "bet":            event.get("bet", ""),
+                "betbck_odds":    event.get("betbck_odds", ""),
+                "pinnacle_nvp":   event.get("pinnacle_nvp", ""),
+                "ev":             event.get("ev", ""),
+                "start_time":     event.get("start_time", ""),
+                "pinnacle_limit": event.get("pinnacle_limit"),
+            })
+        return JSONResponse({"status": "success", "data": {"markets": markets, "last_update": futures_last_run_time}})
+
+    # Fallback to file
+    if not os.path.exists(FUTURES_RESULTS_FILE):
+        return JSONResponse({"status": "success", "data": {"markets": [], "last_update": None}})
+    try:
+        with open(FUTURES_RESULTS_FILE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        events = data.get("events", [])
+        markets = [{
+            "matchup":        e.get("matchup", ""),
+            "league":         e.get("league", ""),
+            "bet":            e.get("bet", ""),
+            "betbck_odds":    e.get("betbck_odds", ""),
+            "pinnacle_nvp":   e.get("pinnacle_nvp", ""),
+            "ev":             e.get("ev", ""),
+            "start_time":     e.get("start_time", ""),
+            "pinnacle_limit": e.get("pinnacle_limit"),
+        } for e in events]
+        return JSONResponse({"status": "success", "data": {"markets": markets, "last_update": data.get("last_run")}})
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"status": "error", "message": str(e), "data": {}})
+
+
 @app.get("/api/get-results")
 def get_results():
     global current_results, last_run_time
@@ -2523,6 +2732,9 @@ async def sse_events_stream(request: Request):
         # the next pipeline run.
         if _last_buckeye_payload:
             await queue.put(json.dumps(_last_buckeye_payload))
+        # Also replay last completed futures pipeline results
+        if _last_futures_payload:
+            await queue.put(json.dumps(_last_futures_payload))
     except Exception as e:
         logger.warning(f"[SSE] Error queuing initial events: {e}")
 
