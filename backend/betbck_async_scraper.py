@@ -62,10 +62,12 @@ class BetBCKAsyncScraper:
             ]
         }
         # Priority order for "all sports" mode - highest priority first
+        # Futures-only sports: not included in the default "all sports" scrape.
+        # Request them explicitly via sport_filters in the futures pipeline.
+        self.futures_only_sports = {'nfl_season_wins', 'cfb_season_wins'}
         self.sport_priority = [
             'nfl', 'nba', 'nhl', 'mlb',            # Major US sports first
             'ncaa_football', 'ncaa_basketball',      # College sports
-            'nfl_season_wins', 'cfb_season_wins',    # Season win totals
             'soccer_major',                          # Major soccer leagues
             'soccer'                                 # All other soccer (lowest priority)
         ]
@@ -81,8 +83,6 @@ class BetBCKAsyncScraper:
             re.compile(r"FOOTBALL_NCAAF_Game_"),
             re.compile(r"FOOTBALL_COLLEGE_Game_"),
             re.compile(r"FOOTBALL_CANADIAN_Game_"),
-            re.compile(r"FOOTBALL_NFL@20;SEAS@20;WIN_Game_"),   # NFL season win totals
-            re.compile(r"FOOTBALL_NCAA@20;SEA@20;WIN_Game_"),  # CFB season win totals
             re.compile(r"HOCKEY_NHL_Game_"),
             re.compile(r"BASEBALL_MLB_Game_"),
             re.compile(r"BASEBALL_WBC_Game_"),
@@ -461,15 +461,10 @@ class BetBCKAsyncScraper:
                 print(f"   {i+1}. {name}")
             if len(all_checkbox_names) > 20:
                 print(f"   ... and {len(all_checkbox_names) - 20} more")
-            # Season win total checkboxes generate huge HTML responses (one row per team,
-            # 130+ CFB + 32 NFL teams) that push a combined request past BetBCK's transfer
-            # limit.  Split them out and send as a second sequential request with a natural
-            # pause — same pattern as a user clicking a second tab.  Everything else goes in
-            # the original single request, exactly as it always has.
-            SEASON_WIN_PATTERNS = ("SEAS@20;WIN", "SEA@20;WIN")
-            season_win_names = [n for n in checkbox_names if any(p in n for p in SEASON_WIN_PATTERNS)]
-            main_names       = [n for n in checkbox_names if not any(p in n for p in SEASON_WIN_PATTERNS)]
-            MAX_CONCURRENT_BETBCK_REQUESTS = 5  # Reduced from unlimited to 5 concurrent requests
+            # Single request with all checkboxes — same approach that has always worked.
+            # Season win totals now live in a dedicated futures pipeline (separate section),
+            # keeping this scrape to the normal ~52 checkboxes BetBCK handles without issue.
+            MAX_CONCURRENT_BETBCK_REQUESTS = 5
             games_htmls = []
 
             if len(checkbox_names) == 0:
@@ -483,41 +478,24 @@ class BetBCKAsyncScraper:
                 print(f"[LOG] Saved 0 games to {self.output_file} (no checkboxes found)")
                 return  # Exit early - no point continuing
 
-            async def _post_checkboxes(names, label):
-                """Send a single POST for the given checkbox names and return the HTML."""
-                post_payload = {
-                    'keyword_search': '',
-                    'inetWagerNumber': inet_wager_value,
-                    'inetSportSelection': 'sport',
-                    'contestType1': '', 'contestType2': '', 'contestType3': '',
-                    'x': random.randint(75, 85), 'y': random.randint(10, 15),
-                }
-                for name in names:
-                    post_payload[name] = 'on'
-                logger.info(f"[LOG] {label}: sending POST with {len(names)} checkboxes")
-                try:
-                    html = await self.fetch_games_page(session, post_payload, delay=True)
-                    logger.info(f"[LOG] {label}: received {len(html)} chars")
-                    return html
-                except Exception as e:
-                    import traceback
-                    logger.error(f"[BetBCK Async] {label} error: {e}\n{traceback.format_exc()}")
-                    return None
-
-            # Request 1 — all normal checkboxes (same single request that has always worked)
-            if main_names:
-                html = await _post_checkboxes(main_names, "Main request")
-                if html:
-                    games_htmls.append(html)
-
-            # Request 2 — season win totals only, sent separately with a human-pace delay
-            if season_win_names:
-                pause = random.uniform(3.0, 6.0)
-                logger.info(f"[LOG] Waiting {pause:.1f}s before season-win-total request...")
-                await asyncio.sleep(pause)
-                html = await _post_checkboxes(season_win_names, "Season-win-totals request")
-                if html:
-                    games_htmls.append(html)
+            logger.info(f"[LOG] Sending POST with {len(checkbox_names)} checkboxes")
+            logger.info(f"[LOG] Checkbox names: {checkbox_names}")
+            post_payload = {
+                'keyword_search': '',
+                'inetWagerNumber': inet_wager_value,
+                'inetSportSelection': 'sport',
+                'contestType1': '', 'contestType2': '', 'contestType3': '',
+                'x': random.randint(75, 85), 'y': random.randint(10, 15),
+            }
+            for name in checkbox_names:
+                post_payload[name] = 'on'
+            try:
+                html = await self.fetch_games_page(session, post_payload, delay=True)
+                games_htmls.append(html)
+                logger.info(f"[LOG] Successfully fetched HTML ({len(html)} chars)")
+            except Exception as e:
+                import traceback
+                logger.error(f"[BetBCK Async] Error fetching games: {e}\n{traceback.format_exc()}")
             all_games = []
             for html in games_htmls:
                 all_games.extend(self.parse_games(html))
