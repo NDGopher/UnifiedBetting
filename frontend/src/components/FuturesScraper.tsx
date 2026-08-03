@@ -163,7 +163,28 @@ function ExpandPanel({ row }: { row: FuturesRow }) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
+// ── Market registry (mirrors futures_config.py) ───────────────────────────────
+const MARKET_CONFIGS = {
+  football_wins: {
+    label:       '🏈 NFL/NCAAF Win Totals',
+    runUrl:      '/api/run-futures-pipeline',
+    resultsUrl:  '/buckeye/futures-results',
+    isOutright:  false,
+    sportFilters: ['ALL', 'NFL', 'NCAAF'] as const,
+  },
+  epl_winner: {
+    label:       '⚽ EPL Winner',
+    runUrl:      '/api/run-futures-pipeline/epl_winner',
+    resultsUrl:  '/buckeye/futures-results/epl_winner',
+    isOutright:  true,
+    sportFilters: ['ALL'] as const,
+  },
+} as const;
+
+type MarketId = keyof typeof MARKET_CONFIGS;
+
 const FuturesScraper: React.FC = () => {
+  const [activeMarket, setActiveMarket]         = useState<MarketId>('football_wins');
   const [markets, setMarkets]                   = useState<FuturesRow[]>([]);
   const [loading, setLoading]                   = useState(false);
   const [message, setMessage]                   = useState<string | null>(null);
@@ -171,8 +192,10 @@ const FuturesScraper: React.FC = () => {
   const [pipelineRunning, setPipelineRunning]   = useState(false);
   const [expandedIdx, setExpandedIdx]           = useState<number | null>(null);
 
+  const mCfg = MARKET_CONFIGS[activeMarket];
+
   // Filters
-  const [sportFilter, setSportFilter]           = useState<'ALL'|'NFL'|'NCAAF'>('ALL');
+  const [sportFilter, setSportFilter]           = useState<string>('ALL');
   const [showOnlyPositive, setShowOnlyPositive] = useState(false);
   const [minSignal, setMinSignal]               = useState(0);
   const [evRange, setEvRange]                   = useState<[number, number]>([-30, 30]);
@@ -182,7 +205,13 @@ const FuturesScraper: React.FC = () => {
   const isPolling  = useRef(false);
   const sseRef     = useRef<EventSource | null>(null);
 
-  useEffect(() => { connectSSE(); fetchResults(); return () => { disconnectSSE(); stopPolling(); }; }, []); // eslint-disable-line
+  // Reset data when market changes, then reload
+  useEffect(() => {
+    setMarkets([]); setMessage(null); setExpandedIdx(null); setSportFilter('ALL');
+    fetchResults();
+  }, [activeMarket]); // eslint-disable-line
+
+  useEffect(() => { connectSSE(); return () => { disconnectSSE(); stopPolling(); }; }, []); // eslint-disable-line
 
   // ── SSE ──────────────────────────────────────────────────────────────────
   const connectSSE = () => {
@@ -235,7 +264,7 @@ const FuturesScraper: React.FC = () => {
   // ── API ───────────────────────────────────────────────────────────────────
   const fetchResults = async () => {
     try {
-      const res  = await fetch(`${API_BASE}/buckeye/futures-results`);
+      const res  = await fetch(`${API_BASE}${mCfg.resultsUrl}`);
       const data = await res.json();
       if (data.status === 'success') {
         setLastUpdate(data.data.last_update || null);
@@ -248,7 +277,7 @@ const FuturesScraper: React.FC = () => {
     if (pipelineRunning) return;
     setPipelineRunning(true); setLoading(true); setMessage(null); setMarkets([]); setExpandedIdx(null);
     try {
-      const res  = await fetch(`${API_BASE}/api/run-futures-pipeline`, { method: 'POST' });
+      const res  = await fetch(`${API_BASE}${mCfg.runUrl}`, { method: 'POST' });
       const data = await res.json();
       if (data.status === 'success') { connectSSE(); startPolling(); }
       else { setPipelineRunning(false); }
@@ -261,6 +290,7 @@ const FuturesScraper: React.FC = () => {
   const posEvCount = markets.filter(r => !r.is_arb && r.ev_float > 0).length;
   const nflCount   = markets.filter(r => r.sport === 'NFL').length;
   const ncaafCount = markets.filter(r => r.sport === 'NCAAF').length;
+  const isOutright = mCfg.isOutright;
 
   const evMin = useMemo(() => Math.floor(Math.min(0, ...markets.map(r => r.ev_float))), [markets]);
   const evMax = useMemo(() => Math.ceil(Math.max(0, ...markets.map(r => r.ev_float))),  [markets]);
@@ -291,6 +321,28 @@ const FuturesScraper: React.FC = () => {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <>
+      {/* ── Market selector tabs ─────────────────────────────────── */}
+      <Box sx={{ display: 'flex', gap: 0.5, mb: 1.5, borderBottom: '1px solid rgba(255,255,255,0.07)', pb: 1.5 }}>
+        {(Object.entries(MARKET_CONFIGS) as [MarketId, typeof MARKET_CONFIGS[MarketId]][]).map(([id, cfg]) => (
+          <Button
+            key={id}
+            size="small"
+            onClick={() => { if (id !== activeMarket) { setActiveMarket(id); stopPolling(); } }}
+            sx={{
+              minWidth: 0, px: 1.5, height: 28,
+              fontSize: '0.75rem', fontWeight: activeMarket === id ? 700 : 500,
+              borderRadius: '6px', textTransform: 'none', border: '1px solid',
+              color: activeMarket === id ? '#F5F5F5' : '#6B7280',
+              borderColor: activeMarket === id ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.08)',
+              bgcolor: activeMarket === id ? 'rgba(255,255,255,0.1)' : 'transparent',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.07)' },
+            }}
+          >
+            {cfg.label}
+          </Button>
+        ))}
+      </Box>
+
       {/* ── Top toolbar (matches screenshot) ─────────────────────── */}
       <Box sx={{ display: 'flex', gap: 1, mb: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
         <Button
@@ -382,10 +434,16 @@ const FuturesScraper: React.FC = () => {
         <Box sx={{ display: 'flex', gap: 0.75, mb: 1.25, alignItems: 'center', flexWrap: 'wrap' }}>
           <Typography sx={{ color: '#374151', fontSize: '0.72rem' }}>✓</Typography>
           <Typography sx={{ color: '#4B5563', fontSize: '0.72rem' }}>
-            Buckeye: {Math.round(markets.length / 2)} teams
-            {' | '}FD: {markets.filter(r => r.fd_odds && r.fd_odds !== 'N/A').length > 0 ? `${Math.round(markets.filter(r => r.fd_odds && r.fd_odds !== 'N/A').length / 2)}` : 0}
-            {' | '}DK: {Math.round(markets.filter(r => r.dk_odds && r.dk_odds !== 'N/A').length / 2)}
-            {' | '}MGM: {Math.round(markets.filter(r => r.mgm_odds && r.mgm_odds !== 'N/A').length / 2)}
+            Buckeye: {isOutright ? markets.length : Math.round(markets.length / 2)} {isOutright ? 'teams' : 'teams'}
+            {' | '}FD: {isOutright
+              ? markets.filter(r => r.fd_odds && r.fd_odds !== 'N/A').length
+              : Math.round(markets.filter(r => r.fd_odds && r.fd_odds !== 'N/A').length / 2)}
+            {' | '}DK: {isOutright
+              ? markets.filter(r => r.dk_odds && r.dk_odds !== 'N/A').length
+              : Math.round(markets.filter(r => r.dk_odds && r.dk_odds !== 'N/A').length / 2)}
+            {' | '}MGM: {isOutright
+              ? markets.filter(r => r.mgm_odds && r.mgm_odds !== 'N/A').length
+              : Math.round(markets.filter(r => r.mgm_odds && r.mgm_odds !== 'N/A').length / 2)}
             {' | '}+EV: {posEvCount}
           </Typography>
         </Box>
@@ -407,7 +465,7 @@ const FuturesScraper: React.FC = () => {
 
       {/* ── Sport / signal / +EV filter bar ──────────────────────── */}
       <Box sx={{ display: 'flex', gap: 0.75, mb: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
-        {(['ALL', 'NFL', 'NCAAF'] as const).map(s => (
+        {!isOutright && (['ALL', 'NFL', 'NCAAF'] as const).map(s => (
           <Button key={s} size="small" onClick={() => setSportFilter(s)} sx={{
             minWidth: 0, px: 1.25, height: 26,
             fontSize: '0.7rem', fontWeight: 600,
@@ -421,7 +479,7 @@ const FuturesScraper: React.FC = () => {
           </Button>
         ))}
 
-        <Box sx={{ width: 1, height: 18, bgcolor: 'rgba(255,255,255,0.07)', mx: 0.25 }} />
+        {!isOutright && <Box sx={{ width: 1, height: 18, bgcolor: 'rgba(255,255,255,0.07)', mx: 0.25 }} />}
 
         {[0, 1, 2, 3].map(n => (
           <Button key={n} size="small" onClick={() => setMinSignal(prev => prev === n ? 0 : n)} sx={{
@@ -498,7 +556,7 @@ const FuturesScraper: React.FC = () => {
                       <Typography sx={{ fontSize: '0.75rem', color: '#4B5563' }}>
                         {markets.length > 0
                           ? 'Try "Show All" or clear the signal / sport filters to see more.'
-                          : <>Click <span style={{ color: '#9CA3AF' }}>Run Futures</span> to scrape win totals from Buckeye, FanDuel, DraftKings, and BetMGM.</>}
+                          : <>Click <span style={{ color: '#9CA3AF' }}>Run Futures</span> to scrape {isOutright ? `${mCfg.label} outright winner odds` : 'win totals'} from Buckeye, FanDuel, DraftKings, and BetMGM.</>}
                       </Typography>
                     </Box>
                   </Box>
@@ -561,15 +619,23 @@ const FuturesScraper: React.FC = () => {
 
                     {/* Bet */}
                     <TableCell sx={{ ...cell, whiteSpace: 'nowrap' }}>
-                      <Box component="span" sx={{
-                        fontSize: '0.8rem', fontWeight: 600, mr: 0.5,
-                        color: row.direction === 'Over' ? '#60A5FA' : '#F87171',
-                      }}>
-                        {row.direction}
-                      </Box>
-                      <Box component="span" sx={{ fontSize: '0.8rem', color: '#9CA3AF', ...mono }}>
-                        {row.line}
-                      </Box>
+                      {row.direction === 'winner' || row.direction === 'Winner' ? (
+                        <Box component="span" sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#A78BFA' }}>
+                          Winner
+                        </Box>
+                      ) : (
+                        <>
+                          <Box component="span" sx={{
+                            fontSize: '0.8rem', fontWeight: 600, mr: 0.5,
+                            color: row.direction === 'Over' ? '#60A5FA' : '#F87171',
+                          }}>
+                            {row.direction}
+                          </Box>
+                          <Box component="span" sx={{ fontSize: '0.8rem', color: '#9CA3AF', ...mono }}>
+                            {row.line}
+                          </Box>
+                        </>
+                      )}
                     </TableCell>
 
                     {/* Buckeye odds */}
