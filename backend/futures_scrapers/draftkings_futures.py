@@ -29,12 +29,13 @@ DK_WIN_TOTAL_PAGES = [
     (
         "NCAAF",
         "https://sportsbook.draftkings.com/leagues/football/ncaaf"
-        "?category=wins&subcategory=regular-season",
+        "?category=futures&subcategory=wins",
     ),
 ]
 
 # Market type strings that represent season win totals on DK
-DK_WIN_TOTAL_TYPE_KWS = ("Regular Season Wins",)
+# Broad match — log all types first so we can tune if needed
+DK_WIN_TOTAL_TYPE_KWS = ("Regular Season Wins", "Season Wins", "Win Total")
 
 # Strip the year suffix from DK market names like "ARI Cardinals Regular Season Wins 2026/27"
 _MARKET_NAME_RE = re.compile(
@@ -103,6 +104,11 @@ def parse_dk_nash_response(data: dict, sport: str) -> list[dict]:
     records: list[dict] = []
     markets = {m["id"]: m for m in data.get("markets", [])}
     selections = data.get("selections", [])
+
+    # Log all unique market type names on first parse per sport so we can tune keywords
+    unique_mt = {m.get("marketType", {}).get("name", "") for m in markets.values()}
+    if unique_mt:
+        logger.info("[DK] %s market types in response: %s", sport, sorted(unique_mt)[:20])
 
     for sel in selections:
         market_id = sel.get("marketId")
