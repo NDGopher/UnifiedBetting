@@ -61,36 +61,22 @@ def fmt_american(amer: Optional[int]) -> str:
 # ---------------------------------------------------------------------------
 # BetBCK win-total parsing
 # ---------------------------------------------------------------------------
+# Real BetBCK format (confirmed from live data):
+#   home_team            = "Arizona Cardinals"          ← clean team name
+#   away_team            = "Regular Season Wins"        ← literal marker
+#   odds.game_total_line = 4.5                          ← the win total
+#   odds.game_total_over_odds  = "+140"
+#   odds.game_total_under_odds = "-160"
+# Each row produces TWO records (Over + Under) at the same line.
 
-# BetBCK encodes each bet in the team-name field:
-#   "Missouri Over 6.5"      → over 6.5
-#   "Missouri Under 3.5 Wins" → under 3.5
-#   "Iowa State Over 5.5 Wins" → over 5.5
-# The over and under entries for the same team CAN be at different lines.
-_BETBCK_BET_RE = re.compile(
-    r"^(?P<team>.+?)\s+(?P<dir>Over|Under)\s+(?P<line>[\d.]+)",
-    re.IGNORECASE,
-)
-
-# Spread-column format: [{line: float, odds: int}, ...]
-# Sometimes BetBCK encodes the line only in the spreads column (no direction in name).
-_DIRECTION_IN_SPREAD_RE = re.compile(r"[ou]", re.IGNORECASE)
-
-
-def _extract_bet_from_name(name: str) -> Optional[tuple[str, str, float]]:
-    """Return (team, 'over'|'under', line) if the name encodes a win-total bet."""
-    m = _BETBCK_BET_RE.match(name)
-    if m:
-        return m.group("team").strip(), m.group("dir").lower(), float(m.group("line"))
-    return None
+_WIN_TOTAL_MARKER_RE = re.compile(r"regular\s+season\s+wins?", re.IGNORECASE)
 
 
 def parse_betbck_win_totals(betbck_games: list[dict]) -> list[dict]:
     """Convert raw BetBCK game dicts to a flat list of individual win-total bets.
 
-    BetBCK can show Over X.5 and Under Y.5 for the same team as separate rows,
-    potentially at DIFFERENT lines (X ≠ Y).  We therefore parse EACH side as an
-    independent record rather than requiring a matched pair.
+    BetBCK shows one row per team with both Over and Under at the same line,
+    encoded in game_total_line / game_total_over_odds / game_total_under_odds.
 
     Each output record:
         {team, sport, line, direction ('over'|'under'), american_odds, book, _raw}
@@ -103,74 +89,54 @@ def parse_betbck_win_totals(betbck_games: list[dict]) -> list[dict]:
         odds: dict = game.get("betbck_site_odds", {})
         sport: str = game.get("sport", "")
 
-        top_ml  = odds.get("site_top_team_moneyline_american")
-        bot_ml  = odds.get("site_bottom_team_moneyline_american")
-
-        # ── Try to extract direction + line from each name independently ──────
-        top_bet = _extract_bet_from_name(home)
-        bot_bet = _extract_bet_from_name(away)
-
-        if top_bet and top_ml is not None:
-            t_team, t_dir, t_line = top_bet
-            records.append({
-                "team":          t_team,
-                "sport":         sport,
-                "line":          t_line,
-                "direction":     t_dir,
-                "american_odds": int(top_ml),
-                "book":          "BetBCK",
-                "_raw":          home,
-            })
-
-        if bot_bet and bot_ml is not None:
-            b_team, b_dir, b_line = bot_bet
-            records.append({
-                "team":          b_team,
-                "sport":         sport,
-                "line":          b_line,
-                "direction":     b_dir,
-                "american_odds": int(bot_ml),
-                "book":          "BetBCK",
-                "_raw":          away,
-            })
-
-        if top_bet or bot_bet:
-            continue  # handled above
-
-        # ── Fallback: direction not in name → infer from spreads column ───────
-        # top row = over, bottom row = under; get line from spreads
-        top_spreads = odds.get("site_top_team_spreads", [])
-        line: Optional[float] = None
-        if top_spreads:
-            raw_line = (top_spreads[0].get("line") or top_spreads[0].get("spread"))
-            if raw_line is not None:
-                try:
-                    line = abs(float(raw_line))
-                except (TypeError, ValueError):
-                    pass
-
-        if line is None:
-            logger.debug("[BETBCK] No line found for: %s / %s", home, away)
+        # Only process win-total rows (away_team = "Regular Season Wins")
+        if not _WIN_TOTAL_MARKER_RE.search(away):
             continue
 
-        # Determine team name: use whichever name doesn't contain "Wins"/"Season"
-        team = home
-        if any(w in home.lower() for w in ("wins", "season")):
-            team = away
-        elif any(w in away.lower() for w in ("wins", "season")):
-            team = home
+        team = home.strip()
+        if not team:
+            continue
 
-        if top_ml is not None:
+        raw_line = odds.get("game_total_line")
+        over_raw  = odds.get("game_total_over_odds")
+        under_raw = odds.get("game_total_under_odds")
+
+        try:
+            line = float(raw_line)
+        except (TypeError, ValueError):
+            logger.debug("[BETBCK] No total line for team %r — skipping", team)
+            continue
+
+        def _parse_amer(s) -> Optional[int]:
+            if s is None:
+                return None
+            try:
+                return int(str(s).replace("+", "").strip())
+            except (ValueError, TypeError):
+                return None
+
+        over_odds  = _parse_amer(over_raw)
+        under_odds = _parse_amer(under_raw)
+
+        if over_odds is not None:
             records.append({
-                "team": team, "sport": sport, "line": line,
-                "direction": "over", "american_odds": int(top_ml),
-                "book": "BetBCK", "_raw": home,
+                "team":          team,
+                "sport":         sport,
+                "line":          line,
+                "direction":     "over",
+                "american_odds": over_odds,
+                "book":          "BetBCK",
+                "_raw":          f"{team} Over {line}",
             })
-        if bot_ml is not None:
+        if under_odds is not None:
             records.append({
-                "team": team, "sport": sport, "line": line,
-                "direction": "under", "american_odds": int(bot_ml),
-                "book": "BetBCK", "_raw": away,
+                "team":          team,
+                "sport":         sport,
+                "line":          line,
+                "direction":     "under",
+                "american_odds": under_odds,
+                "book":          "BetBCK",
+                "_raw":          f"{team} Under {line}",
             })
 
     # Deduplicate (same team/line/direction may appear from overlapping checkboxes)
