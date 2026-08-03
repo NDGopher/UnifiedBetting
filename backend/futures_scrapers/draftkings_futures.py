@@ -27,7 +27,7 @@ DK_WIN_TOTAL_PAGES = [
         "https://sportsbook.draftkings.com/leagues/football/nfl"
         "?category=futures&subcategory=wins&nav_1=regular-season-wins",
     ),
-    # NCAAF win totals — nav_1=all-teams confirmed by user; market may not be live yet
+    # NCAAF win totals — confirmed working URL from user
     (
         "NCAAF",
         "https://sportsbook.draftkings.com/leagues/football/ncaaf"
@@ -35,13 +35,27 @@ DK_WIN_TOTAL_PAGES = [
     ),
 ]
 
-# Market type strings that represent season win totals on DK
-# Broad match — log all types first so we can tune if needed
-DK_WIN_TOTAL_TYPE_KWS = ("Regular Season Wins", "Season Wins", "Win Total")
+# Market type strings that represent season win totals on DK (broad — NCAAF may differ)
+DK_WIN_TOTAL_TYPE_KWS = (
+    "Regular Season Wins",
+    "Season Wins",
+    "Win Total",
+    "Season Win Total",
+    "Regular Season Win",
+    "Wins",
+)
 
-# Strip the year suffix from DK market names like "ARI Cardinals Regular Season Wins 2026/27"
+# Match both "ARI Cardinals Regular Season Wins 2026" AND "Alabama Win Total 2026"
 _MARKET_NAME_RE = re.compile(
-    r"^(?P<team>.+?)\s+Regular Season Wins\b", re.IGNORECASE
+    r"^(?P<team>.+?)\s+(?:Regular Season )?Win(?:s|s Alternates| Total)\b",
+    re.IGNORECASE,
+)
+
+# DK API hostnames to intercept (NCAAF may not use sportsbook-nash)
+_DK_API_HOSTS = (
+    "sportsbook-nash.draftkings.com",
+    "api.draftkings.com",
+    "sportsbook.draftkings.com",
 )
 
 # Abbreviated NFL team prefix → full name
@@ -188,7 +202,8 @@ async def scrape_draftkings_win_totals() -> list[dict]:
             sport_records: list[dict] = []
 
             async def _on_response(r, _sport=sport, _records=sport_records):
-                if "sportsbook-nash.draftkings.com" not in r.url:
+                # Intercept all DK JSON endpoints (nash + main API + sportsbook)
+                if not any(h in r.url for h in _DK_API_HOSTS):
                     return
                 if r.status != 200:
                     return
@@ -202,37 +217,36 @@ async def scrape_draftkings_win_totals() -> list[dict]:
                     if parsed:
                         _records.extend(parsed)
                         logger.info(
-                            "[DK] Intercepted %s nash response: +%d records",
-                            _sport,
-                            len(parsed),
+                            "[DK] Intercepted %s response (%s): +%d records",
+                            _sport, r.url[:80], len(parsed),
                         )
                     else:
-                        # Log market types from responses that didn't match our keywords
+                        # Log all market type names we saw but didn't match
                         unique_mt = {
                             m.get("marketType", {}).get("name", "")
                             for m in data.get("markets", [])
                         }
                         if unique_mt and unique_mt != {""}:
                             logger.info(
-                                "[DK] %s non-matching response market types: %s",
-                                _sport, sorted(unique_mt)[:10],
+                                "[DK] %s non-matching types from %s: %s",
+                                _sport, r.url[:60], sorted(unique_mt)[:10],
                             )
-                        # Save raw response if we got markets but nothing matched
+                        # Save debug sample for any response with markets
                         if data.get("markets"):
-                            import os, pathlib
+                            import pathlib
                             dbg_dir = pathlib.Path("/home/runner/workspace/backend/data")
-                            dbg_path = dbg_dir / f"dk_{_sport.lower()}_raw_debug.json"
                             dbg_dir.mkdir(exist_ok=True)
+                            dbg_path = dbg_dir / f"dk_{_sport.lower()}_raw_debug.json"
                             with open(dbg_path, "w") as _f:
-                                import json as _json
-                                _json.dump(
-                                    {"markets": data.get("markets", [])[:5],
+                                json.dump(
+                                    {"url": r.url,
+                                     "markets": data.get("markets", [])[:5],
                                      "selections": data.get("selections", [])[:20]},
                                     _f, indent=2
                                 )
                             logger.info("[DK] Saved debug sample → %s", dbg_path)
                 except Exception as exc:  # pylint: disable=broad-except
-                    logger.debug("[DK] Could not parse nash response: %s", exc)
+                    logger.debug("[DK] Could not parse response from %s: %s", r.url[:60], exc)
 
             page = await context.new_page()
             await page.add_init_script(
