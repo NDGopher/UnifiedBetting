@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Box, Button, Typography, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, CircularProgress, Alert, Slider, Chip,
+  TableHead, TableRow, CircularProgress, Alert, Slider, Chip, Tooltip,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -21,6 +21,10 @@ interface FuturesRow {
   ev:             string;
   ev_float:       number;
   sharp_books:    string;
+  is_arb?:        boolean;
+  arb_book?:      string;
+  arb_opp_odds?:  string;
+  arb_roi?:       number | null;
 }
 
 const FuturesScraper: React.FC = () => {
@@ -30,12 +34,12 @@ const FuturesScraper: React.FC = () => {
   const [message, setMessage]               = useState<string | null>(null);
   const [lastUpdate, setLastUpdate]         = useState<string | null>(null);
   const [pipelineRunning, setPipelineRunning] = useState(false);
-  const [sortBy, setSortBy]   = useState<'ev'>('ev');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
   const EV_MAX_SLIDER = 20;
   const [minEv, setMinEv] = useState(0);
   const [maxEv, setMaxEv] = useState(EV_MAX_SLIDER);
+  const [showAllEv, setShowAllEv] = useState(false);
 
   const pollingRef  = useRef<NodeJS.Timeout | null>(null);
   const isPolling   = useRef(false);
@@ -60,17 +64,11 @@ const FuturesScraper: React.FC = () => {
         const data = JSON.parse(event.data);
         if (data.type === 'futures_update') {
           const { events, last_run, message: msg } = data.data;
-          if (events?.length > 0) {
-            setMarkets(events);
-            setLastUpdate(last_run);
-          }
+          if (events?.length > 0) { setMarkets(events); setLastUpdate(last_run); }
           if (msg) setMessage(msg);
         } else if (data.type === 'futures_complete') {
           const { events, last_run, message: msg } = data.data;
-          if (events?.length > 0) {
-            setMarkets(events);
-            setLastUpdate(last_run);
-          }
+          if (events?.length > 0) { setMarkets(events); setLastUpdate(last_run); }
           if (msg) setMessage(msg);
           setPipelineRunning(false);
           stopPolling();
@@ -81,13 +79,10 @@ const FuturesScraper: React.FC = () => {
         }
       } catch {}
     };
-    es.onerror = () => console.warn('[FuturesScraper] SSE error — will auto-reconnect');
+    es.onerror = () => console.warn('[FuturesScraper] SSE error');
   };
 
-  const disconnectSSE = () => {
-    sseRef.current?.close();
-    sseRef.current = null;
-  };
+  const disconnectSSE = () => { sseRef.current?.close(); sseRef.current = null; };
 
   // ── Polling ───────────────────────────────────────────────────────────────
   const checkStatus = async () => {
@@ -97,10 +92,7 @@ const FuturesScraper: React.FC = () => {
       if (data.status === 'success') {
         const running = data.data.running;
         setPipelineRunning(running);
-        if (!running && data.data.task_done) {
-          await fetchResults();
-          stopPolling();
-        }
+        if (!running && data.data.task_done) { await fetchResults(); stopPolling(); }
       }
     } catch {}
   };
@@ -163,33 +155,34 @@ const FuturesScraper: React.FC = () => {
 
   // ── Sort / filter ─────────────────────────────────────────────────────────
   const sortedMarkets = useMemo(() => {
-    return [...markets].sort((a, b) =>
-      sortDir === 'desc' ? b.ev_float - a.ev_float : a.ev_float - b.ev_float
-    );
+    return [...markets].sort((a, b) => {
+      // Arb always floats to top regardless of sort direction
+      if (a.is_arb && !b.is_arb) return -1;
+      if (!a.is_arb && b.is_arb) return 1;
+      return sortDir === 'desc' ? b.ev_float - a.ev_float : a.ev_float - b.ev_float;
+    });
   }, [markets, sortDir]);
 
-  const filteredMarkets = sortedMarkets.filter(row => {
+  const filteredMarkets = useMemo(() => sortedMarkets.filter(row => {
+    if (row.is_arb) return true;         // arbs always visible
+    if (showAllEv) return true;
     const v = row.ev_float ?? 0;
     if (v < minEv) return false;
     if (maxEv < EV_MAX_SLIDER && v > maxEv) return false;
     return true;
-  });
+  }), [sortedMarkets, minEv, maxEv, showAllEv]);
 
   const evLabel = (v: number, isMax: boolean) =>
     isMax && v >= EV_MAX_SLIDER ? 'All' : `${v}%`;
 
-  // ── Shared styles ─────────────────────────────────────────────────────────
+  const arbCount  = markets.filter(r => r.is_arb).length;
+  const posEvCount = markets.filter(r => !r.is_arb && (r.ev_float ?? 0) > 0).length;
+
+  // ── Styles ────────────────────────────────────────────────────────────────
   const btnSx = {
-    color: '#9CA3AF',
-    borderColor: 'rgba(255,255,255,0.1)',
-    borderRadius: '6px',
-    fontWeight: 500,
-    px: 2, py: 0.5,
-    fontSize: '0.75rem',
-    minWidth: 'auto',
-    height: 32,
-    textTransform: 'none' as const,
-    lineHeight: 1.2,
+    color: '#9CA3AF', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '6px',
+    fontWeight: 500, px: 2, py: 0.5, fontSize: '0.75rem', minWidth: 'auto',
+    height: 32, textTransform: 'none' as const, lineHeight: 1.2,
     bgcolor: 'rgba(255,255,255,0.04)',
     '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', borderColor: 'rgba(255,255,255,0.2)', color: '#F5F5F5' },
   };
@@ -199,16 +192,18 @@ const FuturesScraper: React.FC = () => {
     '& .MuiSlider-thumb': { width: 12, height: 12, bgcolor: '#F5F5F5', boxShadow: 'none' },
     '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.1)' },
     '& .MuiSlider-track': { bgcolor: 'rgba(255,255,255,0.4)', border: 'none' },
-    '& .MuiSlider-valueLabel': {
-      bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)',
-      fontSize: '0.7rem', color: '#F5F5F5',
-    },
+    '& .MuiSlider-valueLabel': { bgcolor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.7rem', color: '#F5F5F5' },
   };
 
-  const monoCell = {
+  const monoSx = {
     fontFamily: '"JetBrains Mono","Fira Code","Consolas",monospace',
     fontVariantNumeric: 'tabular-nums' as const,
     fontSize: '0.8125rem',
+  };
+
+  const hdrSx = {
+    color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem',
+    textTransform: 'uppercase' as const, letterSpacing: '0.07em',
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -217,56 +212,88 @@ const FuturesScraper: React.FC = () => {
       {/* Toolbar */}
       <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center', flexWrap: 'wrap' }}>
         <Button
-          variant="outlined"
-          size="small"
-          disabled={pipelineRunning}
+          variant="outlined" size="small" disabled={pipelineRunning}
           onClick={handleRunFutures}
           sx={{
             ...btnSx,
             color:       pipelineRunning ? '#32D74B' : '#9CA3AF',
             borderColor: pipelineRunning ? 'rgba(50,215,75,0.3)' : 'rgba(255,255,255,0.1)',
             bgcolor:     pipelineRunning ? 'rgba(50,215,75,0.06)' : 'rgba(255,255,255,0.04)',
-            '&.Mui-disabled': {
-              color: '#32D74B', borderColor: 'rgba(50,215,75,0.3)', opacity: 1, borderRadius: '6px',
-            },
+            '&.Mui-disabled': { color: '#32D74B', borderColor: 'rgba(50,215,75,0.3)', opacity: 1, borderRadius: '6px' },
           }}
         >
           {pipelineRunning ? 'Running…' : 'Run Futures'}
         </Button>
 
+        {/* Summary badges */}
+        {markets.length > 0 && (
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            {arbCount > 0 && (
+              <Chip
+                label={`${arbCount} ARB`}
+                size="small"
+                sx={{
+                  height: 22, fontSize: '0.7rem', fontWeight: 700,
+                  bgcolor: 'rgba(251,191,36,0.15)', color: '#FBB724',
+                  border: '1px solid rgba(251,191,36,0.35)', borderRadius: '5px',
+                  '& .MuiChip-label': { px: 1 },
+                }}
+              />
+            )}
+            {posEvCount > 0 && (
+              <Chip
+                label={`${posEvCount} +EV`}
+                size="small"
+                sx={{
+                  height: 22, fontSize: '0.7rem', fontWeight: 700,
+                  bgcolor: 'rgba(50,215,75,0.1)', color: '#32D74B',
+                  border: '1px solid rgba(50,215,75,0.25)', borderRadius: '5px',
+                  '& .MuiChip-label': { px: 1 },
+                }}
+              />
+            )}
+          </Box>
+        )}
+
         <Box sx={{ width: '1px', height: 24, bgcolor: 'rgba(255,255,255,0.12)', mx: 0.5 }} />
 
         {/* EV Range Filter */}
-        <Box sx={{
-          display: 'flex', alignItems: 'center', gap: 1.5,
-          px: 1.5, py: 0.5,
-          border: '1px solid rgba(255,255,255,0.08)', borderRadius: 1.5,
-          height: 32, minWidth: 240,
-        }}>
-          <TuneRounded sx={{ fontSize: '0.95rem', color: '#B0B0B0', flexShrink: 0 }} />
-          <Box sx={{ flex: 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 26, flexShrink: 0 }}>Min</Typography>
-              <Slider value={minEv} onChange={(_, v) => setMinEv(v as number)}
-                min={0} max={EV_MAX_SLIDER} step={0.5}
-                valueLabelDisplay="auto" valueLabelFormat={v => evLabel(v, false)}
-                sx={{ ...sliderSx, py: 0.5, my: 0 }} />
-              <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 28, textAlign: 'right', flexShrink: 0 }}>
-                {evLabel(minEv, false)}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 26, flexShrink: 0 }}>Max</Typography>
-              <Slider value={maxEv} onChange={(_, v) => setMaxEv(v as number)}
-                min={0} max={EV_MAX_SLIDER} step={0.5}
-                valueLabelDisplay="auto" valueLabelFormat={v => evLabel(v, true)}
-                sx={{ ...sliderSx, py: 0.5, my: 0 }} />
-              <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 28, textAlign: 'right', flexShrink: 0 }}>
-                {evLabel(maxEv, true)}
-              </Typography>
+        {!showAllEv && (
+          <Box sx={{
+            display: 'flex', alignItems: 'center', gap: 1.5,
+            px: 1.5, py: 0.5, border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 1.5, height: 32, minWidth: 240,
+          }}>
+            <TuneRounded sx={{ fontSize: '0.95rem', color: '#B0B0B0', flexShrink: 0 }} />
+            <Box sx={{ flex: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 26, flexShrink: 0 }}>Min</Typography>
+                <Slider value={minEv} onChange={(_, v) => setMinEv(v as number)}
+                  min={0} max={EV_MAX_SLIDER} step={0.5}
+                  valueLabelDisplay="auto" valueLabelFormat={v => evLabel(v, false)}
+                  sx={{ ...sliderSx, py: 0.5, my: 0 }} />
+                <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 28, textAlign: 'right', flexShrink: 0 }}>
+                  {evLabel(minEv, false)}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography sx={{ fontSize: '0.7rem', color: '#777', width: 26, flexShrink: 0 }}>Max</Typography>
+                <Slider value={maxEv} onChange={(_, v) => setMaxEv(v as number)}
+                  min={0} max={EV_MAX_SLIDER} step={0.5}
+                  valueLabelDisplay="auto" valueLabelFormat={v => evLabel(v, true)}
+                  sx={{ ...sliderSx, py: 0.5, my: 0 }} />
+                <Typography sx={{ fontSize: '0.7rem', color: '#9CA3AF', width: 28, textAlign: 'right', flexShrink: 0 }}>
+                  {evLabel(maxEv, true)}
+                </Typography>
+              </Box>
             </Box>
           </Box>
-        </Box>
+        )}
+
+        <Button variant="outlined" size="small" onClick={() => setShowAllEv(v => !v)}
+          sx={{ ...btnSx, ...(showAllEv ? { color: '#F5F5F5', borderColor: 'rgba(255,255,255,0.25)' } : {}) }}>
+          {showAllEv ? 'Filter EV' : 'Show All'}
+        </Button>
       </Box>
 
       {/* Meta row */}
@@ -307,52 +334,28 @@ const FuturesScraper: React.FC = () => {
       )}
 
       {/* EV Table */}
-      <TableContainer sx={{
-        background: 'transparent', borderRadius: 1.5,
-        border: '1px solid rgba(255,255,255,0.06)',
-      }}>
+      <TableContainer sx={{ background: 'transparent', borderRadius: 1.5, border: '1px solid rgba(255,255,255,0.06)' }}>
         <Table size="small">
           <TableHead>
             <TableRow sx={{ '& .MuiTableCell-root': {
               borderBottom: '1px solid rgba(255,255,255,0.06)', py: 1.5,
               bgcolor: 'rgba(255,255,255,0.02)',
             }}}>
-              {/* Team */}
-              <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                Team
-              </TableCell>
-              {/* Bet */}
-              <TableCell sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                Bet
-              </TableCell>
-              {/* BetBCK */}
-              <TableCell align="center" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                BetBCK
-              </TableCell>
-              {/* FD */}
-              <TableCell align="center" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                FanDuel
-              </TableCell>
-              {/* DK */}
-              <TableCell align="center" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                DraftKings
-              </TableCell>
-              {/* Consensus */}
-              <TableCell align="center" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                Fair
-              </TableCell>
-              {/* EV — sortable */}
+              <TableCell sx={hdrSx}>Team</TableCell>
+              <TableCell sx={hdrSx}>Bet</TableCell>
+              <TableCell align="center" sx={hdrSx}>BetBCK</TableCell>
+              <TableCell align="center" sx={hdrSx}>FanDuel</TableCell>
+              <TableCell align="center" sx={hdrSx}>DraftKings</TableCell>
+              <TableCell align="center" sx={hdrSx}>Fair</TableCell>
               <TableCell
                 align="center"
                 onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
-                sx={{ color: '#F5F5F5', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em', cursor: 'pointer', userSelect: 'none', '&:hover': { color: '#fff' } }}
+                sx={{ ...hdrSx, color: '#F5F5F5', cursor: 'pointer', userSelect: 'none', '&:hover': { color: '#fff' } }}
               >
                 EV {sortDir === 'desc' ? '↓' : '↑'}
               </TableCell>
-              {/* Ref */}
-              <TableCell align="right" sx={{ color: '#6B7280', fontWeight: 600, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                Ref
-              </TableCell>
+              {/* Arb / Ref combined */}
+              <TableCell align="right" sx={hdrSx}>Info</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -367,7 +370,7 @@ const FuturesScraper: React.FC = () => {
                       </Typography>
                       <Typography sx={{ fontSize: '0.75rem', color: '#6B7280' }}>
                         {markets.length > 0
-                          ? <>Widen the EV range to see all {markets.length} bets.</>
+                          ? <>Widen the EV range or click <b style={{ color: '#9CA3AF' }}>Show All</b> to see all {markets.length} bets.</>
                           : <>Click <span style={{ color: '#9CA3AF' }}>Run Futures</span> to scrape BetBCK, FanDuel, and DraftKings win totals.</>
                         }
                       </Typography>
@@ -378,22 +381,27 @@ const FuturesScraper: React.FC = () => {
             ) : filteredMarkets.map((row, idx) => {
               const evVal  = row.ev_float ?? 0;
               const evPos  = evVal > 0;
-              const evZero = Math.abs(evVal) < 0.05;
+              const isArb  = row.is_arb === true;
 
               return (
                 <TableRow
                   key={idx}
                   sx={{
-                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.03)' },
+                    // Arb rows get a faint amber left border
+                    ...(isArb ? {
+                      borderLeft: '2px solid rgba(251,191,36,0.5)',
+                      bgcolor: 'rgba(251,191,36,0.03)',
+                    } : {}),
+                    '&:hover': { backgroundColor: isArb ? 'rgba(251,191,36,0.06)' : 'rgba(255,255,255,0.03)' },
                     '& .MuiTableCell-root': { borderBottom: '1px solid rgba(255,255,255,0.04)', py: 1.25, verticalAlign: 'middle' },
                   }}
                 >
                   {/* Team */}
-                  <TableCell sx={{ color: '#E5E7EB', fontWeight: 400, fontSize: '0.875rem', maxWidth: 180, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <TableCell sx={{ color: '#E5E7EB', fontSize: '0.875rem', maxWidth: 180, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {row.team}
                   </TableCell>
 
-                  {/* Bet: "Over 8.5" */}
+                  {/* Bet: "Over 6.5" */}
                   <TableCell sx={{ color: '#D1D5DB', fontSize: '0.8125rem', whiteSpace: 'nowrap' }}>
                     <Box component="span" sx={{ color: row.direction === 'Over' ? '#60A5FA' : '#F87171', fontWeight: 500 }}>
                       {row.direction}
@@ -402,31 +410,31 @@ const FuturesScraper: React.FC = () => {
                   </TableCell>
 
                   {/* BetBCK odds */}
-                  <TableCell align="center" sx={{ color: '#D1D5DB', ...monoCell }}>
+                  <TableCell align="center" sx={{ color: '#D1D5DB', ...monoSx }}>
                     {row.betbck_odds}
                   </TableCell>
 
                   {/* FanDuel odds */}
-                  <TableCell align="center" sx={{ color: row.fd_odds === 'N/A' ? '#4B5563' : '#D1D5DB', ...monoCell }}>
+                  <TableCell align="center" sx={{ color: row.fd_odds === 'N/A' ? '#374151' : '#D1D5DB', ...monoSx }}>
                     {row.fd_odds}
                   </TableCell>
 
                   {/* DraftKings odds */}
-                  <TableCell align="center" sx={{ color: row.dk_odds === 'N/A' ? '#4B5563' : '#D1D5DB', ...monoCell }}>
+                  <TableCell align="center" sx={{ color: row.dk_odds === 'N/A' ? '#374151' : '#D1D5DB', ...monoSx }}>
                     {row.dk_odds}
                   </TableCell>
 
                   {/* Consensus fair */}
-                  <TableCell align="center" sx={{ color: '#9CA3AF', ...monoCell }}>
+                  <TableCell align="center" sx={{ color: '#9CA3AF', ...monoSx }}>
                     {row.consensus_fair}
                   </TableCell>
 
                   {/* EV% */}
                   <TableCell align="center">
                     <span style={{
-                      color: evZero ? '#4B5563' : evPos ? '#32D74B' : '#EF4444',
-                      fontWeight: evPos ? 600 : 400,
-                      fontSize: evPos ? '0.9rem' : '0.8125rem',
+                      color: evVal === 0 ? '#4B5563' : evPos ? '#32D74B' : '#EF4444',
+                      fontWeight: isArb ? 700 : evPos ? 600 : 400,
+                      fontSize: (evPos || isArb) ? '0.9rem' : '0.8125rem',
                       fontFamily: 'monospace',
                       fontVariantNumeric: 'tabular-nums',
                     }}>
@@ -434,22 +442,37 @@ const FuturesScraper: React.FC = () => {
                     </span>
                   </TableCell>
 
-                  {/* Sharp books chip */}
+                  {/* Info: arb badge or sharp-books ref */}
                   <TableCell align="right">
-                    {row.sharp_books && (
-                      <Chip
-                        label={row.sharp_books}
-                        size="small"
-                        sx={{
-                          height: 18,
-                          fontSize: '0.6rem',
-                          fontWeight: 600,
-                          bgcolor: 'rgba(255,255,255,0.06)',
-                          color: '#6B7280',
-                          borderRadius: '4px',
-                          '& .MuiChip-label': { px: 0.75 },
-                        }}
-                      />
+                    {isArb ? (
+                      <Tooltip
+                        title={`Arb vs ${row.arb_book} ${row.arb_opp_odds} — guaranteed ${row.arb_roi != null ? `+${row.arb_roi.toFixed(1)}%` : 'profit'} on balanced stakes`}
+                        placement="left"
+                        arrow
+                      >
+                        <Chip
+                          label={`ARB ${row.arb_roi != null ? `+${row.arb_roi.toFixed(1)}%` : ''}`}
+                          size="small"
+                          sx={{
+                            height: 20, fontSize: '0.65rem', fontWeight: 700, cursor: 'help',
+                            bgcolor: 'rgba(251,191,36,0.18)', color: '#FBB724',
+                            border: '1px solid rgba(251,191,36,0.4)', borderRadius: '4px',
+                            '& .MuiChip-label': { px: 0.75 },
+                          }}
+                        />
+                      </Tooltip>
+                    ) : (
+                      row.sharp_books && (
+                        <Chip
+                          label={row.sharp_books}
+                          size="small"
+                          sx={{
+                            height: 18, fontSize: '0.6rem', fontWeight: 600,
+                            bgcolor: 'rgba(255,255,255,0.06)', color: '#6B7280',
+                            borderRadius: '4px', '& .MuiChip-label': { px: 0.75 },
+                          }}
+                        />
+                      )
                     )}
                   </TableCell>
                 </TableRow>
