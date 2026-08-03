@@ -110,28 +110,37 @@ async def scrape_fanduel_win_totals() -> list[dict]:
                 "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
             )
 
+            all_urls: list[str] = []
+
+            async def _log_response(r):
+                url_r = r.url
+                all_urls.append(url_r)
+                if "content-managed-page" in url_r and r.status == 200:
+                    body = await r.body()
+                    try:
+                        captured[sport] = json.loads(body)
+                        logger.info("[FD] Captured %s content page: %d bytes", sport, len(body))
+                    except json.JSONDecodeError:
+                        logger.warning("[FD] Could not parse content page JSON for %s", sport)
+
+            page.on("response", _log_response)
+
             try:
-                # Use expect_response so the handler is registered BEFORE navigation,
-                # eliminating the race condition between page.on() and the first XHR.
-                async with page.expect_response(
-                    lambda r: "content-managed-page" in r.url and r.status == 200,
-                    timeout=45_000,
-                ) as resp_info:
-                    await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
-
-                response = await resp_info.value
-                body = await response.body()
-                try:
-                    captured[sport] = json.loads(body)
-                    logger.info("[FD] Captured %s content page: %d bytes", sport, len(body))
-                except json.JSONDecodeError:
-                    logger.warning("[FD] Could not parse JSON for %s", sport)
-
+                await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
+                # Wait for all XHRs to fire — 15s gives FD plenty of time
+                await page.wait_for_timeout(15_000)
             except Exception as exc:  # pylint: disable=broad-except
-                logger.warning("[FD] No content-managed-page captured for %s: %s", sport, exc)
-                # Fallback: wait and check if the on-response handler caught it
-                await page.wait_for_timeout(12_000)
+                logger.warning("[FD] Navigation error for %s: %s", sport, exc)
             finally:
+                # Log all response URLs so we can identify the correct API endpoint
+                api_urls = [u for u in all_urls if "fanduel" in u.lower() or "api" in u.lower()]
+                if sport not in captured:
+                    logger.warning(
+                        "[FD] %s: content-managed-page NOT found. API URLs seen (%d):\n%s",
+                        sport,
+                        len(api_urls),
+                        "\n".join(f"  {u}" for u in api_urls[:30]),
+                    )
                 await page.close()
                 await context.close()
 
