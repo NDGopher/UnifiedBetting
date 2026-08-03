@@ -2168,7 +2168,7 @@ async def run_futures_pipeline_background():
 
         from match_games import match_pinnacle_to_betbck
         matched_games = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
-        total_matched = len([g for g in matched_games if g.get('betbck_data')])
+        total_matched = len([g for g in matched_games if g.get('betbck_game')])
         logger.info(f"[FUTURES] Matched {total_matched} of {len(matched_games)} futures events")
 
         # Step 4 — Calculate EV
