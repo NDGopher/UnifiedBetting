@@ -277,8 +277,9 @@ def _norm(name: str) -> str:
 
 
 def _canonical(name: str) -> str:
-    # Strip trailing parenthetical before normalising (e.g. "Miami (FL)" → "Miami FL")
-    cleaned = _PAREN_RE.sub("", name).strip()
+    # Convert "Miami (FL)" → "Miami FL" (keep the abbreviation, strip only the parens)
+    # so the alias table can resolve "miami fl" → "miami florida"
+    cleaned = re.sub(r'\s*\(([^)]*)\)\s*$', r' \1', name).strip()
     n = _norm(cleaned)
     return _ALIASES.get(n, n)
 
