@@ -280,7 +280,8 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
         if _first_failed:
             away_parts = pod_away_clean.split()
             if away_parts:
-                skip_words = {'fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif', 'kc', 'sr', 'mg', 'us', 'br'}
+                skip_words = {'fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif', 'kc', 'sr', 'mg', 'us', 'br',
+                             'town', 'rovers', 'county', 'athletic', 'wanderers', 'vale', 'albion', 'wednesday'}
                 away_search = None
                 if len(away_parts) > 1 and len(away_parts[-1]) > 3 and away_parts[-1].lower() not in skip_words:
                     away_search = away_parts[-1]
