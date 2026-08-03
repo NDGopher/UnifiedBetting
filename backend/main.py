@@ -2137,7 +2137,7 @@ async def run_futures_pipeline_background():
         logger.info(f"[FUTURES] Loaded {len(event_dicts)} futures event IDs from file")
 
         if not event_dicts:
-            await broadcast_event({
+            await sse_manager.broadcast({
                 "type": "futures_complete",
                 "data": {
                     "events": [], "total_matched": 0, "last_run": datetime.now().isoformat(),
@@ -2148,7 +2148,7 @@ async def run_futures_pipeline_background():
 
         # Step 2 — Scrape BetBCK for season win totals only (2 checkboxes — fast)
         logger.info("[FUTURES] Scraping BetBCK season win total checkboxes…")
-        await broadcast_event({
+        await sse_manager.broadcast({
             "type": "futures_update",
             "data": {"events": [], "message": "Scraping BetBCK season win totals…", "last_run": datetime.now().isoformat()},
         })
@@ -2161,13 +2161,13 @@ async def run_futures_pipeline_background():
 
         # Step 3 — Match Pinnacle futures events → BetBCK lines
         logger.info("[FUTURES] Matching Pinnacle futures to BetBCK…")
-        await broadcast_event({
+        await sse_manager.broadcast({
             "type": "futures_update",
             "data": {"events": [], "message": f"Matching {len(event_dicts)} futures events → {len(betbck_games)} BetBCK lines…", "last_run": datetime.now().isoformat()},
         })
 
         from match_games import match_pinnacle_to_betbck
-        matched_games = match_pinnacle_to_betbck(event_dicts, betbck_games)
+        matched_games = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
         total_matched = len([g for g in matched_games if g.get('betbck_data')])
         logger.info(f"[FUTURES] Matched {total_matched} of {len(matched_games)} futures events")
 
@@ -2206,7 +2206,7 @@ async def run_futures_pipeline_background():
             },
         }
         _last_futures_payload = payload
-        await broadcast_event(payload)
+        await sse_manager.broadcast(payload)
         logger.info(f"[FUTURES] Pipeline done in {round(_time.time() - run_start, 1)}s")
 
     except Exception as e:
@@ -2214,7 +2214,7 @@ async def run_futures_pipeline_background():
         tb = traceback.format_exc()
         logger.error(f"[FUTURES] Pipeline error: {e}\n{tb}")
         try:
-            await broadcast_event({
+            await sse_manager.broadcast({
                 "type": "futures_error",
                 "data": {"error": str(e), "message": "Futures pipeline failed", "traceback": tb},
             })
