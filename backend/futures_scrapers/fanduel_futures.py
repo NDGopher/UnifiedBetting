@@ -90,7 +90,9 @@ async def scrape_fanduel_win_totals() -> list[dict]:
     """Navigate to each FD win-totals page, intercept the content-managed-page
     response, and return parsed records.
 
-    Each sport gets its own fresh browser context to avoid PerimeterX blocking.
+    Uses a SINGLE persistent browser context across all sports so that cookies
+    and session data established on the first page (NCAAF) carry over to NFL,
+    reducing PerimeterX friction on subsequent navigations.
     """
     from playwright.async_api import async_playwright
 
@@ -103,8 +105,10 @@ async def scrape_fanduel_win_totals() -> list[dict]:
             args=["--no-sandbox", "--disable-dev-shm-usage"],
         )
 
+        # Single shared context — cookies persist across sport pages
+        context = await browser.new_context(**_fresh_context_kwargs())
+
         for sport, url in FD_WIN_TOTAL_PAGES:
-            context = await browser.new_context(**_fresh_context_kwargs())
             page = await context.new_page()
             await page.add_init_script(
                 "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
@@ -112,38 +116,39 @@ async def scrape_fanduel_win_totals() -> list[dict]:
 
             all_urls: list[str] = []
 
-            async def _log_response(r):
-                url_r = r.url
-                all_urls.append(url_r)
-                if "content-managed-page" in url_r and r.status == 200:
+            async def _on_response(r, _sport=sport):
+                all_urls.append(r.url)
+                if "content-managed-page" in r.url and r.status == 200:
                     body = await r.body()
                     try:
-                        captured[sport] = json.loads(body)
-                        logger.info("[FD] Captured %s content page: %d bytes", sport, len(body))
+                        captured[_sport] = json.loads(body)
+                        logger.info(
+                            "[FD] Captured %s content page: %d bytes", _sport, len(body)
+                        )
                     except json.JSONDecodeError:
-                        logger.warning("[FD] Could not parse content page JSON for %s", sport)
+                        logger.warning("[FD] Could not parse content page JSON for %s", _sport)
 
-            page.on("response", _log_response)
+            page.on("response", _on_response)
 
             try:
                 await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
-                # Wait for all XHRs to fire — 15s gives FD plenty of time
-                await page.wait_for_timeout(15_000)
+                # Give the XHR time to fire — 15s for first sport, 20s for NFL
+                # since it may need an extra round-trip after session is warm.
+                wait_ms = 20_000 if sport == "NFL" else 15_000
+                await page.wait_for_timeout(wait_ms)
             except Exception as exc:  # pylint: disable=broad-except
                 logger.warning("[FD] Navigation error for %s: %s", sport, exc)
             finally:
-                # Log all response URLs so we can identify the correct API endpoint
-                api_urls = [u for u in all_urls if "fanduel" in u.lower() or "api" in u.lower()]
                 if sport not in captured:
+                    api_urls = [u for u in all_urls if "fanduel" in u.lower() or "api" in u.lower()]
                     logger.warning(
                         "[FD] %s: content-managed-page NOT found. API URLs seen (%d):\n%s",
-                        sport,
-                        len(api_urls),
-                        "\n".join(f"  {u}" for u in api_urls[:30]),
+                        sport, len(api_urls),
+                        "\n".join(f"  {u}" for u in api_urls[:20]),
                     )
                 await page.close()
-                await context.close()
 
+        await context.close()
         await browser.close()
 
     # Parse each captured page
