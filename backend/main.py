@@ -2116,103 +2116,129 @@ async def run_streaming_pipeline_background(sport_filters=None):
 
 
 async def run_futures_pipeline_background():
-    """Futures pipeline: scrape BetBCK season win totals → match Pinnacle → calculate EV → broadcast."""
+    """Futures pipeline: scrape BetBCK + FanDuel + DraftKings season win totals
+    → build FD+DK consensus fair odds → calculate EV → broadcast.
+
+    Replaces the old Pinnacle-based approach; Pinnacle shows no live futures lines.
+    """
     global futures_current_results, futures_last_run_time, futures_pipeline_running, _last_futures_payload
     import time as _time
     futures_pipeline_running = True
     run_start = _time.time()
 
     try:
-        logger.info("[FUTURES] ═══ FUTURES PIPELINE STARTED ═══")
+        logger.info("[FUTURES] ═══ FUTURES PIPELINE STARTED (FD+DK consensus) ═══")
 
-        # Step 1 — Load futures event IDs (season win totals only)
-        futures_events_file = os.path.join(os.path.dirname(__file__), 'data', 'futures_event_ids.json')
-        if not os.path.exists(futures_events_file):
-            raise FileNotFoundError(
-                "data/futures_event_ids.json not found — click 'Get Futures Event IDs' first."
-            )
-        with open(futures_events_file, 'r', encoding='utf-8') as f:
-            fdata = json.load(f)
-        event_dicts = fdata.get("event_ids", [])
-        logger.info(f"[FUTURES] Loaded {len(event_dicts)} futures event IDs from file")
-
-        if not event_dicts:
-            await sse_manager.broadcast({
-                "type": "futures_complete",
-                "data": {
-                    "events": [], "total_matched": 0, "last_run": datetime.now().isoformat(),
-                    "message": "No futures event IDs found — fetch them first.",
-                },
-            })
-            return
-
-        # Step 2 — Scrape BetBCK for season win totals only (2 checkboxes — fast)
-        logger.info("[FUTURES] Scraping BetBCK season win total checkboxes…")
+        # ── Step 1  Scrape BetBCK season win totals ──────────────────────────
+        logger.info("[FUTURES] Step 1 — scraping BetBCK season win totals…")
         await sse_manager.broadcast({
             "type": "futures_update",
-            "data": {"events": [], "message": "Scraping BetBCK season win totals…", "last_run": datetime.now().isoformat()},
+            "data": {"events": [], "message": "Scraping BetBCK season win totals…",
+                     "last_run": datetime.now().isoformat()},
         })
 
         from betbck_async_scraper import _get_all_betbck_games_async
-        betbck_games = await _get_all_betbck_games_async(
-            sport_filters=['nfl_season_wins', 'cfb_season_wins']
+        betbck_raw = await _get_all_betbck_games_async(
+            sport_filters=["nfl_season_wins", "cfb_season_wins"]
         )
-        logger.info(f"[FUTURES] BetBCK returned {len(betbck_games)} season win total lines")
+        logger.info("[FUTURES] BetBCK returned %d raw game rows", len(betbck_raw))
 
-        # Step 3 — Match Pinnacle futures events → BetBCK lines
-        logger.info("[FUTURES] Matching Pinnacle futures to BetBCK…")
+        from futures_ev import parse_betbck_win_totals
+        betbck_lines = parse_betbck_win_totals(betbck_raw)
+        logger.info("[FUTURES] Parsed %d BetBCK win-total records", len(betbck_lines))
+
+        # Log sample for format verification
+        if betbck_lines:
+            logger.info("[FUTURES] BetBCK sample: %s", betbck_lines[:3])
+
+        # ── Step 2  Scrape FanDuel ────────────────────────────────────────────
+        logger.info("[FUTURES] Step 2 — scraping FanDuel win totals (Playwright)…")
         await sse_manager.broadcast({
             "type": "futures_update",
-            "data": {"events": [], "message": f"Matching {len(event_dicts)} futures events → {len(betbck_games)} BetBCK lines…", "last_run": datetime.now().isoformat()},
+            "data": {"events": [], "message": "Scraping FanDuel win totals (browser)…",
+                     "last_run": datetime.now().isoformat()},
         })
 
-        from match_games import match_pinnacle_to_betbck
-        matched_games = match_pinnacle_to_betbck(event_dicts, {"games": betbck_games})
-        total_matched = len([g for g in matched_games if g.get('betbck_game')])
-        logger.info(f"[FUTURES] Matched {total_matched} of {len(matched_games)} futures events")
+        fd_lines: list = []
+        try:
+            from futures_scrapers.fanduel_futures import scrape_fanduel_win_totals
+            fd_lines = await scrape_fanduel_win_totals()
+            logger.info("[FUTURES] FanDuel returned %d win-total records", len(fd_lines))
+        except Exception as fd_exc:
+            logger.warning("[FUTURES] FanDuel scrape failed: %s", fd_exc)
 
-        # Step 4 — Calculate EV
-        logger.info("[FUTURES] Calculating EV for futures…")
-        from calculate_ev_table import calculate_ev_table_async, format_ev_table_for_display
-        ev_results = await calculate_ev_table_async(matched_games)
-        ev_events  = format_ev_table_for_display(ev_results)
-        logger.info(f"[FUTURES] EV calc complete: {len(ev_events)} futures opportunities")
+        # ── Step 3  Scrape DraftKings ─────────────────────────────────────────
+        logger.info("[FUTURES] Step 3 — scraping DraftKings win totals (Playwright)…")
+        await sse_manager.broadcast({
+            "type": "futures_update",
+            "data": {"events": [], "message": "Scraping DraftKings win totals (browser)…",
+                     "last_run": datetime.now().isoformat()},
+        })
 
-        # Step 5 — Save to file
+        dk_lines: list = []
+        try:
+            from futures_scrapers.draftkings_futures import scrape_draftkings_win_totals
+            dk_lines = await scrape_draftkings_win_totals()
+            logger.info("[FUTURES] DraftKings returned %d win-total records", len(dk_lines))
+        except Exception as dk_exc:
+            logger.warning("[FUTURES] DraftKings scrape failed: %s", dk_exc)
+
+        # ── Step 4  Calculate EV ──────────────────────────────────────────────
+        logger.info("[FUTURES] Step 4 — calculating EV (FD+DK consensus)…")
+        await sse_manager.broadcast({
+            "type": "futures_update",
+            "data": {"events": [], "message": "Calculating EV from FD+DK consensus…",
+                     "last_run": datetime.now().isoformat()},
+        })
+
+        from futures_ev import calculate_futures_ev
+        ev_events = calculate_futures_ev(betbck_lines, fd_lines, dk_lines)
+        logger.info("[FUTURES] EV calc complete: %d results", len(ev_events))
+
+        # ── Step 5  Save results ──────────────────────────────────────────────
         last_run_iso = datetime.now().isoformat()
         futures_last_run_time = last_run_iso
         futures_current_results = ev_events
 
         os.makedirs(os.path.dirname(FUTURES_RESULTS_FILE), exist_ok=True)
-        with open(FUTURES_RESULTS_FILE, 'w', encoding='utf-8') as f:
+        with open(FUTURES_RESULTS_FILE, "w", encoding="utf-8") as f:
             json.dump({
                 "events": ev_events,
                 "last_run": last_run_iso,
-                "total_matched": total_matched,
-                "betbck_count": len(betbck_games),
-                "pinnacle_count": len(event_dicts),
+                "betbck_count": len(betbck_lines) // 2,   # pairs
+                "fd_count":     len(fd_lines),
+                "dk_count":     len(dk_lines),
             }, f, indent=2)
-        logger.info(f"[FUTURES] Saved results to {FUTURES_RESULTS_FILE}")
+        logger.info("[FUTURES] Saved results to %s", FUTURES_RESULTS_FILE)
 
-        # Step 6 — Broadcast completion
+        # ── Step 6  Broadcast completion ──────────────────────────────────────
+        positive_ev = [e for e in ev_events if e.get("ev_float", 0) > 0]
         payload = {
             "type": "futures_complete",
             "data": {
-                "events": ev_events,
-                "total_matched": total_matched,
-                "last_run": last_run_iso,
+                "events":          ev_events,
+                "total_matched":   len(ev_events) // 2,
+                "last_run":        last_run_iso,
                 "elapsed_seconds": round(_time.time() - run_start, 1),
-                "message": f"{total_matched} futures matched, {len(ev_events)} EV opportunities",
+                "message": (
+                    f"BetBCK: {len(betbck_lines)//2} teams | "
+                    f"FD: {len(fd_lines)//2} | "
+                    f"DK: {len(dk_lines)//2} | "
+                    f"+EV: {len(positive_ev)}"
+                ),
             },
         }
         _last_futures_payload = payload
         await sse_manager.broadcast(payload)
-        logger.info(f"[FUTURES] Pipeline done in {round(_time.time() - run_start, 1)}s")
+        logger.info(
+            "[FUTURES] Pipeline done in %.1fs — %d +EV bets",
+            _time.time() - run_start, len(positive_ev)
+        )
 
     except Exception as e:
         import traceback
         tb = traceback.format_exc()
-        logger.error(f"[FUTURES] Pipeline error: {e}\n{tb}")
+        logger.error("[FUTURES] Pipeline error: %s\n%s", e, tb)
         try:
             await sse_manager.broadcast({
                 "type": "futures_error",
@@ -2621,20 +2647,27 @@ def get_futures_event_ids_endpoint():
 def get_futures_results():
     """Serve the latest futures EV results from futures_results.json."""
     global futures_current_results, futures_last_run_time
+
+    def _serialize(events):
+        return [
+            {
+                "team":           e.get("team", ""),
+                "line":           e.get("line", 0),
+                "direction":      e.get("direction", ""),
+                "betbck_odds":    e.get("betbck_odds", "N/A"),
+                "fd_odds":        e.get("fd_odds", "N/A"),
+                "dk_odds":        e.get("dk_odds", "N/A"),
+                "consensus_fair": e.get("consensus_fair", "N/A"),
+                "ev":             e.get("ev", "0.0%"),
+                "ev_float":       e.get("ev_float", 0.0),
+                "sharp_books":    e.get("sharp_books", ""),
+            }
+            for e in events
+        ]
+
     # Serve from memory if available
     if futures_current_results is not None and len(futures_current_results) > 0:
-        markets = []
-        for event in futures_current_results:
-            markets.append({
-                "matchup":        event.get("matchup", ""),
-                "league":         event.get("league", ""),
-                "bet":            event.get("bet", ""),
-                "betbck_odds":    event.get("betbck_odds", ""),
-                "pinnacle_nvp":   event.get("pinnacle_nvp", ""),
-                "ev":             event.get("ev", ""),
-                "start_time":     event.get("start_time", ""),
-                "pinnacle_limit": event.get("pinnacle_limit"),
-            })
+        markets = _serialize(futures_current_results)
         return JSONResponse({"status": "success", "data": {"markets": markets, "last_update": futures_last_run_time}})
 
     # Fallback to file
@@ -2643,17 +2676,7 @@ def get_futures_results():
     try:
         with open(FUTURES_RESULTS_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
-        events = data.get("events", [])
-        markets = [{
-            "matchup":        e.get("matchup", ""),
-            "league":         e.get("league", ""),
-            "bet":            e.get("bet", ""),
-            "betbck_odds":    e.get("betbck_odds", ""),
-            "pinnacle_nvp":   e.get("pinnacle_nvp", ""),
-            "ev":             e.get("ev", ""),
-            "start_time":     e.get("start_time", ""),
-            "pinnacle_limit": e.get("pinnacle_limit"),
-        } for e in events]
+        markets = _serialize(data.get("events", []))
         return JSONResponse({"status": "success", "data": {"markets": markets, "last_update": data.get("last_run")}})
     except Exception as e:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(e), "data": {}})
