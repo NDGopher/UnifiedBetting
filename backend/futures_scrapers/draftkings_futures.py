@@ -288,9 +288,13 @@ async def _extract_dk_page_records(page, sport: str) -> list[dict]:
                 logger.info("[DK] DOM text extraction → %d %s records", len(dom_records), sport)
                 records.extend(dom_records)
             else:
-                # Log a sample of what we actually see so we can debug format
-                sample = "\n".join(dom_text.splitlines()[:60])
-                logger.warning("[DK] %s: DOM parser returned 0 records. DOM sample:\n%s", sport, sample)
+                # Save full DOM to file and log a sample for debugging
+                import pathlib as _pl
+                _dbg = _pl.Path("/home/runner/workspace/backend/data") / f"dk_{sport.lower()}_dom_debug.txt"
+                _dbg.write_text(dom_text, encoding="utf-8")
+                sample = "\n".join(dom_text.splitlines()[:80])
+                logger.warning("[DK] %s: DOM parser returned 0 records. Full DOM saved → %s. Sample:\n%s",
+                               sport, _dbg, sample)
     except Exception as exc:
         logger.debug("[DK] DOM text extraction failed: %s", exc)
 
