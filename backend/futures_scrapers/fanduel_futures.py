@@ -90,11 +90,27 @@ async def scrape_fanduel_win_totals() -> list[dict]:
     """Navigate to each FD win-totals page, intercept the content-managed-page
     response, and return parsed records.
 
-    Uses a SINGLE persistent browser context across all sports so that cookies
-    and session data established on the first page (NCAAF) carry over to NFL,
-    reducing PerimeterX friction on subsequent navigations.
+    Each sport gets its OWN fresh browser context so that a PerimeterX block
+    on one page cannot carry over and flag the next page's session.
+    Rotating user-agents reduce the chance of persistent fingerprinting.
     """
+    import random
     from playwright.async_api import async_playwright
+
+    _UA_POOL = [
+        (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+        ),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+        ),
+        (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15"
+        ),
+    ]
 
     captured: dict[str, dict] = {}
 
@@ -105,10 +121,11 @@ async def scrape_fanduel_win_totals() -> list[dict]:
             args=["--no-sandbox", "--disable-dev-shm-usage"],
         )
 
-        # Single shared context — cookies persist across sport pages
-        context = await browser.new_context(**_fresh_context_kwargs())
-
         for sport, url in FD_WIN_TOTAL_PAGES:
+            # Fresh isolated context per sport — no shared cookies/fingerprint
+            ctx_kwargs = _fresh_context_kwargs()
+            ctx_kwargs["user_agent"] = random.choice(_UA_POOL)
+            context = await browser.new_context(**ctx_kwargs)
             page = await context.new_page()
             await page.add_init_script(
                 "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
@@ -132,10 +149,7 @@ async def scrape_fanduel_win_totals() -> list[dict]:
 
             try:
                 await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
-                # Give the XHR time to fire — 15s for first sport, 20s for NFL
-                # since it may need an extra round-trip after session is warm.
-                wait_ms = 20_000 if sport == "NFL" else 15_000
-                await page.wait_for_timeout(wait_ms)
+                await page.wait_for_timeout(15_000)
             except Exception as exc:  # pylint: disable=broad-except
                 logger.warning("[FD] Navigation error for %s: %s", sport, exc)
             finally:
@@ -147,8 +161,8 @@ async def scrape_fanduel_win_totals() -> list[dict]:
                         "\n".join(f"  {u}" for u in api_urls[:20]),
                     )
                 await page.close()
+                await context.close()
 
-        await context.close()
         await browser.close()
 
     # Parse each captured page
