@@ -1,3 +1,4 @@
+import re
 import requests
 import json
 import os
@@ -122,8 +123,28 @@ def fetch_sports() -> List[Dict[str, Any]]:
 
 def _build_event_dict(matchup: dict, sport_name: str) -> dict:
     """Extract all useful fields from an Arcadia matchup object."""
-    home_team = next((p["name"] for p in matchup.get("participants", []) if p.get("alignment") == "home"), "Unknown")
-    away_team = next((p["name"] for p in matchup.get("participants", []) if p.get("alignment") == "away"), "Unknown")
+    is_special = matchup.get("type") == "special"
+    special_info = matchup.get("special") or {}
+    special_category = special_info.get("category", "") if is_special else ""
+    is_season_wins = is_special and special_category == "Regular Season Wins"
+
+    if is_season_wins:
+        # Parse the team name from the description, e.g.
+        # "New England Patriots Total Regular Season Wins" -> "New England Patriots"
+        desc = special_info.get("description", "")
+        team_name = re.sub(
+            r"\s+(Total\s+)?Regular\s+Season\s+Wins?\s*$", "", desc, flags=re.IGNORECASE
+        ).strip() or desc or "Unknown"
+        home_team = team_name
+        away_team = "Season Wins"
+    elif is_special:
+        # Non-season-wins special (futures, division odds, etc.) — skip via Unknown filter
+        home_team = "Unknown"
+        away_team = "Unknown"
+    else:
+        home_team = next((p["name"] for p in matchup.get("participants", []) if p.get("alignment") == "home"), "Unknown")
+        away_team = next((p["name"] for p in matchup.get("participants", []) if p.get("alignment") == "away"), "Unknown")
+
     league_obj = matchup.get("league") or matchup.get("leagueInfo") or {}
     return {
         "event_id": matchup["id"],
@@ -132,6 +153,7 @@ def _build_event_dict(matchup: dict, sport_name: str) -> dict:
         "starts": matchup.get("startTime", ""),      # ISO datetime string from Arcadia
         "league": league_obj.get("name", "") if isinstance(league_obj, dict) else "",
         "sport": sport_name,
+        "is_special": is_season_wins,               # True only for season win totals
     }
 
 
@@ -167,8 +189,10 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
 
         # Special case for American Football: Fetch from known leagues
         if sport_name == "Football":  # American Football (sport_id: 15)
-            # Known leagues: CFL (876), UFL (220795)
-            league_ids = [876, 220795]
+            # Known leagues: CFL (876), UFL (220795), NCAA football (880)
+            # Fetching each league directly captures game matchups AND season win
+            # total specials for that league in one call.
+            league_ids = [876, 220795, 880]
             for league_id in league_ids:
                 url = f"{ARCADIA_BASE_URL}/leagues/{league_id}/matchups"
                 params = {"brandId": "0"}
@@ -179,14 +203,18 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
                     matchups = response.json()
                     for matchup in matchups:
                         ev = _build_event_dict(matchup, sport_name)
+                        # Skip Unknown/Unknown events (non-season-wins specials)
+                        if ev["home_team"] == "Unknown" and ev["away_team"] == "Unknown":
+                            continue
                         if is_prop_market(ev["home_team"], ev["away_team"]):
                             continue
                         events.append(ev)
                 except Exception as e:
                     logger.error(f"Exception for {sport_name} (League {league_id}): {e}")
-            # Also fetch from /matchups to get NFL games
+            # Also fetch from /matchups WITH specials to capture NFL season win totals
+            # and any NFL/NCAA game matchups not covered by the explicit league fetch.
             url = f"{ARCADIA_BASE_URL}/sports/{sport_id}/matchups"
-            params = {"withSpecials": "false", "brandId": "0"}
+            params = {"withSpecials": "true", "brandId": "0"}
             try:
                 response = requests.get(url, params=params, headers=ARCADIA_HEADERS)
                 total_requests += 1
@@ -194,6 +222,9 @@ def fetch_arcadia_events() -> List[Dict[str, Any]]:
                 matchups = response.json()
                 for matchup in matchups:
                     ev = _build_event_dict(matchup, sport_name)
+                    # Skip Unknown/Unknown events (non-season-wins specials)
+                    if ev["home_team"] == "Unknown" and ev["away_team"] == "Unknown":
+                        continue
                     if is_prop_market(ev["home_team"], ev["away_team"]):
                         continue
                     # Avoid duplicates if already fetched from league endpoints
