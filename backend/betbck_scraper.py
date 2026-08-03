@@ -39,6 +39,20 @@ except ImportError:
     fuzz = None
     FUZZY_MATCH_THRESHOLD = 101 # Effectively disables fuzzy matching
 
+# Generic soccer words that appear in many unrelated team names.
+# Used by the distinctive-part guard to reject fuzzy matches that scored
+# high only because both teams share a common suffix ("Crawley Town" ≈
+# "Athlone Town" purely on the word "town").
+_GENERIC_SOCCER_WORDS = frozenset({
+    'city', 'town', 'united', 'utd', 'fc', 'sc', 'afc', 'rovers', 'county',
+    'athletic', 'wanderers', 'hotspur', 'villa', 'palace', 'albion',
+    'wednesday', 'vale', 'club', 'ac', 'if', 'bk',
+})
+
+def _strip_generic_soccer_words(name: str) -> str:
+    """Return *name* with pure generic soccer suffix words removed."""
+    return ' '.join(t for t in name.split() if t not in _GENERIC_SOCCER_WORDS)
+
 # --- Configuration Loading ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(SCRIPT_DIR, 'config.json')
