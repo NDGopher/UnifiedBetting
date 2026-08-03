@@ -68,7 +68,7 @@ class BetBCKAsyncScraper:
         # Priority order for "all sports" mode - highest priority first
         # Futures-only sports: not included in the default "all sports" scrape.
         # Request them explicitly via sport_filters in the futures pipeline.
-        self.futures_only_sports = {'nfl_season_wins', 'cfb_season_wins'}
+        self.futures_only_sports = {'nfl_season_wins', 'cfb_season_wins', 'epl_winner', 'la_liga_winner', 'seria_a_winner'}
         self.sport_priority = [
             'nfl', 'nba', 'nhl', 'mlb',            # Major US sports first
             'ncaa_football', 'ncaa_basketball',      # College sports
@@ -546,6 +546,20 @@ def get_all_betbck_games():
 
 async def _get_all_betbck_games_async(sport_filters=None):
     scraper = BetBCKAsyncScraper(sport_filters=sport_filters)
+    await scraper.run()
+    with open(scraper.output_file, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+async def _get_betbck_outright_games_async(market_sport_filter: str) -> list[dict]:
+    """Fetch BetBCK outright winner props (e.g. 'epl_winner') bypassing the
+    prop filter so that rows like "Arsenal | TO WIN OUTRIGHT" are kept.
+
+    The underlying parse_games filter is bypassed only for rows whose away_team
+    matches an outright-winner pattern; all other rows remain filtered normally.
+    """
+    scraper = BetBCKAsyncScraper(sport_filters=[market_sport_filter])
+    scraper._allow_outright_props = True   # bypass is_prop_market_by_name for outrights
     await scraper.run()
     with open(scraper.output_file, "r", encoding="utf-8") as f:
         return json.load(f)
