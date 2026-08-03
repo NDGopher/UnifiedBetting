@@ -2683,6 +2683,7 @@ def get_futures_results():
                 "sharp_books":    e.get("sharp_books", ""),
                 "signal_count":   e.get("signal_count", 0),
                 "per_book_ev":    e.get("per_book_ev", {}),
+                "all_book_odds":  e.get("all_book_odds", {}),
                 "is_arb":         e.get("is_arb", False),
                 "arb_book":       e.get("arb_book", ""),
                 "arb_opp_odds":   e.get("arb_opp_odds", ""),
