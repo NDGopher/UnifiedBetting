@@ -172,79 +172,65 @@ def parse_dk_nash_response(data: dict, sport: str) -> list[dict]:
     return records
 
 
-def _parse_dom_win_totals(html_text: str, sport: str) -> list[dict]:
-    """Parse DK page text content (from DOM) to extract win total over/under records.
+def _parse_dom_win_totals(html_text: str, sport: str, book: str = "DraftKings") -> list[dict]:
+    """Parse DK (or FD) page DOM text into win-total records.
 
-    DK renders odds in text like:
-        "Alabama\nOver 8.5\n-120\nUnder 8.5\n+100"
+    Both DK and FD render each bet as a dedicated line then odds on the very
+    next non-blank line, e.g.:
 
-    We look for "Over X.5" / "Under X.5" patterns adjacent to team names and odds.
+        Alabama Over 8.5 Wins      ← the bet
+        -124                       ← odds (next non-blank line)
+        Alabama Under 8.5 Wins
+        +102
+
+    This format is more reliable than the old regex that expected
+    "Over 8.5\\n-124" (without the "Wins" suffix).
     """
     import re as _re
 
-    # Find all Over/Under occurrences with a line and then an immediately following odds
-    # Pattern: "Over 8.5" or "Under 8.5" then optionally whitespace then an american odds string
-    ou_odds_re = _re.compile(
-        r'(Over|Under)\s+([\d.]+)\s*\n\s*([+-]?\d{3,4})',
+    # One bet per line: "Team Over/Under X.X Wins?" — optional trailing "Wins"
+    BET_RE = _re.compile(
+        r'^(?P<team>.+?)\s+(?P<dir>Over|Under)\s+(?P<line>[\d.]+)\s+Win[s]?$',
         _re.IGNORECASE,
     )
+    # American odds: +/-NNN (2–4 digits)
+    ODDS_RE = _re.compile(r'^([+-]\d{2,4})$')
 
+    lines = [ln.strip() for ln in html_text.splitlines()]
     records: list[dict] = []
-    matches = list(ou_odds_re.finditer(html_text))
-    if not matches:
-        return records
-
-    # For each match, try to find the team name by looking backwards in the text
-    # Team names appear on their own line before the Over/Under block
-    lines = html_text.split('\n')
-    line_starts = []
-    pos = 0
-    for ln in lines:
-        line_starts.append(pos)
-        pos += len(ln) + 1
-
-    def _find_team_name(match_start: int) -> str:
-        """Walk backwards from match_start to find the last non-empty line that looks like a team."""
-        # Find which line the match is on
-        idx = 0
-        for i, s in enumerate(line_starts):
-            if s > match_start:
-                idx = i - 1
-                break
-        else:
-            idx = len(lines) - 1
-
-        # Walk back up to 10 lines looking for a non-empty, non-odds line
-        for i in range(idx - 1, max(0, idx - 10), -1):
-            ln = lines[i].strip()
-            if not ln:
-                continue
-            # Skip lines that look like odds (+120, -110) or numbers
-            if _re.match(r'^[+-]?\d{1,4}$', ln):
-                continue
-            # Skip lines that look like "Over X.5" / "Under X.5"
-            if _re.match(r'^(Over|Under)\s+[\d.]+$', ln, _re.IGNORECASE):
-                continue
-            # Skip very short lines (likely scores or labels)
-            if len(ln) < 3:
-                continue
-            return ln
-        return ""
-
     seen: set = set()
-    for m in matches:
-        direction = m.group(1).lower()
-        try:
-            line_val = float(m.group(2))
-        except ValueError:
+
+    for i, ln in enumerate(lines):
+        m = BET_RE.match(ln)
+        if not m:
             continue
+
+        # Find the next non-empty line and confirm it's an odds value
+        odds_str: str | None = None
+        for j in range(i + 1, min(i + 6, len(lines))):
+            candidate = lines[j].strip()
+            if not candidate:
+                continue
+            if ODDS_RE.match(candidate):
+                odds_str = candidate
+            break  # stop at first non-blank line regardless
+
+        if odds_str is None:
+            continue
+
         try:
-            amer = int(m.group(3))
+            amer = int(odds_str)
         except ValueError:
             continue
 
-        team = _find_team_name(m.start())
-        if not team or len(team) > 50:
+        team      = m.group("team").strip()
+        direction = m.group("dir").lower()
+        line_val  = float(m.group("line"))
+
+        # Sanity: odds must be plausible win-total range, team name reasonable
+        if not (1.0 <= line_val <= 20.0):
+            continue
+        if len(team) < 2 or len(team) > 55:
             continue
 
         key = (team.lower(), line_val, direction)
@@ -259,7 +245,7 @@ def _parse_dom_win_totals(html_text: str, sport: str) -> list[dict]:
             "direction":     direction,
             "american_odds": amer,
             "market_type":   "Regular Season Wins (DOM)",
-            "book":          "DraftKings",
+            "book":          book,
         })
 
     return records
@@ -272,6 +258,20 @@ async def _extract_dk_page_records(page, sport: str) -> list[dict]:
     Strategy 2: walk page.evaluate for any embedded JSON structures.
     """
     records: list[dict] = []
+
+    # ── Pre-extraction: expand any collapsed accordion sections ──────────────
+    try:
+        n_expanded = await page.evaluate("""() => {
+            // DK uses aria-expanded on section headers — click any that are collapsed
+            const toggles = Array.from(document.querySelectorAll('[aria-expanded="false"]'));
+            toggles.forEach(el => { try { el.click(); } catch(e) {} });
+            return toggles.length;
+        }""")
+        if n_expanded:
+            logger.info("[DK] %s: expanded %d collapsed sections", sport, n_expanded)
+            await page.wait_for_timeout(2_000)   # let render settle
+    except Exception:
+        pass
 
     # ── Strategy 1: DOM text content ─────────────────────────────────────────
     try:
@@ -287,6 +287,10 @@ async def _extract_dk_page_records(page, sport: str) -> list[dict]:
             if dom_records:
                 logger.info("[DK] DOM text extraction → %d %s records", len(dom_records), sport)
                 records.extend(dom_records)
+            else:
+                # Log a sample of what we actually see so we can debug format
+                sample = "\n".join(dom_text.splitlines()[:60])
+                logger.warning("[DK] %s: DOM parser returned 0 records. DOM sample:\n%s", sport, sample)
     except Exception as exc:
         logger.debug("[DK] DOM text extraction failed: %s", exc)
 
