@@ -2183,16 +2183,32 @@ async def run_futures_pipeline_background():
         except Exception as dk_exc:
             logger.warning("[FUTURES] DraftKings scrape failed: %s", dk_exc)
 
-        # ── Step 4  Calculate EV ──────────────────────────────────────────────
-        logger.info("[FUTURES] Step 4 — calculating EV (FD+DK consensus)…")
+        # ── Step 3b  Scrape BetMGM ────────────────────────────────────────────
+        logger.info("[FUTURES] Step 3b — scraping BetMGM win totals (Playwright)…")
         await sse_manager.broadcast({
             "type": "futures_update",
-            "data": {"events": [], "message": "Calculating EV from FD+DK consensus…",
+            "data": {"events": [], "message": "Scraping BetMGM win totals (browser)…",
+                     "last_run": datetime.now().isoformat()},
+        })
+
+        mgm_lines: list = []
+        try:
+            from futures_scrapers.betmgm_futures import scrape_betmgm_win_totals
+            mgm_lines = await scrape_betmgm_win_totals()
+            logger.info("[FUTURES] BetMGM returned %d win-total records", len(mgm_lines))
+        except Exception as mgm_exc:
+            logger.warning("[FUTURES] BetMGM scrape failed: %s", mgm_exc)
+
+        # ── Step 4  Calculate EV ──────────────────────────────────────────────
+        logger.info("[FUTURES] Step 4 — calculating EV (FD+DK+MGM consensus)…")
+        await sse_manager.broadcast({
+            "type": "futures_update",
+            "data": {"events": [], "message": "Calculating EV from FD+DK+MGM consensus…",
                      "last_run": datetime.now().isoformat()},
         })
 
         from futures_ev import calculate_futures_ev
-        ev_events = calculate_futures_ev(betbck_lines, fd_lines, dk_lines)
+        ev_events = calculate_futures_ev(betbck_lines, fd_lines, dk_lines, mgm_lines)
         logger.info("[FUTURES] EV calc complete: %d results", len(ev_events))
 
         # ── Step 5  Save results ──────────────────────────────────────────────
@@ -2203,11 +2219,12 @@ async def run_futures_pipeline_background():
         os.makedirs(os.path.dirname(FUTURES_RESULTS_FILE), exist_ok=True)
         with open(FUTURES_RESULTS_FILE, "w", encoding="utf-8") as f:
             json.dump({
-                "events": ev_events,
-                "last_run": last_run_iso,
+                "events":       ev_events,
+                "last_run":     last_run_iso,
                 "betbck_count": len(betbck_lines) // 2,   # pairs
                 "fd_count":     len(fd_lines),
                 "dk_count":     len(dk_lines),
+                "mgm_count":    len(mgm_lines),
             }, f, indent=2)
         logger.info("[FUTURES] Saved results to %s", FUTURES_RESULTS_FILE)
 
@@ -2224,6 +2241,7 @@ async def run_futures_pipeline_background():
                     f"BetBCK: {len(betbck_lines)//2} teams | "
                     f"FD: {len(fd_lines)//2} | "
                     f"DK: {len(dk_lines)//2} | "
+                    f"MGM: {len(mgm_lines)//2} | "
                     f"+EV: {len(positive_ev)}"
                 ),
             },
