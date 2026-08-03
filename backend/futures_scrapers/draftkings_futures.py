@@ -21,12 +21,13 @@ CHROMIUM_PATH = (
 
 # DK URL for each sport's win-totals / futures page
 DK_WIN_TOTAL_PAGES = [
-    # nav_1=all-teams ensures every team's line loads, not just a filtered subset
+    # nav_1=regular-season-wins loads the "Regular Season Wins Alternates" market on DK
     (
         "NFL",
         "https://sportsbook.draftkings.com/leagues/football/nfl"
-        "?category=wins&subcategory=regular-season&nav_1=all-teams",
+        "?category=futures&subcategory=wins&nav_1=regular-season-wins",
     ),
+    # NCAAF win totals — nav_1=all-teams confirmed by user; market may not be live yet
     (
         "NCAAF",
         "https://sportsbook.draftkings.com/leagues/football/ncaaf"
