@@ -10,6 +10,7 @@ import PODAlerts from "./components/PODAlerts";
 import EVCalculator from "./components/EVCalculator";
 // import PropBuilder from "./components/PropBuilder"; // Props disabled for now
 import BuckeyeScraper from './components/BuckeyeScraper';
+import FuturesScraper from './components/FuturesScraper';
 import BetBCKStatusPopup from './components/BetBCKStatusPopup';
 import AlertLog from './components/AlertLog';
 // import HighEVHistory from './components/HighEVHistory'; // Removed - replaced with Auto Bet Placement
@@ -484,6 +485,14 @@ function App() {
                 <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>EV BETS</Box>
               </Box>
               <BuckeyeScraper />
+            </Box>
+
+            {/* Futures Section */}
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 2, pb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>FUTURES</Box>
+              </Box>
+              <FuturesScraper />
             </Box>
 
             {/* Auto Bet Placement Section */}
