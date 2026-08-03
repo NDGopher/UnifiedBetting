@@ -105,32 +105,32 @@ async def scrape_fanduel_win_totals() -> list[dict]:
 
         for sport, url in FD_WIN_TOTAL_PAGES:
             context = await browser.new_context(**_fresh_context_kwargs())
-
-            async def _on_response(r, _sport=sport):
-                if "content-managed-page" in r.url and r.status == 200:
-                    body = await r.body()
-                    try:
-                        captured[_sport] = json.loads(body)
-                        logger.info(
-                            "[FD] Captured %s content page: %d bytes", _sport, len(body)
-                        )
-                    except json.JSONDecodeError:
-                        logger.warning("[FD] Could not parse JSON for %s", _sport)
-
             page = await context.new_page()
             await page.add_init_script(
                 "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
             )
-            page.on("response", _on_response)
 
             try:
-                await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
-                # Give the page time to fire the content-managed-page XHR.
-                # NFL needs a bit longer than NCAAF to trigger the request.
-                wait_ms = 15_000 if sport == "NFL" else 10_000
-                await page.wait_for_timeout(wait_ms)
+                # Use expect_response so the handler is registered BEFORE navigation,
+                # eliminating the race condition between page.on() and the first XHR.
+                async with page.expect_response(
+                    lambda r: "content-managed-page" in r.url and r.status == 200,
+                    timeout=45_000,
+                ) as resp_info:
+                    await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
+
+                response = await resp_info.value
+                body = await response.body()
+                try:
+                    captured[sport] = json.loads(body)
+                    logger.info("[FD] Captured %s content page: %d bytes", sport, len(body))
+                except json.JSONDecodeError:
+                    logger.warning("[FD] Could not parse JSON for %s", sport)
+
             except Exception as exc:  # pylint: disable=broad-except
-                logger.warning("[FD] Navigation error for %s: %s", sport, exc)
+                logger.warning("[FD] No content-managed-page captured for %s: %s", sport, exc)
+                # Fallback: wait and check if the on-response handler caught it
+                await page.wait_for_timeout(12_000)
             finally:
                 await page.close()
                 await context.close()
