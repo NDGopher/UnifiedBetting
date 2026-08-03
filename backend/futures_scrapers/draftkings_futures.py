@@ -204,6 +204,31 @@ async def scrape_draftkings_win_totals() -> list[dict]:
                             _sport,
                             len(parsed),
                         )
+                    else:
+                        # Log market types from responses that didn't match our keywords
+                        unique_mt = {
+                            m.get("marketType", {}).get("name", "")
+                            for m in data.get("markets", [])
+                        }
+                        if unique_mt and unique_mt != {""}:
+                            logger.info(
+                                "[DK] %s non-matching response market types: %s",
+                                _sport, sorted(unique_mt)[:10],
+                            )
+                        # Save raw response if we got markets but nothing matched
+                        if data.get("markets"):
+                            import os, pathlib
+                            dbg_dir = pathlib.Path("/home/runner/workspace/backend/data")
+                            dbg_path = dbg_dir / f"dk_{_sport.lower()}_raw_debug.json"
+                            dbg_dir.mkdir(exist_ok=True)
+                            with open(dbg_path, "w") as _f:
+                                import json as _json
+                                _json.dump(
+                                    {"markets": data.get("markets", [])[:5],
+                                     "selections": data.get("selections", [])[:20]},
+                                    _f, indent=2
+                                )
+                            logger.info("[DK] Saved debug sample → %s", dbg_path)
                 except Exception as exc:  # pylint: disable=broad-except
                     logger.debug("[DK] Could not parse nash response: %s", exc)
 
