@@ -360,6 +360,72 @@ def load_event_ids(filename: str = None) -> Optional[List[dict]]:
         logger.error(f"Error loading event IDs: {e}")
         return None
 
+def get_futures_event_ids() -> List[dict]:
+    """Fetch season win total (futures) event IDs from Pinnacle — NFL + CFB only.
+    
+    Targeted fetch: only Football (sport_id=15) with withSpecials=true.
+    Filters to is_special=True events (Regular Season Wins category).
+    Much faster than a full fetch_arcadia_events() call.
+    """
+    logger.info("[FUTURES] Fetching season win total event IDs from Pinnacle (Football)...")
+    futures: List[dict] = []
+    seen_ids: set = set()
+
+    def _add_if_futures(matchup: dict) -> None:
+        ev = _build_event_dict(matchup, "Football")
+        if ev.get("is_special") and ev["away_team"] == "Season Wins" and ev["event_id"] not in seen_ids:
+            seen_ids.add(ev["event_id"])
+            futures.append({
+                "event_id":  ev["event_id"],
+                "home_team": ev["home_team"],
+                "away_team": ev["away_team"],
+                "starts":    ev.get("starts", ""),
+                "league":    ev.get("league", ""),
+                "sport":     "Football",
+                "is_special": True,
+            })
+
+    # Primary: /sports/15/matchups with specials (captures NFL season win totals)
+    try:
+        r = requests.get(
+            f"{ARCADIA_BASE_URL}/sports/15/matchups",
+            params={"withSpecials": "true", "brandId": "0"},
+            headers=ARCADIA_HEADERS, timeout=15,
+        )
+        r.raise_for_status()
+        for m in r.json():
+            _add_if_futures(m)
+        logger.info(f"[FUTURES] /sports/15/matchups → {len(futures)} futures so far")
+    except Exception as e:
+        logger.error(f"[FUTURES] Error fetching /sports/15/matchups: {e}")
+
+    # Supplement: per-league endpoints for CFL/UFL/NCAA to catch any missed
+    for league_id in [876, 220795, 880]:
+        try:
+            r = requests.get(
+                f"{ARCADIA_BASE_URL}/leagues/{league_id}/matchups",
+                params={"brandId": "0"},
+                headers=ARCADIA_HEADERS, timeout=15,
+            )
+            r.raise_for_status()
+            before = len(futures)
+            for m in r.json():
+                _add_if_futures(m)
+            added = len(futures) - before
+            if added:
+                logger.info(f"[FUTURES] league/{league_id} added {added} new futures")
+        except Exception as e:
+            logger.debug(f"[FUTURES] league/{league_id}: {e}")
+
+    logger.info(f"[FUTURES] Total season win total events found: {len(futures)}")
+    return futures
+
+
+def save_futures_event_ids(futures: List[dict]) -> bool:
+    """Save futures event IDs to data/futures_event_ids.json."""
+    return save_event_ids(futures, "futures_event_ids.json")
+
+
 if __name__ == "__main__":
     event_ids = get_todays_event_ids()
     save_event_ids(event_ids or [])
