@@ -17,6 +17,7 @@ interface FuturesRow {
   betbck_odds:    string;
   fd_odds:        string;
   dk_odds:        string;
+  mgm_odds:       string;
   consensus_fair: string;
   ev:             string;
   ev_float:       number;
@@ -328,7 +329,7 @@ const FuturesScraper: React.FC = () => {
             animation: 'futures-pulse 1.5s ease-in-out infinite', flexShrink: 0,
           }} />
           <Typography sx={{ color: '#9CA3AF', fontSize: '0.75rem' }}>
-            {message || 'Futures pipeline running — scraping BetBCK + FanDuel + DraftKings…'}
+            {message || 'Futures pipeline running — scraping BetBCK + FanDuel + DraftKings + BetMGM…'}
           </Typography>
         </Box>
       )}
@@ -346,6 +347,7 @@ const FuturesScraper: React.FC = () => {
               <TableCell align="center" sx={hdrSx}>BetBCK</TableCell>
               <TableCell align="center" sx={hdrSx}>FanDuel</TableCell>
               <TableCell align="center" sx={hdrSx}>DraftKings</TableCell>
+              <TableCell align="center" sx={hdrSx}>BetMGM</TableCell>
               <TableCell align="center" sx={hdrSx}>Fair</TableCell>
               <TableCell
                 align="center"
@@ -361,7 +363,7 @@ const FuturesScraper: React.FC = () => {
           <TableBody>
             {filteredMarkets.length === 0 && !loading ? (
               <TableRow sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
-                <TableCell colSpan={8} sx={{ border: 'none', py: 5, px: 3 }}>
+                <TableCell colSpan={9} sx={{ border: 'none', py: 5, px: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
                     <SearchOff sx={{ fontSize: 18, color: '#374151', mt: 0.15, flexShrink: 0 }} />
                     <Box>
@@ -422,6 +424,11 @@ const FuturesScraper: React.FC = () => {
                   {/* DraftKings odds */}
                   <TableCell align="center" sx={{ color: row.dk_odds === 'N/A' ? '#374151' : '#D1D5DB', ...monoSx }}>
                     {row.dk_odds}
+                  </TableCell>
+
+                  {/* BetMGM odds */}
+                  <TableCell align="center" sx={{ color: row.mgm_odds === 'N/A' ? '#374151' : '#D1D5DB', ...monoSx }}>
+                    {row.mgm_odds ?? 'N/A'}
                   </TableCell>
 
                   {/* Consensus fair */}
