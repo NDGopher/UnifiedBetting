@@ -564,7 +564,26 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             
             if not norm_pin_home or not norm_pin_away:
                 continue
-                
+
+            # --- Season win total special matching ---
+            # Pinnacle season win total events have away_team="Season Wins" so the
+            # normal two-team fuzzy match always fails (away score ~0).  Instead,
+            # we only compare the team (home) side, requiring a higher threshold
+            # (75) to compensate for the relaxed constraint.  BetBCK sometimes
+            # lists the same team name twice for these markets.
+            _pin_is_season_wins = (pinnacle_event.get("is_special") is True
+                                   and norm_pin_away == "season wins")
+            if _pin_is_season_wins:
+                home_vs_home = fuzz.token_set_ratio(norm_bck_home, norm_pin_home)
+                away_vs_home = fuzz.token_set_ratio(norm_bck_away, norm_pin_home)
+                team_match   = max(home_vs_home, away_vs_home)
+                if team_match >= 75 and team_match > best_score:
+                    best_score = team_match
+                    best_match = pinnacle_event
+                    best_orientation = home_vs_home >= away_vs_home
+                    logger.debug(f"[SEASON-WINS] Matched '{norm_pin_home}' via team_match={team_match}")
+                continue  # skip normal two-team scoring for this event
+
             # Try both orientations using token_set_ratio which handles:
             #  - extra tokens ("Philadelphia 76ers" vs "76ers")
             #  - word reordering ("Inter Milan" vs "Milan Inter")
