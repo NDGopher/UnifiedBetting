@@ -370,20 +370,33 @@ async def _fetch_dk_direct(sport: str) -> list[dict]:
             logger.warning("[DK] No event group ID found for %s — skipping direct API", sport)
             return []
 
-        # Step 2 — try sportsbook-nash CDN API (same format Playwright intercepts)
-        nash_url = f"https://sportsbook-nash.draftkings.com/picks/v1/network/live/eventgroup/{eg_id}"
-        try:
-            rn = await client.get(nash_url, headers=api_headers)
-            logger.info("[DK] Nash API %s eg=%d → HTTP %d (%d bytes)",
-                        sport, eg_id, rn.status_code, len(rn.content))
-            if rn.status_code == 200:
-                records = parse_dk_nash_response(rn.json(), sport)
-                if records:
-                    logger.info("[DK] Nash API %s: %d records ✓  (URL: %s)", sport, len(records), nash_url)
-                    return records
-                logger.info("[DK] Nash API %s: 200 but 0 win-total records — market types may not match", sport)
-        except Exception as exc:
-            logger.warning("[DK] Nash API %s error: %s", sport, exc)
+        # Step 2 — try sportsbook-nash CDN API with correct US-OR-SB site path
+        # Confirmed from live Playwright intercept: base is
+        # https://sportsbook-nash.draftkings.com/sites/US-OR-SB/api/sportscontent/
+        # Try event-group listing endpoints to get all markets at once.
+        nash_eg_urls = [
+            f"https://sportsbook-nash.draftkings.com/sites/US-OR-SB/api/sportscontent/category/v2/eventgroups/{eg_id}",
+            f"https://sportsbook-nash.draftkings.com/sites/US-OR-SB/api/sportscontent/category/v1/eventgroups/{eg_id}",
+            f"https://sportsbook-nash.draftkings.com/sites/US-OR-SB/api/sportscontent/category/v2/eventgroups/{eg_id}/categories",
+            f"https://sportsbook-nash.draftkings.com/sites/US-OR-SB/api/sportscontent/eventgroup/{eg_id}",
+        ]
+        for nash_url in nash_eg_urls:
+            try:
+                rn = await client.get(nash_url, headers=api_headers)
+                logger.info("[DK] Nash API %s eg=%d → HTTP %d (%d bytes) from %s",
+                            sport, eg_id, rn.status_code, len(rn.content), nash_url)
+                if rn.status_code == 200:
+                    try:
+                        data = rn.json()
+                    except Exception:
+                        continue
+                    records = parse_dk_nash_response(data, sport)
+                    if records:
+                        logger.info("[DK] Nash API %s: %d records ✓  (URL: %s)", sport, len(records), nash_url)
+                        return records
+                    logger.info("[DK] Nash API %s: 200 but 0 win-total records from %s", sport, nash_url[:80])
+            except Exception as exc:
+                logger.warning("[DK] Nash API %s error for %s: %s", sport, nash_url[:60], exc)
 
         # Step 3 — try Odds API v4 categories endpoint with discovered ID
         try:
