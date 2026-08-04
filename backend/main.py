@@ -2173,9 +2173,28 @@ async def run_futures_pipeline_background():
             logger.info("[FUTURES] FanDuel returned %d win-total records", len(fd_lines))
             if fd_lines:
                 os.makedirs(os.path.dirname(_FD_CACHE_FILE), exist_ok=True)
-                with open(_FD_CACHE_FILE, "w") as _f:
-                    json.dump(fd_lines, _f)
-                logger.info("[FUTURES] Saved FD cache (%d records)", len(fd_lines))
+                # Only update cache when new count ≥ cached count (never downgrade).
+                # This preserves NFL records from the last successful search run when
+                # the search page is blocked by PerimeterX on the current run.
+                _existing_cache_count = 0
+                if os.path.exists(_FD_CACHE_FILE):
+                    try:
+                        with open(_FD_CACHE_FILE) as _fc:
+                            _existing_cache_count = len(json.load(_fc))
+                    except Exception:
+                        pass
+                if len(fd_lines) >= _existing_cache_count:
+                    with open(_FD_CACHE_FILE, "w") as _f:
+                        json.dump(fd_lines, _f)
+                    logger.info("[FUTURES] Saved FD cache (%d records)", len(fd_lines))
+                else:
+                    logger.info("[FUTURES] FD cache NOT updated — new %d < cached %d (keeping richer cache)",
+                                len(fd_lines), _existing_cache_count)
+                    # Load cache so downstream EV calc uses the full dataset
+                    with open(_FD_CACHE_FILE) as _fc:
+                        fd_lines = json.load(_fc)
+                    logger.info("[FUTURES] FD using cached %d records instead of new %d",
+                                len(fd_lines), len(fd_lines))
         except Exception as fd_exc:
             logger.warning("[FUTURES] FanDuel scrape failed: %s", fd_exc)
 
