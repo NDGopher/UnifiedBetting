@@ -15,9 +15,19 @@ import re
 
 logger = logging.getLogger(__name__)
 
-CHROMIUM_PATH = (
-    "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
-)
+def _find_chromium() -> str | None:
+    import shutil, os
+    REPLIT_PATH = "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
+    if os.path.exists(REPLIT_PATH):
+        return REPLIT_PATH
+    for candidate in (shutil.which("chromium"), shutil.which("chromium-browser"), shutil.which("google-chrome")):
+        if candidate:
+            return candidate
+    return None
+
+CHROMIUM_PATH = _find_chromium()
+
+_DATA_DIR = pathlib.Path(__file__).resolve().parent.parent / "data"
 
 # DK URL for each sport's win-totals / futures page
 DK_WIN_TOTAL_PAGES = [
@@ -290,7 +300,7 @@ async def _extract_dk_page_records(page, sport: str) -> list[dict]:
             else:
                 # Save full DOM to file and log a sample for debugging
                 import pathlib as _pl
-                _dbg = _pl.Path("/home/runner/workspace/backend/data") / f"dk_{sport.lower()}_dom_debug.txt"
+                _dbg = _DATA_DIR / f"dk_{sport.lower()}_dom_debug.txt"
                 _dbg.write_text(dom_text, encoding="utf-8")
                 sample = "\n".join(dom_text.splitlines()[:80])
                 logger.warning("[DK] %s: DOM parser returned 0 records. Full DOM saved → %s. Sample:\n%s",
@@ -330,7 +340,7 @@ async def scrape_draftkings_win_totals() -> list[dict]:
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            executable_path=CHROMIUM_PATH,
+            **({"executable_path": CHROMIUM_PATH} if CHROMIUM_PATH else {}),
             headless=True,
             args=[
                 "--no-sandbox",
@@ -386,7 +396,7 @@ async def scrape_draftkings_win_totals() -> list[dict]:
                         # Save debug sample for any response with markets
                         if data.get("markets"):
                             import pathlib
-                            dbg_dir = pathlib.Path("/home/runner/workspace/backend/data")
+                            dbg_dir = _DATA_DIR
                             dbg_dir.mkdir(exist_ok=True)
                             dbg_path = dbg_dir / f"dk_{_sport.lower()}_raw_debug.json"
                             with open(dbg_path, "w") as _f:
@@ -469,7 +479,7 @@ async def scrape_draftkings_outright(
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            executable_path=CHROMIUM_PATH,
+            **({"executable_path": CHROMIUM_PATH} if CHROMIUM_PATH else {}),
             headless=True,
             args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
         )
