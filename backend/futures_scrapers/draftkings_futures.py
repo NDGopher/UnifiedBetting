@@ -183,6 +183,149 @@ def parse_dk_nash_response(data: dict, sport: str) -> list[dict]:
     return records
 
 
+# ── Direct HTTP API (primary path — no Playwright needed) ─────────────────────
+
+_DK_WIN_KWS_LOWER = tuple(kw.lower() for kw in DK_WIN_TOTAL_TYPE_KWS)
+
+# Known DraftKings event-group IDs (from URL pattern /leagues/football/{sport})
+_DK_EG_IDS: dict[str, int] = {
+    "NFL":   88808,
+    "NCAAF": 84240,
+}
+
+_DK_API_HEADERS = {
+    "User-Agent":      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Accept":          "application/json",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+
+
+def _parse_dk_v4_odds(data: dict, sport: str) -> list[dict]:
+    """Parse DK Odds API v4 (eventgroups) response into win-total records."""
+    records: list[dict] = []
+    eg = data.get("eventGroup", data)
+    events_by_id = {str(e["eventId"]): e for e in eg.get("events", [])}
+    offers_map = eg.get("offersByEventId", {})
+
+    if not offers_map:
+        # Flat list of offers at root (alternate response shape)
+        raw_offers = eg.get("offers", []) or data.get("offers", [])
+        for offer in raw_offers:
+            for outcome in offer.get("outcomes", []):
+                direction = outcome.get("label", "").lower()
+                if direction not in ("over", "under"):
+                    continue
+                participant = outcome.get("participant", "") or offer.get("label", "")
+                participant = participant.split(" Over ")[0].split(" Under ")[0].strip()
+                participant = _expand_team_name(participant)
+                line = outcome.get("line")
+                amer = _parse_dk_american(outcome.get("oddsAmerican", ""))
+                if line is None or amer is None or not participant:
+                    continue
+                records.append({
+                    "team": participant, "sport": sport, "line": float(line),
+                    "direction": direction, "american_odds": amer,
+                    "market_type": offer.get("label", ""), "book": "DraftKings",
+                })
+        return records
+
+    for event_id, event_data in offers_map.items():
+        event = events_by_id.get(str(event_id), {})
+        for offer in event_data.get("offers", []):
+            label = offer.get("label", "")
+            # Accept any offer whose label contains a win-total keyword
+            if not any(kw in label.lower() for kw in _DK_WIN_KWS_LOWER):
+                continue
+            for outcome in offer.get("outcomes", []):
+                direction = outcome.get("label", "").lower()
+                if direction not in ("over", "under"):
+                    continue
+                line = outcome.get("line")
+                amer = _parse_dk_american(outcome.get("oddsAmerican", ""))
+                if line is None or amer is None:
+                    continue
+                # participant > event name > label extraction
+                participant = (
+                    outcome.get("participant", "")
+                    or event.get("teamName1", "")
+                    or event.get("name", "")
+                )
+                m = _MARKET_NAME_RE.match(label)
+                if not participant and m:
+                    participant = m.group("team").strip()
+                participant = _expand_team_name(participant.strip())
+                if not participant:
+                    continue
+                records.append({
+                    "team": participant, "sport": sport, "line": float(line),
+                    "direction": direction, "american_odds": amer,
+                    "market_type": label, "book": "DraftKings",
+                })
+
+    logger.info("[DK] Direct API v4 %s: parsed %d records", sport, len(records))
+    return records
+
+
+async def _fetch_dk_direct(sport: str) -> list[dict]:
+    """Call DK's public Odds API v4 directly — no browser needed.
+
+    Discovers the Win-Totals offer category from the event group index,
+    then fetches and parses the actual odds.  Works from any IP because
+    DK's REST API does not run PerimeterX bot-detection.
+    """
+    try:
+        import httpx
+    except ImportError:
+        logger.warning("[DK] httpx not installed; skipping direct API")
+        return []
+
+    eg_id = _DK_EG_IDS.get(sport)
+    if not eg_id:
+        return []
+
+    sport_path = "nfl" if sport == "NFL" else "ncaaf"
+    headers = {**_DK_API_HEADERS,
+               "Referer": f"https://sportsbook.draftkings.com/leagues/football/{sport_path}"}
+
+    WIN_KWS = ("win total", "season wins", "wins")
+
+    async with httpx.AsyncClient(timeout=25, follow_redirects=True) as client:
+        try:
+            # 1 — Discover categories
+            cat_url = f"https://sportsbook.draftkings.com/api/odds/v4/eventgroups/{eg_id}/categories"
+            r = await client.get(cat_url, headers=headers)
+            logger.info("[DK] Direct API categories %s → HTTP %d", sport, r.status_code)
+            if r.status_code != 200:
+                return []
+
+            cats = r.json().get("eventGroup", {}).get("offerCategories", [])
+            logger.info("[DK] Direct API %s categories: %s", sport, [c.get("name") for c in cats])
+
+            win_cat = next(
+                (c for c in cats if any(kw in c.get("name", "").lower() for kw in WIN_KWS)),
+                None,
+            )
+            if not win_cat:
+                logger.warning("[DK] Direct API %s: no Win Totals category found", sport)
+                return []
+
+            cat_id = win_cat.get("offerCategoryId")
+            logger.info("[DK] Direct API %s: using category '%s' id=%s", sport, win_cat.get("name"), cat_id)
+
+            # 2 — Fetch odds for the win-totals category
+            odds_url = f"https://sportsbook.draftkings.com/api/odds/v4/eventgroups/{eg_id}/categories/{cat_id}"
+            r2 = await client.get(odds_url, headers=headers)
+            logger.info("[DK] Direct API odds %s → HTTP %d (%d bytes)", sport, r2.status_code, len(r2.content))
+            if r2.status_code != 200:
+                return []
+
+            return _parse_dk_v4_odds(r2.json(), sport)
+
+        except Exception as exc:
+            logger.warning("[DK] Direct API %s error: %s", sport, exc)
+            return []
+
+
 def _parse_dom_win_totals(html_text: str, sport: str, book: str = "DraftKings") -> list[dict]:
     """Parse DK (or FD) page DOM text into win-total records.
 
@@ -332,12 +475,34 @@ async def _extract_dk_page_records(page, sport: str) -> list[dict]:
 
 
 async def scrape_draftkings_win_totals() -> list[dict]:
-    """Navigate to each DK win-totals page, scroll to trigger lazy loading,
-    intercept all sportsbook-nash API responses, and return parsed records.
+    """Return DK win-total records.
+
+    Primary path: DK's public Odds API v4 (direct HTTP — no browser, no bot
+    detection).  Falls back to Playwright only if the direct API returns 0
+    for a given sport.
     """
     from playwright.async_api import async_playwright
 
     all_records: list[dict] = []
+    need_playwright: list[tuple[str, str]] = []  # (sport, url) pairs that failed direct
+
+    # ── Primary: direct HTTP API ───────────────────────────────────────────────
+    for sport, url in DK_WIN_TOTAL_PAGES:
+        logger.info("[DK] %s: trying direct API first", sport)
+        records = await _fetch_dk_direct(sport)
+        if records:
+            logger.info("[DK] %s: direct API → %d records ✓", sport, len(records))
+            all_records.extend(records)
+        else:
+            logger.warning("[DK] %s: direct API returned 0 — queuing Playwright fallback", sport)
+            need_playwright.append((sport, url))
+
+    if not need_playwright:
+        logger.info("[DK] Total records (direct API): %d", len(all_records))
+        return all_records
+
+    # ── Fallback: Playwright for sports that failed direct API ────────────────
+    logger.info("[DK] Playwright fallback for: %s", [s for s, _ in need_playwright])
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
@@ -350,7 +515,7 @@ async def scrape_draftkings_win_totals() -> list[dict]:
             ],
         )
 
-        for sport, url in DK_WIN_TOTAL_PAGES:
+        for sport, url in need_playwright:
             context = await browser.new_context(
                 user_agent=(
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
