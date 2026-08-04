@@ -33,5 +33,6 @@ echo.
 echo  Two PowerShell windows should now be open.
 echo  Dashboard : http://localhost:5000
 echo.
-timeout /t 15 /nobreak >nul
+echo  Waiting 30s for frontend to finish starting...
+timeout /t 30 /nobreak >nul
 start "" http://localhost:5000
