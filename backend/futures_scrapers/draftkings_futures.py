@@ -266,12 +266,90 @@ def _parse_dk_v4_odds(data: dict, sport: str) -> list[dict]:
     return records
 
 
-async def _fetch_dk_direct(sport: str) -> list[dict]:
-    """Call DK's public Odds API v4 directly — no browser needed.
+async def _discover_dk_eg_id(sport: str, client) -> int | None:
+    """Fetch DK's page HTML and extract the current event group ID.
 
-    Discovers the Win-Totals offer category from the event group index,
-    then fetches and parses the actual odds.  Works from any IP because
-    DK's REST API does not run PerimeterX bot-detection.
+    DK uses Next.js.  The server embeds initial state as
+    <script id="__NEXT_DATA__" type="application/json">…</script>
+    which is present in the raw HTML without executing any JavaScript.
+    We extract the event group ID from this JSON blob.
+
+    Falls back to the hardcoded _DK_EG_IDS value if extraction fails
+    (stale, but still worth trying).
+    """
+    import re as _re, json as _json
+
+    sport_path = "nfl" if sport == "NFL" else "ncaaf"
+    page_url   = (
+        f"https://sportsbook.draftkings.com/leagues/football/{sport_path}"
+        f"?category=futures&subcategory=wins&nav_1=regular-season-wins"
+    )
+    headers = {
+        **_DK_API_HEADERS,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Referer": "https://sportsbook.draftkings.com/",
+    }
+
+    try:
+        r = await client.get(page_url, headers=headers, timeout=20)
+        logger.info("[DK] Page HTML %s → HTTP %d (%d bytes)", sport, r.status_code, len(r.content))
+        html = r.text
+
+        # Save for inspection
+        import pathlib as _pl
+        _pl.Path(str(_DATA_DIR / f"dk_{sport.lower()}_page.html")).write_text(html[:200_000], encoding="utf-8", errors="replace")
+
+        # 1 — Try to extract __NEXT_DATA__ JSON blob
+        nd_match = _re.search(r'<script[^>]+id=["\']__NEXT_DATA__["\'][^>]*>(.*?)</script>', html, _re.DOTALL)
+        if nd_match:
+            try:
+                nd = _json.loads(nd_match.group(1))
+                # Search recursively for eventGroupId / leagueId in the JSON tree
+                blob = _json.dumps(nd)
+                # Look for patterns: "eventGroupId":NNNNNN or "leagueId":NNNNNN
+                eg_hits = _re.findall(r'"eventGroup[Ii]d"\s*:\s*(\d{4,7})', blob)
+                if eg_hits:
+                    eg_id = int(eg_hits[0])
+                    logger.info("[DK] __NEXT_DATA__ event group ID for %s: %d", sport, eg_id)
+                    return eg_id
+            except Exception as _e:
+                logger.debug("[DK] __NEXT_DATA__ parse failed: %s", _e)
+
+        # 2 — Broader regex scan of raw HTML for any event group reference
+        eg_hits = _re.findall(r'"eventGroup[Ii]d"\s*:\s*(\d{4,7})', html)
+        if eg_hits:
+            eg_id = int(eg_hits[0])
+            logger.info("[DK] HTML regex event group ID for %s: %d", sport, eg_id)
+            return eg_id
+
+        # 3 — Also look for the nash URL pattern embedded in the HTML
+        nash_hits = _re.findall(r'eventgroup/(\d{4,7})', html)
+        if nash_hits:
+            eg_id = int(nash_hits[0])
+            logger.info("[DK] Nash URL event group ID for %s: %d", sport, eg_id)
+            return eg_id
+
+    except Exception as exc:
+        logger.warning("[DK] Page HTML fetch failed for %s: %s", sport, exc)
+
+    # 4 — Fall back to hardcoded (may be stale)
+    fallback = _DK_EG_IDS.get(sport)
+    logger.warning("[DK] Using fallback event group ID for %s: %s", sport, fallback)
+    return fallback
+
+
+async def _fetch_dk_direct(sport: str) -> list[dict]:
+    """Call DK's sportsbook-nash API directly — no browser needed.
+
+    Strategy:
+      1. Fetch DK's Next.js page HTML to extract the current event group ID
+         (embedded in __NEXT_DATA__ — available without executing JavaScript).
+      2. Call the sportsbook-nash CDN API directly with that ID.
+         The nash API returns the same JSON format parse_dk_nash_response handles.
+      3. Also try DK's Odds API v4 endpoint with the discovered ID.
+
+    Works from any IP because the nash/odds API does not run PerimeterX
+    (PerimeterX only blocks browser sessions, not plain HTTP requests).
     """
     try:
         import httpx
@@ -279,51 +357,61 @@ async def _fetch_dk_direct(sport: str) -> list[dict]:
         logger.warning("[DK] httpx not installed; skipping direct API")
         return []
 
-    eg_id = _DK_EG_IDS.get(sport)
-    if not eg_id:
-        return []
-
     sport_path = "nfl" if sport == "NFL" else "ncaaf"
-    headers = {**_DK_API_HEADERS,
-               "Referer": f"https://sportsbook.draftkings.com/leagues/football/{sport_path}"}
-
-    WIN_KWS = ("win total", "season wins", "wins")
+    api_headers = {
+        **_DK_API_HEADERS,
+        "Referer": f"https://sportsbook.draftkings.com/leagues/football/{sport_path}",
+    }
 
     async with httpx.AsyncClient(timeout=25, follow_redirects=True) as client:
-        try:
-            # 1 — Discover categories
-            cat_url = f"https://sportsbook.draftkings.com/api/odds/v4/eventgroups/{eg_id}/categories"
-            r = await client.get(cat_url, headers=headers)
-            logger.info("[DK] Direct API categories %s → HTTP %d", sport, r.status_code)
-            if r.status_code != 200:
-                return []
-
-            cats = r.json().get("eventGroup", {}).get("offerCategories", [])
-            logger.info("[DK] Direct API %s categories: %s", sport, [c.get("name") for c in cats])
-
-            win_cat = next(
-                (c for c in cats if any(kw in c.get("name", "").lower() for kw in WIN_KWS)),
-                None,
-            )
-            if not win_cat:
-                logger.warning("[DK] Direct API %s: no Win Totals category found", sport)
-                return []
-
-            cat_id = win_cat.get("offerCategoryId")
-            logger.info("[DK] Direct API %s: using category '%s' id=%s", sport, win_cat.get("name"), cat_id)
-
-            # 2 — Fetch odds for the win-totals category
-            odds_url = f"https://sportsbook.draftkings.com/api/odds/v4/eventgroups/{eg_id}/categories/{cat_id}"
-            r2 = await client.get(odds_url, headers=headers)
-            logger.info("[DK] Direct API odds %s → HTTP %d (%d bytes)", sport, r2.status_code, len(r2.content))
-            if r2.status_code != 200:
-                return []
-
-            return _parse_dk_v4_odds(r2.json(), sport)
-
-        except Exception as exc:
-            logger.warning("[DK] Direct API %s error: %s", sport, exc)
+        # Step 1 — discover the correct event group ID from the page HTML
+        eg_id = await _discover_dk_eg_id(sport, client)
+        if not eg_id:
+            logger.warning("[DK] No event group ID found for %s — skipping direct API", sport)
             return []
+
+        # Step 2 — try sportsbook-nash CDN API (same format Playwright intercepts)
+        nash_url = f"https://sportsbook-nash.draftkings.com/picks/v1/network/live/eventgroup/{eg_id}"
+        try:
+            rn = await client.get(nash_url, headers=api_headers)
+            logger.info("[DK] Nash API %s eg=%d → HTTP %d (%d bytes)",
+                        sport, eg_id, rn.status_code, len(rn.content))
+            if rn.status_code == 200:
+                records = parse_dk_nash_response(rn.json(), sport)
+                if records:
+                    logger.info("[DK] Nash API %s: %d records ✓  (URL: %s)", sport, len(records), nash_url)
+                    return records
+                logger.info("[DK] Nash API %s: 200 but 0 win-total records — market types may not match", sport)
+        except Exception as exc:
+            logger.warning("[DK] Nash API %s error: %s", sport, exc)
+
+        # Step 3 — try Odds API v4 categories endpoint with discovered ID
+        try:
+            WIN_KWS = ("win total", "season wins", "wins")
+            cat_url = f"https://sportsbook.draftkings.com/api/odds/v4/eventgroups/{eg_id}/categories"
+            rc = await client.get(cat_url, headers=api_headers)
+            logger.info("[DK] Odds API v4 categories %s eg=%d → HTTP %d", sport, eg_id, rc.status_code)
+            if rc.status_code == 200:
+                cats = rc.json().get("eventGroup", {}).get("offerCategories", [])
+                logger.info("[DK] %s categories: %s", sport, [c.get("name") for c in cats])
+                win_cat = next(
+                    (c for c in cats if any(kw in c.get("name", "").lower() for kw in WIN_KWS)),
+                    None,
+                )
+                if win_cat:
+                    cat_id = win_cat["offerCategoryId"]
+                    odds_url = f"https://sportsbook.draftkings.com/api/odds/v4/eventgroups/{eg_id}/categories/{cat_id}"
+                    ro = await client.get(odds_url, headers=api_headers)
+                    logger.info("[DK] Odds API v4 odds %s → HTTP %d (%d bytes)",
+                                sport, ro.status_code, len(ro.content))
+                    if ro.status_code == 200:
+                        records = _parse_dk_v4_odds(ro.json(), sport)
+                        if records:
+                            return records
+        except Exception as exc:
+            logger.warning("[DK] Odds API v4 %s error: %s", sport, exc)
+
+        return []
 
 
 def _parse_dom_win_totals(html_text: str, sport: str, book: str = "DraftKings") -> list[dict]:
@@ -544,9 +632,10 @@ async def scrape_draftkings_win_totals() -> list[dict]:
                     parsed = parse_dk_nash_response(data, _sport)
                     if parsed:
                         _records.extend(parsed)
+                        # ★ Log the FULL URL — critical for direct-API discovery
                         logger.info(
-                            "[DK] Intercepted %s response (%s): +%d records",
-                            _sport, r.url[:80], len(parsed),
+                            "[DK] ★ WORKING URL for %s (%d records): %s",
+                            _sport, len(parsed), r.url,
                         )
                     else:
                         # Log all market type names we saw but didn't match
