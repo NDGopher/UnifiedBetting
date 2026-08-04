@@ -32,12 +32,84 @@ def _find_chromium() -> str | None:
     REPLIT_PATH = "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
     if os.path.exists(REPLIT_PATH):
         return REPLIT_PATH
-    for candidate in (shutil.which("chromium"), shutil.which("chromium-browser"), shutil.which("google-chrome")):
+    # Windows: prefer installed Chrome so bot detection is harder
+    for win_path in [
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
+    ]:
+        if os.path.exists(win_path):
+            logger.info("[MGM] Using installed Chrome: %s", win_path)
+            return win_path
+    for candidate in (shutil.which("google-chrome"), shutil.which("chromium"), shutil.which("chromium-browser")):
         if candidate:
             return candidate
     return None
 
 CHROMIUM_PATH = _find_chromium()
+
+# Stealth script — same as FanDuel scraper
+_STEALTH_SCRIPT = """
+Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+Object.defineProperty(navigator, 'plugins', {get: () => [1,2,3,4,5]});
+Object.defineProperty(navigator, 'languages', {get: () => ['en-US','en']});
+window.chrome = {runtime: {}, loadTimes: function(){}, csi: function(){}, app: {}};
+const origQuery = window.navigator.permissions.query;
+window.navigator.permissions.query = (params) =>
+    params.name === 'notifications' ?
+    Promise.resolve({state: Notification.permission}) :
+    origQuery(params);
+"""
+
+# Regex patterns to extract the access ID from page HTML/JS
+_ACCESS_ID_RE = re.compile(
+    r'["\']?(?:accessId|bwinAccessId|x-bwin-accessid)["\']?\s*[=:]\s*["\']([A-Za-z0-9+/=]{20,})["\']',
+    re.IGNORECASE,
+)
+
+async def _fetch_live_access_id() -> str:
+    """Try to extract the current CDS access ID from the BetMGM sports homepage.
+
+    BetMGM embeds the access ID in their page source / JS bundles.  This ID
+    can rotate; calling this before _fetch_cds ensures we always use the live
+    credential instead of a potentially stale hardcoded one.
+
+    Returns the hardcoded fallback if extraction fails.
+    """
+    try:
+        import httpx
+    except ImportError:
+        return _CDS_ACCESS_ID
+
+    # Try the main sports site (not state-specific so it's accessible everywhere)
+    for url in [
+        "https://sports.betmgm.com/en/sports",
+        "https://www.betmgm.com/",
+    ]:
+        try:
+            async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
+                resp = await client.get(url, headers={
+                    "User-Agent": (
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
+                    ),
+                    "Accept": "text/html,application/xhtml+xml,*/*",
+                    "Accept-Language": "en-US,en;q=0.9",
+                })
+                if resp.status_code == 200:
+                    m = _ACCESS_ID_RE.search(resp.text)
+                    if m:
+                        found = m.group(1)
+                        if found != _CDS_ACCESS_ID:
+                            logger.info("[MGM] Live access ID found (differs from hardcoded): %s…", found[:12])
+                        else:
+                            logger.info("[MGM] Live access ID matches hardcoded value")
+                        return found
+        except Exception as exc:
+            logger.debug("[MGM] Access ID fetch from %s failed: %s", url, exc)
+
+    logger.info("[MGM] Could not fetch live access ID — using hardcoded fallback")
+    return _CDS_ACCESS_ID
 
 # Data dir: relative to this file so it works locally and on Replit
 DATA_DIR = pathlib.Path(__file__).resolve().parent.parent / "data"
@@ -165,6 +237,7 @@ async def _fetch_cds(
     sport: str,
     competition_id: int,
     page_url_override: str | None = None,
+    _access_id: str | None = None,
 ) -> list[dict]:
     """Direct REST call to BetMGM CDS API — no browser needed.
 
@@ -173,12 +246,15 @@ async def _fetch_cds(
 
     page_url_override: if supplied, use this as the Referer/Origin base instead
     of the football-centric default (needed for soccer, tennis, etc.)
+    _access_id: pre-fetched live ID; if None, uses hardcoded fallback.
     """
     try:
         import httpx
     except ImportError:
         logger.warning("[MGM] httpx not available; install it: pip install httpx")
         return []
+
+    access_id = _access_id or _CDS_ACCESS_ID
 
     async with httpx.AsyncClient(timeout=25, follow_redirects=True) as client:
         for state in _CDS_STATES:
@@ -196,11 +272,11 @@ async def _fetch_cds(
                 "Accept-Language": "en-US,en;q=0.9",
                 "Referer":         page_url,
                 "Origin":          origin,
-                "x-bwin-accessid": _CDS_ACCESS_ID,
+                "x-bwin-accessid": access_id,
             }
             url = (
                 f"{base}/bettingoffer/fixture-view"
-                f"?x-bwin-accessid={_CDS_ACCESS_ID}"
+                f"?x-bwin-accessid={access_id}"
                 f"&lang=en-us&country=US&usercountry=US"
                 f"&competitionIds={competition_id}"
                 f"&fixtureTypes=Standard&offerMapping=All"
@@ -392,9 +468,7 @@ async def _scrape_via_playwright(sport: str, competition_id: int) -> list[dict]:
         )
 
         page = await context.new_page()
-        await page.add_init_script(
-            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-        )
+        await page.add_init_script(_STEALTH_SCRIPT)
 
         # Keep API interception as a bonus — MGM sometimes streams CDS data
         page.on("websocket", lambda ws: ws.on(
