@@ -194,13 +194,70 @@ def _parse_fd_dom(html_text: str, sport: str) -> list[dict]:
     return records
 
 
-async def scrape_fanduel_win_totals() -> list[dict]:
-    """Navigate to each FD win-totals page, intercept the content-managed-page
-    response, and return parsed records.
+async def _fetch_fd_direct(sport: str) -> list[dict]:
+    """Try FanDuel's content-managed-page API directly via HTTP.
 
-    Each sport gets its OWN fresh browser context so that a PerimeterX block
-    on one page cannot carry over and flag the next page's session.
-    Rotating user-agents reduce the chance of persistent fingerprinting.
+    PerimeterX is a BROWSER JavaScript challenge — it does not run on direct
+    HTTP requests to JSON API endpoints.  This function tries several known
+    URL patterns for FD's content API and parses any successful response with
+    the same `parse_fd_content_page` function used by the Playwright path.
+    """
+    try:
+        import httpx
+    except ImportError:
+        return []
+
+    fd_sport_map = {"NFL": "NFL", "NCAAF": "NCAAF"}
+    fd_sport = fd_sport_map.get(sport, sport)
+    referer  = {"NFL":   "https://sportsbook.fanduel.com/navigation/nfl?tab=win-totals",
+                "NCAAF": "https://sportsbook.fanduel.com/navigation/ncaaf?tab=win-totals"}.get(sport, "https://sportsbook.fanduel.com/")
+
+    headers = {
+        "User-Agent":      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+        "Accept":          "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer":         referer,
+        "Origin":          "https://sportsbook.fanduel.com",
+    }
+
+    # FD's content-managed-page API — try several URL patterns
+    url_patterns = [
+        f"https://sportsbook.fanduel.com/api/content-managed-page?page=sport&sport={fd_sport}&tab=win-totals",
+        f"https://sportsbook.fanduel.com/api/content-managed-page?pageType=Navigation&sport={fd_sport}&tab=win-totals",
+        f"https://sportsbook.fanduel.com/api/content-managed-page?page=navigation&sport={fd_sport}&tab=win-totals",
+        f"https://sportsbook.fanduel.com/api/content-managed-page?page=sport&sportName={fd_sport}&tab=win-totals",
+    ]
+
+    async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
+        for url in url_patterns:
+            try:
+                resp = await client.get(url, headers=headers)
+                ct   = resp.headers.get("content-type", "")
+                logger.info("[FD] Direct API %s → HTTP %d (%d bytes) from %s",
+                            sport, resp.status_code, len(resp.content), url[:80])
+                if resp.status_code == 200 and "json" in ct:
+                    try:
+                        data    = resp.json()
+                        records = parse_fd_content_page(data, sport)
+                        if records:
+                            logger.info("[FD] Direct API %s: %d records ✓", sport, len(records))
+                            return records
+                        else:
+                            logger.info("[FD] Direct API %s: 200 OK but 0 parsed records from %s", sport, url[:80])
+                    except Exception as pe:
+                        logger.debug("[FD] Direct API %s parse error: %s", sport, pe)
+            except Exception as exc:
+                logger.debug("[FD] Direct API %s request error for %s: %s", sport, url[:60], exc)
+
+    return []
+
+
+async def scrape_fanduel_win_totals() -> list[dict]:
+    """Return FD win-total records.
+
+    Primary path: direct HTTP to FD's content-managed-page API — bypasses
+    PerimeterX entirely because it runs only in browsers.
+    Falls back to Playwright for sports where the direct API returns 0.
     """
     import random
     from playwright.async_api import async_playwright
@@ -214,6 +271,26 @@ async def scrape_fanduel_win_totals() -> list[dict]:
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
     ]
+
+    # ── Primary: direct HTTP API (no browser, no bot detection) ─────────────────
+    direct_results: list[dict] = []
+    need_playwright: list[tuple[str, str]] = []
+    for sport, url in FD_WIN_TOTAL_PAGES:
+        logger.info("[FD] %s: trying direct API first", sport)
+        records = await _fetch_fd_direct(sport)
+        if records:
+            logger.info("[FD] %s: direct API → %d records ✓", sport, len(records))
+            direct_results.extend(records)
+        else:
+            logger.warning("[FD] %s: direct API returned 0 — queuing Playwright fallback", sport)
+            need_playwright.append((sport, url))
+
+    if not need_playwright:
+        logger.info("[FD] Total entries (direct API): %d", len(direct_results))
+        return direct_results
+
+    # ── Fallback: Playwright for sports where direct API returned 0 ───────────
+    logger.info("[FD] Playwright fallback for: %s", [s for s, _ in need_playwright])
 
     captured:       dict[str, dict]  = {}
     dom_fallback:   list[dict]       = []   # records from DOM when API is CAPTCHA'd
@@ -234,7 +311,7 @@ async def scrape_fanduel_win_totals() -> list[dict]:
             _launch_kwargs["executable_path"] = CHROMIUM_PATH
         browser = await p.chromium.launch(**_launch_kwargs)
 
-        for sport, url in FD_WIN_TOTAL_PAGES:
+        for sport, url in need_playwright:
             # Fresh isolated context per sport — no shared cookies/fingerprint
             ctx_kwargs = _fresh_context_kwargs()
             ua = random.choice(_UA_POOL)
@@ -330,8 +407,8 @@ async def scrape_fanduel_win_totals() -> list[dict]:
 
         await browser.close()
 
-    # Parse each captured API page, then merge any DOM fallback records
-    results: list[dict] = []
+    # Parse each captured Playwright API page, merge DOM fallback, then merge direct results
+    results: list[dict] = list(direct_results)  # start with direct-API records
     for sport, data in captured.items():
         parsed = parse_fd_content_page(data, sport)
         logger.info("[FD] Parsed %d entries for %s", len(parsed), sport)
