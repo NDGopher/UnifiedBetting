@@ -43,10 +43,13 @@ CHROMIUM_PATH = _find_chromium()
 DATA_DIR = pathlib.Path(__file__).resolve().parent.parent / "data"
 
 # ── CDS config ─────────────────────────────────────────────────────────────────
-# Static public access ID embedded in every nv.betmgm.com page load.
+# Static public access ID embedded in every betmgm.com page load.
 _CDS_ACCESS_ID = "YTJkYzUyNTMtMGIwOS00OTNiLWI0YjItMDM4MzA4MTY0YjA3"
 
-_CDS_BASE      = "https://www.nv.betmgm.com/cds-api"
+# nv.betmgm.com 403s from non-Nevada IPs.  Try states in order until one
+# returns 200.  NJ and PA are the most broadly accessible endpoints.
+_CDS_STATES = ["nj", "pa", "mi", "nv", "az", "co"]
+_CDS_BASE   = "https://www.nv.betmgm.com/cds-api"  # overridden per-state below
 
 # { sport_label: (competition_id, page_url_suffix_for_Referer) }
 _SPORTS: dict[str, tuple[int, str]] = {
@@ -165,6 +168,9 @@ async def _fetch_cds(
 ) -> list[dict]:
     """Direct REST call to BetMGM CDS API — no browser needed.
 
+    Rotates through state endpoints (nj → pa → mi → nv …) because
+    nv.betmgm.com returns 403 from non-Nevada IPs.
+
     page_url_override: if supplied, use this as the Referer/Origin base instead
     of the football-centric default (needed for soccer, tennis, etc.)
     """
@@ -174,64 +180,69 @@ async def _fetch_cds(
         logger.warning("[MGM] httpx not available; install it: pip install httpx")
         return []
 
-    page_url = page_url_override or (
-        f"https://www.nv.betmgm.com/en/sports/football-11/betting/usa-9/"
-        f"{_SPORTS[sport][1]}"
-    )
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
-        ),
-        "Accept":          "application/json, text/plain, */*",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Referer":         page_url,
-        "Origin":          "https://www.nv.betmgm.com",
-        "x-bwin-accessid": _CDS_ACCESS_ID,
-    }
-    url = (
-        f"{_CDS_BASE}/bettingoffer/fixture-view"
-        f"?x-bwin-accessid={_CDS_ACCESS_ID}"
-        f"&lang=en-us&country=US&usercountry=US"
-        f"&competitionIds={competition_id}"
-        f"&fixtureTypes=Standard&offerMapping=All"
-    )
+    async with httpx.AsyncClient(timeout=25, follow_redirects=True) as client:
+        for state in _CDS_STATES:
+            base      = f"https://www.{state}.betmgm.com/cds-api"
+            origin    = f"https://www.{state}.betmgm.com"
+            page_url  = page_url_override or (
+                f"{origin}/en/sports/football-11/betting/usa-9/{_SPORTS[sport][1]}"
+            )
+            headers = {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
+                ),
+                "Accept":          "application/json, text/plain, */*",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Referer":         page_url,
+                "Origin":          origin,
+                "x-bwin-accessid": _CDS_ACCESS_ID,
+            }
+            url = (
+                f"{base}/bettingoffer/fixture-view"
+                f"?x-bwin-accessid={_CDS_ACCESS_ID}"
+                f"&lang=en-us&country=US&usercountry=US"
+                f"&competitionIds={competition_id}"
+                f"&fixtureTypes=Standard&offerMapping=All"
+            )
+            try:
+                resp = await client.get(url, headers=headers)
+                logger.info("[MGM] CDS %s (%s) → HTTP %d (%d bytes)",
+                            sport, state, resp.status_code, len(resp.content))
+                if resp.status_code == 403:
+                    logger.info("[MGM] CDS %s: %s 403 — trying next state", sport, state)
+                    continue
+                if resp.status_code != 200:
+                    logger.warning("[MGM] CDS %s (%s): HTTP %d", sport, state, resp.status_code)
+                    continue
+                if not resp.content:
+                    continue
 
-    try:
-        async with httpx.AsyncClient(timeout=25, follow_redirects=True) as client:
-            resp = await client.get(url, headers=headers)
-            logger.info("[MGM] CDS %s → HTTP %d (%d bytes)", sport, resp.status_code, len(resp.content))
-            if resp.status_code == 200 and resp.content:
-                data = resp.json()
+                data    = resp.json()
                 records = _parse_response(data, sport)
 
-                # Debug: log all non-win-total game names if we got 0 win-totals
                 if not records:
-                    games = data.get("fixture", data).get("games", []) if isinstance(data, dict) else []
+                    games     = data.get("fixture", data).get("games", []) if isinstance(data, dict) else []
                     all_names = [g.get("name", {}).get("value", "") for g in games[:40] if isinstance(g, dict)]
-                    logger.warning(
-                        "[MGM] CDS %s: 0 win-total records. First %d game names: %s",
-                        sport, len(all_names), all_names,
-                    )
+                    logger.warning("[MGM] CDS %s (%s): 0 win-total records. Game names: %s",
+                                   sport, state, all_names)
                     DATA_DIR.mkdir(exist_ok=True)
                     with open(DATA_DIR / f"mgm_{sport.lower()}_cds_nomatch.json", "w") as f:
                         json.dump(all_names, f, indent=2)
+                    # 200 but 0 records — stop trying other states (data issue, not geo)
+                    return []
                 else:
-                    logger.info("[MGM] CDS %s: %d win-total records", sport, len(records))
-                    # Save a small sample for team-name alias development
+                    logger.info("[MGM] CDS %s (%s): %d win-total records", sport, state, len(records))
                     DATA_DIR.mkdir(exist_ok=True)
-                    sample = [r for r in records[:5]]
                     with open(DATA_DIR / f"mgm_{sport.lower()}_sample.json", "w") as f:
-                        json.dump(sample, f, indent=2)
+                        json.dump(records[:5], f, indent=2)
+                    return records
 
-                return records
-            elif resp.status_code == 403:
-                logger.warning("[MGM] CDS %s: 403 — geo-locked or rate-limited", sport)
-            elif resp.status_code != 200:
-                logger.warning("[MGM] CDS %s: HTTP %d — %s", sport, resp.status_code, resp.text[:200])
-    except Exception as exc:
-        logger.warning("[MGM] CDS %s error: %s", sport, exc)
+            except Exception as exc:
+                logger.warning("[MGM] CDS %s (%s) error: %s", sport, state, exc)
+                continue
 
+    logger.warning("[MGM] CDS %s: all state endpoints failed", sport)
     return []
 
 
@@ -352,8 +363,10 @@ async def _scrape_via_playwright(sport: str, competition_id: int) -> list[dict]:
     """Playwright: navigate the BetMGM page, try API intercept then DOM extraction."""
     from playwright.async_api import async_playwright
 
+    # Try NJ first for Playwright — nv.betmgm.com 403s from non-Nevada IPs
+    _pw_state = "nj"
     page_url = (
-        f"https://www.nv.betmgm.com/en/sports/football-11/betting/usa-9/"
+        f"https://www.{_pw_state}.betmgm.com/en/sports/football-11/betting/usa-9/"
         f"{_SPORTS[sport][1]}"
     )
     records: list[dict] = []
