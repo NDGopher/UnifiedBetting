@@ -418,8 +418,45 @@ async def scrape_draftkings_win_totals() -> list[dict]:
             page.on("response", _on_response)
 
             try:
-                await page.goto(url, timeout=45_000, wait_until="domcontentloaded")
-                await page.wait_for_timeout(3_000)
+                # networkidle ensures React tab content finishes rendering
+                await page.goto(url, timeout=60_000, wait_until="networkidle")
+
+                # Dismiss any location/state-selection modal that blocks content
+                for selector in [
+                    "button[aria-label='Close']",
+                    "button:has-text('Dismiss')",
+                    "button:has-text('No Thanks')",
+                    "[data-testid='modal-close']",
+                ]:
+                    try:
+                        btn = page.locator(selector).first
+                        if await btn.is_visible(timeout=1_500):
+                            await btn.click()
+                            await page.wait_for_timeout(500)
+                    except Exception:
+                        pass
+
+                # Wait up to 10 s for actual odds content to appear on the page.
+                # DK uses several class patterns; any one of these confirms content loaded.
+                content_loaded = False
+                for sel in [
+                    ".sportsbook-outcome-cell__label",
+                    ".sportsbook-odds",
+                    "[class*='sportsbook-table']",
+                    "[class*='outcome-cell']",
+                ]:
+                    try:
+                        await page.wait_for_selector(sel, timeout=10_000)
+                        content_loaded = True
+                        logger.info("[DK] %s: content confirmed via selector %s", sport, sel)
+                        break
+                    except Exception:
+                        pass
+
+                if not content_loaded:
+                    logger.warning("[DK] %s: no odds selector appeared — page may not have loaded content", sport)
+
+                await page.wait_for_timeout(2_000)
 
                 # Scroll aggressively to trigger lazy loading for all teams.
                 # NFL has 32 teams × multiple alternate lines — need deep scroll.
