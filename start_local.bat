@@ -47,16 +47,22 @@ if not exist "%VENV_PY%" (
     echo  [SETUP] Creating Python virtual environment...
     %PYTHON% -m venv %VENV%
     if errorlevel 1 ( echo  [ERROR] venv creation failed. & pause & exit /b 1 )
-    echo  [SETUP] Installing Python packages (first time, ~1-2 min)...
+    echo  [SETUP] Installing Python packages (first time, ~2-3 min)...
     %VENV_PY% -m pip install --upgrade pip --quiet
     %VENV_PY% -m pip install -r backend\requirements.txt --quiet
     if errorlevel 1 ( echo  [ERROR] pip install failed. & pause & exit /b 1 )
     echo  [SETUP] Installing Playwright browser (~200 MB, one-time)...
-    %VENV_PY% -m playwright install chromium
+    %VENV_PY% -m playwright install chromium 2>&1
     if errorlevel 1 ( echo  [WARN] Playwright install had issues — browser scraping may fail. )
     echo  [SETUP] Backend ready.
 ) else (
-    REM playwright install is a no-op when browser is already present (just runs a quick check)
+    REM Venv exists — make sure playwright + httpx are installed (safe to re-run, fast if already present)
+    %VENV_PY% -c "import playwright" >nul 2>&1
+    if errorlevel 1 (
+        echo  [SETUP] Installing missing packages into existing venv...
+        %VENV_PY% -m pip install -r backend\requirements.txt --quiet
+    )
+    REM playwright install is a no-op when browser is already present
     %VENV_PY% -m playwright install chromium >nul 2>&1
 )
 echo  [OK] Backend venv ready
