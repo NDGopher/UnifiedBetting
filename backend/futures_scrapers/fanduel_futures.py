@@ -251,13 +251,21 @@ async def scrape_fanduel_win_totals() -> list[dict]:
             try:
                 # Random pre-navigation pause — looks more human to PerimeterX
                 await asyncio.sleep(random.uniform(1.5, 4.0))
-                await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
-                # Simulate human: small mouse movement after load, then wait
+                # networkidle waits for all XHR/fetch to settle before we check
+                # for the content-managed-page intercept.  domcontentloaded fires
+                # too early locally and the API call never gets captured.
+                await page.goto(url, timeout=60_000, wait_until="networkidle")
+                # Simulate human: small mouse movement after load
                 await page.mouse.move(
                     random.randint(300, 900),
                     random.randint(200, 600),
                 )
-                await page.wait_for_timeout(random.randint(12_000, 18_000))
+                # Scroll slowly to trigger lazy-loaded content and any deferred XHR
+                for _ in range(20):
+                    await page.evaluate("window.scrollBy(0, 200)")
+                    await page.wait_for_timeout(300)
+                await page.evaluate("window.scrollTo(0, 0)")
+                await page.wait_for_timeout(random.randint(5_000, 8_000))
             except Exception as exc:  # pylint: disable=broad-except
                 logger.warning("[FD] Navigation error for %s: %s", sport, exc)
             finally:
