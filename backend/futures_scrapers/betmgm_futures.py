@@ -81,8 +81,13 @@ async def _fetch_live_access_id() -> str:
     except ImportError:
         return _CDS_ACCESS_ID
 
-    # Try the main sports site (not state-specific so it's accessible everywhere)
+    # Try state-specific pages directly — the root sports.betmgm.com and www.betmgm.com
+    # both redirect through a geolocator page that does NOT contain the access ID.
+    # State-specific pages (nj/pa/nv) embed the access ID in their initial HTML.
     for url in [
+        "https://www.nj.betmgm.com/en/sports",
+        "https://www.pa.betmgm.com/en/sports",
+        "https://www.nv.betmgm.com/en/sports",
         "https://sports.betmgm.com/en/sports",
         "https://www.betmgm.com/",
     ]:
