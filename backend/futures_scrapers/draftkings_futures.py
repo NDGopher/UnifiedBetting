@@ -279,11 +279,18 @@ async def _discover_dk_eg_id(sport: str, client) -> int | None:
     """
     import re as _re, json as _json
 
-    sport_path = "nfl" if sport == "NFL" else "ncaaf"
-    page_url   = (
-        f"https://sportsbook.draftkings.com/leagues/football/{sport_path}"
-        f"?category=futures&subcategory=wins&nav_1=regular-season-wins"
-    )
+    # Use the URL from DK_WIN_TOTAL_PAGES for this sport (they have different params).
+    # NFL:   ?category=futures&subcategory=wins&nav_1=regular-season-wins
+    # NCAAF: ?category=wins&subcategory=regular-season&nav_1=all-teams
+    # Using the wrong params causes a 302 redirect to /sports/football which
+    # then yields the wrong (or no) event group ID.
+    page_url = next((u for s, u in DK_WIN_TOTAL_PAGES if s == sport), None)
+    if not page_url:
+        sport_path = "nfl" if sport == "NFL" else "ncaaf"
+        page_url = (
+            f"https://sportsbook.draftkings.com/leagues/football/{sport_path}"
+            f"?category=futures&subcategory=wins&nav_1=regular-season-wins"
+        )
     headers = {
         **_DK_API_HEADERS,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -685,10 +692,15 @@ async def scrape_draftkings_win_totals() -> list[dict]:
             page.on("response", _on_response)
 
             try:
-                # domcontentloaded + selector wait is safer than networkidle;
-                # DK fires background requests indefinitely so networkidle
-                # never resolves and times out at 60 s.
+                # domcontentloaded fires fast; then wait briefly for networkidle
+                # to capture the initial batch of nash API calls before scrolling.
+                # Timeout is short (12 s) because DK fires background requests
+                # indefinitely and networkidle would stall forever otherwise.
                 await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
+                try:
+                    await page.wait_for_load_state("networkidle", timeout=12_000)
+                except Exception:
+                    pass  # timeout is expected; initial batch already captured
 
                 # Dismiss any location/state-selection modal that blocks content
                 for selector in [
