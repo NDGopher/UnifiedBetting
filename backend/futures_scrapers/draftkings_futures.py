@@ -751,55 +751,28 @@ async def scrape_draftkings_win_totals() -> list[dict]:
                 except Exception as _snap_exc:
                     logger.debug("[DK] %s: DOM save failed: %s", sport, _snap_exc)
 
-                # DK lazy-loads team win-total markets as they scroll into view.
-                # Strategy: try multiple scroll approaches to trigger IntersectionObserver.
-                #   1. Scroll the main content container (not window) — DK uses a div scroller.
-                #   2. Scroll window as fallback.
-                #   3. Use scrollIntoView on the last link/row element (forces visibility).
-                scroll_js = """
-(function() {
-    // Try to find the main scrollable container (DK wraps content in a scroll div)
-    var containers = [
-        document.querySelector('.sportsbook-league-page'),
-        document.querySelector('[class*="league-page"]'),
-        document.querySelector('[class*="content-container"]'),
-        document.querySelector('main'),
-        document.documentElement
-    ].filter(Boolean);
-    var target = containers[0];
-    if (target && target.scrollHeight > target.clientHeight + 200) {
-        target.scrollTop += 400;
-    } else {
-        window.scrollBy(0, 400);
-    }
-    // Also nudge last visible anchor link into view (triggers IntersectionObserver)
-    var links = document.querySelectorAll('a[href*="win"], a[href*="future"], [class*="event-row"], [class*="parlay-card"]');
-    if (links.length > 0) {
-        links[links.length - 1].scrollIntoView({behavior: 'instant', block: 'end'});
-    }
-})();
-"""
-                prev_count = len(sport_records)
-                stall_steps = 0
-                for step in range(250):
-                    await page.evaluate(scroll_js)
-                    await page.wait_for_timeout(220)
-                    # Check if new XHR records arrived (break early if stalled)
-                    if step % 20 == 19:
-                        if len(sport_records) == prev_count:
-                            stall_steps += 1
-                            if stall_steps >= 3:
-                                logger.info("[DK] %s: no new records for 60 steps — ending scroll", sport)
-                                break
-                        else:
-                            stall_steps = 0
-                            prev_count = len(sport_records)
+                # PRIMARY STRATEGY: click every collapsed team section to trigger XHR per team.
+                # The rendered DOM has one button[data-testid="collapsible-trigger"] per team.
+                # The first team is already expanded (aria-expanded="true", XHR fired on load).
+                # Clicking the others fires a Nash API XHR for each team's win-total markets.
+                collapsed_triggers = await page.query_selector_all(
+                    '[data-testid="collapsible-trigger"][aria-expanded="false"]'
+                )
+                logger.info("[DK] %s: found %d collapsed team sections to expand", sport, len(collapsed_triggers))
+                for i, trigger in enumerate(collapsed_triggers):
+                    try:
+                        await trigger.scroll_into_view_if_needed()
+                        await trigger.click()
+                        await page.wait_for_timeout(300)  # let XHR fire
+                        # Brief pause every 5 clicks to avoid rate-limiting
+                        if i % 5 == 4:
+                            await page.wait_for_timeout(500)
+                    except Exception as _click_exc:
+                        logger.debug("[DK] %s: click %d failed: %s", sport, i, _click_exc)
 
-                # Scroll back to top then down again to catch any missed loads
-                await page.evaluate("window.scrollTo(0, 0)")
-                await page.wait_for_timeout(1_000)
+                # SECONDARY STRATEGY: scroll to catch any sections that weren't in the DOM yet.
                 for _ in range(80):
-                    await page.evaluate("window.scrollBy(0, 600)")
+                    await page.evaluate("window.scrollBy(0, 400)")
                     await page.wait_for_timeout(150)
 
                 # Wait for final API calls to settle
