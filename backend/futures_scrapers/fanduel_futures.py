@@ -12,24 +12,56 @@ import re
 logger = logging.getLogger(__name__)
 
 def _find_chromium() -> str | None:
-    """Return the Chromium executable path, preferring the Replit nix path,
-    then falling back to whatever Playwright installed locally (``playwright
-    install chromium``).  Returns None to let Playwright auto-discover."""
-    import shutil
+    """Return the best Chrome/Chromium executable.
+
+    Priority:
+      1. Replit nix Chromium (server environment)
+      2. Installed Google Chrome on Windows (harder for PerimeterX to detect)
+      3. Installed Chromium/Chrome on Linux/Mac
+      4. None → Playwright uses its own bundled Chromium
+    """
+    import os, shutil
     REPLIT_PATH = "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
-    if shutil.which(REPLIT_PATH) or __import__("os").path.exists(REPLIT_PATH):
+    if os.path.exists(REPLIT_PATH):
         return REPLIT_PATH
-    # Local: Playwright installs chromium at a predictable cache location
+    # Windows: prefer installed Chrome over headless Playwright Chromium
+    _win_chrome_paths = [
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
+    ]
+    for p in _win_chrome_paths:
+        if os.path.exists(p):
+            logger.info("[FD] Using installed Chrome: %s", p)
+            return p
     for candidate in (
+        shutil.which("google-chrome"),
         shutil.which("chromium"),
         shutil.which("chromium-browser"),
-        shutil.which("google-chrome"),
     ):
         if candidate:
             return candidate
     return None  # let Playwright use its own bundled browser
 
 CHROMIUM_PATH = _find_chromium()
+
+# Comprehensive stealth init script — overrides the most common PerimeterX
+# bot-detection fingerprints that fire before any page JS runs.
+_STEALTH_SCRIPT = """
+Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+Object.defineProperty(navigator, 'plugins', {get: () => [1,2,3,4,5]});
+Object.defineProperty(navigator, 'languages', {get: () => ['en-US','en']});
+Object.defineProperty(navigator, 'platform', {get: () => 'Win32'});
+Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8});
+Object.defineProperty(navigator, 'deviceMemory', {get: () => 8});
+Object.defineProperty(navigator, 'maxTouchPoints', {get: () => 0});
+window.chrome = {runtime: {}, loadTimes: function(){}, csi: function(){}, app: {}};
+const origQuery = window.navigator.permissions.query;
+window.navigator.permissions.query = (params) =>
+    params.name === 'notifications' ?
+    Promise.resolve({state: Notification.permission}) :
+    origQuery(params);
+"""
 
 # FD market-type strings that represent regular-season win totals
 _WIN_TOTAL_KEYWORDS = ("REGULAR_SEASON_WINS",)
@@ -187,17 +219,20 @@ async def scrape_fanduel_win_totals() -> list[dict]:
     dom_fallback:   list[dict]       = []   # records from DOM when API is CAPTCHA'd
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(
-            **({"executable_path": CHROMIUM_PATH} if CHROMIUM_PATH else {}),
-            headless=True,
-            args=[
+        _launch_kwargs: dict = {
+            "headless": True,
+            "args": [
                 "--no-sandbox",
                 "--disable-dev-shm-usage",
-                # Critical: removes the Automation flag that PerimeterX detects
                 "--disable-blink-features=AutomationControlled",
                 "--window-size=1440,900",
+                "--disable-infobars",
+                "--disable-extensions",
             ],
-        )
+        }
+        if CHROMIUM_PATH:
+            _launch_kwargs["executable_path"] = CHROMIUM_PATH
+        browser = await p.chromium.launch(**_launch_kwargs)
 
         for sport, url in FD_WIN_TOTAL_PAGES:
             # Fresh isolated context per sport — no shared cookies/fingerprint
@@ -218,9 +253,7 @@ async def scrape_fanduel_win_totals() -> list[dict]:
             )
             context = await browser.new_context(**ctx_kwargs)
             page = await context.new_page()
-            await page.add_init_script(
-                "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-            )
+            await page.add_init_script(_STEALTH_SCRIPT)
             await page.set_extra_http_headers({
                 "sec-ch-ua":          _sec_ch_ua,
                 "sec-ch-ua-mobile":   "?0",
@@ -373,9 +406,7 @@ async def _scrape_fd_nfl_via_search() -> list[dict]:
             timezone_id="America/Chicago",
         )
         page = await context.new_page()
-        await page.add_init_script(
-            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-        )
+        await page.add_init_script(_STEALTH_SCRIPT)
 
         async def _on_resp(r):
             if "content-managed-page" in r.url and r.status == 200:
