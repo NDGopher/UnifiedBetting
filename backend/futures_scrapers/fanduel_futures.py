@@ -533,13 +533,16 @@ async def _scrape_fd_nfl_via_search() -> list[dict]:
 
         try:
             await asyncio.sleep(_random.uniform(1.0, 3.0))
-            await page.goto(search_url, timeout=45_000, wait_until="domcontentloaded")
-            await page.wait_for_timeout(3_000)
+            # networkidle waits for all background XHR to settle, giving the page
+            # more time to load win-total content before we inspect the DOM.
+            await page.goto(search_url, timeout=60_000, wait_until="networkidle")
+            await page.wait_for_timeout(2_000)
 
-            # Find the search input and type the query
+            # Find the search input and type the query — try broader selectors
             search_input = await page.query_selector(
                 'input[type="search"], input[placeholder*="earch" i], '
-                'input[aria-label*="earch" i], [role="searchbox"], input[name="search"]'
+                'input[aria-label*="earch" i], [role="searchbox"], input[name="search"], '
+                'input[data-testid*="search" i], input[class*="search" i]'
             )
             if search_input:
                 await search_input.click()
@@ -547,10 +550,11 @@ async def _scrape_fd_nfl_via_search() -> list[dict]:
                 await search_input.type("regular season wins", delay=60)
                 logger.info("[FD] Search: typed query")
                 # Wait for results to load
-                await page.wait_for_timeout(6_000)
+                await page.wait_for_timeout(7_000)
             else:
                 logger.warning("[FD] Search: could not find search input — waiting for initial page content")
-                await page.wait_for_timeout(5_000)
+                # Even without typing, the american-football tab may show win totals
+                await page.wait_for_timeout(8_000)
 
             # Try DOM scrape regardless of whether API was captured
             dom_text: str = await page.evaluate(
