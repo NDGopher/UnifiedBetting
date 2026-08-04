@@ -220,12 +220,17 @@ async def _fetch_fd_direct(sport: str) -> list[dict]:
         "Origin":          "https://sportsbook.fanduel.com",
     }
 
-    # FD's content-managed-page API — try several URL patterns
+    # FD's actual API domain and path (confirmed from live Playwright intercept).
+    # api.sportsbook.fanduel.com/sbapi/ is different from sportsbook.fanduel.com/api/
+    # _ak is FD's stable frontend API key embedded in their JS bundle.
+    _AK = "FhMFpcPWXMeyZxOx"
+    _custom_page_id = {"NFL": "nfl", "NCAAF": "ncaaf"}.get(sport, sport.lower())
+
     url_patterns = [
-        f"https://sportsbook.fanduel.com/api/content-managed-page?page=sport&sport={fd_sport}&tab=win-totals",
-        f"https://sportsbook.fanduel.com/api/content-managed-page?pageType=Navigation&sport={fd_sport}&tab=win-totals",
-        f"https://sportsbook.fanduel.com/api/content-managed-page?page=navigation&sport={fd_sport}&tab=win-totals",
-        f"https://sportsbook.fanduel.com/api/content-managed-page?page=sport&sportName={fd_sport}&tab=win-totals",
+        # Primary: confirmed working URL format (captured from live Playwright intercept)
+        f"https://api.sportsbook.fanduel.com/sbapi/content-managed-page?page=CUSTOM&customPageId={_custom_page_id}&pbHorizontal=false&_ak={_AK}&timezone=America%2FNew_York",
+        # Fallback: same domain, tab-specific for win totals
+        f"https://api.sportsbook.fanduel.com/sbapi/content-managed-page?page=CUSTOM&customPageId={_custom_page_id}&tab=win-totals&pbHorizontal=false&_ak={_AK}&timezone=America%2FNew_York",
     ]
 
     async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
