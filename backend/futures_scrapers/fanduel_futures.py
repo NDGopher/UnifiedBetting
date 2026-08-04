@@ -11,9 +11,25 @@ import re
 
 logger = logging.getLogger(__name__)
 
-CHROMIUM_PATH = (
-    "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
-)
+def _find_chromium() -> str | None:
+    """Return the Chromium executable path, preferring the Replit nix path,
+    then falling back to whatever Playwright installed locally (``playwright
+    install chromium``).  Returns None to let Playwright auto-discover."""
+    import shutil
+    REPLIT_PATH = "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
+    if shutil.which(REPLIT_PATH) or __import__("os").path.exists(REPLIT_PATH):
+        return REPLIT_PATH
+    # Local: Playwright installs chromium at a predictable cache location
+    for candidate in (
+        shutil.which("chromium"),
+        shutil.which("chromium-browser"),
+        shutil.which("google-chrome"),
+    ):
+        if candidate:
+            return candidate
+    return None  # let Playwright use its own bundled browser
+
+CHROMIUM_PATH = _find_chromium()
 
 # FD market-type strings that represent regular-season win totals
 _WIN_TOTAL_KEYWORDS = ("REGULAR_SEASON_WINS",)
@@ -172,7 +188,7 @@ async def scrape_fanduel_win_totals() -> list[dict]:
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            executable_path=CHROMIUM_PATH,
+            **({"executable_path": CHROMIUM_PATH} if CHROMIUM_PATH else {}),
             headless=True,
             args=[
                 "--no-sandbox",
@@ -332,7 +348,7 @@ async def _scrape_fd_nfl_via_search() -> list[dict]:
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            executable_path=CHROMIUM_PATH,
+            **({"executable_path": CHROMIUM_PATH} if CHROMIUM_PATH else {}),
             headless=True,
             args=[
                 "--no-sandbox",
@@ -392,7 +408,7 @@ async def _scrape_fd_nfl_via_search() -> list[dict]:
 
             # Save DOM for inspection on first run
             import pathlib as _pl
-            _dbg = _pl.Path("/home/runner/workspace/backend/data/fd_nfl_search_dom.txt")
+            _dbg = _pl.Path(__file__).resolve().parent.parent / "data" / "fd_nfl_search_dom.txt"
             _dbg.write_text(dom_text or "", encoding="utf-8")
             logger.info("[FD] Search DOM saved (%d chars) → %s", len(dom_text or ""), _dbg)
 
@@ -440,7 +456,7 @@ async def scrape_fanduel_outright(
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            executable_path=CHROMIUM_PATH,
+            **({"executable_path": CHROMIUM_PATH} if CHROMIUM_PATH else {}),
             headless=True,
             args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
         )
