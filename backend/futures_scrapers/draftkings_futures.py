@@ -11,6 +11,7 @@ the FanDuel / BetBCK primary line.
 import asyncio
 import json
 import logging
+import pathlib
 import re
 
 logger = logging.getLogger(__name__)
