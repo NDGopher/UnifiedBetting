@@ -287,8 +287,132 @@ async def scrape_fanduel_win_totals() -> list[dict]:
         logger.info("[FD] Merging %d DOM fallback records (API had %d)", len(dom_new), len(results))
         results.extend(dom_new)
 
+    # ── NFL search-page fallback ──────────────────────────────────────────────
+    # If NFL still has no records (tab gets CAPTCHA'd), try the search page which
+    # is served by a different FD endpoint and rarely triggers PerimeterX.
+    nfl_covered = {r["team"].lower() for r in results if r.get("sport") == "NFL"}
+    if not nfl_covered:
+        logger.info("[FD] NFL: 0 records from tab — trying search-page fallback")
+        search_records = await _scrape_fd_nfl_via_search()
+        if search_records:
+            logger.info("[FD] NFL search fallback → %d records", len(search_records))
+            results.extend(search_records)
+        else:
+            logger.warning("[FD] NFL search fallback also returned 0 records")
+
     logger.info("[FD] Total entries: %d across %s", len(results), list(captured) + (["DOM"] if dom_new else []))
     return results
+
+
+async def _scrape_fd_nfl_via_search() -> list[dict]:
+    """Try to get FD NFL win totals via the /search page.
+
+    The NFL Win Totals *tab* (`/navigation/nfl?tab=win-totals`) is blocked by
+    PerimeterX on every run from this server.  The search page is a different
+    product surface and is not subject to the same bot-detection rules.
+
+    Strategy:
+      1. Navigate to https://sportsbook.fanduel.com/search?tab=american-football
+      2. Wait for page to load, then type "regular season wins" into the search box.
+      3. Intercept any content-managed-page API response (same format as tab scrape).
+      4. Fallback: DOM-scrape the rendered results using _parse_fd_dom().
+    """
+    import random as _random
+    from playwright.async_api import async_playwright
+
+    _UA_POOL = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    ]
+
+    captured:  dict = {}
+    dom_text:  str  = ""
+    search_url = "https://sportsbook.fanduel.com/search?tab=american-football"
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            executable_path=CHROMIUM_PATH,
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-blink-features=AutomationControlled",
+                "--window-size=1440,900",
+            ],
+        )
+        ua = _random.choice(_UA_POOL)
+        context = await browser.new_context(
+            user_agent=ua,
+            viewport={"width": 1440, "height": 900},
+            locale="en-US",
+            timezone_id="America/Chicago",
+        )
+        page = await context.new_page()
+        await page.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+
+        async def _on_resp(r):
+            if "content-managed-page" in r.url and r.status == 200:
+                try:
+                    body = await r.body()
+                    captured["data"] = json.loads(body)
+                    logger.info("[FD] Search: captured content-managed-page (%d bytes)", len(body))
+                except Exception:
+                    pass
+
+        page.on("response", _on_resp)
+
+        try:
+            await asyncio.sleep(_random.uniform(1.0, 3.0))
+            await page.goto(search_url, timeout=45_000, wait_until="domcontentloaded")
+            await page.wait_for_timeout(3_000)
+
+            # Find the search input and type the query
+            search_input = await page.query_selector(
+                'input[type="search"], input[placeholder*="earch" i], '
+                'input[aria-label*="earch" i], [role="searchbox"], input[name="search"]'
+            )
+            if search_input:
+                await search_input.click()
+                await asyncio.sleep(0.5)
+                await search_input.type("regular season wins", delay=60)
+                logger.info("[FD] Search: typed query")
+                # Wait for results to load
+                await page.wait_for_timeout(6_000)
+            else:
+                logger.warning("[FD] Search: could not find search input — waiting for initial page content")
+                await page.wait_for_timeout(5_000)
+
+            # Try DOM scrape regardless of whether API was captured
+            dom_text: str = await page.evaluate(
+                "() => { const m = document.querySelector('main') || document.body; return m ? m.innerText : ''; }"
+            )
+
+            # Save DOM for inspection on first run
+            import pathlib as _pl
+            _dbg = _pl.Path("/home/runner/workspace/backend/data/fd_nfl_search_dom.txt")
+            _dbg.write_text(dom_text or "", encoding="utf-8")
+            logger.info("[FD] Search DOM saved (%d chars) → %s", len(dom_text or ""), _dbg)
+
+        except Exception as exc:
+            logger.warning("[FD] NFL search error: %s", exc)
+        finally:
+            await page.close()
+            await context.close()
+        await browser.close()
+
+    # Parse: prefer API intercept, fall back to DOM
+    if "data" in captured:
+        records = parse_fd_content_page(captured["data"], "NFL")
+        if records:
+            return records
+
+    if dom_text and ("Over" in dom_text or "Under" in dom_text):
+        return _parse_fd_dom(dom_text, "NFL")
+
+    return []
 
 
 async def scrape_fanduel_outright(
