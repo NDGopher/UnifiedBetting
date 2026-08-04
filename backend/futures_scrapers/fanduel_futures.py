@@ -350,8 +350,9 @@ async def scrape_fanduel_win_totals() -> list[dict]:
                     body = await r.body()
                     try:
                         captured[_sport] = json.loads(body)
+                        # ★ Log the FULL URL — critical for direct-API discovery
                         logger.info(
-                            "[FD] Captured %s content page: %d bytes", _sport, len(body)
+                            "[FD] ★ WORKING URL for %s (%d bytes): %s", _sport, len(body), r.url
                         )
                     except json.JSONDecodeError:
                         logger.warning("[FD] Could not parse content page JSON for %s", _sport)
