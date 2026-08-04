@@ -237,10 +237,11 @@ async def _fetch_fd_direct(sport: str) -> list[dict]:
         f"&_ak={_AK}&timezone=America%2FNew_York"
     )
 
-    # FD's API requires x-sportsbook-region.  Playwright sets this automatically
-    # from the browser session.  Confirmed value from live Playwright request intercept:
-    # x-sportsbook-region = "NJ" (New Jersey).  Keep others as fallbacks.
-    _REGIONS = ["NJ", "US-OR", "US-NJ", "US-PA", "US-CO", "US-AZ", "US-NV", "US-IN"]
+    # FD's API requires x-sportsbook-region.  Confirmed value from live Playwright
+    # request intercept: "NJ" (New Jersey — Replit's NJ-routed datacenter).
+    # FD only accepts 2-letter state codes (e.g. "NJ"), NOT "US-NJ" format.
+    # US-prefixed codes return HTTP 400 "Invalid x-sportsbook-region header format".
+    _REGIONS = ["NJ", "PA", "CO", "AZ", "NV", "IN", "NY", "IL"]
 
     async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
         for region in _REGIONS:
