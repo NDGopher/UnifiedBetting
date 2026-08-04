@@ -226,17 +226,24 @@ async def _fetch_fd_direct(sport: str) -> list[dict]:
     _AK = "FhMFpcPWXMeyZxOx"
     _custom_page_id = {"NFL": "nfl", "NCAAF": "ncaaf"}.get(sport, sport.lower())
 
-    url_patterns = [
-        # Primary: confirmed working URL format (captured from live Playwright intercept)
-        f"https://api.sportsbook.fanduel.com/sbapi/content-managed-page?page=CUSTOM&customPageId={_custom_page_id}&pbHorizontal=false&_ak={_AK}&timezone=America%2FNew_York",
-        # Fallback: same domain, tab-specific for win totals
-        f"https://api.sportsbook.fanduel.com/sbapi/content-managed-page?page=CUSTOM&customPageId={_custom_page_id}&tab=win-totals&pbHorizontal=false&_ak={_AK}&timezone=America%2FNew_York",
-    ]
+    base_url = (
+        f"https://api.sportsbook.fanduel.com/sbapi/content-managed-page"
+        f"?page=CUSTOM&customPageId={_custom_page_id}&pbHorizontal=false"
+        f"&_ak={_AK}&timezone=America%2FNew_York"
+    )
+
+    # FD's API requires x-sportsbook-region.  Playwright sets this automatically
+    # from the browser session.  We try common US region codes until one succeeds.
+    # US-OR matches Replit's AWS Oregon data-center, so it's first.
+    # Values confirmed from DK's nash URL pattern (US-OR-SB) and FD's own JS.
+    _REGIONS = ["US-OR", "US-NJ", "US-PA", "US-CO", "US-AZ", "US-NV", "US-IN"]
 
     async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
-        for url in url_patterns:
+        for region in _REGIONS:
+            h = {**headers, "x-sportsbook-region": region}
+            url = base_url
             try:
-                resp = await client.get(url, headers=headers)
+                resp = await client.get(url, headers=h)
                 ct   = resp.headers.get("content-type", "")
                 logger.info("[FD] Direct API %s → HTTP %d (%d bytes) from %s",
                             sport, resp.status_code, len(resp.content), url[:80])
@@ -349,6 +356,14 @@ async def scrape_fanduel_win_totals() -> list[dict]:
 
             all_urls: list[str] = []
 
+            async def _on_request(req, _sport=sport):
+                if "content-managed-page" in req.url:
+                    region = req.headers.get("x-sportsbook-region", "(not set)")
+                    logger.info(
+                        "[FD] ★ REQUEST HEADERS for %s — x-sportsbook-region: %s",
+                        _sport, region,
+                    )
+
             async def _on_response(r, _sport=sport):
                 all_urls.append(r.url)
                 if "content-managed-page" in r.url and r.status == 200:
@@ -362,6 +377,7 @@ async def scrape_fanduel_win_totals() -> list[dict]:
                     except json.JSONDecodeError:
                         logger.warning("[FD] Could not parse content page JSON for %s", _sport)
 
+            page.on("request", _on_request)
             page.on("response", _on_response)
 
             try:
