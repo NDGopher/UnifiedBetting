@@ -38,12 +38,13 @@ DK_WIN_TOTAL_PAGES = [
         "https://sportsbook.draftkings.com/leagues/football/nfl"
         "?category=futures&subcategory=wins&nav_1=regular-season-wins",
     ),
-    # NCAAF win totals — confirmed working URL from user
-    # NCAAF — slug changed from /ncaaf to /college-football (confirmed from redirect)
+    # NCAAF — DK event group ID confirmed as 87637 ("CFB") from NFL page HTML.
+    # /ncaaf and /college-football both 302 → /sports/football.
+    # Try /cfb slug (same params as NFL) and /college-football with futures params.
     (
         "NCAAF",
-        "https://sportsbook.draftkings.com/leagues/football/college-football"
-        "?category=wins&subcategory=regular-season&nav_1=all-teams",
+        "https://sportsbook.draftkings.com/leagues/football/cfb"
+        "?category=futures&subcategory=wins&nav_1=regular-season-wins",
     ),
 ]
 
@@ -191,7 +192,7 @@ _DK_WIN_KWS_LOWER = tuple(kw.lower() for kw in DK_WIN_TOTAL_TYPE_KWS)
 # Known DraftKings event-group IDs (from URL pattern /leagues/football/{sport})
 _DK_EG_IDS: dict[str, int] = {
     "NFL":   88808,
-    "NCAAF": 84240,
+    "NCAAF": 87637,   # confirmed from DK NFL HTML: "college-football" key → eventGroupId 87637
 }
 
 _DK_API_HEADERS = {
