@@ -39,9 +39,10 @@ DK_WIN_TOTAL_PAGES = [
         "?category=futures&subcategory=wins&nav_1=regular-season-wins",
     ),
     # NCAAF win totals — confirmed working URL from user
+    # NCAAF — slug changed from /ncaaf to /college-football (confirmed from redirect)
     (
         "NCAAF",
-        "https://sportsbook.draftkings.com/leagues/football/ncaaf"
+        "https://sportsbook.draftkings.com/leagues/football/college-football"
         "?category=wins&subcategory=regular-season&nav_1=all-teams",
     ),
 ]
@@ -304,7 +305,7 @@ async def _discover_dk_eg_id(sport: str, client) -> int | None:
 
         # Save for inspection
         import pathlib as _pl
-        _pl.Path(str(_DATA_DIR / f"dk_{sport.lower()}_page.html")).write_text(html[:200_000], encoding="utf-8", errors="replace")
+        _pl.Path(str(_DATA_DIR / f"dk_{sport.lower()}_page.html")).write_text(html, encoding="utf-8", errors="replace")
 
         # 1 — Try to extract __NEXT_DATA__ JSON blob
         nd_match = _re.search(r'<script[^>]+id=["\']__NEXT_DATA__["\'][^>]*>(.*?)</script>', html, _re.DOTALL)
