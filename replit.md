@@ -35,6 +35,46 @@ A comprehensive real-time sports betting alert system that monitors POD (Pick of
 - `frontend/src/components/EVCalculator.tsx` - Manual EV calculator
 - `frontend/src/utils/apiConfig.ts` - Dynamic backend URL config
 
+## Futures EV Pipeline
+
+Scrapes NFL/NCAAF win totals from Buckeye (bet book), FanDuel, DraftKings, and BetMGM (reference books), devigged per-book, averaged for consensus fair odds, and calculates EV against Buckeye's lines.
+
+### Running via the dashboard
+Hit **Run Futures Pipeline** in the UI. Results appear in the Futures tab.
+
+### Running locally (recommended for full coverage)
+Running locally gives you your real state's DraftKings and FanDuel — the Replit server is in Oregon, which blocks NCAAF on DK and NFL futures on FD. Your home IP will likely unlock both.
+
+**One-time setup** (after `git pull origin main`):
+```bat
+pip install -r backend/requirements.txt
+playwright install chromium
+cd frontend && npm install
+```
+
+**Start backend + frontend** (two terminals):
+```bat
+cd backend && python -m uvicorn main:app --host 0.0.0.0 --port 8000
+cd frontend && PORT=5000 npm start
+```
+
+Then open `http://localhost:5000` and click **Run Futures Pipeline**.
+
+The Chromium path is now auto-detected — it uses the Replit nix path when on Replit, and falls back to whatever `playwright install chromium` placed locally. No manual config needed.
+
+### API endpoint
+```
+POST /api/run-futures-pipeline
+GET  /api/futures-pipeline-status
+GET  /api/futures-results
+```
+
+### Key files
+- `backend/futures_scrapers/` — FD, DK, MGM, Buckeye scrapers
+- `backend/futures_ev.py` — devig + consensus EV calc
+- `backend/futures_config.py` — market definitions
+- `backend/data/futures_results.json` — last run output
+
 ## Notes
 - Selenium/Chrome-based PTO scraper requires Chrome browser (not available in Replit sandbox, will log errors but won't crash)
 - pywin32 is Windows-only and not required in Linux/Replit
