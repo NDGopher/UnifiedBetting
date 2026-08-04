@@ -99,6 +99,11 @@ def parse_fd_content_page(data: dict, sport: str) -> list[dict]:
     markets = data.get("attachments", {}).get("markets", {})
     results: list[dict] = []
 
+    # Log every unique marketType so we can detect when FD renames win-total markets
+    all_types = sorted({m.get("marketType", "") for m in markets.values() if m.get("marketType")})
+    if all_types:
+        logger.info("[FD] %s market types (%d total): %s", sport, len(all_types), all_types[:30])
+
     for mid, m in markets.items():
         mt: str = m.get("marketType", "")
         # Keep only regular-season win-total markets
@@ -233,10 +238,9 @@ async def _fetch_fd_direct(sport: str) -> list[dict]:
     )
 
     # FD's API requires x-sportsbook-region.  Playwright sets this automatically
-    # from the browser session.  We try common US region codes until one succeeds.
-    # US-OR matches Replit's AWS Oregon data-center, so it's first.
-    # Values confirmed from DK's nash URL pattern (US-OR-SB) and FD's own JS.
-    _REGIONS = ["US-OR", "US-NJ", "US-PA", "US-CO", "US-AZ", "US-NV", "US-IN"]
+    # from the browser session.  Confirmed value from live Playwright request intercept:
+    # x-sportsbook-region = "NJ" (New Jersey).  Keep others as fallbacks.
+    _REGIONS = ["NJ", "US-OR", "US-NJ", "US-PA", "US-CO", "US-AZ", "US-NV", "US-IN"]
 
     async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
         for region in _REGIONS:
@@ -432,6 +436,14 @@ async def scrape_fanduel_win_totals() -> list[dict]:
     # Parse each captured Playwright API page, merge DOM fallback, then merge direct results
     results: list[dict] = list(direct_results)  # start with direct-API records
     for sport, data in captured.items():
+        # Save raw JSON for post-mortem inspection when records=0
+        try:
+            import pathlib as _pl2, json as _json2
+            _raw_path = _pl2.Path(__file__).parent.parent / "data" / f"fd_{sport.lower()}_raw_debug.json"
+            _raw_path.write_text(_json2.dumps(data, indent=2)[:500_000], encoding="utf-8")
+            logger.info("[FD] Raw %s JSON saved → %s", sport, _raw_path)
+        except Exception:
+            pass
         parsed = parse_fd_content_page(data, sport)
         logger.info("[FD] Parsed %d entries for %s", len(parsed), sport)
         results.extend(parsed)
