@@ -27,11 +27,20 @@ import re
 
 logger = logging.getLogger(__name__)
 
-CHROMIUM_PATH = (
-    "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
-)
+def _find_chromium() -> str | None:
+    import shutil, os
+    REPLIT_PATH = "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
+    if os.path.exists(REPLIT_PATH):
+        return REPLIT_PATH
+    for candidate in (shutil.which("chromium"), shutil.which("chromium-browser"), shutil.which("google-chrome")):
+        if candidate:
+            return candidate
+    return None
 
-DATA_DIR = pathlib.Path("/home/runner/workspace/backend/data")
+CHROMIUM_PATH = _find_chromium()
+
+# Data dir: relative to this file so it works locally and on Replit
+DATA_DIR = pathlib.Path(__file__).resolve().parent.parent / "data"
 
 # ── CDS config ─────────────────────────────────────────────────────────────────
 # Static public access ID embedded in every nv.betmgm.com page load.
@@ -352,7 +361,7 @@ async def _scrape_via_playwright(sport: str, competition_id: int) -> list[dict]:
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            executable_path=CHROMIUM_PATH,
+            **({"executable_path": CHROMIUM_PATH} if CHROMIUM_PATH else {}),
             headless=True,
             args=[
                 "--no-sandbox",
