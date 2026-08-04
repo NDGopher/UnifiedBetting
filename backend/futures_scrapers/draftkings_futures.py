@@ -418,8 +418,10 @@ async def scrape_draftkings_win_totals() -> list[dict]:
             page.on("response", _on_response)
 
             try:
-                # networkidle ensures React tab content finishes rendering
-                await page.goto(url, timeout=60_000, wait_until="networkidle")
+                # domcontentloaded + selector wait is safer than networkidle;
+                # DK fires background requests indefinitely so networkidle
+                # never resolves and times out at 60 s.
+                await page.goto(url, timeout=60_000, wait_until="domcontentloaded")
 
                 # Dismiss any location/state-selection modal that blocks content
                 for selector in [
