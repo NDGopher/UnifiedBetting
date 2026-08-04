@@ -741,18 +741,65 @@ async def scrape_draftkings_win_totals() -> list[dict]:
 
                 await page.wait_for_timeout(2_000)
 
-                # Scroll aggressively to trigger lazy loading for all teams.
-                # NFL has 32 teams × multiple alternate lines — need deep scroll.
-                # 300 steps × 300 px = 90 000 px total; 200 ms between steps.
-                for _ in range(300):
-                    await page.evaluate("window.scrollBy(0, 300)")
-                    await page.wait_for_timeout(200)
+                # Save rendered DOM before scrolling so we can inspect it offline.
+                try:
+                    _dom_snapshot = await page.evaluate("() => document.documentElement.outerHTML")
+                    import pathlib as _pl
+                    _snap_path = _pl.Path(__file__).resolve().parent.parent / "data" / f"dk_{sport.lower()}_rendered_dom.html"
+                    _snap_path.write_text(_dom_snapshot or "", encoding="utf-8")
+                    logger.info("[DK] %s: saved rendered DOM (%d chars) → %s", sport, len(_dom_snapshot or ""), _snap_path)
+                except Exception as _snap_exc:
+                    logger.debug("[DK] %s: DOM save failed: %s", sport, _snap_exc)
+
+                # DK lazy-loads team win-total markets as they scroll into view.
+                # Strategy: try multiple scroll approaches to trigger IntersectionObserver.
+                #   1. Scroll the main content container (not window) — DK uses a div scroller.
+                #   2. Scroll window as fallback.
+                #   3. Use scrollIntoView on the last link/row element (forces visibility).
+                scroll_js = """
+(function() {
+    // Try to find the main scrollable container (DK wraps content in a scroll div)
+    var containers = [
+        document.querySelector('.sportsbook-league-page'),
+        document.querySelector('[class*="league-page"]'),
+        document.querySelector('[class*="content-container"]'),
+        document.querySelector('main'),
+        document.documentElement
+    ].filter(Boolean);
+    var target = containers[0];
+    if (target && target.scrollHeight > target.clientHeight + 200) {
+        target.scrollTop += 400;
+    } else {
+        window.scrollBy(0, 400);
+    }
+    // Also nudge last visible anchor link into view (triggers IntersectionObserver)
+    var links = document.querySelectorAll('a[href*="win"], a[href*="future"], [class*="event-row"], [class*="parlay-card"]');
+    if (links.length > 0) {
+        links[links.length - 1].scrollIntoView({behavior: 'instant', block: 'end'});
+    }
+})();
+"""
+                prev_count = len(sport_records)
+                stall_steps = 0
+                for step in range(250):
+                    await page.evaluate(scroll_js)
+                    await page.wait_for_timeout(220)
+                    # Check if new XHR records arrived (break early if stalled)
+                    if step % 20 == 19:
+                        if len(sport_records) == prev_count:
+                            stall_steps += 1
+                            if stall_steps >= 3:
+                                logger.info("[DK] %s: no new records for 60 steps — ending scroll", sport)
+                                break
+                        else:
+                            stall_steps = 0
+                            prev_count = len(sport_records)
 
                 # Scroll back to top then down again to catch any missed loads
                 await page.evaluate("window.scrollTo(0, 0)")
                 await page.wait_for_timeout(1_000)
-                for _ in range(100):
-                    await page.evaluate("window.scrollBy(0, 500)")
+                for _ in range(80):
+                    await page.evaluate("window.scrollBy(0, 600)")
                     await page.wait_for_timeout(150)
 
                 # Wait for final API calls to settle
