@@ -563,15 +563,20 @@ async def _handle_ws(payload: str | bytes, sport: str, records: list) -> None:
 async def scrape_betmgm_win_totals() -> list[dict]:
     """Return BetMGM win-total records for all configured sports.
 
-    Uses the direct CDS REST API (fast, no browser).  Falls back to
-    Playwright+WebSocket if CDS returns nothing (geo-lock or outage).
+    1. Fetches the live CDS access ID from the BetMGM homepage (rotates
+       periodically; hardcoded fallback used if unavailable).
+    2. Tries the CDS REST API across all state endpoints.
+    3. Falls back to Playwright+DOM if CDS fails for any sport.
     """
     all_records: list[dict] = []
+
+    # Fetch the live access ID once for all sports
+    live_access_id = await _fetch_live_access_id()
 
     for sport, (competition_id, _) in _SPORTS.items():
         logger.info("[MGM] Scraping %s (competitionId=%d)…", sport, competition_id)
 
-        records = await _fetch_cds(sport, competition_id)
+        records = await _fetch_cds(sport, competition_id, _access_id=live_access_id)
 
         if not records:
             logger.info("[MGM] CDS yielded 0 for %s — trying Playwright fallback", sport)
