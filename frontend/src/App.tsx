@@ -382,6 +382,8 @@ function openBetbckTabOnLoad(betbckTabRef: React.MutableRefObject<Window | null>
 function App() {
   const betbckTabRef = useRef<Window | null>(null);
   const [now, setNow] = useState(new Date());
+  const [futuresOpen, setFuturesOpen] = useState(false);
+  const toggleFutures = useCallback(() => setFuturesOpen(v => !v), []);
   const [evCalcOpen, setEvCalcOpen] = useState(false);
   const toggleEvCalc = useCallback(() => setEvCalcOpen(v => !v), []);
 
@@ -487,12 +489,21 @@ function App() {
               <BuckeyeScraper />
             </Box>
 
-            {/* Futures Section */}
-            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 2, pb: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6, userSelect: 'none' }}>FUTURES</Box>
+            {/* Futures Section — collapsed by default */}
+            <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.06)', pt: 2, pb: futuresOpen ? 2 : 2 }}>
+              <Box
+                onClick={toggleFutures}
+                sx={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer', mb: futuresOpen ? 2 : 0, userSelect: 'none', '&:hover': { opacity: 0.8 } }}
+              >
+                <Box sx={{ px: 0.875, py: 0.375, border: '1px solid rgba(255,255,255,0.22)', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 700, color: '#F5F5F5', letterSpacing: '0.08em', lineHeight: 1.6 }}>FUTURES</Box>
+                <Box sx={{ flexGrow: 1 }} />
+                <IconButton size="small" sx={{ p: 0, color: '#4B5563' }}>
+                  {futuresOpen ? <ExpandLess sx={{ fontSize: 16 }} /> : <ExpandMore sx={{ fontSize: 16 }} />}
+                </IconButton>
               </Box>
-              <FuturesScraper />
+              <Collapse in={futuresOpen}>
+                <FuturesScraper />
+              </Collapse>
             </Box>
 
             {/* Auto Bet Placement Section */}
