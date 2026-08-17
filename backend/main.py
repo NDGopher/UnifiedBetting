@@ -904,19 +904,6 @@ async def handle_pod_alert(request: Request):
                 "message": f"Prop bet alert for {event_id_str} ignored (not supported)"
             })
 
-        # CRITICAL: Reject pre-season games — no sharp market, EV is meaningless
-        _league_raw = payload.get("leagueName", "")
-        _PRESEASON_KEYWORDS = ["pre season", "preseason", "pre-season", "exhibition"]
-        if any(kw in _league_raw.lower() for kw in _PRESEASON_KEYWORDS):
-            logger.info(
-                f"[PerEventQueue] REJECTING pre-season alert for Event ID: {event_id_str} "
-                f"— league='{_league_raw}' ({home_team} vs {away_team})"
-            )
-            return JSONResponse({
-                "status": "success",
-                "message": f"Pre-season alert for {event_id_str} ignored (league: {_league_raw})"
-            })
-
         # CRITICAL: Check if BetBCK is rate limited - reject immediately
         if betbck_manager.rate_limited:
             logger.warning(f"[PerEventQueue] REJECTING alert for Event ID: {event_id_str} - BetBCK is rate limited")
