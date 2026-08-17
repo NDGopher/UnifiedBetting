@@ -56,6 +56,24 @@ MULTIWORD_SUFFIXES: tuple = (
     'NBA G League',
     'G League',
     'Summer League',
+    # Pre-season / exhibition leagues POD concatenates onto team names
+    # e.g. "Green Bay PackersNFL Pre Season" → "Green Bay Packers"
+    'NFL Pre Season',
+    'NFL Preseason',
+    'NFL Pre-Season',
+    'NBA Pre Season',
+    'NBA Preseason',
+    'NBA Pre-Season',
+    'NHL Pre Season',
+    'NHL Preseason',
+    'NHL Pre-Season',
+    'MLB Pre Season',
+    'MLB Preseason',
+    'MLB Pre-Season',
+    'Pre Season',
+    'Preseason',
+    'Pre-Season',
+    'Exhibition',
 )
 
 # ---------------------------------------------------------------------------
