@@ -735,7 +735,11 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
         <DialogTitle>Bet Details</DialogTitle>
         <DialogContent>
           {modalMarket && (
-            <LiveEVModal event={modalMarket.event} market={modalMarket.market} />
+            <LiveEVModal
+              event={modalMarket.event}
+              market={modalMarket.market}
+              liveEvent={Object.values(events).find(e => e.title === modalMarket.event.title)}
+            />
           )}
         </DialogContent>
         <DialogActions>
@@ -797,28 +801,16 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
   );
 };
 
-const LiveEVModal: React.FC<{ event: EventData; market: Market }> = ({ event, market }) => {
-  const [liveMarket, setLiveMarket] = useState<Market>(market);
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch(`${API_BASE}/get_active_events_data`);
-        if (res.ok) {
-          const data = await res.json();
-          const updatedEvent = data[event.title];
-          if (updatedEvent) {
-            const updatedMarket = updatedEvent.markets.find((m: Market) => m.market === market.market && m.selection === market.selection && m.line === market.line);
-            if (updatedMarket) setLiveMarket(updatedMarket);
-          }
-        }
-      } catch {}
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [event, market]);
+const LiveEVModal: React.FC<{ event: EventData; market: Market; liveEvent?: EventData }> = ({ event, market, liveEvent }) => {
+  const sourceEvent = liveEvent || event;
+  const liveMarket =
+    sourceEvent.markets?.find(
+      (m) => m.market === market.market && m.selection === market.selection && m.line === market.line
+    ) || market;
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="subtitle1" gutterBottom>{event.title}</Typography>
+      <Typography variant="subtitle1" gutterBottom>{sourceEvent.title}</Typography>
       <Typography variant="body2" gutterBottom>Market: {liveMarket.market}</Typography>
       <Typography variant="body2" gutterBottom>Selection: {liveMarket.selection}</Typography>
       <Typography variant="body2" gutterBottom>Line: {liveMarket.line}</Typography>

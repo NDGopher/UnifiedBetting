@@ -1,13 +1,13 @@
 import time
 import threading
 import queue
-import requests
 import logging
 import random
+import json
 from datetime import datetime
 from typing import Optional, Dict, Any
 from betbck_scraper import login_to_betbck, search_team_and_get_results_html, get_search_prerequisites, parse_game_data_from_html
-from betbck_scraper import MAIN_PAGE_URL_AFTER_LOGIN, BASE_HEADERS
+from betbck_scraper import MAIN_PAGE_URL_AFTER_LOGIN, BASE_HEADERS, new_betbck_session
 import config
 
 try:
@@ -40,12 +40,14 @@ class BetBCKRequestManager:
         self.frontend_alert_message = None  # For POD alerts display
         self.frontend_alert_timestamp = None
         
-        # Configuration
-        self.REQUEST_DELAY_MIN = 0.5     # Reduced to 0.5 seconds for faster alerts
-        self.REQUEST_DELAY_MAX = 1.0     # Reduced to 1.0 seconds for faster alerts
+        # Configuration — human-like jitter. Do not shrink toward zero.
+        self.REQUEST_DELAY_MIN = 0.5
+        self.REQUEST_DELAY_MAX = 1.2
+        self.STALE_SEARCH_SECONDS = 18.0  # Drop backlog so we don't blast BetBCK
         self.MAX_FAILURES = 3           # Max consecutive failures before circuit breaker
         self.RATE_LIMIT_COOLDOWN = 300   # 5 minutes cooldown if rate limited
-        self.SESSION_REFRESH_INTERVAL = 3000  # Increased to 50 minutes (sessions last longer)
+        # Cloud JWT from authenticateCustomer is ~20 min; refresh before expiry
+        self.SESSION_REFRESH_INTERVAL = 720  # 12 minutes
         self.RATE_LIMIT_FAILURE_THRESHOLD = 5  # Require 5 consecutive rate limit failures before pausing
         self.last_session_refresh = 0
         
@@ -83,28 +85,29 @@ class BetBCKRequestManager:
         """Main worker loop that processes requests from the queue"""
         while self.is_running:
             try:
-                # Get next request from queue (blocks until one is available)
                 request_data = self.queue.get(timeout=1)
-                
-                # Check if we're rate limited
+            except queue.Empty:
+                continue
+            try:
                 if self.rate_limited:
                     self._handle_rate_limited_request(request_data)
                     continue
-                
+
+                age = time.time() - request_data.get("timestamp", time.time())
+                if age > self.STALE_SEARCH_SECONDS:
+                    self._drop_stale_request(request_data, age)
+                    continue
+
                 # Enforce inter-request delay — protects against BetBCK rate limiting
                 self._enforce_random_delay()
-                
-                # Process the request
                 self._process_request(request_data)
-                
-                # Mark task as done
-                self.queue.task_done()
-                
-            except queue.Empty:
-                continue
             except Exception as e:
                 logger.error(f"[BetBCK-Manager] Worker loop error: {e}")
-                continue
+            finally:
+                try:
+                    self.queue.task_done()
+                except ValueError:
+                    pass
     
     def _enforce_random_delay(self):
         """Ensure random delay between requests to appear more human"""
@@ -116,7 +119,7 @@ class BetBCKRequestManager:
         
         if time_since_last < random_delay:
             sleep_time = random_delay - time_since_last
-            logger.info(f"[BetBCK-Manager] Waiting {sleep_time:.2f}s before next request (random delay)")
+            logger.debug(f"[BetBCK-Manager] Waiting {sleep_time:.2f}s before next request (random delay)")
             time.sleep(sleep_time)
         self.last_request_time = time.time()
     
@@ -131,31 +134,35 @@ class BetBCKRequestManager:
                 (now - self.last_session_refresh) > self.SESSION_REFRESH_INTERVAL):
                 session_needs_refresh = True
                 logger.info("[BetBCK-Manager] Creating/refreshing session")
-                self.session = requests.Session()
-                
-                if not login_to_betbck(self.session):
+                reuse_cookies = self.session is not None
+                if self.session is None:
+                    self.session = new_betbck_session()
+
+                logged_in = login_to_betbck(self.session, fetch_homepage=not reuse_cookies)
+                if not logged_in:
+                    # CF cookie may have expired — new session + homepage GET
+                    self.session = new_betbck_session()
+                    logged_in = login_to_betbck(self.session, fetch_homepage=True)
+                if not logged_in:
                     logger.error("[BetBCK-Manager] Failed to login to BetBCK")
                     self._set_frontend_alert("BetBCK login failed", "error")
                     raise Exception("Failed to login to BetBCK")
                 
-                # Get search prerequisites from main page
+                # Cloud API: token stored on session; inet_* kept for legacy call signatures
                 self.inet_wager, self.inet_sport_select = get_search_prerequisites(
                     self.session, MAIN_PAGE_URL_AFTER_LOGIN
                 )
                 
                 if not self.inet_wager:
-                    logger.error("[BetBCK-Manager] Failed to get search prerequisites")
+                    logger.error("[BetBCK-Manager] Failed to establish BetBCK cloud session")
                     self._set_frontend_alert("BetBCK setup failed", "error")
-                    raise Exception("Failed to get search prerequisites")
+                    raise Exception("Failed to get BetBCK cloud session")
                 
                 self.last_session_refresh = now
-                logger.info("[BetBCK-Manager] Session refreshed successfully")
+                logger.info("[BetBCK-Manager] Session refreshed successfully (cloud API)")
             
-            # Skip unnecessary page navigation for speed
-            # The search should work directly without going to main page first
             if not session_needs_refresh:
-                logger.info("[BetBCK-Manager] Using existing session (no page navigation)")
-                # TODO: If we start getting bad data, we can add back conditional page navigation here
+                logger.debug("[BetBCK-Manager] Using existing session (no page navigation)")
             
             return self.session
     
@@ -208,7 +215,7 @@ class BetBCKRequestManager:
         self.frontend_alert_message = message
         self.frontend_alert_timestamp = time.time()
         self.frontend_alert_type = alert_type
-        logger.info(f"[BetBCK-Manager] Frontend alert set: {alert_type} - {message}")
+        logger.debug(f"[BetBCK-Manager] Frontend alert set: {alert_type} - {message}")
     
     def get_frontend_alert(self):
         """Get current frontend alert (if any)"""
@@ -255,11 +262,11 @@ class BetBCKRequestManager:
         future = request_data['future']
 
         try:
-            logger.info(f"[BetBCK-Manager] Processing request for: {search_term} (Event: {event_id})")
+            logger.debug(f"[BetBCK-Manager] Processing request for: {search_term} (Event: {event_id})")
             try:
-                logger.info(f"[BetBCK-Manager] Session cookies: {dict(self.session.cookies) if self.session else 'No session'}")
+                logger.debug(f"[BetBCK-Manager] Session cookies: {dict(self.session.cookies) if self.session else 'No session'}")
             except Exception as e:
-                logger.info(f"[BetBCK-Manager] Could not log cookies: {e}")
+                logger.debug(f"[BetBCK-Manager] Could not log cookies: {e}")
 
             # Get session (always starts from main page)
             session = self._get_or_refresh_session()
@@ -274,18 +281,27 @@ class BetBCKRequestManager:
                 self._handle_rate_limit_detected(search_term, future)
                 return
 
-            # ── Small-response guard: session may have expired mid-interval ────────
-            # BetBCK returns a minimal page (~1961 bytes) when the session cookie has
-            # expired between our 50-minute refresh cycles.  If we see a suspiciously
-            # small response we log the full content (for diagnosis), force-expire the
-            # session, and retry once with a fresh login.
-            SMALL_RESPONSE_THRESHOLD = 5000   # bytes
-            if search_results_html and len(search_results_html) < SMALL_RESPONSE_THRESHOLD:
-                logger.warning(
-                    f"[BetBCK-Manager] *** SMALL RESPONSE ({len(search_results_html)} bytes) for "
-                    f"'{search_term}' — possible expired session. Full content:\n{search_results_html}"
-                )
-                # Force session expiry so _get_or_refresh_session re-logins immediately
+            # ── Auth-retry only on clear session problems (not empty Lines) ───────
+            force_retry = False
+            if search_results_html:
+                stripped = search_results_html.lstrip()
+                if stripped.startswith("{"):
+                    try:
+                        _payload = json.loads(search_results_html)
+                        if isinstance(_payload, dict) and _payload.get("CaptchaRequired"):
+                            force_retry = True
+                            logger.warning("[BetBCK-Manager] CaptchaRequired in Lines response — refreshing session")
+                    except Exception:
+                        pass  # leave as-is; parser will fail cleanly
+                elif "<html" in stripped[:200].lower():
+                    force_retry = True
+                    logger.warning("[BetBCK-Manager] HTML error page instead of Lines JSON — refreshing session")
+            # None response often means 401 from search_team_and_get_results_html
+            elif search_results_html is None:
+                force_retry = True
+                logger.warning("[BetBCK-Manager] Empty search response — refreshing session once")
+
+            if force_retry:
                 with self.session_lock:
                     self.last_session_refresh = 0
                 logger.warning(f"[BetBCK-Manager] Forcing session refresh and retrying '{search_term}'...")
@@ -293,27 +309,13 @@ class BetBCKRequestManager:
                 search_results_html = search_team_and_get_results_html(
                     session, search_term, self.inet_wager, self.inet_sport_select, event_id
                 )
-                if search_results_html and len(search_results_html) < SMALL_RESPONSE_THRESHOLD:
-                    logger.warning(
-                        f"[BetBCK-Manager] Retry also returned small response ({len(search_results_html)} bytes). "
-                        f"Full retry content:\n{search_results_html}"
-                    )
-                    logger.warning(
-                        f"[BetBCK-Manager] Team '{search_term}' may not be indexed in BetBCK keyword search "
-                        f"(BetBCK may not carry this league, or league not searchable via keyword)."
-                    )
-                else:
-                    logger.info(
-                        f"[BetBCK-Manager] Retry succeeded — got {len(search_results_html) if search_results_html else 0} bytes "
-                        f"(session had expired, now refreshed)."
-                    )
             # ─────────────────────────────────────────────────────────────────────
 
             # Debug: Log response preview to understand what's being returned
             if search_results_html:
-                logger.info(f"[BetBCK-Manager] Response preview (first 200 chars): {search_results_html[:200]}")
+                logger.debug(f"[BetBCK-Manager] Response preview (first 200 chars): {search_results_html[:200]}")
                 if "429" in search_results_html:
-                    logger.warning(f"[BetBCK-Manager] Found '429' in response but not treating as rate limit (false positive prevention)")
+                    logger.debug(f"[BetBCK-Manager] Found '429' in response but not treating as rate limit (false positive prevention)")
 
             # Parse game data using correct POD team names
             if pod_home_team and pod_away_team:
@@ -324,13 +326,12 @@ class BetBCKRequestManager:
                 pod_home_clean = clean_pod_team_name_for_search(pod_home_team)
                 pod_away_clean = clean_pod_team_name_for_search(pod_away_team)
                 
-                logger.info(f"[BetBCK-Manager] Using cleaned team names: Home='{pod_home_clean}', Away='{pod_away_clean}' (original: Home='{pod_home_team}', Away='{pod_away_team}')")
-                logger.info(f"[BetBCK-Manager] Search term being used: '{search_term}'")
+                logger.debug(f"[BetBCK-Manager] Using cleaned team names: Home='{pod_home_clean}', Away='{pod_away_clean}' (original: Home='{pod_home_team}', Away='{pod_away_team}')")
+                logger.debug(f"[BetBCK-Manager] Search term being used: '{search_term}'")
                 
                 # Reset failure counters on successful request
                 self.consecutive_failures = 0
                 self.consecutive_rate_limit_failures = 0
-                logger.info(f"[BetBCK-Manager] About to call parse_specific_game_from_search_html with cleaned names")
                 
                 game_data = parse_specific_game_from_search_html(search_results_html, pod_home_clean, pod_away_clean, event_id, event_date)
                 
@@ -339,13 +340,12 @@ class BetBCKRequestManager:
                 # (half_1, period_1, half_2, period_2, period_3, etc.) with the correct
                 # home/away orientation — no need to re-scan all tables.
                 if game_data:
-                    logger.info(f"[BetBCK-Manager] Game data found, deriving 1H_data from row_data...")
                     _row_data = game_data.get('row_data', {})
                     game_data['1H_data'] = _row_data.get('half_1') or _row_data.get('period_1')
                     if game_data['1H_data']:
-                        logger.info(f"[BetBCK-Manager] 1H_data set from row_data key: {'half_1' if _row_data.get('half_1') else 'period_1'}")
+                        logger.debug(f"[BetBCK-Manager] 1H_data set from row_data key: {'half_1' if _row_data.get('half_1') else 'period_1'}")
                     else:
-                        logger.info(f"[BetBCK-Manager] No half_1/period_1 in row_data {list(_row_data.keys())} — 1H_data=None")
+                        logger.debug(f"[BetBCK-Manager] No half_1/period_1 in row_data {list(_row_data.keys())} — 1H_data=None")
             else:
                 game_data = parse_game_data_from_html(search_results_html, search_term)
 
@@ -404,9 +404,7 @@ class BetBCKRequestManager:
                         "rate_limited": False
                     })
         finally:
-            # Remove event_id from in-progress set
-            if hasattr(self, '_in_progress_events') and event_id in self._in_progress_events:
-                self._in_progress_events.remove(event_id)
+            self._clear_in_progress(event_id)
     
     def _handle_rate_limit_detected(self, search_term: str, future):
         """Handle when rate limiting is detected - pause ALL processing"""
@@ -464,10 +462,32 @@ class BetBCKRequestManager:
         }
 
         self.queue.put(request_data)
-        logger.info(f"[BetBCK-Manager] Queued request for: {search_term} (Queue size: {self.queue.qsize()})")
+        logger.debug(f"[BetBCK-Manager] Queued request for: {search_term} (Queue size: {self.queue.qsize()})")
 
         return future
     
+    def _clear_in_progress(self, event_id):
+        if hasattr(self, "_in_progress_events") and event_id in self._in_progress_events:
+            self._in_progress_events.discard(event_id)
+
+    def _drop_stale_request(self, request_data, age):
+        """Skip outdated queued searches so a backlog does not hammer BetBCK."""
+        search_term = request_data.get("search_term")
+        event_id = request_data.get("event_id")
+        logger.info(
+            "[BetBCK-Manager] Dropping stale search (queued %.1fs ago): %s",
+            age,
+            search_term,
+        )
+        self._clear_in_progress(event_id)
+        future = request_data.get("future")
+        if future:
+            future.set_result({
+                "status": "error",
+                "message": "Stale search dropped (queue backlog)",
+                "rate_limited": False,
+            })
+
     def reset_rate_limiting(self):
         """Manually reset rate limiting state - use when you know you're not actually rate limited"""
         logger.info("[BetBCK-Manager] MANUAL RATE LIMIT RESET - Clearing rate limiting state")

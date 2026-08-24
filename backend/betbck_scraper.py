@@ -1,4 +1,5 @@
 import requests
+from requests.adapters import HTTPAdapter
 from bs4 import BeautifulSoup
 import json
 import re
@@ -7,7 +8,12 @@ import time
 import datetime
 import threading
 from utils import normalize_team_name_for_matching
-from utils.pod_utils import skip_indicators, is_prop_or_corner_alert, fuzzy_team_match
+from utils.pod_utils import skip_indicators, is_prop_or_corner_alert, fuzzy_team_match, is_prop_market_by_name
+
+try:
+    from urllib3.util.retry import Retry
+except ImportError:  # pragma: no cover
+    from requests.packages.urllib3.util.retry import Retry  # type: ignore
 
 try:
     from alert_logger import get_logger_for_event as _get_alert_logger
@@ -29,13 +35,13 @@ except ImportError:
     print("[BetbckScraper] WARNING: Selenium library not found. Dynamic content (1H data) will not be available.")
     SELENIUM_AVAILABLE = False
 
-# Attempt to import fuzzywuzzy for robust team matching
+# rapidfuzz is a drop-in replacement for fuzzywuzzy (faster, no python-Levenshtein warning)
 try:
-    from fuzzywuzzy import fuzz
+    from rapidfuzz import fuzz
     FUZZY_MATCH_THRESHOLD = 65  # Threshold for team name matching (0-100)
-    print("[BetbckScraper] fuzzywuzzy library loaded.")
+    print("[BetbckScraper] rapidfuzz library loaded.")
 except ImportError:
-    print("[BetbckScraper] WARNING: fuzzywuzzy library not found. Team matching will rely on more exact normalization.")
+    print("[BetbckScraper] WARNING: rapidfuzz library not found. Team matching will rely on more exact normalization.")
     fuzz = None
     FUZZY_MATCH_THRESHOLD = 101 # Effectively disables fuzzy matching
 
@@ -70,9 +76,18 @@ try:
     LOGIN_PAYLOAD_TEMPLATE = betbck_config.get('credentials')
     BASE_HEADERS = betbck_config.get('headers', {}).copy()
     LOGIN_PAGE_URL = betbck_config.get('login_page_url')
-    LOGIN_ACTION_URL = betbck_config.get('login_action_url')
-    MAIN_PAGE_URL_AFTER_LOGIN = betbck_config.get('main_page_url_after_login')
-    SEARCH_ACTION_URL = betbck_config.get('search_action_url', "https://betbck.com/Qubic/PlayerGameSelection.php") 
+    LOGIN_ACTION_URL = betbck_config.get(
+        'auth_api_url',
+        betbck_config.get('login_action_url', 'https://betbck.com/cloud/api/System/authenticateCustomer'),
+    )
+    MAIN_PAGE_URL_AFTER_LOGIN = betbck_config.get(
+        'main_page_url_after_login',
+        'https://betbck.com/skin/sbsports.html?url=StraightSportSelection.php',
+    )
+    SEARCH_ACTION_URL = betbck_config.get(
+        'lines_api_url',
+        betbck_config.get('search_action_url', 'https://betbck.com/cloud/api/Lines/Get_LeagueLines2'),
+    )
     GAME_WRAPPER_PRIMARY_CLASSES = betbck_config.get('game_wrapper_primary_classes', DEFAULT_GAME_WRAPPER_PRIMARY_CLASSES)
     GAME_WRAPPER_FALLBACK_CLASSES = betbck_config.get('game_wrapper_fallback_classes', DEFAULT_GAME_WRAPPER_FALLBACK_CLASSES)
 
@@ -100,35 +115,170 @@ def get_market_type_context():
 def set_market_type_context(value):
     _market_type_context.value = value
 
-# --- Core Scraper Functions ---
-def login_to_betbck(session):
+
+def _fmt_american_odds(val):
+    """Format API numeric American odds as '+110' / '-110' strings."""
+    if val is None:
+        return None
+    try:
+        n = int(val)
+    except (TypeError, ValueError):
+        return None
+    return f"+{n}" if n > 0 else str(n)
+
+
+def _fmt_spread_line(val):
+    """Normalize a numeric spread for downstream matching."""
+    if val is None:
+        return None
+    set_market_type_context("Spread")
+    return normalize_asian_handicap(str(val))
+
+
+def _fmt_total_line(val):
+    if val is None:
+        return None
+    set_market_type_context("Total")
+    return normalize_asian_handicap(str(val))
+
+
+def _session_auth(session):
+    return getattr(session, "betbck_auth", None) or {}
+
+
+def _auth_headers(session, referer=None):
+    headers = BASE_HEADERS.copy()
+    headers["Referer"] = referer or MAIN_PAGE_URL_AFTER_LOGIN
+    token = _session_auth(session).get("token")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
+def configure_betbck_http_session(session):
+    """Reuse TCP connections. Retry only gateway failures — never 403/429."""
+    retry_kwargs = dict(
+        total=2,
+        connect=2,
+        read=1,
+        backoff_factor=0.4,
+        status_forcelist=(502, 503, 504),
+        raise_on_status=False,
+    )
+    try:
+        retry = Retry(allowed_methods=frozenset(["GET", "POST"]), **retry_kwargs)
+    except TypeError:
+        try:
+            retry = Retry(
+                method_whitelist=frozenset(["GET", "POST"]),
+                total=2,
+                backoff_factor=0.4,
+                status_forcelist=(502, 503, 504),
+            )
+        except TypeError:
+            retry = Retry(total=2, backoff_factor=0.4, status_forcelist=(502, 503, 504))
+    adapter = HTTPAdapter(pool_connections=4, pool_maxsize=8, max_retries=retry)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+def new_betbck_session():
+    return configure_betbck_http_session(requests.Session())
+
+
+# --- Core Scraper Functions (cloud API) ---
+def login_to_betbck(session, fetch_homepage=True):
     import logging as _logging
     _log = _logging.getLogger(__name__)
-    _log.info("[BetbckScraper] Attempting login to BetBCK...")
-    print(f"[BetbckScraper] Attempting login to BetBCK...")
-    request_headers = BASE_HEADERS.copy(); request_headers['Referer'] = LOGIN_PAGE_URL
-    login_payload = LOGIN_PAYLOAD_TEMPLATE.copy()
+    _log.info("[BetbckScraper] Attempting login to BetBCK (cloud API)...")
+    print("[BetbckScraper] Attempting login to BetBCK...")
     try:
-        session.get(LOGIN_PAGE_URL, headers=request_headers, timeout=10)
-        login_response = session.post(LOGIN_ACTION_URL, data=login_payload, headers=request_headers, allow_redirects=True, timeout=10)
-        _has_logout = "Logout" in login_response.text
-        _has_invalid = "Invalid User" in login_response.text
-        _good_url = ("StraightLoginSportSelection.php" in login_response.url or
-                     "StraightSportSelection.php" in login_response.url or
-                     "MainMenu.php" in login_response.url)
-        _log.info(
-            f"[BetbckScraper] Login response: status={login_response.status_code} "
-            f"url='{login_response.url}' has_logout={_has_logout} "
-            f"has_invalid={_has_invalid} good_url={_good_url} "
-            f"body_preview='{login_response.text[:200].replace(chr(10),' ')}'"
+        # Homepage GET establishes Cloudflare __cf_bm — keep on first login,
+        # skip on JWT refresh when the cookie is already on the session.
+        has_cf = any(
+            getattr(c, "name", "") in ("__cf_bm", "cf_clearance")
+            for c in session.cookies
         )
-        if _good_url and _has_logout and not _has_invalid:
-            msg = f"[BetbckScraper] Login SUCCESSFUL. Final URL: {login_response.url}"
-            print(msg); _log.info(msg)
-            return True
-        msg = f"[BetbckScraper] Login FAILED. Status: {login_response.status_code}. URL: {login_response.url} has_logout={_has_logout} has_invalid={_has_invalid} good_url={_good_url}"
-        print(msg); _log.error(msg)
-        return False
+        if fetch_homepage or not has_cf:
+            page_headers = BASE_HEADERS.copy()
+            page_headers["Referer"] = LOGIN_PAGE_URL
+            page_headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+            session.get(LOGIN_PAGE_URL, headers=page_headers, timeout=15)
+
+        creds = LOGIN_PAYLOAD_TEMPLATE or {}
+        customer_id = str(creds.get("customerID") or "").strip().upper()
+        password = str(creds.get("password") or creds.get("Password") or "").strip().upper()
+        if not customer_id or not password:
+            msg = "[BetbckScraper] Login FAILED: missing customerID/password in config."
+            print(msg); _log.error(msg)
+            return False
+
+        domain = "betbck.com"
+        payload = {
+            "customerID": customer_id,
+            "state": True,
+            "password": password,
+            "multiaccount": "1",
+            "response_type": "code",
+            "client_id": customer_id,
+            "domain": domain,
+            "redirect_uri": domain,
+            "operation": "authenticateCustomer",
+            "RRO": 1,
+        }
+        headers = BASE_HEADERS.copy()
+        headers["Referer"] = LOGIN_PAGE_URL
+        headers["Content-Type"] = "application/json"
+        headers["Authorization"] = "Bearer undefined"
+
+        login_response = session.post(
+            LOGIN_ACTION_URL, json=payload, headers=headers, timeout=15
+        )
+        status = login_response.status_code
+        body_preview = login_response.text[:180].replace("\n", " ")
+        _log.info(
+            f"[BetbckScraper] Login response: status={status} "
+            f"content_type={login_response.headers.get('content-type')} "
+            f"body_preview='{body_preview}'"
+        )
+
+        if status != 200:
+            msg = f"[BetbckScraper] Login FAILED. Status: {status}"
+            print(msg); _log.error(msg)
+            return False
+
+        try:
+            data = login_response.json()
+        except Exception:
+            msg = "[BetbckScraper] Login FAILED: non-JSON response"
+            print(msg); _log.error(msg)
+            return False
+
+        token = data.get("code") or data.get("token")
+        account = data.get("accountInfo") or {}
+        if not token:
+            msg = (
+                f"[BetbckScraper] Login FAILED: no token in response "
+                f"(keys={list(data.keys())[:12]})"
+            )
+            print(msg); _log.error(msg)
+            return False
+
+        office = str(account.get("Office") or "").strip()
+        auth_customer = str(account.get("customerID") or customer_id).strip().upper()
+        session.betbck_auth = {
+            "token": token,
+            "customer_id": auth_customer,
+            "office": office,
+            "account_info": account,
+        }
+        msg = (
+            f"[BetbckScraper] Login SUCCESSFUL (cloud). "
+            f"customer={auth_customer} office={office or '?'}"
+        )
+        print(msg); _log.info(msg)
+        return True
     except requests.exceptions.Timeout:
         msg = "[BetbckScraper] Login process timed out."
         print(msg); _logging.getLogger(__name__).error(msg)
@@ -138,29 +288,64 @@ def login_to_betbck(session):
         print(msg); _logging.getLogger(__name__).error(msg)
         return False
 
-def get_search_prerequisites(session, page_url_with_search_form):
-    print(f"[BetbckScraper] Getting search prerequisites from: {page_url_with_search_form}")
-    try:
-        response = session.get(page_url_with_search_form, timeout=10); response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-        wager_input = soup.find('input', {'id': 'inetWagerNumber'}) or soup.find('input', {'name': 'inetWagerNumber'})
-        sport_input = soup.find('input', {'id': 'inetSportSelection'}) or soup.find('input', {'name': 'inetSportSelection'})
-        inet_wager_value = wager_input['value'] if wager_input and 'value' in wager_input.attrs else None
-        inet_sport_selection_value = (sport_input['value'] if sport_input and 'value' in sport_input.attrs else 'sport') or 'sport'
-        if inet_wager_value:
-            return inet_wager_value, inet_sport_selection_value
-        print("[BetbckScraper] inetWagerNumber not found on prerequisite page."); return None, 'sport'
-    except requests.exceptions.Timeout: print(f"[BetbckScraper] Timeout getting search prerequisites."); return None, 'sport'
-    except Exception as e: print(f"[BetbckScraper] Failed to get search prerequisites: {e}"); return None, 'sport'
 
-def search_team_and_get_results_html(session, team_name_query, inet_wager_val, inet_sport_select_val, event_id=None):
-    if not all([session, team_name_query, inet_wager_val, inet_sport_select_val]): print("[BetbckScraper] Search prerequisites missing."); return None
-    search_payload = {"action": "Search", "keyword_search": team_name_query, "inetWagerNumber": inet_wager_val, "inetSportSelection": inet_sport_select_val}
-    print(f"[BetbckScraper] Searching BetBCK for '{team_name_query}'...")
+def get_search_prerequisites(session, page_url_with_search_form=None):
+    """Cloud API no longer needs inetWagerNumber; keep return shape for callers."""
+    auth = _session_auth(session)
+    if auth.get("token"):
+        return "cloud", "sport"
+    print("[BetbckScraper] No cloud auth on session; login required.")
+    return None, "sport"
+
+
+def search_team_and_get_results_html(session, team_name_query, inet_wager_val=None, inet_sport_select_val=None, event_id=None):
+    """
+    Search BetBCK via Get_LeagueLines2. Returns JSON text (kept name for callers).
+    inet_wager_val / inet_sport_select_val are ignored (legacy HTML form args).
+    """
+    if not session or not team_name_query:
+        print("[BetbckScraper] Search prerequisites missing.")
+        return None
+    auth = _session_auth(session)
+    if not auth.get("token"):
+        print("[BetbckScraper] Search failed: not logged in (no token).")
+        return None
+
+    print(f"[BetbckScraper] Searching BetBCK (Get_LeagueLines2) for '{team_name_query}'...")
+    # Match browser form-urlencoded body from sbsports search-line.
+    form = {
+        "customerID": auth.get("customer_id") or "",
+        "operation": "Get_LeagueLines2",
+        "sportType": "",
+        "sportSubType": "",
+        "period": "Game",
+        "hourFilter": "0",
+        "propDescription": "",
+        "wagerType": "Straight",
+        "keyword": team_name_query,
+        "office": auth.get("office") or "",
+        "correlationID": "",
+        "periodNumber": "0",
+        "periods": "0",
+        "rotOrder": "0",
+        "placeLateFlag": "false",
+        "RRO": "1",
+    }
+    headers = _auth_headers(session)
+    headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
     try:
-        response = session.post(SEARCH_ACTION_URL, data=search_payload, headers=BASE_HEADERS, timeout=15); response.raise_for_status()
-        print(f"[BetbckScraper] Search POST successful (Status: {response.status_code}). Response size: {len(response.text)} bytes.")
+        response = session.post(SEARCH_ACTION_URL, data=form, headers=headers, timeout=20)
         _alog = _get_alert_logger(event_id) if event_id else None
+        if response.status_code in (401, 403):
+            print(f"[BetbckScraper] Search auth/forbidden HTTP {response.status_code} for '{team_name_query}'.")
+            if _alog:
+                _alog.log_search_error(team_name_query, Exception(f"HTTP {response.status_code}"), str(response.status_code))
+            return None
+        response.raise_for_status()
+        print(
+            f"[BetbckScraper] Search POST successful (Status: {response.status_code}). "
+            f"Response size: {len(response.text)} bytes."
+        )
         if _alog:
             _alog.log_search(team_name_query, response.status_code, len(response.text), SEARCH_ACTION_URL)
         return response.text
@@ -637,8 +822,382 @@ def get_cleaned_team_name_from_div(team_div):
     raw_name = re.sub(r'\s*\((hits\+runs\+errors|h\+r\+e|hre)\)$', '', raw_name, flags=re.IGNORECASE).strip()
     return " ".join(raw_name.split()) if raw_name else ""
 
+def _classify_period_description(period_desc: str, period_number=None) -> str:
+    """Map Get_LeagueLines2 PeriodDescription to row_data keys."""
+    t = (period_desc or "").lower().strip()
+    if not t and period_number is not None:
+        try:
+            pn = int(period_number)
+            if pn == 0:
+                return "full_game"
+            if pn == 1:
+                return "half_1"
+            if pn == 2:
+                return "half_2"
+        except (TypeError, ValueError):
+            pass
+    if not t or t in ("game", "full game", "fg"):
+        return "full_game"
+    if "1st half" in t or t in ("1h", "first half"):
+        return "half_1"
+    if "2nd half" in t or t in ("2h", "second half"):
+        return "half_2"
+    if "1st 5" in t or "first 5" in t or t == "f5":
+        return "half_1"
+    if "3rd" in t or "3p" in t:
+        return "period_3"
+    if "2nd" in t or "2p" in t or "2q" in t:
+        return "period_2"
+    if "1st" in t or "1p" in t or "1q" in t:
+        return "period_1"
+    if "reg" in t:
+        return "reg_time"
+    if t in ("ot", "et"):
+        return "ot"
+    return "full_game"
+
+
+def _line_looks_like_prop(line: dict) -> bool:
+    t1 = str(line.get("Team1ID") or "")
+    t2 = str(line.get("Team2ID") or "")
+    sub = str(line.get("SportSubType") or "")
+    sub_disp = str(line.get("SportSubTypeDisplay") or "")
+    sched = str(line.get("ScheduleText") or "")
+    blob = f"{t1} {t2} {sub} {sub_disp} {sched}".lower()
+    if "prop" in sub.lower() or "prop" in sub_disp.lower():
+        return True
+    try:
+        if is_prop_or_corner_alert(t1, t2) or is_prop_market_by_name(t1, t2):
+            return True
+    except Exception:
+        pass
+    prop_bits = (
+        "season points", "season pts", "outright", "to win", "mvp", "futures",
+        "player total", "corners", "bookings", "cards", "fouls",
+    )
+    return any(b in blob for b in prop_bits)
+
+
+def _score_team_pair(raw_bck_l, raw_bck_v, target_home, target_away):
+    """
+    Return (matched, bck_local_is_pod_home, scores_dict, match_score).
+    Mirrors the HTML matcher orientation logic at a lighter weight.
+    """
+    scores = {}
+    norm_l = normalize_team_name_for_matching(raw_bck_l)
+    norm_v = normalize_team_name_for_matching(raw_bck_v)
+    norm_h = normalize_team_name_for_matching(target_home)
+    norm_a = normalize_team_name_for_matching(target_away)
+
+    if norm_l == norm_h and norm_v == norm_a:
+        scores["exact_order1"] = 100
+        return True, True, scores, 300
+    if norm_l == norm_a and norm_v == norm_h:
+        scores["exact_order2"] = 100
+        return True, False, scores, 300
+
+    if fuzz is None:
+        return False, True, scores, 0
+
+    ts_lh = fuzz.token_set_ratio(norm_l, norm_h)
+    ts_va = fuzz.token_set_ratio(norm_v, norm_a)
+    ts_la = fuzz.token_set_ratio(norm_l, norm_a)
+    ts_vh = fuzz.token_set_ratio(norm_v, norm_h)
+    scores["token_set_h"] = max(ts_lh, ts_vh)
+    scores["token_set_a"] = max(ts_va, ts_la)
+    fwd = ts_lh + ts_va
+    rev = ts_la + ts_vh
+    best = max(fwd, rev)
+    scores["_sum_fwd"] = fwd
+    scores["_sum_best"] = best
+
+    # Distinctive-part guard (same idea as HTML path)
+    def _distinct(name):
+        return _strip_generic_soccer_words(name)
+
+    thr = FUZZY_MATCH_THRESHOLD
+    if fwd >= thr * 2 and fwd >= rev:
+        dl, dh = _distinct(norm_l), _distinct(norm_h)
+        dv, da = _distinct(norm_v), _distinct(norm_a)
+        if dl and dh and fuzz.token_set_ratio(dl, dh) < 50:
+            return False, True, scores, best
+        if dv and da and fuzz.token_set_ratio(dv, da) < 50:
+            return False, True, scores, best
+        return True, True, scores, best
+    if rev >= thr * 2:
+        dl, da = _distinct(norm_l), _distinct(norm_a)
+        dv, dh = _distinct(norm_v), _distinct(norm_h)
+        if dl and da and fuzz.token_set_ratio(dl, da) < 50:
+            return False, False, scores, best
+        if dv and dh and fuzz.token_set_ratio(dv, dh) < 50:
+            return False, False, scores, best
+        return True, False, scores, best
+    return False, True, scores, best
+
+
+def _output_data_from_line(line: dict, target_home, target_away, bck_local_is_pod_home):
+    """Build the standard POD/EV game dict from one Get_LeagueLines2 line object."""
+    raw_bck_l = str(line.get("Team1ID") or "").strip()
+    raw_bck_v = str(line.get("Team2ID") or "").strip()
+    output = {
+        "source": "betbck.com",
+        "betbck_displayed_local": raw_bck_l,
+        "betbck_displayed_visitor": raw_bck_v,
+        "pod_home_team": target_home,
+        "pod_away_team": target_away,
+        "home_moneyline_american": None,
+        "away_moneyline_american": None,
+        "draw_moneyline_american": None,
+        "home_spreads": [],
+        "away_spreads": [],
+        "game_total_line": None,
+        "game_total_over_odds": None,
+        "game_total_under_odds": None,
+        "home_team_total_over_line": None,
+        "home_team_total_over_odds": None,
+        "home_team_total_under_line": None,
+        "home_team_total_under_odds": None,
+        "away_team_total_over_line": None,
+        "away_team_total_over_odds": None,
+        "away_team_total_under_line": None,
+        "away_team_total_under_odds": None,
+        "bck_local_is_pod_home": bck_local_is_pod_home,
+        "game_num": line.get("GameNum"),
+        "period_description": str(line.get("PeriodDescription") or "").strip(),
+        "sport_type": str(line.get("SportType") or "").strip(),
+        "sport_subtype": str(line.get("SportSubTypeDisplay") or line.get("SportSubType") or "").strip(),
+    }
+
+    ml1 = _fmt_american_odds(line.get("MoneyLine1"))
+    ml2 = _fmt_american_odds(line.get("MoneyLine2"))
+    mld = _fmt_american_odds(line.get("MoneyLineDraw"))
+    sp = line.get("Spread")
+    sp_adj1 = _fmt_american_odds(line.get("SpreadAdj1"))
+    sp_adj2 = _fmt_american_odds(line.get("SpreadAdj2"))
+    tot = line.get("TotalPoints")
+    tot_over = _fmt_american_odds(line.get("TtlPtsAdj1"))
+    tot_under = _fmt_american_odds(line.get("TtlPtsAdj2"))
+    t1_tot = line.get("Team1TotalPoints")
+    t2_tot = line.get("Team2TotalPoints")
+
+    # Team1 = BetBCK local/top; map onto POD home/away via orientation flag
+    if bck_local_is_pod_home:
+        output["home_moneyline_american"] = ml1
+        output["away_moneyline_american"] = ml2
+        if sp is not None and sp_adj1:
+            output["home_spreads"].append({"line": _fmt_spread_line(sp), "odds": sp_adj1})
+        if sp is not None and sp_adj2:
+            try:
+                away_sp = -float(sp)
+            except (TypeError, ValueError):
+                away_sp = sp
+            output["away_spreads"].append({"line": _fmt_spread_line(away_sp), "odds": sp_adj2})
+        output["home_team_total_over_line"] = _fmt_total_line(t1_tot)
+        output["home_team_total_over_odds"] = _fmt_american_odds(line.get("Team1TtlPtsAdj1"))
+        output["home_team_total_under_line"] = _fmt_total_line(t1_tot)
+        output["home_team_total_under_odds"] = _fmt_american_odds(line.get("Team1TtlPtsAdj2"))
+        output["away_team_total_over_line"] = _fmt_total_line(t2_tot)
+        output["away_team_total_over_odds"] = _fmt_american_odds(line.get("Team2TtlPtsAdj1"))
+        output["away_team_total_under_line"] = _fmt_total_line(t2_tot)
+        output["away_team_total_under_odds"] = _fmt_american_odds(line.get("Team2TtlPtsAdj2"))
+    else:
+        output["home_moneyline_american"] = ml2
+        output["away_moneyline_american"] = ml1
+        if sp is not None and sp_adj2:
+            try:
+                home_sp = -float(sp)
+            except (TypeError, ValueError):
+                home_sp = sp
+            output["home_spreads"].append({"line": _fmt_spread_line(home_sp), "odds": sp_adj2})
+        if sp is not None and sp_adj1:
+            output["away_spreads"].append({"line": _fmt_spread_line(sp), "odds": sp_adj1})
+        output["home_team_total_over_line"] = _fmt_total_line(t2_tot)
+        output["home_team_total_over_odds"] = _fmt_american_odds(line.get("Team2TtlPtsAdj1"))
+        output["home_team_total_under_line"] = _fmt_total_line(t2_tot)
+        output["home_team_total_under_odds"] = _fmt_american_odds(line.get("Team2TtlPtsAdj2"))
+        output["away_team_total_over_line"] = _fmt_total_line(t1_tot)
+        output["away_team_total_over_odds"] = _fmt_american_odds(line.get("Team1TtlPtsAdj1"))
+        output["away_team_total_under_line"] = _fmt_total_line(t1_tot)
+        output["away_team_total_under_odds"] = _fmt_american_odds(line.get("Team1TtlPtsAdj2"))
+
+    output["draw_moneyline_american"] = mld
+    if tot is not None:
+        output["game_total_line"] = _fmt_total_line(tot)
+        output["game_total_over_odds"] = tot_over
+        output["game_total_under_odds"] = tot_under
+    return output
+
+
+def _parse_bck_game_datetime(line: dict):
+    raw = line.get("GameDateTime") or line.get("ScheduleDate")
+    if not raw:
+        return None
+    try:
+        # "2026-08-23 10:30:01.000"
+        return datetime.datetime.strptime(str(raw).split(".")[0].strip(), "%Y-%m-%d %H:%M:%S")
+    except Exception:
+        try:
+            return datetime.datetime.fromisoformat(str(raw).replace("Z", ""))
+        except Exception:
+            return None
+
+
+def parse_specific_game_from_lines_json(json_content, target_home_team_pod, target_away_team_pod, event_id=None, event_date=None):
+    """Parse Get_LeagueLines2 JSON into the same shape as the HTML game parser."""
+    if not json_content:
+        print(f"[BetbckParser] No JSON content. (Event ID: {event_id})")
+        return None
+    _alog = _get_alert_logger(event_id) if event_id else None
+    try:
+        payload = json.loads(json_content) if isinstance(json_content, str) else json_content
+    except Exception as e:
+        print(f"[BetbckParser] Invalid JSON: {e} (Event ID: {event_id})")
+        return None
+
+    lines = payload.get("Lines") if isinstance(payload, dict) else None
+    if not isinstance(lines, list) or not lines:
+        print(f"[BetbckParser] No Lines in API response. (Event ID: {event_id})")
+        if _alog:
+            _alog.log_not_found(target_home_team_pod, target_away_team_pod, "")
+        return None
+
+    # Group period rows by GameNum for matched games
+    matches = []
+    _global_best = {"bck_home": None, "bck_away": None, "score": 0, "scores": {}}
+
+    # First pass: find GameNums that match POD teams (using any period row)
+    game_orientation = {}  # GameNum -> (bck_local_is_pod_home, scores, match_score, teams)
+    for line in lines:
+        if not isinstance(line, dict):
+            continue
+        if str(line.get("Status") or "").strip().upper() not in ("O", "I", ""):
+            # Still allow "O" primarily; skip clearly closed if other codes appear later
+            pass
+        if _line_looks_like_prop(line):
+            continue
+        raw_l = str(line.get("Team1ID") or "").strip()
+        raw_v = str(line.get("Team2ID") or "").strip()
+        if not raw_l or not raw_v:
+            continue
+        gnum = line.get("GameNum")
+        if gnum in game_orientation:
+            continue
+        matched, orient, scores, mscore = _score_team_pair(
+            raw_l, raw_v, target_home_team_pod, target_away_team_pod
+        )
+        if matched:
+            game_orientation[gnum] = (orient, scores, mscore, raw_l, raw_v)
+            if _alog:
+                _alog.log_match_candidate(raw_l, raw_v, target_home_team_pod, target_away_team_pod, {k: v for k, v in scores.items() if not str(k).startswith("_")}, True)
+        else:
+            cand = scores.get("_sum_best", 0)
+            if cand > _global_best["score"]:
+                _global_best.update({"bck_home": raw_l, "bck_away": raw_v, "score": cand, "scores": scores})
+
+    if not game_orientation:
+        if _alog:
+            if _global_best["bck_home"]:
+                _alog.log_closest_candidate(
+                    _global_best["bck_home"], _global_best["bck_away"],
+                    _global_best["score"], FUZZY_MATCH_THRESHOLD * 2, _global_best["scores"],
+                )
+            _alog.log_not_found(target_home_team_pod, target_away_team_pod, "")
+        print(f"[BetbckParser] No game matching POD teams in Lines JSON. (Event ID: {event_id})")
+        return None
+
+    # Prefer open ("O") lines; build row_data per GameNum then pick best GameNum
+    by_game = {}
+    for line in lines:
+        if not isinstance(line, dict):
+            continue
+        gnum = line.get("GameNum")
+        if gnum not in game_orientation:
+            continue
+        if _line_looks_like_prop(line):
+            continue
+        status = str(line.get("Status") or "").strip().upper()
+        if status and status not in ("O",):
+            # Keep 1H etc. only when open; skip inactive props already filtered
+            if status != "O":
+                continue
+        orient, scores, mscore, raw_l, raw_v = game_orientation[gnum]
+        rtype = _classify_period_description(line.get("PeriodDescription"), line.get("PeriodNumber"))
+        out = _output_data_from_line(line, target_home_team_pod, target_away_team_pod, orient)
+        bck_date = _parse_bck_game_datetime(line)
+
+        # Date reject (same windows as HTML parser)
+        _DATE_REJECT_HOURS = 18
+        _DATE_REJECT_HOURS_NO_ANCHOR = 168
+        if bck_date and not ("exact_order1" in scores or "exact_order2" in scores):
+            if event_date is not None:
+                gap_h = abs((bck_date - event_date).total_seconds()) / 3600
+                if gap_h > _DATE_REJECT_HOURS:
+                    print(f"[BetbckParser] DATE REJECT JSON: {raw_l} vs {raw_v} gap={gap_h:.1f}h (Event ID: {event_id})")
+                    continue
+            else:
+                hours_from_now = (bck_date - datetime.datetime.now()).total_seconds() / 3600
+                if hours_from_now > _DATE_REJECT_HOURS_NO_ANCHOR or hours_from_now < -24:
+                    continue
+
+        bucket = by_game.setdefault(gnum, {
+            "row_data": {},
+            "score": mscore,
+            "bck_date": bck_date,
+            "bck_home": raw_l,
+            "bck_away": raw_v,
+            "scores": scores,
+        })
+        # Merge alt spreads into existing period row when present
+        if rtype in bucket["row_data"]:
+            existing = bucket["row_data"][rtype]
+            for key in ("home_spreads", "away_spreads"):
+                seen = {(s.get("line"), s.get("odds")) for s in existing.get(key) or []}
+                for s in out.get(key) or []:
+                    tup = (s.get("line"), s.get("odds"))
+                    if tup not in seen:
+                        existing.setdefault(key, []).append(s)
+                        seen.add(tup)
+        else:
+            bucket["row_data"][rtype] = out
+        if bck_date and (bucket["bck_date"] is None or bck_date < bucket["bck_date"]):
+            bucket["bck_date"] = bck_date
+
+    if not by_game:
+        print(f"[BetbckParser] All JSON candidates date-rejected. (Event ID: {event_id})")
+        return None
+
+    def _game_sort_key(item):
+        gnum, meta = item
+        score = -meta.get("score", 0)
+        if event_date is not None and meta.get("bck_date") is not None:
+            date_diff = abs((meta["bck_date"] - event_date).total_seconds())
+        else:
+            date_diff = float("inf")
+        return (score, date_diff)
+
+    best_gnum, best_meta = sorted(by_game.items(), key=_game_sort_key)[0]
+    row_data = best_meta["row_data"]
+    print(f"[BetbckParser] JSON match GameNum={best_gnum} row_data keys={list(row_data.keys())} (Event ID: {event_id})")
+    if _alog:
+        _alog.log_found(best_meta["bck_home"], best_meta["bck_away"])
+
+    if "full_game" in row_data:
+        primary = row_data["full_game"]
+    else:
+        primary = next(iter(row_data.values()))
+    primary = dict(primary)
+    primary["row_data"] = row_data
+    return primary
+
+
 def parse_specific_game_from_search_html(html_content, target_home_team_pod, target_away_team_pod, event_id=None, event_date=None):
     if not html_content: print(f"[BetbckParser] No HTML content. (Event ID: {event_id})"); return None
+    # Cloud API path: search now returns Get_LeagueLines2 JSON
+    stripped = html_content.lstrip() if isinstance(html_content, str) else ""
+    if stripped.startswith("{") and '"Lines"' in stripped[:500]:
+        return parse_specific_game_from_lines_json(
+            html_content, target_home_team_pod, target_away_team_pod, event_id, event_date
+        )
     _alog = _get_alert_logger(event_id) if event_id else None
     soup = BeautifulSoup(html_content, 'html.parser'); search_context = soup.find('form', {'name': 'GameSelectionForm', 'id': 'GameSelectionForm'}) or soup
     game_wrappers = []
@@ -1015,17 +1574,36 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
 
 def parse_game_data_from_html(search_results_html, search_term):
     """
-    Wrapper function that parses game data from BetBCK search results HTML.
-    Used by the BetBCK Request Manager for consistent parsing.
+    Wrapper function that parses game data from BetBCK search results.
+    Accepts Get_LeagueLines2 JSON (cloud) or legacy HTML.
     """
-    # For now, we need to extract the home/away team names from search context
-    # Since we only have the search term, we'll try to find the first matching game
-    # This is a simplified approach - in a real implementation, you'd want to 
-    # specify the exact teams to search for
-    
     if not search_results_html:
         return None
-    
+
+    stripped = search_results_html.lstrip() if isinstance(search_results_html, str) else ""
+    if stripped.startswith("{") and '"Lines"' in stripped[:800]:
+        try:
+            payload = json.loads(search_results_html)
+            lines = payload.get("Lines") or []
+            for line in lines:
+                if not isinstance(line, dict) or _line_looks_like_prop(line):
+                    continue
+                if str(line.get("Status") or "").strip().upper() not in ("O", ""):
+                    continue
+                home = str(line.get("Team1ID") or "").strip()
+                away = str(line.get("Team2ID") or "").strip()
+                if home and away:
+                    result = parse_specific_game_from_lines_json(
+                        search_results_html, home, away
+                    )
+                    if result:
+                        _rdata = result.get('row_data', {})
+                        result['1H_data'] = _rdata.get('half_1') or _rdata.get('period_1')
+                    return result
+        except Exception as e:
+            print(f"[BetbckParser] JSON parse_game_data_from_html failed: {e}")
+            return None
+
     from bs4 import BeautifulSoup
     soup = BeautifulSoup(search_results_html, 'html.parser')
     search_context = soup.find('form', {'name': 'GameSelectionForm', 'id': 'GameSelectionForm'}) or soup
@@ -1068,10 +1646,10 @@ def parse_game_data_from_html(search_results_html, search_term):
 # --- Main Callable Function ---
 def scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck=None, event_id=None):
     print(f"\n[BetbckScraper-CORE] Initiating scrape for: '{pod_home_team}' vs '{pod_away_team}' (Event ID: {event_id})")
-    session = requests.Session();
+    session = new_betbck_session()
     if not login_to_betbck(session): print("[BetbckScraper-CORE] Login failed."); return None
     inet_wager, inet_sport_select = get_search_prerequisites(session, MAIN_PAGE_URL_AFTER_LOGIN)
-    if not inet_wager : print("[BetbckScraper-CORE] Failed to get inetWagerNumber."); return None 
+    if not inet_wager : print("[BetbckScraper-CORE] Failed to get cloud auth prerequisites."); return None 
     actual_search_query = search_team_name_betbck
     if not actual_search_query:
         temp_cleaned_home = normalize_team_name_for_matching(pod_home_team) 
@@ -1084,34 +1662,26 @@ def scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck
         print(f"[BetbckScraper-CORE] Derived search query '{actual_search_query}' from '{pod_home_team}'")
     print(f"[BetbckScraper-CORE] Using BetBCK search query: '{actual_search_query}'")
     search_results_html = search_team_and_get_results_html(session, actual_search_query, inet_wager, inet_sport_select or 'sport')
-    if not search_results_html: print(f"[BetbckScraper-CORE] No search results HTML for '{actual_search_query}'."); return None
-    debug_html_dir = os.path.join(SCRIPT_DIR, "betbck_html_logs"); os.makedirs(debug_html_dir, exist_ok=True)
-    safe_pod_home = re.sub(r'[^\w\-_.]', '_', normalize_team_name_for_matching(pod_home_team)); safe_pod_away = re.sub(r'[^\w\-_.]', '_', normalize_team_name_for_matching(pod_away_team))
-    pod_teams_fn_part = f"{safe_pod_home}_vs_{safe_pod_away}"[:100]; safe_search_q = re.sub(r'[^\w\-_.]', '_', actual_search_query); ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-    
-    # Add event_id to filename to prevent race conditions
-    event_suffix = f"_event_{event_id}" if event_id else ""
-    debug_fn = os.path.join(debug_html_dir, f"search_{safe_search_q}_{pod_teams_fn_part}_{ts}{event_suffix}.html")
-    
-    try:
-        with open(debug_fn, "w", encoding="utf-8") as f: f.write(search_results_html)
-        print(f"[BetbckScraper-CORE] DEBUG: Saved BetBCK search HTML to {debug_fn}")
-    except Exception as e: print(f"[BetbckScraper-CORE] DEBUG: ERROR saving HTML: {e}")
+    if not search_results_html: print(f"[BetbckScraper-CORE] No search results for '{actual_search_query}'."); return None
+    if os.environ.get("BETBCK_DEBUG_HTML"):
+        debug_html_dir = os.path.join(SCRIPT_DIR, "betbck_html_logs"); os.makedirs(debug_html_dir, exist_ok=True)
+        safe_pod_home = re.sub(r'[^\w\-_.]', '_', normalize_team_name_for_matching(pod_home_team)); safe_pod_away = re.sub(r'[^\w\-_.]', '_', normalize_team_name_for_matching(pod_away_team))
+        pod_teams_fn_part = f"{safe_pod_home}_vs_{safe_pod_away}"[:100]; safe_search_q = re.sub(r'[^\w\-_.]', '_', actual_search_query); ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+        event_suffix = f"_event_{event_id}" if event_id else ""
+        debug_fn = os.path.join(debug_html_dir, f"search_{safe_search_q}_{pod_teams_fn_part}_{ts}{event_suffix}.json")
+        try:
+            with open(debug_fn, "w", encoding="utf-8") as f: f.write(search_results_html)
+            print(f"[BetbckScraper-CORE] DEBUG: Saved BetBCK search JSON to {debug_fn}")
+        except Exception as e: print(f"[BetbckScraper-CORE] DEBUG: ERROR saving search payload: {e}")
     parsed_game_data = parse_specific_game_from_search_html(search_results_html, pod_home_team, pod_away_team, event_id)
-    # --- Add BetBCK payload for POD alerts ---
     if parsed_game_data and isinstance(parsed_game_data, dict):
-        from bs4 import BeautifulSoup
-        soup = BeautifulSoup(search_results_html, "html.parser")
-        wager_input = soup.find('input', {'id': 'inetWagerNumber'}) or soup.find('input', {'name': 'inetWagerNumber'})
-        inetWagerNumber = wager_input['value'] if wager_input and 'value' in wager_input.attrs else None
-        sport_input = soup.find('input', {'id': 'inetSportSelection'}) or soup.find('input', {'name': 'inetSportSelection'})
-        inetSportSelection = sport_input['value'] if sport_input and 'value' in sport_input.attrs else 'sport'
+        auth = _session_auth(session)
         parsed_game_data['betbck_payload'] = {
-            'inetWagerNumber': inetWagerNumber,
-            'inetSportSelection': inetSportSelection,
-            'keyword_search': actual_search_query
+            'api': 'Get_LeagueLines2',
+            'keyword_search': actual_search_query,
+            'customerID': auth.get('customer_id'),
+            'office': auth.get('office'),
         }
-    # Derive 1H_data from already-parsed row_data (covers all period types correctly)
     if parsed_game_data:
         print(f"[BetbckScraper-CORE] Scraper returned parsed game data.")
         _rdata = parsed_game_data.get('row_data', {})
@@ -1119,7 +1689,7 @@ def scrape_betbck_for_game(pod_home_team, pod_away_team, search_team_name_betbck
         if parsed_game_data['1H_data']:
             print(f"[BetbckScraper-CORE] 1H_data populated from row_data: keys={list(_rdata.keys())}")
     else: 
-        print(f"[BetbckScraper-CORE] Scraper did NOT find or parse specific game from HTML.")
+        print(f"[BetbckScraper-CORE] Scraper did NOT find or parse specific game from API JSON.")
     return parsed_game_data 
 
 # --- Tennis Last Name Utility ---
@@ -1145,7 +1715,7 @@ def extract_last_name(full_name):
 
 def scrape_all_betbck_games():
     """Scrape all games and lines from the BetBCK main board after login."""
-    session = requests.Session()
+    session = new_betbck_session()
     if not login_to_betbck(session):
         print("[BetbckScraper] Login failed.")
         return []

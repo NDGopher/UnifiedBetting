@@ -329,9 +329,9 @@ class BuckeyeScraper:
                 return None
             search_term = determine_betbck_search_term(raw_home, raw_away)
             logger.info(f"[BETBCK-MATCH] '{clean_home}' vs '{clean_away}' → search: '{search_term}'")
-            from betbck_scraper import scrape_betbck_for_game
-            betbck_data = scrape_betbck_for_game(clean_home, clean_away, search_term)
-            if betbck_data and betbck_data.get("status") == "success":
+            from betbck_request_manager import scrape_betbck_for_game_queued
+            betbck_data = scrape_betbck_for_game_queued(clean_home, clean_away, search_term)
+            if betbck_data and (betbck_data.get("status") == "success" or betbck_data.get("row_data") or betbck_data.get("site_team1")):
                 logger.info(f"[BETBCK-MATCH] Match found for '{clean_home}' vs '{clean_away}'")
                 return betbck_data
             logger.warning(f"[BETBCK-MATCH] No BetBCK data for '{clean_home}' vs '{clean_away}'")

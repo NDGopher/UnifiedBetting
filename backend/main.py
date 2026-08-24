@@ -2996,13 +2996,15 @@ def get_results():
 @app.post("/api/betbck/open_bet")
 async def open_bet(request: Request):
     payload = await request.json()
-    import requests
-    from betbck_scraper import login_to_betbck, SEARCH_ACTION_URL, BASE_HEADERS
-    session = requests.Session()
+    from betbck_scraper import login_to_betbck, SEARCH_ACTION_URL, _auth_headers, new_betbck_session
+    session = new_betbck_session()
     if not login_to_betbck(session):
         return JSONResponse({"status": "error", "message": "Failed to login to BetBCK"}, status_code=500)
     try:
-        response = session.post(SEARCH_ACTION_URL, data=payload, headers=BASE_HEADERS, timeout=15)
+        # Cloud Lines API expects form fields + Bearer token (legacy HTML bet-open may need a follow-up).
+        headers = _auth_headers(session)
+        headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+        response = session.post(SEARCH_ACTION_URL, data=payload, headers=headers, timeout=15)
         if response.ok:
             return JSONResponse({"status": "success", "message": "Bet page opened"})
         else:
