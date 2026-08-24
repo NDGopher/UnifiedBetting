@@ -4,6 +4,7 @@ import queue
 import requests
 import logging
 import random
+import json
 from datetime import datetime
 from typing import Optional, Dict, Any
 from betbck_scraper import login_to_betbck, search_team_and_get_results_html, get_search_prerequisites, parse_game_data_from_html
@@ -45,7 +46,8 @@ class BetBCKRequestManager:
         self.REQUEST_DELAY_MAX = 1.0     # Reduced to 1.0 seconds for faster alerts
         self.MAX_FAILURES = 3           # Max consecutive failures before circuit breaker
         self.RATE_LIMIT_COOLDOWN = 300   # 5 minutes cooldown if rate limited
-        self.SESSION_REFRESH_INTERVAL = 3000  # Increased to 50 minutes (sessions last longer)
+        # Cloud JWT from authenticateCustomer is ~20 min; refresh before expiry
+        self.SESSION_REFRESH_INTERVAL = 720  # 12 minutes
         self.RATE_LIMIT_FAILURE_THRESHOLD = 5  # Require 5 consecutive rate limit failures before pausing
         self.last_session_refresh = 0
         
@@ -138,18 +140,18 @@ class BetBCKRequestManager:
                     self._set_frontend_alert("BetBCK login failed", "error")
                     raise Exception("Failed to login to BetBCK")
                 
-                # Get search prerequisites from main page
+                # Cloud API: token stored on session; inet_* kept for legacy call signatures
                 self.inet_wager, self.inet_sport_select = get_search_prerequisites(
                     self.session, MAIN_PAGE_URL_AFTER_LOGIN
                 )
                 
                 if not self.inet_wager:
-                    logger.error("[BetBCK-Manager] Failed to get search prerequisites")
+                    logger.error("[BetBCK-Manager] Failed to establish BetBCK cloud session")
                     self._set_frontend_alert("BetBCK setup failed", "error")
-                    raise Exception("Failed to get search prerequisites")
+                    raise Exception("Failed to get BetBCK cloud session")
                 
                 self.last_session_refresh = now
-                logger.info("[BetBCK-Manager] Session refreshed successfully")
+                logger.info("[BetBCK-Manager] Session refreshed successfully (cloud API)")
             
             # Skip unnecessary page navigation for speed
             # The search should work directly without going to main page first
@@ -274,18 +276,27 @@ class BetBCKRequestManager:
                 self._handle_rate_limit_detected(search_term, future)
                 return
 
-            # ── Small-response guard: session may have expired mid-interval ────────
-            # BetBCK returns a minimal page (~1961 bytes) when the session cookie has
-            # expired between our 50-minute refresh cycles.  If we see a suspiciously
-            # small response we log the full content (for diagnosis), force-expire the
-            # session, and retry once with a fresh login.
-            SMALL_RESPONSE_THRESHOLD = 5000   # bytes
-            if search_results_html and len(search_results_html) < SMALL_RESPONSE_THRESHOLD:
-                logger.warning(
-                    f"[BetBCK-Manager] *** SMALL RESPONSE ({len(search_results_html)} bytes) for "
-                    f"'{search_term}' — possible expired session. Full content:\n{search_results_html}"
-                )
-                # Force session expiry so _get_or_refresh_session re-logins immediately
+            # ── Auth-retry only on clear session problems (not empty Lines) ───────
+            force_retry = False
+            if search_results_html:
+                stripped = search_results_html.lstrip()
+                if stripped.startswith("{"):
+                    try:
+                        _payload = json.loads(search_results_html)
+                        if isinstance(_payload, dict) and _payload.get("CaptchaRequired"):
+                            force_retry = True
+                            logger.warning("[BetBCK-Manager] CaptchaRequired in Lines response — refreshing session")
+                    except Exception:
+                        pass  # leave as-is; parser will fail cleanly
+                elif "<html" in stripped[:200].lower():
+                    force_retry = True
+                    logger.warning("[BetBCK-Manager] HTML error page instead of Lines JSON — refreshing session")
+            # None response often means 401 from search_team_and_get_results_html
+            elif search_results_html is None:
+                force_retry = True
+                logger.warning("[BetBCK-Manager] Empty search response — refreshing session once")
+
+            if force_retry:
                 with self.session_lock:
                     self.last_session_refresh = 0
                 logger.warning(f"[BetBCK-Manager] Forcing session refresh and retrying '{search_term}'...")
@@ -293,20 +304,6 @@ class BetBCKRequestManager:
                 search_results_html = search_team_and_get_results_html(
                     session, search_term, self.inet_wager, self.inet_sport_select, event_id
                 )
-                if search_results_html and len(search_results_html) < SMALL_RESPONSE_THRESHOLD:
-                    logger.warning(
-                        f"[BetBCK-Manager] Retry also returned small response ({len(search_results_html)} bytes). "
-                        f"Full retry content:\n{search_results_html}"
-                    )
-                    logger.warning(
-                        f"[BetBCK-Manager] Team '{search_term}' may not be indexed in BetBCK keyword search "
-                        f"(BetBCK may not carry this league, or league not searchable via keyword)."
-                    )
-                else:
-                    logger.info(
-                        f"[BetBCK-Manager] Retry succeeded — got {len(search_results_html) if search_results_html else 0} bytes "
-                        f"(session had expired, now refreshed)."
-                    )
             # ─────────────────────────────────────────────────────────────────────
 
             # Debug: Log response preview to understand what's being returned
