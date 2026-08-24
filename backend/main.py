@@ -1349,42 +1349,41 @@ async def get_buckeye_scraper_status():
         }, status_code=500)
 
 @app.post('/buckeye/get-event-ids')
-def get_event_ids():
+async def get_event_ids():
+    """Fetch today's Pinnacle event IDs in-process (do not spawn `python`)."""
     try:
-        result = subprocess.run(['python', 'eventID.py'], capture_output=True, text=True, timeout=300)
-        if result.returncode != 0:
-            return JSONResponse(status_code=500, content={
-                'status': 'error',
-                'message': f'eventID.py failed: {result.stderr}',
-                'data': {}
-            })
-        # Read data/buckeye_event_ids.json for event count
-        if os.path.exists('data/buckeye_event_ids.json'):
-            with open('data/buckeye_event_ids.json', 'r', encoding='utf-8') as f:
-                events_data = f.read()
-            import json
-            events_json = json.loads(events_data)
-            event_dicts = events_json.get('event_ids', [])
-            event_count = len(event_dicts)
-            return {
-                'status': 'success',
-                'message': f'Successfully retrieved {event_count} event IDs',
-                'data': {
-                    'event_count': event_count,
-                    'event_ids': [event['event_id'] for event in event_dicts if isinstance(event, dict) and 'event_id' in event]
-                }
-            }
-        else:
-            return {
-                'status': 'error',
-                'message': 'data/buckeye_event_ids.json not found after running eventID.py',
-                'data': {}
-            }
-    except Exception as e:
+        from eventID import get_todays_event_ids, save_event_ids
+        loop = asyncio.get_running_loop()
+        event_dicts = await asyncio.wait_for(
+            loop.run_in_executor(None, get_todays_event_ids),
+            timeout=300,
+        )
+        event_dicts = event_dicts or []
+        save_event_ids(event_dicts)
+        return {
+            'status': 'success',
+            'message': f'Successfully retrieved {len(event_dicts)} event IDs',
+            'data': {
+                'event_count': len(event_dicts),
+                'event_ids': [
+                    event['event_id']
+                    for event in event_dicts
+                    if isinstance(event, dict) and 'event_id' in event
+                ],
+            },
+        }
+    except asyncio.TimeoutError:
         return JSONResponse(status_code=500, content={
             'status': 'error',
-            'message': f'Exception running eventID.py: {e}',
-            'data': {}
+            'message': 'Timed out fetching event IDs from Pinnacle',
+            'data': {},
+        })
+    except Exception as e:
+        logger.error(f"Exception fetching event IDs: {e}")
+        return JSONResponse(status_code=500, content={
+            'status': 'error',
+            'message': f'Exception fetching event IDs: {e}',
+            'data': {},
         })
 
 BUCKEYE_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'buckeye_results.json')
