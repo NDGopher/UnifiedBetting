@@ -1,5 +1,7 @@
 // Relays dashboard "Place Bet" postMessage to the extension background.
-// This script only runs on localhost (the React/FastAPI dashboard), not on betbck.com.
+if (!/^https?:\/\/(localhost|127\.0\.0\.1):(8000|5000)\b/i.test(location.origin || '')) {
+  // never run on betbck.com
+} else {
 window.addEventListener('message', function (event) {
   if (event.source !== window) return;
   const message = event.data;
@@ -11,3 +13,4 @@ window.addEventListener('message', function (event) {
     });
   }
 });
+}

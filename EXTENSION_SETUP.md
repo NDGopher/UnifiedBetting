@@ -64,18 +64,9 @@ When an alert fires:
 
 The `betbck_extension/` folder is **optional**. Live POD alerts and BetBCK odds scraping work without it (the backend logs in via the cloud API).
 
-If loaded, Helper can:
-- Jump to the sbsports board and try to search when you click **Place Bet** on the dashboard
-- Show a small EV overlay on `sbsports.html` only
+v0.3.3 is named **BetBCK Place Bet**. It has no interceptor, no debugger, and does not inject on the login splash. Live alerts do not need it.
 
-v0.3.2 has **no** access to `https://betbck.com/` (the login splash). It only injects on `sbsports.html`.
-
-1. Go to `chrome://extensions` (or Comet/Perplexity equivalent)
-2. Click **Load unpacked** (or **Reload** if it is already loaded)
-3. Select the folder: `betbck_extension/`
-4. Confirm the version shows **0.3.2** — older copies still inject on login and break the Login button
-
-Log in on `https://betbck.com` **first** (plain site, no Helper activity). Enable Helper after you are on the sports board, or leave it on — 0.3.2 will not touch the splash.
+To log into BetBCK: **Remove** (do not just disable) any old "BetBCK Helper" first, then log in. Load 0.3.3 only after you are on the sports board if you want Place Bet.
 
 ---
 

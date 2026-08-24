@@ -1,21 +1,25 @@
-// BetBCK Helper — Place Bet overlay. Loaded only on sbsports.html via background inject.
-// Never wrap fetch/XHR/WebSocket. Never attach the debugger.
-if (globalThis.__UB_BETBCK_HELPER__) {
-  // already injected in this tab
-} else {
-globalThis.__UB_BETBCK_HELPER__ = true;
+// Optional Place Bet overlay. Abort on any page that is not the logged-in sports board.
+(function () {
+  const host = (location.hostname || '').replace(/^www\./i, '').toLowerCase();
+  const href = location.href || '';
+  if (host !== 'betbck.com') return;
+  if (!/\/skin\/sbsports\.html/i.test(href)) return;
+  if (document.querySelector('input[type="password"], input[name="Password"], button[data-action="login"]')) return;
+  if (window.top !== window.self) return;
+  if (globalThis.__UB_BETBCK_HELPER__) return;
+  globalThis.__UB_BETBCK_HELPER__ = true;
 
 function isSportsBoard() {
   try {
-    const href = location.href || '';
-    return /sbsports\.html|StraightSportSelection\.php|PlayerGameSelection\.php/i.test(href);
+    const hrefNow = location.href || '';
+    return /sbsports\.html/i.test(hrefNow);
   } catch {
     return false;
   }
 }
 
 function hasPasswordField() {
-  return !!document.querySelector('input[type="password"], input[name="password"], input[name="Password"]');
+  return !!document.querySelector('input[type="password"], input[name="password"], input[name="Password"], button[data-action="login"]');
 }
 
 function isLoginPage() {
@@ -23,21 +27,16 @@ function isLoginPage() {
   if (hasPasswordField()) return true;
   try {
     const path = (location.pathname || '').replace(/\/+$/, '') || '/';
-    if (path === '/' ) return true;
-    if (/login|signin|authenticate|securitypage/i.test(path + location.search + location.href)) {
-      return !isSportsBoard();
-    }
+    if (path === '/') return true;
   } catch {}
   return false;
 }
 
-if (window.top !== window.self) {
-  console.log('[BetBCK Helper] iframe — idle');
-} else if (isLoginPage()) {
-  console.log('[BetBCK Helper] Login/non-board page — idle (no interceptor, no debugger)');
-} else {
-  console.log('[BetBCK Helper] Sports board — Place Bet helper ready');
+if (isLoginPage()) {
+  globalThis.__UB_BETBCK_HELPER__ = false;
+  return;
 }
+console.log('[BetBCK Place Bet] Sports board overlay ready');
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -159,4 +158,4 @@ window.addEventListener('message', function (event) {
     });
   }
 });
-}
+})();
