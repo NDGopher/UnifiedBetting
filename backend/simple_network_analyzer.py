@@ -44,9 +44,9 @@ def analyze_betbck_endpoints():
     
     try:
         login_url = betbck_config.get('login_page_url', 'https://betbck.com/')
-        login_action_url = betbck_config.get('login_action_url', 'https://betbck.com/Qubic/SecurityPage.php')
-        main_page_url = betbck_config.get('main_page_url_after_login', 
-                                         'https://betbck.com/Qubic/StraightSportSelection.php')
+        login_action_url = betbck_config.get('login_action_url', 'https://betbck.com/cloud/api/System/authenticateCustomer')
+        main_page_url = betbck_config.get('main_page_url_after_login',
+                                         'https://betbck.com/skin/sbsports.html?url=StraightSportSelection.php')
         
         print("[Analyzer] Step 1: Loading login page...")
         login_page = session.get(login_url, timeout=10)

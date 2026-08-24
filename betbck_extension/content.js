@@ -1,7 +1,25 @@
 // content.js
-// Inject API interceptor FIRST (before anything else, to catch early requests)
+// Do not touch the new cloud/sbsports login splash — injecting fetch/XHR
+// hooks there made the Login button unclickable on Chromium profiles.
+
+function isBetbckLoginSplash() {
+  try {
+    const u = new URL(location.href);
+    const path = u.pathname.replace(/\/+$/, '') || '/';
+    if (/sbsports\.html|\/skin\/|\/cloud\/|StraightSport|PlayerGame/i.test(u.href)) {
+      return false;
+    }
+    return path === '/' || /login/i.test(path + u.search);
+  } catch {
+    return false;
+  }
+}
+
 (function() {
-  // Inject API interceptor using src (CSP-compliant way)
+  if (isBetbckLoginSplash()) {
+    console.log('[BetBCK Helper] Login splash — skipping API interceptor');
+    return;
+  }
   const script = document.createElement('script');
   script.src = chrome.runtime.getURL('api_interceptor.js');
   script.onload = function() {
@@ -12,12 +30,10 @@
     console.error('[BetBCK Helper] Failed to load API interceptor');
     this.remove();
   };
-  // Inject into documentElement if head doesn't exist yet (for early injection)
   const injectTarget = document.head || document.documentElement || document;
   if (injectTarget) {
     injectTarget.appendChild(script);
   } else {
-    // Wait for DOM to be ready
     const checkAndInject = setInterval(() => {
       const target = document.head || document.documentElement || document;
       if (target) {
@@ -30,54 +46,36 @@
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-// --- Auto re-login logic ---
 function isLoggedOut() {
-  // Adjust selectors as needed for BetBCK login form
-  return !!document.querySelector('input[type="password"], input[name="password"], form[action*="login"]');
+  if (isBetbckLoginSplash()) return true;
+  return !!document.querySelector('input[type="password"], input[name="password"]');
 }
 
-function tryAutoLogin() {
-  // Try to click the login button if credentials are pre-filled
-  const loginBtn = document.querySelector('button[type="submit"], input[type="submit"]');
-  if (loginBtn) {
-    loginBtn.click();
-    return true;
-  }
-  return false;
+function findSearchInput() {
+  return document.querySelector(
+    'input.keyword_search_qubic#keyword_search[name="keyword_search"], input#keyword_search, input[name="keyword_search"], input[type="search"], input[placeholder*="search" i]'
+  );
 }
 
-// --- Enhanced auto re-login logic ---
-function clickErrorDialogIfPresent() {
-  // Try to find and click a modal/alert button (adjust selector as needed)
-  const errorBtn = document.querySelector('button, input[type="button"], input[type="submit"]');
-  if (errorBtn && errorBtn.offsetParent !== null) {
-    errorBtn.click();
-    return true;
-  }
-  return false;
+function findSearchButton() {
+  return document.querySelector(
+    'button[type="Submit"], button[type="submit"], input[name="action"][value="Search"], input[type="submit"][value="Search"], input[value="GO"], button.go'
+  );
 }
 
 async function handleBetbckAction(message) {
   console.log('[BetBCK Helper][Content] handleBetbckAction called:', message);
-  // Step 1: If error dialog is present, click it and retry after a short delay
-  if (clickErrorDialogIfPresent()) {
-    setTimeout(() => handleBetbckAction(message), 1000);
-    return;
-  }
-  // Step 2: If logged out, try to auto-login
+  // Never auto-click Login on the new splash — that is what broke Chromium login.
   if (isLoggedOut()) {
-    alert('You are logged out of BetBCK. Please log in to continue.');
-    if (tryAutoLogin()) {
-      setTimeout(() => handleBetbckAction(message), 2000); // Retry after login
-    }
+    console.warn('[BetBCK Helper] Not logged in. Log in on the splash, then use Place Bet.');
     return;
   }
   if (message.type === 'SEARCH_BETBCK') {
     const keyword = message.keyword;
     const betInfo = message.betInfo || {};
     // Use the correct selectors for the search input and button
-    const searchInput = document.querySelector('input.keyword_search_qubic#keyword_search[name="keyword_search"]');
-    const goButton = document.querySelector('button[type="Submit"]');
+    const searchInput = findSearchInput();
+    const goButton = findSearchButton();
     console.log('[BetBCK Helper][Content] Found search input:', searchInput);
     console.log('[BetBCK Helper][Content] Found GO button:', goButton);
     if (searchInput && goButton) {

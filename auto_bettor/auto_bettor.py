@@ -162,7 +162,7 @@ def login_to_betbck(page: "Page", customer_id: str, password: str) -> bool:
     from playwright.sync_api import TimeoutError as PWTimeout
     try:
         log.info("[BetBCK] Navigating to login page...")
-        page.goto("https://betbck.com/Qubic/Login.php", wait_until="domcontentloaded")
+        page.goto("https://betbck.com/", wait_until="domcontentloaded")
         human_delay(600, 1200)
 
         human_type(page, CONFIRMED_SELECTORS["login_customer_id"], customer_id)
@@ -229,7 +229,7 @@ def search_and_place_bet(
 
     try:
         log.info(f"[BetBCK] Navigating to search page...")
-        page.goto("https://betbck.com/Qubic/PlayerGameSelection.php", wait_until="domcontentloaded")
+        page.goto("https://betbck.com/skin/sbsports.html?url=StraightSportSelection.php", wait_until="domcontentloaded")
         human_delay(700, 1400)
 
         # Extract search keyword from home team (last meaningful word)

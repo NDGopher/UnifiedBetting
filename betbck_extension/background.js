@@ -1,5 +1,4 @@
-// background.js
-// Track current captured tab for forwarding events
+const BETBCK_BOARD = 'https://betbck.com/skin/sbsports.html?url=StraightSportSelection.php';
 let currentCapturedTabId = null;
 let workerCheckInterval = null;
 let attachedWorkers = new Set();
@@ -143,7 +142,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         });
       } else {
         // Optionally open a new tab if not found
-        chrome.tabs.create({ url: 'https://betbck.com' }, (tab) => {
+        chrome.tabs.create({ url: BETBCK_BOARD }, (tab) => {
           console.log('[BetBCK Helper][Background] Created new BetBCK tab:', tab.id);
           // Wait for tab to load, then send message
           chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
