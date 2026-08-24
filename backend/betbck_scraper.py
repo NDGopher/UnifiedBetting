@@ -116,6 +116,51 @@ def set_market_type_context(value):
     _market_type_context.value = value
 
 
+_CLOSED_LINE_STATUSES = {
+    "C", "X", "CL", "CLOSED", "S", "SETTLED", "D", "DL",
+}
+
+
+def _line_status(line):
+    return str((line or {}).get("Status") or "").strip().upper()
+
+
+def _line_is_closed(line):
+    return _line_status(line) in _CLOSED_LINE_STATUSES
+
+
+def _game_num_key(line):
+    gnum = (line or {}).get("GameNum")
+    if gnum is None or gnum == "":
+        t1 = str((line or {}).get("Team1ID") or "").strip().lower()
+        t2 = str((line or {}).get("Team2ID") or "").strip().lower()
+        return f"{t1}|{t2}"
+    return str(gnum)
+
+
+def _maybe_lines_payload(text):
+    """If this is Get_LeagueLines2 JSON, return a dict with a Lines list."""
+    if isinstance(text, dict):
+        lines = text.get("Lines") or text.get("lines")
+        if isinstance(lines, list):
+            if "Lines" not in text and "lines" in text:
+                out = dict(text)
+                out["Lines"] = lines
+                return out
+            return text
+        return None
+    if not isinstance(text, str):
+        return None
+    stripped = text.lstrip()
+    if not stripped.startswith("{"):
+        return None
+    try:
+        payload = json.loads(text)
+    except Exception:
+        return None
+    return _maybe_lines_payload(payload)
+
+
 def _fmt_american_odds(val):
     """Format API numeric American odds as '+110' / '-110' strings."""
     if val is None:
@@ -1070,16 +1115,15 @@ def parse_specific_game_from_lines_json(json_content, target_home_team_pod, targ
     for line in lines:
         if not isinstance(line, dict):
             continue
-        if str(line.get("Status") or "").strip().upper() not in ("O", "I", ""):
-            # Still allow "O" primarily; skip clearly closed if other codes appear later
-            pass
+        if _line_is_closed(line):
+            continue
         if _line_looks_like_prop(line):
             continue
         raw_l = str(line.get("Team1ID") or "").strip()
         raw_v = str(line.get("Team2ID") or "").strip()
         if not raw_l or not raw_v:
             continue
-        gnum = line.get("GameNum")
+        gnum = _game_num_key(line)
         if gnum in game_orientation:
             continue
         matched, orient, scores, mscore = _score_team_pair(
@@ -1107,19 +1151,18 @@ def parse_specific_game_from_lines_json(json_content, target_home_team_pod, targ
 
     # Prefer open ("O") lines; build row_data per GameNum then pick best GameNum
     by_game = {}
+    skipped_status = []
     for line in lines:
         if not isinstance(line, dict):
             continue
-        gnum = line.get("GameNum")
+        gnum = _game_num_key(line)
         if gnum not in game_orientation:
             continue
         if _line_looks_like_prop(line):
             continue
-        status = str(line.get("Status") or "").strip().upper()
-        if status and status not in ("O",):
-            # Keep 1H etc. only when open; skip inactive props already filtered
-            if status != "O":
-                continue
+        if _line_is_closed(line):
+            skipped_status.append(_line_status(line) or "(empty)")
+            continue
         orient, scores, mscore, raw_l, raw_v = game_orientation[gnum]
         rtype = _classify_period_description(line.get("PeriodDescription"), line.get("PeriodNumber"))
         out = _output_data_from_line(line, target_home_team_pod, target_away_team_pod, orient)
@@ -1163,7 +1206,10 @@ def parse_specific_game_from_lines_json(json_content, target_home_team_pod, targ
             bucket["bck_date"] = bck_date
 
     if not by_game:
-        print(f"[BetbckParser] All JSON candidates date-rejected. (Event ID: {event_id})")
+        print(
+            f"[BetbckParser] Matched teams but no usable line rows "
+            f"(closed_status={skipped_status or 'none'}) (Event ID: {event_id})"
+        )
         return None
 
     def _game_sort_key(item):
@@ -1192,11 +1238,10 @@ def parse_specific_game_from_lines_json(json_content, target_home_team_pod, targ
 
 def parse_specific_game_from_search_html(html_content, target_home_team_pod, target_away_team_pod, event_id=None, event_date=None):
     if not html_content: print(f"[BetbckParser] No HTML content. (Event ID: {event_id})"); return None
-    # Cloud API path: search now returns Get_LeagueLines2 JSON
-    stripped = html_content.lstrip() if isinstance(html_content, str) else ""
-    if stripped.startswith("{") and '"Lines"' in stripped[:500]:
+    lines_payload = _maybe_lines_payload(html_content)
+    if lines_payload is not None:
         return parse_specific_game_from_lines_json(
-            html_content, target_home_team_pod, target_away_team_pod, event_id, event_date
+            lines_payload, target_home_team_pod, target_away_team_pod, event_id, event_date
         )
     _alog = _get_alert_logger(event_id) if event_id else None
     soup = BeautifulSoup(html_content, 'html.parser'); search_context = soup.find('form', {'name': 'GameSelectionForm', 'id': 'GameSelectionForm'}) or soup
@@ -1588,7 +1633,7 @@ def parse_game_data_from_html(search_results_html, search_term):
             for line in lines:
                 if not isinstance(line, dict) or _line_looks_like_prop(line):
                     continue
-                if str(line.get("Status") or "").strip().upper() not in ("O", ""):
+                if _line_is_closed(line):
                     continue
                 home = str(line.get("Team1ID") or "").strip()
                 away = str(line.get("Team2ID") or "").strip()

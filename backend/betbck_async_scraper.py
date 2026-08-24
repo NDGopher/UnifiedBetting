@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import dateutil.parser
 import logging
 from utils.pod_utils import normalize_team_name_for_matching, is_prop_market_by_name
+from betbck_scraper import _line_is_closed
 
 logger = logging.getLogger(__name__)
 
@@ -386,7 +387,7 @@ class BetBCKAsyncScraper:
         for line in lines:
             if not isinstance(line, dict):
                 continue
-            if str(line.get("Status") or "").strip().upper() not in ("O", ""):
+            if _line_is_closed(line):
                 continue
             home = str(line.get("Team1ID") or "").strip()
             away = str(line.get("Team2ID") or "").strip()
