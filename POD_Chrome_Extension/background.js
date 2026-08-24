@@ -117,7 +117,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
 
         // 1. Open a new tab for BetBCK, making it the active tab
-        chrome.tabs.create({ url: "https://betbck.com/skin/sbsports.html?url=StraightSportSelection.php", active: true }, (newTab) => {
+        chrome.tabs.create({ url: "https://betbck.com/Qubic/StraightSportSelection.php", active: true }, (newTab) => {
             
             // 2. We need to wait for the tab to finish loading before we can send a message to its content script.
             const listener = (tabId, info) => {
