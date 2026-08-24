@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Odds Dropper",
-  "version": "1.4",
+  "version": "1.4.1",
   "description": "Monitors POD for alerts.",
   "permissions": [
     "activeTab",
@@ -31,6 +31,13 @@
         "https://www.pinnacleoddsdropper.com/",
         "https://www.pinnacleoddsdropper.com/terminal",
         "https://www.pinnacleoddsdropper.com/*"
+      ],
+      "exclude_matches": [
+        "https://www.pinnacleoddsdropper.com/sign-in*",
+        "https://www.pinnacleoddsdropper.com/sign-up*",
+        "https://www.pinnacleoddsdropper.com/sign-out*",
+        "https://www.pinnacleoddsdropper.com/sign-in/*",
+        "https://www.pinnacleoddsdropper.com/sign-up/*"
       ],
       "js": ["content.js"],
       "run_at": "document_start"

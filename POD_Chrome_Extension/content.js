@@ -6,6 +6,17 @@
 // 3. Added polling fallback to detect new rows that MutationObserver might miss.
 
 (function() {
+    const path = (window.location.pathname || "").toLowerCase();
+    if (
+        path.startsWith("/sign-in") ||
+        path.startsWith("/sign-up") ||
+        path.startsWith("/sign-out") ||
+        path.includes("/handshake")
+    ) {
+        console.log("POD Content Script: skipping Clerk auth page", window.location.href);
+        return;
+    }
+
     console.log("POD Content Script (Your Working Base - v5 EventId Focus) Loaded:", new Date().toISOString());
 
     const processedAlerts = new Map(); 
@@ -503,6 +514,10 @@
     }
     
     function startMonitoring() {
+        const path = (window.location.pathname || "").toLowerCase();
+        if (path.startsWith("/sign-in") || path.startsWith("/sign-up") || path.startsWith("/sign-out")) {
+            return;
+        }
         // Handle redirect from main page to terminal
         if (window.location.pathname === '/' || window.location.pathname === '') {
             console.log("🚨🚨🚨 On main page - waiting for redirect to terminal 🚨🚨🚨");
