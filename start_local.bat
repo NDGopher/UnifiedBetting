@@ -110,8 +110,8 @@ echo  Starting Unified Betting on http://localhost:8000
 echo  Press Ctrl+C in this window to stop.
 echo.
 
-REM Open the browser shortly after uvicorn binds
-start "" cmd /c "timeout /t 5 /nobreak >nul & start http://localhost:8000"
+REM Wait until the server actually answers, then open the dashboard
+start "" powershell -WindowStyle Hidden -Command "for ($i=0; $i -lt 90; $i++) { try { $r = Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:8000/healthz' -TimeoutSec 1; if ($r.StatusCode -eq 200) { Start-Process 'http://localhost:8000'; break } } catch {} Start-Sleep 1 }"
 
 cd /d "%ROOT%\backend"
 "%ROOT%\backend\venv\Scripts\python.exe" -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info
