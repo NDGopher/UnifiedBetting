@@ -274,8 +274,8 @@ def main():
             print(f"{'='*80}")
             
             # Navigate back to main page first
-            main_url = betbck_config.get('main_page_url_after_login',
-                                        'https://betbck.com/skin/sbsports.html?url=StraightSportSelection.php')
+            main_url = betbck_config.get('main_page_url_after_login', 
+                                        'https://betbck.com/Qubic/StraightSportSelection.php')
             driver.get(main_url)
             time.sleep(3)
             
