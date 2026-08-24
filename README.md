@@ -20,23 +20,42 @@ POD page (Chrome)
 
 ## Quick Start — Local (Windows)
 
+### Prerequisites
+- **Python 3.10+** (check "Add Python to PATH" during install)
+- **Node.js LTS** from https://nodejs.org (needed for the dashboard)
+
 ### First-time setup
 ```bat
 setup_dependencies.bat
 ```
-Creates the Python venv and installs all packages.
+Creates the Python venv **and** runs `npm install` in `frontend/`.
+
+You can skip this and just run `start_local.bat` — it now installs both the Python venv and frontend packages automatically on first run.
 
 ### Every run
 ```bat
 start_local.bat
 ```
 Starts the backend (port 8000) and frontend (port 5000) in separate console windows.
-**No browser opens automatically.**
 
-Then manually open in Chrome:
+Then open in Chrome:
 1. **http://localhost:5000** — the alert dashboard
 2. **https://www.pinnacleoddsdropper.com** — with Odds Dropper extension active
 3. **https://betbck.com** — so the extension can auto-search games
+
+### If the frontend says `'react-scripts' is not recognized`
+`node_modules` is not committed to git. Install it once:
+
+```bat
+cd frontend
+npm install
+npm start
+```
+
+Or just re-run `start_local.bat`, which installs frontend deps when they are missing.
+
+### Harmless `/api/snapshot` and `/api/bot` 404s
+This app does **not** serve those URLs. If the backend log shows `GET /api/snapshot` or `GET /api/bot` 404s, some other local program (another dashboard, browser tab, or extension) is polling port 8000. They do not stop this app from running. Confirm the API with http://localhost:8000/healthz and use the dashboard at http://localhost:5000.
 
 ---
 

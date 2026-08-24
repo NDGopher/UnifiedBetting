@@ -18,8 +18,7 @@ PyYAML
 watchfiles
 websockets
 python-dateutil
-fuzzywuzzy
-rapidfuzz  # Required for team name matching (python-Levenshtein removed due to compilation issues on Python 3.14)
+rapidfuzz  # Fuzzy team-name matching (replaces fuzzywuzzy; no python-Levenshtein needed)
 selenium
 psutil  # For process management and cleanup
 # pywin32 — Windows-only, not installed on Linux/Replit

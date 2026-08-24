@@ -82,9 +82,21 @@ python launch.py
 - **Solution**: Clear npm cache:
   ```bash
   npm cache clean --force
+  cd frontend
+  npm install
   ```
 
-#### 5. "Chrome driver issues"
+#### 5. `'react-scripts' is not recognized`
+- **Cause**: `frontend/node_modules` is not in git. You ran `npm start` before `npm install`.
+- **Solution**:
+  ```bash
+  cd frontend
+  npm install
+  npm start
+  ```
+  Or from the repo root: `start_local.bat` (installs frontend deps automatically).
+
+#### 6. "Chrome driver issues"
 - **Solution**: The setup script should handle this automatically
 - **Manual fix**: Download ChromeDriver from https://chromedriver.chromium.org/
 

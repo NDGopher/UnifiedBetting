@@ -76,6 +76,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    """Friendly landing page so opening http://localhost:8000 is not a 404."""
+    return {
+        "name": "Unified Betting App",
+        "status": "ok",
+        "ready": bool(getattr(app.state, "ready", False)),
+        "dashboard": "http://localhost:5000",
+        "health": "/healthz",
+        "docs": "/docs",
+        "events": "/get_active_events_data",
+    }
+
+
 # Lightweight health endpoint for launcher readiness checks
 @app.get("/healthz")
 async def healthz():
@@ -401,7 +415,7 @@ async def event_alert_worker(event_id):
                     # A correct eventId may have minor spelling differences (e.g. accents,
                     # abbreviations) so we allow up to 40/100 as the minimum passing score.
                     try:
-                        from fuzzywuzzy import fuzz as _fz_l0
+                        from rapidfuzz import fuzz as _fz_l0
                         # Clean the POD team names the same way the rest of the pipeline
                         # does — strips appended league/country suffixes like
                         # "BrannNorway - Eliteserien" → "brann" before fuzzy matching.
