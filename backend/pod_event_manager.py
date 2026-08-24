@@ -82,7 +82,7 @@ class PodEventManager:
         """Non-blocking BetBCK re-scrape every BETBCK_REFRESH_INTERVAL_SECONDS seconds per event."""
         try:
             from betbck_request_manager import scrape_betbck_for_game_queued
-            from utils.pod_utils import analyze_markets_for_ev
+            from utils.pod_utils import analyze_markets_for_ev, filter_realistic_ev_bets
             from main_logic import determine_betbck_search_term
 
             search_result = determine_betbck_search_term(cleaned_home, cleaned_away)
@@ -104,16 +104,7 @@ class PodEventManager:
                 return
 
             fresh_bets = analyze_markets_for_ev(fresh_game_data, pinnacle_snapshot)
-            realistic_bets = []
-            for bet in fresh_bets:
-                try:
-                    ev_val = float(bet.get("ev", "0").replace('%', ''))
-                    if -30 <= ev_val <= 30:
-                        realistic_bets.append(bet)
-                    else:
-                        print(f"[BetBCKRefresh] Filtering unrealistic EV: {bet.get('ev')} for {bet.get('market')} {bet.get('selection')}")
-                except Exception:
-                    realistic_bets.append(bet)
+            realistic_bets = filter_realistic_ev_bets(fresh_bets)
 
             if not realistic_bets:
                 print(f"[BetBCKRefresh] No realistic bets after BetBCK refresh for event {event_id}")
@@ -324,7 +315,7 @@ class PodEventManager:
                                 
                                 # Re-analyze markets for EV with fresh Pinnacle odds and existing BetBCK data
                                 try:
-                                    from utils.pod_utils import analyze_markets_for_ev
+                                    from utils.pod_utils import analyze_markets_for_ev, filter_realistic_ev_bets
                                     betbck_data = working_event_data.get("betbck_data", {}).get("data", {})
                                     
                                     # Guard: skip EV re-analysis if Swordfish returned data for a
@@ -375,19 +366,7 @@ class PodEventManager:
                                     if betbck_data and processed_odds and _teams_match:
                                         print(f"[BackgroundRefresher] Re-analyzing markets for EV with fresh Pinnacle odds")
                                         fresh_potential_bets = analyze_markets_for_ev(betbck_data, processed_odds)
-                                        
-                                        # Filter out unrealistic EVs (outside ±30% range)
-                                        realistic_bets = []
-                                        for bet in fresh_potential_bets:
-                                            try:
-                                                ev_str = bet.get("ev", "0")
-                                                ev_value = float(ev_str.replace('%', ''))
-                                                if -30 <= ev_value <= 30:
-                                                    realistic_bets.append(bet)
-                                                else:
-                                                    print(f"[BackgroundRefresher] Filtering out unrealistic EV: {ev_str} for {bet.get('market', 'N/A')} {bet.get('selection', 'N/A')}")
-                                            except:
-                                                realistic_bets.append(bet)  # Keep if we can't parse EV
+                                        realistic_bets = filter_realistic_ev_bets(fresh_potential_bets)
                                         
                                         # Update the processed odds with fresh EV calculations
                                         processed_odds["markets"] = realistic_bets

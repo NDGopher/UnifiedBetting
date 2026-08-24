@@ -46,6 +46,190 @@ def calculate_ev(bet_decimal: float, true_decimal: float) -> float:
         return 0.0
     return (bet_decimal / true_decimal) - 1
 
+
+# Anything beyond this is a mismatched line/side (or a far alt), not a real number.
+# Filter at analysis time so Alert Log never flashes a fake +41% that we later dump.
+MAX_ABS_EV_TO_PUBLISH = 0.15
+
+
+def _parse_american_int(odds) -> Optional[int]:
+    if odds is None:
+        return None
+    text = str(odds).strip()
+    if not text or text.upper() == "N/A":
+        return None
+    try:
+        return int(round(float(text)))
+    except (TypeError, ValueError):
+        return None
+
+
+def spread_quotes_are_same_side(bck_odds, pin_nvp_american) -> bool:
+    """Reject pairing a plus-money dog with a heavy favorite — that's the other side."""
+    bck = _parse_american_int(bck_odds)
+    pin = _parse_american_int(pin_nvp_american)
+    if bck is None or pin is None:
+        return True
+    if (bck > 0) == (pin > 0):
+        return True
+    # -110 vs +100 is a normal pick'em juice flip. Heavy favorite vs dog is the wrong side.
+    return abs(bck) < 200 and abs(pin) < 200
+
+
+def pin_spread_quote_for_bet(
+    pin_spread: Dict,
+    bet_line,
+    side: str,
+    nvp_swapped: bool,
+) -> Optional[tuple]:
+    """
+    Pinnacle `hdp` is always the Pinnacle-home team's signed handicap.
+    BetBCK home/away spreads are already mapped onto POD home/away.
+
+    Same order (POD home == Pin home):
+      home bet matches hdp == bet_line → nvp_home
+      away bet matches hdp == -bet_line → nvp_away
+    Reversed (POD home == Pin away):
+      home bet matches hdp == -bet_line → nvp_away
+      away bet matches hdp ==  bet_line → nvp_home
+    """
+    if not isinstance(pin_spread, dict) or bet_line is None:
+        return None
+    hdp = pin_spread.get("hdp")
+    if hdp is None:
+        return None
+    try:
+        bet_line_f = float(bet_line)
+        hdp_f = float(hdp)
+    except (TypeError, ValueError):
+        return None
+
+    side = (side or "").lower()
+    if side == "home":
+        if nvp_swapped:
+            ok = math.isclose(bet_line_f, -hdp_f, abs_tol=0.01)
+            nvp, nvp_am, line_out = pin_spread.get("nvp_away"), pin_spread.get("nvp_american_away"), -hdp_f
+        else:
+            ok = math.isclose(bet_line_f, hdp_f, abs_tol=0.01)
+            nvp, nvp_am, line_out = pin_spread.get("nvp_home"), pin_spread.get("nvp_american_home"), hdp_f
+    elif side == "away":
+        if nvp_swapped:
+            ok = math.isclose(bet_line_f, hdp_f, abs_tol=0.01)
+            nvp, nvp_am, line_out = pin_spread.get("nvp_home"), pin_spread.get("nvp_american_home"), hdp_f
+        else:
+            ok = math.isclose(bet_line_f, -hdp_f, abs_tol=0.01)
+            nvp, nvp_am, line_out = pin_spread.get("nvp_away"), pin_spread.get("nvp_american_away"), -hdp_f
+    else:
+        return None
+
+    if not ok or not nvp_am:
+        return None
+    return nvp, nvp_am, line_out
+
+
+def ev_is_publishable(ev: Optional[float]) -> bool:
+    if ev is None:
+        return False
+    return abs(ev) <= MAX_ABS_EV_TO_PUBLISH
+
+
+def filter_realistic_ev_bets(bets: Optional[List[Dict]]) -> List[Dict]:
+    """Drop rows whose |EV| is outside the publishable window. Safe to call twice."""
+    if not bets:
+        return []
+    kept: List[Dict] = []
+    for bet in bets:
+        ev_raw = bet.get("ev", "0")
+        try:
+            ev_val = float(str(ev_raw).replace("%", "").strip())
+        except (TypeError, ValueError):
+            kept.append(bet)
+            continue
+        if abs(ev_val) <= MAX_ABS_EV_TO_PUBLISH * 100:
+            kept.append(bet)
+        else:
+            logger.info(
+                f"[EV] Dropping unrealistic {bet.get('market')} {bet.get('selection')} "
+                f"{bet.get('line')}: {ev_raw} before publish"
+            )
+    return kept
+
+
+def _match_spread_bets(
+    bet_spreads: Optional[List],
+    pin_spreads: Dict,
+    side: str,
+    nvp_swapped: bool,
+    market: str,
+    home_team: str,
+    away_team: str,
+    meta_limits: Dict,
+) -> List[Dict]:
+    """Match each BetBCK spread to the signed Pinnacle quote for that same team and direction."""
+    rows: List[Dict] = []
+    if not isinstance(pin_spreads, dict):
+        pin_spreads = {}
+    selection = "Home" if (side or "").lower() == "home" else "Away"
+
+    for spread in bet_spreads or []:
+        if not isinstance(spread, dict):
+            continue
+        bet_line = spread.get("line")
+        if bet_line is None:
+            continue
+        best = None  # (juice_gap, row)
+        for pin_spread in pin_spreads.values():
+            quote = pin_spread_quote_for_bet(pin_spread, bet_line, side, nvp_swapped)
+            if not quote:
+                continue
+            nvp, nvp_am, line_out = quote
+            bck_odds = spread.get("odds")
+            if not spread_quotes_are_same_side(bck_odds, nvp_am):
+                logger.info(
+                    f"[SpreadMatch] Skip {market} {selection} {bet_line}: "
+                    f"BCK {bck_odds} vs PIN {nvp_am} are opposite sides"
+                )
+                continue
+            bet_odds = american_to_decimal(bck_odds)
+            if not bet_odds or not nvp:
+                continue
+            ev = calculate_ev(bet_odds, nvp)
+            if not ev_is_publishable(ev):
+                logger.info(
+                    f"[SpreadMatch] Skip {market} {selection} {bet_line}: "
+                    f"BCK {bck_odds} / PIN {nvp_am} EV={ev*100:.2f}% (line/side mismatch)"
+                )
+                continue
+            bck_am = _parse_american_int(bck_odds)
+            pin_am = _parse_american_int(nvp_am)
+            juice_gap = abs((bck_am or 0) - (pin_am or 0))
+            line_str = str(line_out)
+            if line_str.endswith(".0") and ".0" in line_str:
+                try:
+                    as_f = float(line_out)
+                    if as_f == int(as_f):
+                        line_str = str(int(as_f))
+                except (TypeError, ValueError):
+                    pass
+            row = {
+                "market": market,
+                "selection": selection,
+                "line": line_str,
+                "pinnacle_nvp": nvp_am,
+                "pinnacle_limit": pin_spread.get("max") or meta_limits.get("max_spread"),
+                "betbck_odds": bck_odds,
+                "ev": f"{ev*100:.2f}%",
+                "home_team": home_team,
+                "away_team": away_team,
+                "bet": format_bet_description(market, selection, line_str, home_team, away_team),
+            }
+            if best is None or juice_gap < best[0]:
+                best = (juice_gap, row)
+        if best:
+            rows.append(best[1])
+    return rows
+
+
 def adjust_power_probabilities(probabilities: List[float], tolerance: float = 1e-4, max_iterations: int = 100) -> List[float]:
     """Adjust probabilities using power method to remove overround."""
     k = 1.0
@@ -854,12 +1038,17 @@ def _validate_period_separation(bet_data: Dict, pinnacle_data: Dict) -> bool:
         return False
 
 
-def _analyze_1h_markets_for_ev(bet_1h_data: Dict, pinnacle_1h_data: Dict, pin_data: Dict) -> List[Dict]:
+def _analyze_1h_markets_for_ev(
+    bet_1h_data: Dict,
+    pinnacle_1h_data: Dict,
+    pin_data: Dict,
+    nvp_swapped: bool = False,
+) -> List[Dict]:
     """
     Analyze 1H markets for expected value opportunities.
     CRITICAL: This function ONLY processes 1H data to prevent mixing with full game data.
-    
-    Validates period data and uses strict matching with break logic to prevent incorrect matches.
+
+    Spread matching uses signed Pinnacle hdp plus team order (nvp_swapped), same as full game.
     """
     potential_bets = []
     
@@ -922,90 +1111,18 @@ def _analyze_1h_markets_for_ev(bet_1h_data: Dict, pinnacle_1h_data: Dict, pin_da
                     'bet': format_bet_description('1H Moneyline', 'Away', '', home_team, away_team)
                 })
         
-        # --- 1H Spreads ---
+        # --- 1H Spreads (signed line + team order, same as full game) ---
         pin_spreads = pinnacle_1h_data.get('spreads', {})
         if not isinstance(pin_spreads, dict):
             pin_spreads = {}
-        
-        # Home spreads: Match BetBCK home spreads to Pinnacle 1H spreads
-        for spread in bet_1h_data.get('home_spreads', []):
-            bet_line = spread.get('line')
-            if bet_line is None:
-                continue
-            
-            matched = False
-            for spread_key, pin_spread in pin_spreads.items():
-                if not isinstance(pin_spread, dict):
-                    continue
-                    
-                line = pin_spread.get('hdp')
-                try:
-                    # Match home spread: BetBCK line should match Pinnacle hdp
-                    if line is not None and math.isclose(float(bet_line), float(line), abs_tol=0.01) and pin_spread.get('nvp_american_home'):
-                        bet_odds = american_to_decimal(spread.get('odds'))
-                        true_odds = pin_spread.get('nvp_home')
-                        if bet_odds and true_odds:
-                            ev = calculate_ev(bet_odds, true_odds)
-                            potential_bets.append({
-                                'market': '1H Spread',
-                                'selection': 'Home',
-                                'line': str(line),
-                                'pinnacle_nvp': pin_spread.get('nvp_american_home', 'N/A'),
-                                'pinnacle_limit': pin_spread.get('max') or meta_limits.get('max_spread'),
-                                'betbck_odds': spread.get('odds'),
-                                'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
-                                'home_team': home_team,
-                                'away_team': away_team,
-                                'bet': format_bet_description('1H Spread', 'Home', str(line), home_team, away_team)
-                            })
-                            matched = True
-                            break  # CRITICAL: Break after finding first match to prevent duplicates
-                except (ValueError, TypeError, AttributeError) as e:
-                    logger.debug(f"[1H-Analysis] Error matching home spread: {e}")
-                    continue
-            
-            if matched:
-                continue  # Move to next spread
-        
-        # Away spreads: Match BetBCK away spreads to Pinnacle 1H spreads (negated)
-        for spread in bet_1h_data.get('away_spreads', []):
-            bet_line = spread.get('line')
-            if bet_line is None:
-                continue
-            
-            matched = False
-            for spread_key, pin_spread in pin_spreads.items():
-                if not isinstance(pin_spread, dict):
-                    continue
-                    
-                line = pin_spread.get('hdp')
-                try:
-                    # Match away spread: BetBCK line should match -Pinnacle hdp
-                    if line is not None and math.isclose(float(bet_line), -float(line), abs_tol=0.01) and pin_spread.get('nvp_american_away'):
-                        bet_odds = american_to_decimal(spread.get('odds'))
-                        true_odds = pin_spread.get('nvp_away')
-                        if bet_odds and true_odds:
-                            ev = calculate_ev(bet_odds, true_odds)
-                            potential_bets.append({
-                                'market': '1H Spread',
-                                'selection': 'Away',
-                                'line': str(-line),
-                                'pinnacle_nvp': pin_spread.get('nvp_american_away', 'N/A'),
-                                'pinnacle_limit': pin_spread.get('max') or meta_limits.get('max_spread'),
-                                'betbck_odds': spread.get('odds'),
-                                'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
-                                'home_team': home_team,
-                                'away_team': away_team,
-                                'bet': format_bet_description('1H Spread', 'Away', str(-line), home_team, away_team)
-                            })
-                            matched = True
-                            break  # CRITICAL: Break after finding first match to prevent duplicates
-                except (ValueError, TypeError, AttributeError) as e:
-                    logger.debug(f"[1H-Analysis] Error matching away spread: {e}")
-                    continue
-            
-            if matched:
-                continue  # Move to next spread
+        potential_bets.extend(_match_spread_bets(
+            bet_1h_data.get('home_spreads'), pin_spreads, 'home', nvp_swapped,
+            '1H Spread', home_team, away_team, meta_limits,
+        ))
+        potential_bets.extend(_match_spread_bets(
+            bet_1h_data.get('away_spreads'), pin_spreads, 'away', nvp_swapped,
+            '1H Spread', home_team, away_team, meta_limits,
+        ))
         
         # --- 1H Totals ---
         pin_totals = pinnacle_1h_data.get('totals', {})
@@ -1325,69 +1442,18 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
         if not isinstance(pin_spreads, dict):
             pin_spreads = {}
 
-        # Apply the same home/away NVP swap to each spread entry if teams are reversed
-        if _nvp_swapped:
-            for _sk, _sp in pin_spreads.items():
-                if isinstance(_sp, dict):
-                    _sp['nvp_home'], _sp['nvp_away'] = _sp.get('nvp_away'), _sp.get('nvp_home')
-                    _sp['nvp_american_home'], _sp['nvp_american_away'] = _sp.get('nvp_american_away'), _sp.get('nvp_american_home')
-
-        for spread_key, pin_spread in pin_spreads.items():
-            line = pin_spread.get('hdp')
-            
-            # Home
-            for s in bet_data_copy.get('home_spreads', []):
-                bet_line = s.get('line')
-                try:
-                    if bet_line is not None and line is not None and math.isclose(float(bet_line), float(line), abs_tol=0.01) and pin_spread.get('nvp_american_home'):
-                        bet_odds = american_to_decimal(s.get('odds'))
-                        true_odds = pin_spread.get('nvp_home')
-                        if bet_odds and true_odds:
-                            ev = calculate_ev(bet_odds, true_odds)
-                            # Get team names from pinnacle data
-                            home_team = pin_data.get('home', '')
-                            away_team = pin_data.get('away', '')
-                            potential_bets.append({
-                                'market': 'Spread',
-                                'selection': 'Home',
-                                'line': str(line),
-                                'pinnacle_nvp': pin_spread.get('nvp_american_home', 'N/A'),
-                                'pinnacle_limit': pin_spread.get('max') or meta_limits.get('max_spread'),
-                                'betbck_odds': s.get('odds'),
-                                'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
-                                'home_team': home_team,
-                                'away_team': away_team,
-                                'bet': format_bet_description('Spread', 'Home', str(line), home_team, away_team)
-                            })
-                except Exception as e:
-                    continue
-            
-            # Away
-            for s in bet_data_copy.get('away_spreads', []):
-                bet_line = s.get('line')
-                try:
-                    if bet_line is not None and line is not None and math.isclose(float(bet_line), -float(line), abs_tol=0.01) and pin_spread.get('nvp_american_away'):
-                        bet_odds = american_to_decimal(s.get('odds'))
-                        true_odds = pin_spread.get('nvp_away')
-                        if bet_odds and true_odds:
-                            ev = calculate_ev(bet_odds, true_odds)
-                            # Get team names from pinnacle data
-                            home_team = pin_data.get('home', '')
-                            away_team = pin_data.get('away', '')
-                            potential_bets.append({
-                                'market': 'Spread',
-                                'selection': 'Away',
-                                'line': str(-line),
-                                'pinnacle_nvp': pin_spread.get('nvp_american_away', 'N/A'),
-                                'pinnacle_limit': pin_spread.get('max') or meta_limits.get('max_spread'),
-                                'betbck_odds': s.get('odds'),
-                                'ev': f"{ev*100:.2f}%" if ev is not None else 'N/A',
-                                'home_team': home_team,
-                                'away_team': away_team,
-                                'bet': format_bet_description('Spread', 'Away', str(-line), home_team, away_team)
-                            })
-                except Exception as e:
-                    continue
+        # Do not swap spread NVPs in place. Pinnacle hdp stays Pin-home's line;
+        # matching uses _nvp_swapped to pick nvp_home vs nvp_away and the sign.
+        home_team = pin_data.get('home', '')
+        away_team = pin_data.get('away', '')
+        potential_bets.extend(_match_spread_bets(
+            bet_data_copy.get('home_spreads'), pin_spreads, 'home', _nvp_swapped,
+            'Spread', home_team, away_team, meta_limits,
+        ))
+        potential_bets.extend(_match_spread_bets(
+            bet_data_copy.get('away_spreads'), pin_spreads, 'away', _nvp_swapped,
+            'Spread', home_team, away_team, meta_limits,
+        ))
 
         # --- Totals ---
         pin_totals = full_game.get('totals')
@@ -1471,18 +1537,17 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
             
             if first_half and isinstance(first_half, dict):
                 logger.info("[AnalyzeMarkets] Found 1H Pinnacle data, processing 1H BetBCK data")
-                # Apply the same home/away NVP swap to 1H period if teams are reversed
+                # Swap 1H moneyline NVPs when teams are reversed. Spreads keep Pin hdp
+                # as Pin-home's line; _analyze_1h_markets_for_ev uses nvp_swapped.
                 if _nvp_swapped:
                     first_half = copy.deepcopy(first_half)
                     _1h_ml = first_half.get('money_line')
                     if isinstance(_1h_ml, dict):
                         _1h_ml['nvp_home'], _1h_ml['nvp_away'] = _1h_ml.get('nvp_away'), _1h_ml.get('nvp_home')
                         _1h_ml['nvp_american_home'], _1h_ml['nvp_american_away'] = _1h_ml.get('nvp_american_away'), _1h_ml.get('nvp_american_home')
-                    for _sk, _sp in (first_half.get('spreads') or {}).items():
-                        if isinstance(_sp, dict):
-                            _sp['nvp_home'], _sp['nvp_away'] = _sp.get('nvp_away'), _sp.get('nvp_home')
-                            _sp['nvp_american_home'], _sp['nvp_american_away'] = _sp.get('nvp_american_away'), _sp.get('nvp_american_home')
-                potential_bets.extend(_analyze_1h_markets_for_ev(bet_data_copy['1H_data'], first_half, pin_data))
+                potential_bets.extend(_analyze_1h_markets_for_ev(
+                    bet_data_copy['1H_data'], first_half, pin_data, _nvp_swapped
+                ))
             else:
                 logger.warning("[AnalyzeMarkets] No 1H Pinnacle data found, skipping 1H BetBCK data")
         else:
@@ -1556,7 +1621,7 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                         'bet': f"TT {_tt_name} {_direction.capitalize()} {_pin_line}"
                     })
 
-        return potential_bets
+        return filter_realistic_ev_bets(potential_bets)
 
     except Exception as e:
         logger.error(f"[AnalyzeMarkets] Error analyzing markets: {e}")
@@ -1732,7 +1797,7 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
         else:
             logger.debug(f"[MultiRow] Dedup dropped duplicate: {key}")
 
-    return deduped
+    return filter_realistic_ev_bets(deduped)
 
 
 skip_indicators = ["1H", "1st Half", "First Half", "1st 5 Innings", "First Five Innings", "1st Period", "2nd Period", "3rd Period", "hits+runs+errors", "h+r+e", "hre", "corners", "series"]

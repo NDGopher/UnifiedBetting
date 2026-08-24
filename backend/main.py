@@ -15,7 +15,7 @@ import threading
 import traceback
 from pod_event_manager import PodEventManager
 from main_logic import process_alert_and_scrape_betbck, analyze_markets_for_ev
-from utils.pod_utils import analyze_markets_multi_row
+from utils.pod_utils import analyze_markets_multi_row, filter_realistic_ev_bets
 from odds_processing import fetch_live_pinnacle_event_odds
 from utils import process_event_odds_for_display
 import copy
@@ -573,18 +573,9 @@ async def event_alert_worker(event_id):
                                 betbck_data = betbck_result.get("data", {})
                                 potential_bets = betbck_data.get("potential_bets_analyzed", [])
 
-                                # Filter out unrealistic EVs (outside ±15% range)
-                                realistic_bets = []
-                                for bet in potential_bets:
-                                    try:
-                                        ev_str = bet.get("ev", "0")
-                                        ev_value = float(ev_str.replace('%', ''))
-                                        if -15 <= ev_value <= 15:
-                                            realistic_bets.append(bet)
-                                        else:
-                                            logger.warning(f"[PerEventQueue] Filtering out unrealistic EV: {ev_str} for {bet.get('market', 'N/A')} {bet.get('selection', 'N/A')}")
-                                    except:
-                                        realistic_bets.append(bet)
+                                # Unrealistic EVs are already dropped in analyze_markets_*;
+                                # filter again here so a stale unfiltered list never gets stored.
+                                realistic_bets = filter_realistic_ev_bets(potential_bets)
 
                                 has_positive_ev = any(float(b.get("ev", "0").replace('%','')) > 0 for b in realistic_bets)
                                 betbck_data["potential_bets_analyzed"] = realistic_bets
