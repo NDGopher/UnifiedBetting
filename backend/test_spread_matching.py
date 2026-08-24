@@ -175,6 +175,85 @@ def test_alt_line_41_pct_never_published_same_order():
     assert not any("41" in str(r.get("ev")) for r in rows)
 
 
+def _ev_kwargs():
+    return dict(
+        period_label="",
+        sport="soccer",
+        event_name="Cardiff City vs Norwich City",
+        start_time_fmt="-",
+        league="Championship",
+        event_id="1",
+        market_suffix=None,
+        meta_limits={},
+    )
+
+
+def test_ev_table_uses_orientation_not_exact_names():
+    """Cardiff vs Cardiff City already matched; spreads must still map."""
+    from calculate_ev_table import build_ev_spread_rows
+    pin = {"0.25": _spread(0.25, 1.91, 1.91, "-110", "-110")}
+    rows = build_ev_spread_rows(
+        pin,
+        [{"line": "0.25", "odds": "-110"}],
+        [{"line": "-0.25", "odds": "-110"}],
+        "direct",
+        "Cardiff City",
+        "Norwich City",
+        **_ev_kwargs(),
+    )
+    assert len(rows) == 2
+    home = next(r for r in rows if "Cardiff City" in r["bet"])
+    assert home["pinnacle_nvp"] == "-110"
+    assert abs(home["ev_val"]) < 0.02
+
+
+def test_ev_table_flipped_orientation_maps_top_to_away():
+    from calculate_ev_table import build_ev_spread_rows
+    pin = {"-0.75": _spread(-0.75, 1.80, 2.05, "-125", "+105")}
+    # BCK lists Fiorentina on top with -0.75; Pin home is Roma laying -0.75.
+    rows = build_ev_spread_rows(
+        pin,
+        [{"line": "0.75", "odds": "+105"}],
+        [{"line": "-0.75", "odds": "-125"}],
+        "flipped",
+        "AS Roma",
+        "Fiorentina",
+        period_label="",
+        sport="soccer",
+        event_name="AS Roma vs Fiorentina",
+        start_time_fmt="-",
+        league="Serie A",
+        event_id="2",
+        market_suffix=None,
+        meta_limits={},
+    )
+    assert len(rows) >= 1
+    roma = next(r for r in rows if "AS Roma" in r["bet"])
+    assert roma["pinnacle_nvp"] == "-125"
+
+
+def test_ev_table_does_not_publish_far_alt():
+    from calculate_ev_table import build_ev_spread_rows
+    pin = {"0.25": _spread(0.25, 1.2488, 5.02, "-402", "+402")}
+    rows = build_ev_spread_rows(
+        pin,
+        [{"line": "0.25", "odds": "-130"}],
+        [{"line": "-0.25", "odds": "+100"}],
+        "direct",
+        "AS Roma",
+        "Fiorentina",
+        period_label="1H ",
+        sport="soccer",
+        event_name="AS Roma vs Fiorentina",
+        start_time_fmt="-",
+        league="Serie A",
+        event_id="3",
+        market_suffix="1H",
+        meta_limits={},
+    )
+    assert rows == []
+
+
 def main():
     tests = [
         test_same_order_home_matches_pin_hdp,
@@ -185,6 +264,9 @@ def main():
         test_nfl_spread_same_order_still_matches,
         test_roma_1h_reversed_matches_signed_line_not_trap,
         test_alt_line_41_pct_never_published_same_order,
+        test_ev_table_uses_orientation_not_exact_names,
+        test_ev_table_flipped_orientation_maps_top_to_away,
+        test_ev_table_does_not_publish_far_alt,
     ]
     failed = 0
     for fn in tests:
