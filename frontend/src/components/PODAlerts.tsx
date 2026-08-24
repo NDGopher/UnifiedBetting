@@ -62,6 +62,18 @@ const NEGATIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for negative EV alert
 const POSITIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for positive EV alerts
 const MAX_RETRIES = 3; // Maximum number of retries before showing error
 
+const isUnpriced = (value?: string | null) => {
+  if (value == null || value === "") return true;
+  const s = String(value).trim().toUpperCase();
+  return s === "N/A" || s === "NA" || s === "—" || s === "-" || s === "∞";
+};
+
+const formatSignedOdds = (value?: string | null) => {
+  if (!value || isUnpriced(value)) return value || "N/A";
+  if (value.startsWith("-") || value.startsWith("+") || value.startsWith("0")) return value;
+  return `+${value}`;
+};
+
 interface PODAlertsProps {}
 
 const PODAlerts: React.FC<PODAlertsProps> = () => {
@@ -276,13 +288,19 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
     return [...markets].sort((a, b) => {
       const evA = parseFloat(a.ev);
       const evB = parseFloat(b.ev);
+      const aOk = Number.isFinite(evA);
+      const bOk = Number.isFinite(evB);
+      if (!aOk && !bOk) return 0;
+      if (!aOk) return 1;
+      if (!bOk) return -1;
       return evB - evA;
     });
   };
 
   const getBestEV = (markets: Market[]) => {
     if (!markets || markets.length === 0) return -Infinity;
-    return Math.max(...markets.map(m => parseFloat(m.ev)));
+    const vals = markets.map(m => parseFloat(m.ev)).filter(Number.isFinite);
+    return vals.length ? Math.max(...vals) : -Infinity;
   };
 
   const activeEvents = Object.entries(events)
@@ -627,10 +645,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                               if (market.selection === 'Home') selectionDisplay = homeTeam;
                               else if (market.selection === 'Away') selectionDisplay = awayTeam;
                             }
-                            let evDisplay = market.ev;
-                            if (!evDisplay.startsWith('-') && !evDisplay.startsWith('0') && !evDisplay.startsWith('+')) {
-                              evDisplay = '+' + evDisplay;
-                            }
+                            let evDisplay = formatSignedOdds(market.ev);
                             let lineDisplay = market.line;
                             if (lineDisplay === "0" || lineDisplay === "+0" || lineDisplay === "-0") {
                               lineDisplay = "PK";
@@ -681,7 +696,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                   className={nvpFlash[`${eventId}_${market.market}_${market.selection}_${market.line}`] ? 'nvp-flash' : ''}
                                   sx={{ fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums', fontWeight: 400, fontSize: '0.8125rem', color: '#9CA3AF' }}
                                 >
-                                  {market.pinnacle_nvp && !market.pinnacle_nvp.startsWith('-') && !market.pinnacle_nvp.startsWith('+') ? `+${market.pinnacle_nvp}` : market.pinnacle_nvp}
+                                  {formatSignedOdds(market.pinnacle_nvp)}
                                 </TableCell>
                                 <TableCell align="center" sx={{ fontFamily: '"JetBrains Mono", "Fira Code", "Consolas", monospace', fontVariantNumeric: 'tabular-nums', fontWeight: 400, fontSize: '0.8125rem', color: '#9CA3AF' }}>
                                   {market.betbck_odds}
@@ -690,6 +705,7 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
                                   <Button
                                     variant="text"
                                     color={isPositiveEV ? 'success' : 'inherit'}
+                                    disabled={isUnpriced(market.ev) || isUnpriced(market.pinnacle_nvp)}
                                     onClick={() => handleEVClick(event, market)}
                                     sx={{
                                       fontWeight: isPositiveEV ? 500 : 400,

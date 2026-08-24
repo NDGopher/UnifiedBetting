@@ -15,7 +15,7 @@ import threading
 import traceback
 from pod_event_manager import PodEventManager
 from main_logic import process_alert_and_scrape_betbck, analyze_markets_for_ev
-from utils.pod_utils import analyze_markets_multi_row, filter_realistic_ev_bets
+from utils.pod_utils import analyze_markets_multi_row, filter_realistic_ev_bets, bet_has_positive_ev
 from odds_processing import fetch_live_pinnacle_event_odds
 from utils import process_event_odds_for_display
 import copy
@@ -577,19 +577,29 @@ async def event_alert_worker(event_id):
                                 # filter again here so a stale unfiltered list never gets stored.
                                 realistic_bets = filter_realistic_ev_bets(potential_bets)
 
-                                has_positive_ev = any(float(b.get("ev", "0").replace('%','')) > 0 for b in realistic_bets)
+                                has_positive_ev = any(bet_has_positive_ev(b) for b in realistic_bets)
                                 betbck_data["potential_bets_analyzed"] = realistic_bets
 
                                 # FALLBACK: when Pinnacle data is unavailable (timestamp eventId),
                                 # EV analysis returns empty potential_bets.  Build market rows from
                                 # BetBCK odds + POD's noVigPriceFromAlert so the card shows something
-                                # useful rather than being blank.
+                                # useful rather than being blank. Never attach the alert NVP to a
+                                # different BetBCK number (36.5 vs 37.5).
                                 if not realistic_bets and betbck_data:
                                     _no_vig_raw = payload.get("noVigPriceFromAlert")
                                     _market_type = (payload.get("marketType") or "").strip()
                                     _team_for_bet = (payload.get("teamForBet") or "").strip()
                                     _line_val = str(payload.get("lineValueForBet") or "")
                                     _mt_lower = _market_type.lower()
+                                    _team_bet_l = _team_for_bet.lower()
+
+                                    def _same_line(a, b):
+                                        try:
+                                            if a is None or b is None or a == "" or b == "":
+                                                return False
+                                            return abs(float(a) - float(b)) < 0.011
+                                        except (TypeError, ValueError):
+                                            return str(a).strip() == str(b).strip()
 
                                     # Is the POD bet on the home or away side?
                                     _bet_is_home = bool(
@@ -623,31 +633,39 @@ async def event_alert_worker(event_id):
                                     if _a_ml:
                                         _pin = _no_vig_raw if (_mt_lower == "moneyline" and not _bet_is_home) else "N/A"
                                         _fb.append(_make_fallback_row("Moneyline", pod_away_clean or "Away", "", _pin, _a_ml))
-                                    # Spread rows
+                                    # Spread rows — only attach alert NVP when the BCK number matches
                                     for _s in betbck_data.get("home_spreads", []):
-                                        _pin = _no_vig_raw if (_mt_lower == "spread" and _bet_is_home) else "N/A"
+                                        _pin = _no_vig_raw if (
+                                            _mt_lower == "spread" and _bet_is_home and _same_line(_s.get("line"), _line_val)
+                                        ) else "N/A"
                                         _fb.append(_make_fallback_row("Spread", pod_home_clean or "Home", _s.get("line", ""), _pin, _s.get("odds")))
                                     for _s in betbck_data.get("away_spreads", []):
-                                        _pin = _no_vig_raw if (_mt_lower == "spread" and not _bet_is_home) else "N/A"
+                                        _pin = _no_vig_raw if (
+                                            _mt_lower == "spread" and not _bet_is_home and _same_line(_s.get("line"), _line_val)
+                                        ) else "N/A"
                                         _fb.append(_make_fallback_row("Spread", pod_away_clean or "Away", _s.get("line", ""), _pin, _s.get("odds")))
-                                    # Total rows
+                                    # Total rows — Over 36.5 NVP must not be applied to BetBCK 37.5
                                     _tot_line = betbck_data.get("game_total_line")
                                     _tot_ov = betbck_data.get("game_total_over_odds")
                                     _tot_un = betbck_data.get("game_total_under_odds")
+                                    _tot_matches = _same_line(_tot_line, _line_val)
+                                    _is_total_mkt = _mt_lower in ("total", "over/under", "totals")
                                     if _tot_ov:
-                                        _pin = _no_vig_raw if _mt_lower in ("total", "over/under") else "N/A"
+                                        _pin = _no_vig_raw if (
+                                            _is_total_mkt and _tot_matches and ("over" in _team_bet_l or not _team_bet_l)
+                                        ) else "N/A"
                                         _fb.append(_make_fallback_row("Total", "Over", _tot_line or "", _pin, _tot_ov))
                                     if _tot_un:
-                                        _fb.append(_make_fallback_row("Total", "Under", _tot_line or "", "N/A", _tot_un))
+                                        _pin = _no_vig_raw if (
+                                            _is_total_mkt and _tot_matches and "under" in _team_bet_l
+                                        ) else "N/A"
+                                        _fb.append(_make_fallback_row("Total", "Under", _tot_line or "", _pin, _tot_un))
 
                                     if _fb:
                                         logger.info(f"[PerEventQueue] Built {len(_fb)} fallback market rows (noVig={_no_vig_raw}, market={_market_type}) for event {event_id}")
                                         realistic_bets = _fb
                                         betbck_data["potential_bets_analyzed"] = _fb
-                                        has_positive_ev = any(
-                                            b.get("ev", "N/A") not in ("N/A", "") and float(b["ev"].replace("%","")) > 0
-                                            for b in _fb
-                                        )
+                                        has_positive_ev = any(bet_has_positive_ev(b) for b in _fb)
 
                                 if not betbck_data:
                                     logger.warning(f"[PerEventQueue] No BetBCK data for event {event_id}, skipping broadcast")
@@ -698,7 +716,7 @@ async def event_alert_worker(event_id):
                         else:
                             betbck_data = event.get("betbck_data", {}).get("data", {})
                             potential_bets = betbck_data.get("potential_bets_analyzed", [])
-                            has_positive_ev = event.get("has_positive_ev", False) or any(float(b.get("ev", "0").replace('%','')) > 0 for b in potential_bets)
+                            has_positive_ev = event.get("has_positive_ev", False) or any(bet_has_positive_ev(b) for b in potential_bets)
                             pod_event_manager.update_event_data(event_id, {
                                 "last_pinnacle_data_update_timestamp": now,
                                 "pinnacle_data_processed": live_pinnacle_odds_processed,
