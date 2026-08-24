@@ -399,7 +399,9 @@ def run_command(command, cwd=None, silent=False):
 
 def check_dependencies_installed(backend_dir, frontend_dir):
     """Check if dependencies are already installed"""
-    backend_venv = backend_dir / "venv" 
+    backend_venv = backend_dir / "venv"
+    frontend_node_modules = frontend_dir / "node_modules"
+    
     # Check if uvicorn is installed in the virtual environment
     if sys.platform == "win32":
         pip_cmd = str(backend_dir / "venv" / "Scripts" / "pip")
@@ -417,9 +419,7 @@ def check_dependencies_installed(backend_dir, frontend_dir):
     except:
         uvicorn_installed = False
     
-    frontend_react_scripts = frontend_dir / "node_modules" / "react-scripts" / "bin" / "react-scripts.js"
-    
-    return backend_venv.exists() and frontend_react_scripts.exists() and uvicorn_installed
+    return backend_venv.exists() and frontend_node_modules.exists() and uvicorn_installed
 
 def check_for_problematic_files(directory):
     """Check for problematic files like '-' and remove them"""
@@ -621,9 +621,9 @@ def setup_frontend():
     
     # Check if node_modules already exists and key dependencies are installed
     node_modules_exists = (frontend_dir / "node_modules").exists()
-    react_scripts_exists = (frontend_dir / "node_modules" / "react-scripts" / "bin" / "react-scripts.js").exists() if node_modules_exists else False
+    dayjs_exists = (frontend_dir / "node_modules" / "dayjs").exists() if node_modules_exists else False
     
-    if node_modules_exists and react_scripts_exists:
+    if node_modules_exists and dayjs_exists:
         print_status("✅ Frontend dependencies already installed", "SUCCESS", Colors.GREEN)
     else:
         print_status("Installing frontend dependencies...", "INFO", Colors.BLUE)
@@ -655,8 +655,11 @@ def setup_frontend():
             raise Exception("Failed to install frontend dependencies")
         
         # Verify key dependencies are installed
-        if not (frontend_dir / "node_modules" / "react-scripts" / "bin" / "react-scripts.js").exists():
-            raise Exception("react-scripts missing after npm install — try: cd frontend && npm install")
+        if not (frontend_dir / "node_modules" / "dayjs").exists():
+            print_status("⚠️ dayjs not found after install, trying to install it specifically...", "WARNING", Colors.YELLOW)
+            dayjs_result = run_command("powershell -ExecutionPolicy Bypass -Command \"npm install dayjs\"", cwd=frontend_dir, silent=False)
+            if dayjs_result.wait() != 0:
+                raise Exception("Failed to install dayjs dependency")
         
         print_status("✅ Frontend dependencies installed successfully", "SUCCESS", Colors.GREEN)
 
@@ -985,11 +988,9 @@ def launch_application():
         frontend_dir = project_dir / "frontend"
         print_status(f"🚀 Starting Frontend (React) on port {frontend_port}...", "INFO", Colors.CYAN)
         
-        # Set the port for React (CRA 5 + Node 17+ needs the OpenSSL legacy provider)
+        # Set the port for React
         env = os.environ.copy()
         env['PORT'] = str(frontend_port)
-        env['BROWSER'] = 'none'
-        env['NODE_OPTIONS'] = '--openssl-legacy-provider'
         frontend_process = subprocess.Popen(
             "powershell -ExecutionPolicy Bypass -Command \"npm start\"",
             cwd=frontend_dir,
