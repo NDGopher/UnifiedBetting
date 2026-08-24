@@ -1,13 +1,18 @@
 $ROOT = Split-Path -Parent $MyInvocation.MyCommand.Path
 $VENV = "$ROOT\backend\venv\Scripts\python.exe"
 $REACT_SCRIPTS = "$ROOT\frontend\node_modules\react-scripts\bin\react-scripts.js"
+$FRONTEND_INDEX = "$ROOT\frontend\build\index.html"
 
 Write-Host ""
 Write-Host "  Unified Betting - starting up..." -ForegroundColor Cyan
 Write-Host ""
 
-# Newer Node (17+) can break CRA 5 without this OpenSSL flag
+# CRA 5 + Node 17+ needs the OpenSSL legacy provider
 $env:NODE_OPTIONS = "--openssl-legacy-provider"
+$env:CI = "false"
+$env:BROWSER = "none"
+$env:GENERATE_SOURCEMAP = "false"
+$env:DISABLE_ESLINT_PLUGIN = "true"
 
 # ── Prerequisites ─────────────────────────────────────────────────────────────
 if (-not (Get-Command python -ErrorAction SilentlyContinue) -and -not (Get-Command py -ErrorAction SilentlyContinue)) {
@@ -60,30 +65,41 @@ if (-not (Test-Path $REACT_SCRIPTS)) {
     Write-Host "  [SETUP] Frontend packages ready." -ForegroundColor Green
 }
 
-# ── Kill anything on ports 8000 / 5000 (ignore errors) ────────────────────────
-netstat -ano 2>$null | Select-String ":8000 " | ForEach-Object {
-    $procId = ($_ -split "\s+") | Select-Object -Last 1
-    if ($procId -match "^\d+$") { Stop-Process -Id $procId -Force -ErrorAction SilentlyContinue }
+# ── Build dashboard (served by the backend — no second window) ────────────────
+if (-not (Test-Path $FRONTEND_INDEX)) {
+    Write-Host "  [SETUP] Building dashboard (first run, ~1-2 min)..." -ForegroundColor Yellow
+    Push-Location "$ROOT\frontend"
+    npm run build
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  [SETUP] npm run build failed, retrying via node..." -ForegroundColor Yellow
+        node "node_modules\react-scripts\bin\react-scripts.js" build
+    }
+    Pop-Location
+    if (-not (Test-Path $FRONTEND_INDEX)) {
+        Write-Host "  ERROR: Dashboard build failed." -ForegroundColor Red
+        Write-Host "    cd frontend" -ForegroundColor Yellow
+        Write-Host "    `$env:NODE_OPTIONS='--openssl-legacy-provider'" -ForegroundColor Yellow
+        Write-Host "    npm run build" -ForegroundColor Yellow
+        exit 1
+    }
+    Write-Host "  [SETUP] Dashboard built." -ForegroundColor Green
+} else {
+    Write-Host "  [SETUP] Dashboard build already present." -ForegroundColor Green
 }
-netstat -ano 2>$null | Select-String ":5000 " | ForEach-Object {
+
+# ── Kill anything on port 8000 (ignore errors) ────────────────────────────────
+netstat -ano 2>$null | Select-String ":8000 " | ForEach-Object {
     $procId = ($_ -split "\s+") | Select-Object -Last 1
     if ($procId -match "^\d+$") { Stop-Process -Id $procId -Force -ErrorAction SilentlyContinue }
 }
 Start-Sleep 1
 
-# ── Launch both servers ────────────────────────────────────────────────────────
-Write-Host "  Starting Backend  (http://localhost:8000)..." -ForegroundColor Cyan
-Start-Process powershell -ArgumentList "-NoExit", "-Command", `
-    "Write-Host 'UB Backend' -ForegroundColor Cyan; cd '$ROOT\backend'; & '$VENV' -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info"
-
-Write-Host "  Starting Frontend (http://localhost:5000)..." -ForegroundColor Cyan
-Start-Process powershell -ArgumentList "-NoExit", "-Command", `
-    "Write-Host 'UB Frontend' -ForegroundColor Cyan; cd '$ROOT\frontend'; `$env:PORT='5000'; `$env:BROWSER='none'; `$env:NODE_OPTIONS='--openssl-legacy-provider'; npm start"
-
 Write-Host ""
-Write-Host "  Both windows are opening. Browser in 15 seconds." -ForegroundColor Green
-Write-Host "  Dashboard : http://localhost:5000" -ForegroundColor Green
-Write-Host "  Backend   : http://localhost:8000/healthz" -ForegroundColor Green
+Write-Host "  Starting Unified Betting on http://localhost:8000" -ForegroundColor Green
+Write-Host "  Press Ctrl+C in this window to stop." -ForegroundColor Green
 Write-Host ""
-Start-Sleep 15
-Start-Process "http://localhost:5000"
+
+Start-Process "http://localhost:8000"
+
+Set-Location "$ROOT\backend"
+& $VENV -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info

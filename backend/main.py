@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from sse_manager import sse_manager
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, RootModel
@@ -67,6 +68,10 @@ app = FastAPI(title="Unified Betting App")
 # Readiness flag used by launcher health checks
 setattr(app.state, "ready", False)
 
+# Built React dashboard (created by start_local.bat). Served from this same process
+# so a single `start_local.bat` brings up API + UI on http://localhost:8000
+FRONTEND_BUILD = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "build"))
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
@@ -78,15 +83,19 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    """Friendly landing page so opening http://localhost:8000 is not a 404."""
+    """Serve the dashboard when built; otherwise a short JSON status."""
+    index = os.path.join(FRONTEND_BUILD, "index.html")
+    if os.path.isfile(index):
+        return FileResponse(index)
     return {
         "name": "Unified Betting App",
         "status": "ok",
         "ready": bool(getattr(app.state, "ready", False)),
-        "dashboard": "http://localhost:5000",
+        "dashboard": "http://localhost:8000",
         "health": "/healthz",
         "docs": "/docs",
         "events": "/get_active_events_data",
+        "hint": "Dashboard is not built yet. Run start_local.bat from the repo root.",
     }
 
 
@@ -3803,6 +3812,63 @@ async def cleanup_expired_events():
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+@app.get("/api/snapshot")
+async def api_snapshot(request: Request):
+    """Live events snapshot. Also stops unknown local clients 404-polling this path."""
+    ua = request.headers.get("user-agent", "-")
+    logger.info("[compat] GET /api/snapshot ua=%s", ua)
+    return await get_active_events_data()
+
+@app.get("/api/bot")
+async def api_bot(request: Request):
+    """Refresher / bot status. Also stops unknown local clients 404-polling this path."""
+    ua = request.headers.get("user-agent", "-")
+    logger.info("[compat] GET /api/bot ua=%s", ua)
+    return await get_refresher_status()
+
+def _register_frontend_static():
+    """Serve the CRA production build from this same FastAPI process."""
+    static_dir = os.path.join(FRONTEND_BUILD, "static")
+    if os.path.isdir(static_dir):
+        app.mount("/static", StaticFiles(directory=static_dir), name="frontend-static")
+        logger.info("[Frontend] Serving dashboard static assets from %s", static_dir)
+    else:
+        logger.warning("[Frontend] No build at %s — run start_local.bat to build the dashboard", FRONTEND_BUILD)
+
+_register_frontend_static()
+
+_FRONTEND_RESERVED = (
+    "api/", "pod_alert", "buckeye", "ace", "pto", "docs", "redoc",
+    "openapi.json", "healthz", "test", "get_active_events_data",
+    "high-ev-alerts", "refresher-status", "refresher/", "ws",
+)
+
+@app.get("/{full_path:path}")
+async def serve_frontend(full_path: str):
+    """SPA fallback: index.html for client routes; real files from the build folder."""
+    lowered = full_path.lower()
+    if any(lowered == p.rstrip("/") or lowered.startswith(p) for p in _FRONTEND_RESERVED):
+        return JSONResponse({"error": "not found", "path": f"/{full_path}"}, status_code=404)
+
+    candidate = os.path.normpath(os.path.join(FRONTEND_BUILD, full_path))
+    try:
+        in_build = os.path.commonpath([FRONTEND_BUILD, candidate]) == FRONTEND_BUILD
+    except ValueError:
+        in_build = False
+    if in_build and os.path.isfile(candidate):
+        return FileResponse(candidate)
+
+    index = os.path.join(FRONTEND_BUILD, "index.html")
+    if os.path.isfile(index):
+        return FileResponse(index)
+    return JSONResponse(
+        {
+            "error": "frontend build missing",
+            "hint": "Run start_local.bat from the repo root to install and build the dashboard.",
+        },
+        status_code=503,
+    )
 
 # Global exception handler to prevent crashes
 import sys

@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableExtensions
 REM Get repo root without trailing backslash (works even if double-clicked)
 for /f "delims=" %%i in ("%~dp0.") do set ROOT=%%~fi
 
@@ -27,8 +28,13 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Newer Node (17+) can break CRA 5 without this OpenSSL flag
+REM CRA 5 + Node 17+ needs the OpenSSL legacy provider. CI=false so warnings
+REM don't fail the production build.
 set "NODE_OPTIONS=--openssl-legacy-provider"
+set "CI=false"
+set "BROWSER=none"
+set "GENERATE_SOURCEMAP=false"
+set "DISABLE_ESLINT_PLUGIN=true"
 
 REM ── First-time setup: Python venv ──────────────────────────────────────────
 if not exist "%ROOT%\backend\venv\Scripts\python.exe" (
@@ -71,23 +77,47 @@ if not exist "%ROOT%\frontend\node_modules\react-scripts\bin\react-scripts.js" (
     echo  [SETUP] Frontend packages ready.
 )
 
-REM ── Kill stale processes on 8000 / 5000 ────────────────────────────────────
+REM ── Build dashboard (served by the backend — no second window) ─────────────
+if not exist "%ROOT%\frontend\build\index.html" (
+    echo  [SETUP] Building dashboard (first run, ~1-2 min)...
+    pushd "%ROOT%\frontend"
+    call npm run build
+    if errorlevel 1 (
+        echo  [SETUP] npm run build failed, retrying via node...
+        node node_modules\react-scripts\bin\react-scripts.js build
+    )
+    popd
+    if not exist "%ROOT%\frontend\build\index.html" (
+        echo  ERROR: Dashboard build failed.
+        echo  From this folder run:
+        echo    cd frontend
+        echo    set NODE_OPTIONS=--openssl-legacy-provider
+        echo    npm run build
+        pause
+        exit /b 1
+    )
+    echo  [SETUP] Dashboard built.
+) else (
+    echo  [SETUP] Dashboard build already present.
+)
+
+REM ── Kill stale process on 8000 ─────────────────────────────────────────────
 for /f "tokens=5" %%p in ('netstat -ano ^| findstr ":8000 " 2^>nul') do taskkill /PID %%p /F >nul 2>&1
-for /f "tokens=5" %%p in ('netstat -ano ^| findstr ":5000 " 2^>nul') do taskkill /PID %%p /F >nul 2>&1
 timeout /t 1 /nobreak >nul
 
-REM ── Launch via PowerShell windows (avoids all cmd quoting issues) ──────────
-echo  Starting Backend...
-start "UB Backend"  powershell -NoExit -Command "cd '%ROOT%\backend'; & '%ROOT%\backend\venv\Scripts\python.exe' -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info"
-
-echo  Starting Frontend...
-start "UB Frontend" powershell -NoExit -Command "cd '%ROOT%\frontend'; $env:PORT='5000'; $env:BROWSER='none'; $env:NODE_OPTIONS='--openssl-legacy-provider'; npm start"
-
 echo.
-echo  Two PowerShell windows should now be open.
-echo  Dashboard : http://localhost:5000
-echo  Backend   : http://localhost:8000/healthz
+echo  Starting Unified Betting on http://localhost:8000
+echo  Press Ctrl+C in this window to stop.
 echo.
-echo  Waiting 30s for frontend to finish starting...
-timeout /t 30 /nobreak >nul
-start "" http://localhost:5000
+
+REM Open the browser shortly after uvicorn binds
+start "" cmd /c "timeout /t 5 /nobreak >nul & start http://localhost:8000"
+
+cd /d "%ROOT%\backend"
+"%ROOT%\backend\venv\Scripts\python.exe" -m uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info
+if errorlevel 1 (
+    echo.
+    echo  Backend exited with an error.
+    pause
+    exit /b 1
+)
