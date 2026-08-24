@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Odds Dropper",
-  "version": "1.5.2",
-  "description": "Monitors POD /terminal only. No access to Clerk, sign-in, or BetBCK.",
+  "version": "1.5.3",
+  "description": "Monitors POD /terminal only. Never runs on BetBCK or Clerk.",
   "permissions": [
     "tabs",
     "webRequest",

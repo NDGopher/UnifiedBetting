@@ -8,15 +8,40 @@ function isSbsportsUrl(url) {
   return typeof url === 'string' && /https?:\/\/(www\.)?betbck\.com\/skin\/sbsports\.html/i.test(url);
 }
 
-function injectHelper(tabId) {
+function pageIsLoggedInSportsBoard() {
+  const host = (location.hostname || '').replace(/^www\./i, '').toLowerCase();
+  if (host !== 'betbck.com') return false;
+  if (!/\/skin\/sbsports\.html/i.test(location.href || '')) return false;
+  if (document.querySelector('input[type="password"], input[name="Password"], button[data-action="login"]')) {
+    return false;
+  }
+  return true;
+}
+
+function injectHelper(tabId, tabUrl) {
   return new Promise((resolve) => {
+    if (!isSbsportsUrl(tabUrl || '')) {
+      resolve(false);
+      return;
+    }
     chrome.scripting.executeScript(
-      { target: { tabId }, files: ['content.js'] },
-      () => {
-        if (chrome.runtime.lastError) {
-          console.warn('[BetBCK Helper] inject skipped:', chrome.runtime.lastError.message);
+      { target: { tabId }, func: pageIsLoggedInSportsBoard },
+      (results) => {
+        if (chrome.runtime.lastError || !results || !results[0] || !results[0].result) {
+          resolve(false);
+          return;
         }
-        resolve();
+        chrome.scripting.executeScript(
+          { target: { tabId }, files: ['content.js'] },
+          () => {
+            if (chrome.runtime.lastError) {
+              console.warn('[BetBCK Helper] inject skipped:', chrome.runtime.lastError.message);
+              resolve(false);
+              return;
+            }
+            resolve(true);
+          }
+        );
       }
     );
   });
@@ -33,10 +58,12 @@ function sendSearch(tabId, message) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type !== 'FOCUS_BETBCK_TAB') return;
   chrome.tabs.query({ url: SBSPORTS_QUERY }, (tabs) => {
-    const target = (tabs || [])[0];
-    if (target) {
-      chrome.tabs.update(target.id, { active: true }, () => {
-        injectHelper(target.id).then(() => sendSearch(target.id, message));
+    const loggedIn = (tabs || []).find((t) => isSbsportsUrl(t.url || ''));
+    if (loggedIn) {
+      chrome.tabs.update(loggedIn.id, { active: true }, () => {
+        injectHelper(loggedIn.id, loggedIn.url).then((ok) => {
+          if (ok) sendSearch(loggedIn.id, message);
+        });
       });
     } else {
       chrome.tabs.create({ url: BETBCK_BOARD }, (tab) => {
@@ -45,7 +72,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           const url = (updated && updated.url) || tab.url || '';
           if (!isSbsportsUrl(url)) return;
           chrome.tabs.onUpdated.removeListener(listener);
-          injectHelper(tabId).then(() => sendSearch(tabId, message));
+          injectHelper(tabId, url).then((ok) => {
+            if (ok) sendSearch(tabId, message);
+          });
         };
         chrome.tabs.onUpdated.addListener(listener);
       });
@@ -53,11 +82,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   });
   sendResponse({ status: 'ok' });
   return true;
-});
-
-// Overlay only after the sports board is already open. Never inject on /.
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status !== 'complete') return;
-  if (!isSbsportsUrl(tab.url || '')) return;
-  injectHelper(tabId);
 });

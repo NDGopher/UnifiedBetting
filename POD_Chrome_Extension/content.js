@@ -6,18 +6,24 @@
 // 3. Added polling fallback to detect new rows that MutationObserver might miss.
 
 (function() {
+    const host = (window.location.hostname || "").toLowerCase();
     const path = (window.location.pathname || "").toLowerCase();
+    if (host !== "www.pinnacleoddsdropper.com" && host !== "pinnacleoddsdropper.com") {
+        return;
+    }
+    if (!path.startsWith("/terminal")) {
+        return;
+    }
     if (
         path.startsWith("/sign-in") ||
         path.startsWith("/sign-up") ||
         path.startsWith("/sign-out") ||
         path.includes("/handshake")
     ) {
-        console.log("POD Content Script: skipping Clerk auth page", window.location.href);
         return;
     }
 
-    console.log("POD Content Script (Your Working Base - v5 EventId Focus) Loaded:", new Date().toISOString());
+    console.log("POD Content Script loaded on /terminal:", new Date().toISOString());
 
     const processedAlerts = new Map(); 
     const FETCH_INTERVAL = 2000; // Your original value

@@ -107,45 +107,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             });
             return true; // Async
         });
-
-    } else if (message.type === "autoSearchBetBCK") {
-        console.log(`[Background] Received auto-search request for term: "${message.searchTerm}"`);
-        if (!message.searchTerm) {
-            console.error("[Background] Auto-search failed: No search term provided.");
-            sendResponse({status: "error", reason: "No search term"});
-            return true;
-        }
-
-        // 1. Open a new tab for BetBCK, making it the active tab
-        chrome.tabs.create({ url: "https://betbck.com/skin/sbsports.html?url=StraightSportSelection.php", active: true }, (newTab) => {
-            
-            // 2. We need to wait for the tab to finish loading before we can send a message to its content script.
-            const listener = (tabId, info) => {
-                if (tabId === newTab.id && info.status === 'complete') {
-                    // This listener is no longer needed, so we remove it to prevent it from firing again.
-                    chrome.tabs.onUpdated.removeListener(listener);
-
-                    // 3. Send the search term to the content script (`betbck_auto_search.js`) in the new tab.
-                    chrome.tabs.sendMessage(newTab.id, {
-                        type: 'do_betbck_search',
-                        searchTerm: message.searchTerm
-                    }, (response) => {
-                        if (chrome.runtime.lastError) {
-                            console.error(`[Background] Error sending search message: ${chrome.runtime.lastError.message}`);
-                            sendResponse({status: "error", reason: `Could not communicate with BetBCK tab: ${chrome.runtime.lastError.message}`});
-                        } else {
-                            console.log("[Background] Response from content script:", response);
-                            sendResponse({status: "success", details: response});
-                        }
-                    });
-                }
-            };
-            chrome.tabs.onUpdated.addListener(listener);
-        });
-        
-        return true; // Indicate this is an asynchronous response
     }
-    
-    // Fallback for any unhandled message types
-    return true; 
+
+    return true;
 });

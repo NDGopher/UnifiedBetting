@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "BetBCK Helper",
-  "version": "0.3.2",
-  "description": "Place Bet overlay. Injected only on sbsports.html — never on the BetBCK login page.",
+  "name": "BetBCK Place Bet",
+  "version": "0.3.3",
+  "description": "Optional Place Bet overlay. Does nothing on the BetBCK login page.",
   "permissions": [
     "tabs",
     "storage",
