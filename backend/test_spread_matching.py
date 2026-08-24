@@ -53,9 +53,11 @@ def test_reversed_home_plus_uses_pin_away_at_negated_hdp():
 
 
 def test_opposite_side_prices_rejected():
-    assert spread_quotes_are_same_side("-130", "-402") is True
+    assert spread_quotes_are_same_side("-130", "-402") is False
+    assert spread_quotes_are_same_side("-135", "-289") is False
     assert spread_quotes_are_same_side("-130", "+402") is False
     assert spread_quotes_are_same_side("-110", "+100") is True
+    assert spread_quotes_are_same_side("-110", "-115") is True
 
 
 def test_filter_drops_41_pct_before_publish():
@@ -232,6 +234,53 @@ def test_ev_table_flipped_orientation_maps_top_to_away():
     assert roma["pinnacle_nvp"] == "-125"
 
 
+def test_nacional_asuncion_does_not_show_plus_quarter_at_minus_juice():
+    """Flipped BetBCK listing: Nacional is home/favorite, not Sportivo's +0.25 -135."""
+    bet = {
+        "pod_home_team": "Nacional Asuncion",
+        "pod_away_team": "Sportivo Luqueno",
+        "home_moneyline_american": "+110",
+        "away_moneyline_american": "+250",
+        "home_spreads": [{"line": "-0.25", "odds": "-135"}],
+        "away_spreads": [{"line": "0.25", "odds": "+105"}],
+    }
+    pin = _pin_payload(
+        "Nacional Asuncion",
+        "Sportivo Luqueno",
+        {
+            "0.25": _spread(0.25, 1.346, 3.89, "-289", "+289"),
+            "-0.25": _spread(-0.25, 1.74, 2.05, "-135", "+105"),
+        },
+        {},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    evs = [abs(float(str(r["ev"]).replace("%", ""))) for r in rows if r.get("market") == "Spread"]
+    assert evs and max(evs) < 15
+    home = next(r for r in rows if r.get("market") == "Spread" and r.get("selection") == "Home")
+    assert float(home["line"]) == -0.25
+    assert home["betbck_odds"] == "-135"
+    assert home["pinnacle_nvp"] != "-289"
+
+
+def test_wrong_plus_quarter_minus_135_never_publishes_29pct():
+    """If a caller still passes the unaligned +0.25 -135, do not pair Pin -289."""
+    bet = {
+        "pod_home_team": "Nacional Asuncion",
+        "pod_away_team": "Sportivo Luqueno",
+        "home_spreads": [{"line": "+0.25", "odds": "-135"}],
+        "away_spreads": [{"line": "-0.25", "odds": "+105"}],
+    }
+    pin = _pin_payload(
+        "Nacional Asuncion",
+        "Sportivo Luqueno",
+        {"0.25": _spread(0.25, 1.346, 3.89, "-289", "+289")},
+        {},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    spreads = [r for r in rows if r.get("market") == "Spread"]
+    assert spreads == [], f"trap +0.25/-289 must not publish: {spreads}"
+
+
 def test_ev_table_does_not_publish_far_alt():
     from calculate_ev_table import build_ev_spread_rows
     pin = {"0.25": _spread(0.25, 1.2488, 5.02, "-402", "+402")}
@@ -267,6 +316,8 @@ def main():
         test_ev_table_uses_orientation_not_exact_names,
         test_ev_table_flipped_orientation_maps_top_to_away,
         test_ev_table_does_not_publish_far_alt,
+        test_nacional_asuncion_does_not_show_plus_quarter_at_minus_juice,
+        test_wrong_plus_quarter_minus_135_never_publishes_29pct,
     ]
     failed = 0
     for fn in tests:

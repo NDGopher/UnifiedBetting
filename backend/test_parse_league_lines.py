@@ -83,6 +83,43 @@ def test_no_moneyline_still_counts_as_found():
     assert result.get("game_total_line")
 
 
+def test_flipped_soccer_ah_follows_ml_favorite():
+    """Sportivo is Team1, Nacional is POD/Pin home and the ML favorite.
+
+    JSON Spread=-0.25 would map to Nacional +0.25 after a naive flip.
+    The site lists Nacional -0.25 -135; keep that juice on the laying number.
+    """
+    result = parse_specific_game_from_lines_json(
+        {"Lines": [_line(
+            Team1ID="Sportivo Luqueno",
+            Team2ID="Nacional Asuncion",
+            Spread=-0.25,
+            SpreadAdj1=105,
+            SpreadAdj2=-135,
+            MoneyLine1=250,
+            MoneyLine2=110,
+            MoneyLineDraw=210,
+            SportType="SOCCER",
+            SportSubType="PARAGUAY",
+            SportSubTypeDisplay="Division Profesional",
+            PeriodDescription="Game",
+            GameNum=619171580,
+        )]},
+        "Nacional Asuncion",
+        "Sportivo Luqueno",
+        event_id="1634197096",
+    )
+    assert result is not None
+    assert result.get("home_moneyline_american") == "+110"
+    assert result.get("away_moneyline_american") == "+250"
+    home_sp = result["home_spreads"][0]
+    assert float(home_sp["line"]) == -0.25
+    assert home_sp["odds"] == "-135"
+    away_sp = result["away_spreads"][0]
+    assert float(away_sp["line"]) == 0.25
+    assert away_sp["odds"] == "+105"
+
+
 if __name__ == "__main__":
     tests = [
         test_status_i_still_returns_spread_game,
@@ -91,6 +128,7 @@ if __name__ == "__main__":
         test_closed_status_is_skipped,
         test_json_with_preamble_still_detected,
         test_no_moneyline_still_counts_as_found,
+        test_flipped_soccer_ah_follows_ml_favorite,
     ]
     failed = 0
     for fn in tests:

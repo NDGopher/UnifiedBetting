@@ -71,6 +71,9 @@ def spread_quotes_are_same_side(bck_odds, pin_nvp_american) -> bool:
     if bck is None or pin is None:
         return True
     if (bck > 0) == (pin > 0):
+        # Same sign with a huge juice gap is the other AH number (e.g. -135 vs -289).
+        if abs(bck - pin) >= 100 and max(abs(bck), abs(pin)) >= 200:
+            return False
         return True
     # -110 vs +100 is a normal pick'em juice flip. Heavy favorite vs dog is the wrong side.
     return abs(bck) < 200 and abs(pin) < 200

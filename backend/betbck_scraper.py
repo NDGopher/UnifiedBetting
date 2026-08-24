@@ -1070,7 +1070,74 @@ def _output_data_from_line(line: dict, target_home, target_away, bck_local_is_po
         output["game_total_line"] = _fmt_total_line(tot)
         output["game_total_over_odds"] = tot_over
         output["game_total_under_odds"] = tot_under
+    _align_spread_signs_with_moneyline(output)
     return output
+
+
+def _american_ml_int(val):
+    if val is None:
+        return None
+    try:
+        return int(round(float(str(val).strip())))
+    except (TypeError, ValueError):
+        return None
+
+
+def _simple_spread_float(line):
+    if line is None:
+        return None
+    s = str(line).strip().lower().replace("pk", "0").replace("+", "")
+    if "," in s or "/" in s:
+        return None
+    try:
+        return float(s)
+    except (TypeError, ValueError):
+        return None
+
+
+def _negate_spread_entries(spreads):
+    for spread in spreads:
+        raw = _simple_spread_float(spread.get("line"))
+        if raw is None:
+            continue
+        spread["line"] = _fmt_spread_line(-raw)
+
+
+def _align_spread_signs_with_moneyline(output):
+    """BetBCK JSON Spread is Team1's number. Soccer often lists the away team as Team1.
+
+    After mapping onto POD home/away, the ML favorite can end up GETTING points
+    (Nacional Asuncion +0.25 -135) while the site shows them LAYING (-0.25 -135).
+    If the two AH numbers are complements, flip the signs and keep each team's juice.
+    """
+    home_ml = _american_ml_int(output.get("home_moneyline_american"))
+    away_ml = _american_ml_int(output.get("away_moneyline_american"))
+    home_spreads = output.get("home_spreads") or []
+    away_spreads = output.get("away_spreads") or []
+    if home_ml is None or away_ml is None or home_ml == away_ml:
+        return
+    if not home_spreads or not away_spreads:
+        return
+    h_line = _simple_spread_float(home_spreads[0].get("line"))
+    a_line = _simple_spread_float(away_spreads[0].get("line"))
+    if h_line is None or a_line is None:
+        return
+    if abs(h_line + a_line) > 0.02:
+        return
+    home_is_fav = home_ml < away_ml
+    inverted = (
+        (home_is_fav and h_line > 0.01 and a_line < -0.01)
+        or ((not home_is_fav) and h_line < -0.01 and a_line > 0.01)
+    )
+    if not inverted:
+        return
+    _negate_spread_entries(home_spreads)
+    _negate_spread_entries(away_spreads)
+    print(
+        f"[BetbckParser] AH sign aligned to ML favorite: home "
+        f"{home_spreads[0].get('line')} {home_spreads[0].get('odds')} "
+        f"(ML {output.get('home_moneyline_american')} vs {output.get('away_moneyline_american')})"
+    )
 
 
 def _parse_bck_game_datetime(line: dict):
@@ -1163,7 +1230,13 @@ def parse_specific_game_from_lines_json(json_content, target_home_team_pod, targ
         if _line_is_closed(line):
             skipped_status.append(_line_status(line) or "(empty)")
             continue
-        orient, scores, mscore, raw_l, raw_v = game_orientation[gnum]
+        raw_l = str(line.get("Team1ID") or "").strip()
+        raw_v = str(line.get("Team2ID") or "").strip()
+        matched, orient, scores, mscore = _score_team_pair(
+            raw_l, raw_v, target_home_team_pod, target_away_team_pod
+        )
+        if not matched:
+            orient, scores, mscore, raw_l, raw_v = game_orientation[gnum]
         rtype = _classify_period_description(line.get("PeriodDescription"), line.get("PeriodNumber"))
         out = _output_data_from_line(line, target_home_team_pod, target_away_team_pod, orient)
         bck_date = _parse_bck_game_datetime(line)
