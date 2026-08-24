@@ -1,24 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Odds Dropper",
-  "version": "1.5.1",
-  "description": "Monitors POD terminal for alerts. Does not run on sign-in or Clerk.",
+  "version": "1.5.2",
+  "description": "Monitors POD /terminal only. No access to Clerk, sign-in, or BetBCK.",
   "permissions": [
-    "activeTab",
     "tabs",
     "webRequest",
     "storage"
   ],
   "host_permissions": [
-    "https://www.pinnacleoddsdropper.com/*",
+    "https://www.pinnacleoddsdropper.com/terminal",
+    "https://www.pinnacleoddsdropper.com/terminal*",
     "https://swordfish-production.up.railway.app/*",
     "https://sword.pinnacleoddsdropper.com/*",
     "http://localhost:8000/*",
-    "http://127.0.0.1:8000/*",
-    "https://*.replit.dev/*",
-    "https://*.replit.dev:8000/*",
-    "https://*.spock.replit.dev/*",
-    "https://*.spock.replit.dev:8000/*"
+    "http://127.0.0.1:8000/*"
   ],
   "options_ui": {
     "page": "options.html",
@@ -30,8 +26,14 @@
         "https://www.pinnacleoddsdropper.com/terminal",
         "https://www.pinnacleoddsdropper.com/terminal*"
       ],
+      "exclude_matches": [
+        "https://www.pinnacleoddsdropper.com/sign-in*",
+        "https://www.pinnacleoddsdropper.com/sign-up*",
+        "https://www.pinnacleoddsdropper.com/*/sign-in*",
+        "https://clerk.pinnacleoddsdropper.com/*"
+      ],
       "js": ["content.js"],
-      "run_at": "document_start"
+      "run_at": "document_idle"
     }
   ],
   "background": {

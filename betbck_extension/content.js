@@ -1,6 +1,9 @@
-// BetBCK Helper content script.
-// Default behavior: Place Bet search + EV overlay on the sports board only.
-// Do NOT wrap fetch/XHR/WebSocket and do NOT attach the debugger on login.
+// BetBCK Helper — Place Bet overlay. Loaded only on sbsports.html via background inject.
+// Never wrap fetch/XHR/WebSocket. Never attach the debugger.
+if (globalThis.__UB_BETBCK_HELPER__) {
+  // already injected in this tab
+} else {
+globalThis.__UB_BETBCK_HELPER__ = true;
 
 function isSportsBoard() {
   try {
@@ -156,3 +159,4 @@ window.addEventListener('message', function (event) {
     });
   }
 });
+}
