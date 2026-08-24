@@ -11,6 +11,7 @@ cd frontend
 npm install --legacy-peer-deps --silent
 cd ..
 
-# Pull-first auto-sync: GitHub wins when ahead; never upload Qubic over sbsports.
-echo "[post-merge] Syncing with GitHub (pull-first, stale-guard)..."
-python scripts/github_autosync.py
+# Do not push to GitHub from post-merge. The old auto-sync daemon kept
+# uploading a stale Qubic checkout onto main. scripts/github_autosync.py
+# stays in the repo for manual use only.
+echo "[post-merge] Skipping GitHub auto-sync (disabled)."

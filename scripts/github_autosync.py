@@ -6,6 +6,10 @@ The old behaviour uploaded every local file that differed from GitHub. A stale
 Replit (or PC) tree with Qubic URLs then overwrote authenticateCustomer / sbsports
 on main every few minutes.
 
+This script is **manual only**. Do not wire it back into `.replit` workflows or
+`scripts/post-merge.sh`. If you run it, GitHub wins when ahead and Qubic-over-sbsports
+uploads are refused.
+
 Rules:
   1. Only run pushes while on `main`. Feature-branch / cloud-agent checkouts skip.
   2. If GitHub is ahead or histories diverged, PULL those files — do not upload.
