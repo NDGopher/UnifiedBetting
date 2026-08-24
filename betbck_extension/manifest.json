@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "BetBCK Helper",
-  "version": "0.2.0",
-  "description": "Optional: jump to the BetBCK sports board from the dashboard Place Bet button and show an EV overlay. Does not run on the login splash.",
+  "version": "0.1.0",
+  "description": "Automate BetBCK search and show always-on-top EV popup with real-time updates.",
   "permissions": [
     "scripting",
     "tabs",
@@ -14,10 +14,7 @@
   "host_permissions": [
     "https://betbck.com/*",
     "https://plive.becoms.co/*",
-    "http://localhost:8000/*",
-    "http://127.0.0.1:8000/*",
-    "http://localhost:5000/*",
-    "http://127.0.0.1:5000/*"
+    "http://localhost:8000/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -27,17 +24,7 @@
       "matches": ["https://betbck.com/*", "https://plive.becoms.co/*"],
       "js": ["content.js"],
       "run_at": "document_idle",
-      "all_frames": true
-    },
-    {
-      "matches": [
-        "http://localhost:8000/*",
-        "http://127.0.0.1:8000/*",
-        "http://localhost:5000/*",
-        "http://127.0.0.1:5000/*"
-      ],
-      "js": ["dashboard_relay.js"],
-      "run_at": "document_idle"
+      "all_frames": false
     }
   ],
   "web_accessible_resources": [
@@ -63,4 +50,4 @@
     "32": "icon32.png",
     "48": "icon48.png"
   }
-}
+} 
