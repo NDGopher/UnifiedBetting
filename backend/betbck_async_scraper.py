@@ -116,18 +116,351 @@ class BetBCKAsyncScraper:
             re.compile(r"LIVE_RUGBY_.*?@20;LIVE_Game_")
         ]
         self.output_file = "data/betbck_games.json"
+        self.leagues_url = self.config['betbck'].get(
+            'leagues_api_url',
+            'https://betbck.com/cloud/api/League/Get_SportsLeagues',
+        )
+        # Map UI sport keys → which Get_SportsLeagues rows to pull (exact API codes).
+        # Matchers receive a league dict from Get_SportsLeagues.
+        self.sport_league_matchers = {
+            "nfl": lambda L: (
+                L.get("SportType") == "FOOTBALL"
+                and L.get("SportSubType") in ("NFL", "NFL PRESEAS")
+                and L.get("PeriodDescription") in ("Game", "1st Half")
+            ),
+            "ncaa_football": lambda L: (
+                L.get("SportType") == "FOOTBALL"
+                and L.get("SportSubType") == "COLLEGE"
+                and L.get("PeriodDescription") in ("Game", "1st Half")
+            ),
+            "nba": lambda L: (
+                L.get("SportType") == "BASKETBALL"
+                and L.get("SportSubType") == "NBA"
+                and L.get("PeriodDescription") in ("Game", "1st Half", "1st Quarter")
+            ),
+            "ncaa_basketball": lambda L: (
+                L.get("SportType") == "BASKETBALL"
+                and L.get("SportSubType") in ("NCAA", "NCAAB", "NCAA EXTRA")
+                and L.get("PeriodDescription") in ("Game", "1st Half", "1st Quarter")
+            ),
+            "nhl": lambda L: (
+                L.get("SportType") == "HOCKEY"
+                and L.get("SportSubType") == "NHL"
+                and L.get("PeriodDescription") in ("Game", "1st Period")
+            ),
+            "mlb": lambda L: (
+                L.get("SportType") == "BASEBALL"
+                and L.get("SportSubType") == "MLB"
+                and L.get("PeriodDescription") in ("Game", "1st 5 Innings")
+            ),
+            "wnba": lambda L: (
+                L.get("SportType") == "BASKETBALL"
+                and L.get("SportSubType") == "WNBA"
+                and L.get("PeriodDescription") in ("Game", "1st Half", "1st Quarter")
+            ),
+            "soccer_major": lambda L: (
+                L.get("SportType") == "SOCCER"
+                and L.get("SportSubType") in (
+                    "ENG PREM", "UEFA CH LEA", "UEFA EU LEA", "GER BUNDE",
+                    "SPA LA LIGA", "ITA SER A", "FRE LIGUE1", "USA MLS",
+                    "MEX - PR DIV", "BRA - SER A", "ARG PRI DIV", "ENG LEA1", "ENG CHAMPI",
+                )
+                and L.get("PeriodDescription") in ("Game", "1st Half")
+            ),
+            # All soccer Game/1H boards — NOT futures, NOT props, NOT live
+            "soccer": lambda L: (
+                L.get("SportType") == "SOCCER"
+                and str(L.get("PeriodDescription") or "") in ("Game", "1st Half")
+                and "PROP" not in str(L.get("SportSubType") or "").upper()
+                and "FUTURE" not in str(L.get("SportSubType") or "").upper()
+                and "FUTURE" not in str(L.get("SportSubTypeDisplay") or "").upper()
+                and str(L.get("PeriodDescription") or "").lower() != "prop"
+            ),
+            "nfl_season_wins": lambda L: (
+                L.get("SportType") == "FOOTBALL"
+                and L.get("SportSubType") in ("NFL SEAS WIN", "NFL ALT SW")
+                and L.get("PeriodDescription") == "Game"
+            ),
+            "cfb_season_wins": lambda L: (
+                L.get("SportType") == "FOOTBALL"
+                and L.get("SportSubType") == "NCAA SEA WIN"
+                and L.get("PeriodDescription") == "Game"
+            ),
+            "epl_winner": lambda L: (
+                L.get("SportType") == "SOCCER"
+                and (
+                    "premier" in str(L.get("SportSubType") or "").lower()
+                    or "premier" in str(L.get("SportSubTypeDisplay") or "").lower()
+                )
+                and str(L.get("PeriodDescription") or "").lower() == "prop"
+                and "win" in str(L.get("SportSubType2") or "").lower()
+            ),
+            "la_liga_winner": lambda L: (
+                L.get("SportType") == "SOCCER"
+                and (
+                    "la liga" in str(L.get("SportSubType") or "").lower()
+                    or "la liga" in str(L.get("SportSubTypeDisplay") or "").lower()
+                )
+                and str(L.get("PeriodDescription") or "").lower() == "prop"
+            ),
+            "seria_a_winner": lambda L: (
+                L.get("SportType") == "SOCCER"
+                and (
+                    "serie" in str(L.get("SportSubType") or "").lower()
+                    or "serie" in str(L.get("SportSubTypeDisplay") or "").lower()
+                )
+                and str(L.get("PeriodDescription") or "").lower() == "prop"
+            ),
+        }
+        # EV anti-bot pacing (seconds). Soccer can be many leagues — stay slow.
+        self.EV_DELAY_MIN = 2.2
+        self.EV_DELAY_MAX = 4.0
+        # Prefer Game-only rows for EV to cut request count ~in half (1H still in POD path).
+        self.EV_GAME_PERIOD_ONLY = True
+        # If a sport would fire more than this many Lines calls, only pull Game period
+        # and never exceed this many calls in one EV run (safety valve).
+        self.EV_MAX_LEAGUE_CALLS = 20
 
     async def login(self, session, fast_mode=False):
         if not fast_mode:
             await asyncio.sleep(random.uniform(0.4, 0.8))
-        async with session.get(self.login_page_url, headers=self.headers) as _:
+        page_headers = dict(self.headers)
+        page_headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+        page_headers["Referer"] = self.login_page_url
+        async with session.get(self.login_page_url, headers=page_headers) as _:
             pass
-        payload = self.config['betbck']['credentials']
-        async with session.post(self.login_url, data=payload, headers=self.headers) as resp:
+        creds = self.config['betbck']['credentials']
+        customer_id = str(creds.get('customerID') or '').strip().upper()
+        password = str(creds.get('password') or creds.get('Password') or '').strip().upper()
+        domain = "betbck.com"
+        payload = {
+            "customerID": customer_id,
+            "state": True,
+            "password": password,
+            "multiaccount": "1",
+            "response_type": "code",
+            "client_id": customer_id,
+            "domain": domain,
+            "redirect_uri": domain,
+            "operation": "authenticateCustomer",
+            "RRO": 1,
+        }
+        headers = dict(self.headers)
+        headers["Referer"] = self.login_page_url
+        headers["Content-Type"] = "application/json"
+        headers["Authorization"] = "Bearer undefined"
+        async with session.post(self.login_url, json=payload, headers=headers) as resp:
+            if resp.status != 200:
+                raise Exception(f'Login failed! HTTP {resp.status}')
+            data = await resp.json(content_type=None)
+            token = data.get("code") or data.get("token")
+            if not token:
+                raise Exception('Login failed! No token in authenticateCustomer response')
+            account = data.get("accountInfo") or {}
+            self._cloud_auth = {
+                "token": token,
+                "customer_id": str(account.get("customerID") or customer_id).strip().upper(),
+                "office": str(account.get("Office") or "").strip(),
+            }
+        print('[LOG] Login successful (cloud API).')
+
+    async def fetch_sports_leagues(self, session, delay=True):
+        """POST Get_SportsLeagues — same call the sbsports selection page uses."""
+        if delay:
+            await asyncio.sleep(random.uniform(0.4, 0.9))
+        auth = getattr(self, "_cloud_auth", None) or {}
+        if not auth.get("token"):
+            raise Exception("BetBCK cloud auth missing — login first")
+        form = {
+            "customerID": auth.get("customer_id") or "",
+            "wagerType": "Straight",
+            "office": auth.get("office") or "",
+            "placeLateFlag": "false",
+            "operation": "Get_SportsLeagues",
+            "RRO": "1",
+        }
+        headers = dict(self.headers)
+        headers["Authorization"] = f"Bearer {auth['token']}"
+        headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+        headers["Referer"] = self.selection_url
+        async with session.post(self.leagues_url, data=form, headers=headers) as resp:
+            if resp.status in (401, 403, 429):
+                raise Exception(f"BetBCK leagues auth/rate limited: HTTP {resp.status}")
+            data = await resp.json(content_type=None)
+            leagues = data.get("Leagues") if isinstance(data, dict) else None
+            return leagues if isinstance(leagues, list) else []
+
+    async def fetch_lines_json(
+        self,
+        session,
+        *,
+        keyword="",
+        sport_type="",
+        sport_subtype="",
+        period="Game",
+        period_number=0,
+        delay=True,
+    ):
+        """POST Get_LeagueLines2 (same endpoint as sbsports search-line / league click)."""
+        if delay:
+            dmin = getattr(self, "EV_DELAY_MIN", 2.2)
+            dmax = getattr(self, "EV_DELAY_MAX", 4.0)
+            await asyncio.sleep(random.uniform(dmin, dmax))
+        auth = getattr(self, "_cloud_auth", None) or {}
+        if not auth.get("token"):
+            raise Exception("BetBCK cloud auth missing — login first")
+        form = {
+            "customerID": auth.get("customer_id") or "",
+            "operation": "Get_LeagueLines2",
+            "sportType": sport_type,
+            "sportSubType": sport_subtype,
+            "period": period or "Game",
+            "hourFilter": "0",
+            "propDescription": "",
+            "wagerType": "Straight",
+            "keyword": keyword,
+            "office": auth.get("office") or "",
+            "correlationID": "",
+            "periodNumber": str(period_number if period_number is not None else 0),
+            "periods": "0",
+            "rotOrder": "0",
+            "placeLateFlag": "false",
+            "RRO": "1",
+        }
+        headers = dict(self.headers)
+        headers["Authorization"] = f"Bearer {auth['token']}"
+        headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+        headers["Referer"] = self.selection_url
+        async with session.post(self.games_url, data=form, headers=headers) as resp:
+            if resp.status in (401, 403, 429):
+                logger.warning(f"[BetBCK Async] Auth/rate HTTP {resp.status}")
+                raise Exception(f"BetBCK rate/auth limited: HTTP {resp.status}")
             text = await resp.text()
-            if 'logout' not in text.lower():
-                raise Exception('Login failed!')
-        print('[LOG] Login successful.')
+            return text
+
+    def _select_leagues_for_filters(self, leagues, filters):
+        """Pick Get_SportsLeagues rows matching our sport_filters keys."""
+        selected = []
+        seen = set()
+        for key in filters:
+            # Futures-only markets are opt-in (not pulled during default "all sports")
+            if key in self.futures_only_sports and not self.sport_filters:
+                continue
+            matcher = self.sport_league_matchers.get(key)
+            if not matcher:
+                print(f"[LOG] No league matcher for sport filter '{key}' — skipping")
+                continue
+            matched = 0
+            for league in leagues:
+                if not isinstance(league, dict):
+                    continue
+                if int(league.get("Active") or 0) != 1:
+                    continue
+                try:
+                    ok = bool(matcher(league))
+                except Exception:
+                    ok = False
+                if not ok:
+                    continue
+                st = str(league.get("SportType") or "").strip()
+                ss = str(league.get("SportSubType") or "").strip()
+                pd = str(league.get("PeriodDescription") or "Game").strip()
+                pn = league.get("PeriodNumber", 0)
+                dedupe_key = (st, ss, pd, pn)
+                if dedupe_key in seen:
+                    continue
+                seen.add(dedupe_key)
+                selected.append(league)
+                matched += 1
+            print(f"[LOG] Filter '{key}' matched {matched} league row(s)")
+        return selected
+
+    def parse_games_from_lines_json(self, json_text):
+        """Convert Get_LeagueLines2 JSON into the async scraper's game dicts."""
+        try:
+            payload = json.loads(json_text) if isinstance(json_text, str) else json_text
+        except Exception:
+            return []
+        lines = payload.get("Lines") or []
+        found = []
+        for line in lines:
+            if not isinstance(line, dict):
+                continue
+            if str(line.get("Status") or "").strip().upper() not in ("O", ""):
+                continue
+            home = str(line.get("Team1ID") or "").strip()
+            away = str(line.get("Team2ID") or "").strip()
+            if not home or not away:
+                continue
+            period = str(line.get("PeriodDescription") or "").strip()
+            market_suffix = None
+            pl = period.lower()
+            if "1st half" in pl:
+                market_suffix = "1H"
+            elif "2nd half" in pl:
+                market_suffix = "2H"
+            elif "1st 5" in pl or "first 5" in pl:
+                market_suffix = "1H"
+            elif "1st quarter" in pl or "1q" in pl:
+                market_suffix = "1Q"
+            # Skip props
+            blob = f"{home} {away} {line.get('SportSubType')} {line.get('SportSubTypeDisplay')}".lower()
+            if "prop" in blob or is_prop_market_by_name(home, away):
+                if not getattr(self, "_allow_outright_props", False):
+                    continue
+
+            def _amer(v):
+                if v is None:
+                    return None
+                try:
+                    n = int(v)
+                except (TypeError, ValueError):
+                    return None
+                return f"+{n}" if n > 0 else str(n)
+
+            sp = line.get("Spread")
+            top_spreads, bottom_spreads = [], []
+            if sp is not None:
+                adj1, adj2 = _amer(line.get("SpreadAdj1")), _amer(line.get("SpreadAdj2"))
+                if adj1:
+                    top_spreads.append({"line": str(sp), "odds": adj1})
+                if adj2:
+                    try:
+                        bottom_spreads.append({"line": str(-float(sp)), "odds": adj2})
+                    except (TypeError, ValueError):
+                        bottom_spreads.append({"line": str(sp), "odds": adj2})
+
+            tot = line.get("TotalPoints")
+            odds = {
+                "site_top_team_moneyline_american": _amer(line.get("MoneyLine1")),
+                "site_bottom_team_moneyline_american": _amer(line.get("MoneyLine2")),
+                "draw_moneyline_american": _amer(line.get("MoneyLineDraw")),
+                "site_top_team_spreads": top_spreads,
+                "site_bottom_team_spreads": bottom_spreads,
+                "game_total_line": str(tot) if tot is not None else None,
+                "game_total_over_odds": _amer(line.get("TtlPtsAdj1")),
+                "game_total_under_odds": _amer(line.get("TtlPtsAdj2")),
+                "home_team_total_over_line": str(line["Team1TotalPoints"]) if line.get("Team1TotalPoints") is not None else None,
+                "home_team_total_over_odds": _amer(line.get("Team1TtlPtsAdj1")),
+                "home_team_total_under_line": str(line["Team1TotalPoints"]) if line.get("Team1TotalPoints") is not None else None,
+                "home_team_total_under_odds": _amer(line.get("Team1TtlPtsAdj2")),
+                "away_team_total_over_line": str(line["Team2TotalPoints"]) if line.get("Team2TotalPoints") is not None else None,
+                "away_team_total_over_odds": _amer(line.get("Team2TtlPtsAdj1")),
+                "away_team_total_under_line": str(line["Team2TotalPoints"]) if line.get("Team2TotalPoints") is not None else None,
+                "away_team_total_under_odds": _amer(line.get("Team2TtlPtsAdj2")),
+            }
+            found.append({
+                "betbck_site_home_team": home,
+                "betbck_site_away_team": away,
+                "betbck_game_id": str(line.get("GameNum") or f"{home}_{away}"),
+                "market_suffix": market_suffix,
+                "betbck_site_odds": odds,
+                "lines": [],
+                "game_datetime": line.get("GameDateTime"),
+                "sport_type": str(line.get("SportType") or "").strip(),
+                "sport_subtype": str(line.get("SportSubTypeDisplay") or line.get("SportSubType") or "").strip(),
+            })
+        return found
 
     async def fetch_selection_page(self, session, fast_mode=False):
         if not fast_mode:
@@ -137,11 +470,10 @@ class BetBCKAsyncScraper:
             return html
 
     async def fetch_games_page(self, session, post_payload, delay=True):
-        # Reduced delay for small sport selections - only delay if delay=True
+        # Legacy HTML checkbox POST — kept for compatibility but cloud path preferred.
         if delay:
             await asyncio.sleep(random.uniform(1.5, 3.0))
         async with session.post(self.games_url, data=post_payload, headers=self.headers) as resp:
-            # Check for rate limiting
             if resp.status == 429 or resp.status == 403:
                 logger.warning(f"[BetBCK Async] Rate limited: HTTP {resp.status}, waiting 10 seconds...")
                 await asyncio.sleep(10)
@@ -385,134 +717,107 @@ class BetBCKAsyncScraper:
         return deduped
 
     async def run(self):
-        # Determine if this is a fast mode run (small sport selection)
+        """Cloud API board scrape: Get_SportsLeagues → careful Get_LeagueLines2 per league.
+
+        Anti-bot rules for EV:
+        - One login, one leagues list, then sequential Lines calls only
+        - Prefer Game-period only (cuts volume)
+        - Hard cap on number of Lines calls per run
+        - 2.2–4.0s jitter between Lines calls
+        """
         is_fast_mode = len(self.sport_filters) > 0 and len(self.sport_filters) <= 2
-        
-        timeout = aiohttp.ClientTimeout(total=300)  # 5-min cap; large pages need time to download
+        filters = self.sport_filters or list(self.sport_priority)
+
+        timeout = aiohttp.ClientTimeout(total=600)
         async with aiohttp.ClientSession(headers=self.headers, timeout=timeout) as session:
             await self.login(session, fast_mode=is_fast_mode)
-            selection_html = await self.fetch_selection_page(session, fast_mode=is_fast_mode)
-            selection_soup = BeautifulSoup(selection_html, 'html.parser')
-            inet_wager_input = selection_soup.find('input', {'name': 'inetWagerNumber'})
-            inet_wager_value = inet_wager_input['value'] if inet_wager_input else "0.1234567890123456"
-            all_checkboxes = selection_soup.find_all('input', {'type': 'checkbox'})
-            
-            # Filter checkboxes based on sport_filters
-            if self.sport_filters:
-                # Build exact match patterns for selected sports
-                selected_patterns = []
-                for sport_key in self.sport_filters:
-                    if sport_key in self.sport_checkbox_mapping:
-                        patterns = self.sport_checkbox_mapping[sport_key]
-                        for pattern in patterns:
-                            # Store pattern as-is (checkbox names use @20; for spaces, so match literally)
-                            selected_patterns.append(pattern)
-                
-                # Filter checkboxes to only those matching selected sports
-                checkbox_names = []
-                for cb in all_checkboxes:
-                    cb_name = cb.get('name')
-                    if cb_name:
-                        # Check if checkbox name matches any selected pattern
-                        for pattern in selected_patterns:
-                            # Handle wildcard patterns (.*?)
-                            if '.*?' in pattern:
-                                # Convert pattern to regex: escape everything except .*?
-                                pattern_parts = pattern.split('.*?')
-                                pattern_regex = '.*?'.join([re.escape(p) for p in pattern_parts])
-                                if re.search(pattern_regex, cb_name):  # Use search instead of match
-                                    checkbox_names.append(cb_name)
-                                    break
-                            else:
-                                # For exact patterns, check if pattern appears in checkbox name
-                                # Checkbox names might have suffixes like _Game_123 or @20;Game_
-                                # So we check if the pattern is contained in the name, not just starts with
-                                if pattern in cb_name or cb_name.startswith(pattern):
-                                    checkbox_names.append(cb_name)
-                                    break
-                print(f"[LOG] Filtered to {len(checkbox_names)} checkboxes for sports: {self.sport_filters}")
-                if len(checkbox_names) == 0:
-                    print(f"[LOG] WARNING: No checkboxes found! Available checkbox names (first 20):")
-                    available_names = [cb.get('name') for cb in all_checkboxes if cb.get('name')][:20]
-                    for name in available_names:
-                        print(f"[LOG]   - {name}")
-                    print(f"[LOG] Patterns we're looking for: {selected_patterns}")
-            else:
-                # Use all checkboxes (original behavior) - but prioritize by sport importance
-                all_checkbox_dict = {}
-                for cb in all_checkboxes:
-                    cb_name = cb.get('name')
-                    if cb_name and any(p.fullmatch(cb_name) for p in self.checkbox_patterns):
-                        # Determine priority based on sport
-                        priority = 999  # Default low priority
-                        for i, sport_key in enumerate(self.sport_priority):
-                            if sport_key in self.sport_checkbox_mapping:
-                                patterns = self.sport_checkbox_mapping[sport_key]
-                                for pattern in patterns:
-                                    if '.*?' in pattern:
-                                        pattern_parts = pattern.split('.*?')
-                                        pattern_regex = '.*?'.join([re.escape(p) for p in pattern_parts])
-                                        if re.match(pattern_regex, cb_name):
-                                            priority = i
-                                            break
-                                    elif cb_name.startswith(pattern):
-                                        priority = i
-                                        break
-                                if priority != 999:
-                                    break
-                        all_checkbox_dict[cb_name] = priority
-                
-                # Sort by priority (lower number = higher priority)
-                checkbox_names = sorted(all_checkbox_dict.keys(), key=lambda x: all_checkbox_dict[x])
-                print(f"[LOG] Found {len(checkbox_names)} sport/league checkboxes for async POST (all sports, prioritized).")
-            
-            # Log all checkbox names for debugging
-            all_checkbox_names = [cb.get('name') for cb in all_checkboxes if cb.get('name')]
-            print(f"[LOG] All available checkboxes ({len(all_checkbox_names)}):")
-            for i, name in enumerate(all_checkbox_names[:20]):  # Show first 20
-                print(f"   {i+1}. {name}")
-            if len(all_checkbox_names) > 20:
-                print(f"   ... and {len(all_checkbox_names) - 20} more")
-            # Single request with all checkboxes — same approach that has always worked.
-            # Season win totals now live in a dedicated futures pipeline (separate section),
-            # keeping this scrape to the normal ~52 checkboxes BetBCK handles without issue.
-            MAX_CONCURRENT_BETBCK_REQUESTS = 5
-            games_htmls = []
+            try:
+                await self.fetch_selection_page(session, fast_mode=True)
+            except Exception as e:
+                logger.warning(f"[BetBCK Async] skin page fetch skipped: {e}")
 
-            if len(checkbox_names) == 0:
-                logger.error(f"[LOG] ERROR: No checkboxes found for sport filters: {self.sport_filters}")
-                logger.error(f"[LOG] This means no games will be scraped. Check the patterns above.")
-                all_games = []
-                deduped_games = self.deduplicate_games(all_games)
-                os.makedirs(os.path.dirname(self.output_file), exist_ok=True)
+            try:
+                leagues = await self.fetch_sports_leagues(session, delay=True)
+            except Exception as e:
+                logger.error(f"[BetBCK Async] Get_SportsLeagues failed: {e}")
+                leagues = []
+            print(f"[LOG] Get_SportsLeagues returned {len(leagues)} league row(s)")
+
+            selected = self._select_leagues_for_filters(leagues, filters)
+
+            # Prefer Game-only for EV volume control (POD keyword search still gets 1H).
+            if self.EV_GAME_PERIOD_ONLY:
+                game_only = [
+                    L for L in selected
+                    if str(L.get("PeriodDescription") or "").strip() == "Game"
+                ]
+                if game_only:
+                    print(
+                        f"[LOG] EV Game-period filter: {len(selected)} -> {len(game_only)} "
+                        f"league call(s) (1H skipped to reduce request volume)"
+                    )
+                    selected = game_only
+
+            if len(selected) > self.EV_MAX_LEAGUE_CALLS:
+                print(
+                    f"[LOG] SAFETY CAP: {len(selected)} leagues exceeds "
+                    f"EV_MAX_LEAGUE_CALLS={self.EV_MAX_LEAGUE_CALLS}. "
+                    f"Truncating to first {self.EV_MAX_LEAGUE_CALLS} "
+                    f"(re-run with a narrower sport filter if needed)."
+                )
+                selected = selected[: self.EV_MAX_LEAGUE_CALLS]
+
+            if not selected:
+                print(f"[LOG] WARNING: no leagues matched filters={filters}; nothing to scrape")
+                deduped_games = []
+                out_dir = os.path.dirname(self.output_file)
+                if out_dir:
+                    os.makedirs(out_dir, exist_ok=True)
                 with open(self.output_file, "w", encoding="utf-8") as f:
                     json.dump(deduped_games, f, indent=2, ensure_ascii=False)
-                print(f"[LOG] Saved 0 games to {self.output_file} (no checkboxes found)")
-                return  # Exit early - no point continuing
+                print(f"[LOG] Saved 0 deduplicated games to {self.output_file}")
+                return
 
-            logger.info(f"[LOG] Sending POST with {len(checkbox_names)} checkboxes")
-            logger.info(f"[LOG] Checkbox names: {checkbox_names}")
-            post_payload = {
-                'keyword_search': '',
-                'inetWagerNumber': inet_wager_value,
-                'inetSportSelection': 'sport',
-                'contestType1': '', 'contestType2': '', 'contestType3': '',
-                'x': random.randint(75, 85), 'y': random.randint(10, 15),
-            }
-            for name in checkbox_names:
-                post_payload[name] = 'on'
-            try:
-                html = await self.fetch_games_page(session, post_payload, delay=True)
-                games_htmls.append(html)
-                logger.info(f"[LOG] Successfully fetched HTML ({len(html)} chars)")
-            except Exception as e:
-                import traceback
-                logger.error(f"[BetBCK Async] Error fetching games: {e}\n{traceback.format_exc()}")
+            est_sec = len(selected) * ((self.EV_DELAY_MIN + self.EV_DELAY_MAX) / 2)
+            print(
+                f"[LOG] Cloud Lines scrape: {len(selected)} sequential call(s) for "
+                f"filters={filters} (~{est_sec:.0f}s with human pacing)"
+            )
+
             all_games = []
-            for html in games_htmls:
-                all_games.extend(self.parse_games(html))
+            for idx, league in enumerate(selected):
+                stype = str(league.get("SportType") or "").strip()
+                ssub = str(league.get("SportSubType") or "").strip()
+                period = str(league.get("PeriodDescription") or "Game").strip()
+                pnum = league.get("PeriodNumber", 0)
+                display = str(league.get("SportSubTypeDisplay") or ssub).strip()
+                try:
+                    json_text = await self.fetch_lines_json(
+                        session,
+                        keyword="",
+                        sport_type=stype,
+                        sport_subtype=ssub,
+                        period=period,
+                        period_number=pnum,
+                        delay=(idx > 0),
+                    )
+                    batch = self.parse_games_from_lines_json(json_text)
+                    print(
+                        f"[LOG] Get_LeagueLines2 {stype!r}/{ssub!r} "
+                        f"period={period!r} ({display}) -> {len(batch)} lines"
+                    )
+                    all_games.extend(batch)
+                except Exception as e:
+                    import traceback
+                    logger.error(
+                        f"[BetBCK Async] Lines fetch failed ({stype}/{ssub}/{period}): {e}\n"
+                        f"{traceback.format_exc()}"
+                    )
+
             deduped_games = self.deduplicate_games(all_games)
-            os.makedirs(os.path.dirname(self.output_file), exist_ok=True)
+            out_dir = os.path.dirname(self.output_file)
+            if out_dir:
+                os.makedirs(out_dir, exist_ok=True)
             with open(self.output_file, "w", encoding="utf-8") as f:
                 json.dump(deduped_games, f, indent=2, ensure_ascii=False)
             print(f"[LOG] Saved {len(deduped_games)} deduplicated games to {self.output_file}")
