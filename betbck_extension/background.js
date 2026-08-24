@@ -3,6 +3,39 @@ let currentCapturedTabId = null;
 let workerCheckInterval = null;
 let attachedWorkers = new Set();
 
+function isBetbckTabUrl(url) {
+  try {
+    const host = new URL(url || '').hostname;
+    return host === 'betbck.com' || host.endsWith('.betbck.com') || host.endsWith('becoms.co');
+  } catch {
+    return false;
+  }
+}
+
+function detachAllDebuggers() {
+  if (workerCheckInterval) {
+    clearInterval(workerCheckInterval);
+    workerCheckInterval = null;
+  }
+  chrome.debugger.getTargets((targets) => {
+    (targets || []).forEach((t) => {
+      const target = t.tabId ? { tabId: t.tabId } : (t.id ? { targetId: t.id } : null);
+      if (!target) return;
+      chrome.debugger.detach(target, () => void chrome.runtime.lastError);
+    });
+  });
+  attachedWorkers.clear();
+  currentCapturedTabId = null;
+}
+
+chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+  if (tabId !== currentCapturedTabId) return;
+  if (info.url && !isBetbckTabUrl(info.url)) {
+    console.warn('[BetBCK Helper] Captured tab left BetBCK — detaching debugger');
+    detachAllDebuggers();
+  }
+});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('[BetBCK Helper][Background] Received message:', message);
   if (message.type === 'START_CAPTURE') {
@@ -10,6 +43,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
       const tab = tabs && tabs[0];
       if (!tab) return sendResponse({status:'error', message:'No active tab'});
+      if (!isBetbckTabUrl(tab.url)) {
+        console.warn('[BetBCK Helper] Refusing debugger attach on non-BetBCK tab:', tab.url);
+        return sendResponse({status:'error', message:'Debugger only attaches on betbck.com'});
+      }
       const pageTarget = { tabId: tab.id };
       currentCapturedTabId = tab.id;
       

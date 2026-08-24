@@ -515,27 +515,13 @@
     
     function startMonitoring() {
         const path = (window.location.pathname || "").toLowerCase();
-        if (path.startsWith("/sign-in") || path.startsWith("/sign-up") || path.startsWith("/sign-out")) {
+        if (!path.includes("/terminal")) {
+            console.log("POD Content Script: not on /terminal — skipping", window.location.href);
             return;
         }
-        // Handle redirect from main page to terminal
-        if (window.location.pathname === '/' || window.location.pathname === '') {
-            console.log("🚨🚨🚨 On main page - waiting for redirect to terminal 🚨🚨🚨");
-            // Wait a bit for redirect, then try to monitor
-            setTimeout(() => {
-                console.log("🚨🚨🚨 After redirect delay - starting monitoring 🚨🚨🚨");
-                monitorRows();
-                setupRandomRefresh();
-            }, 3000); // Wait 3 seconds for redirect
-        } else if (window.location.pathname.includes('/terminal')) {
-            console.log("🚨🚨🚨 On terminal page - starting immediately 🚨🚨🚨");
-            monitorRows();
-            setupRandomRefresh();
-        } else {
-            console.log("🚨🚨🚨 On other page - starting monitoring anyway 🚨🚨🚨");
-            monitorRows();
-            setupRandomRefresh();
-        }
+        console.log("🚨🚨🚨 On terminal page - starting immediately 🚨🚨🚨");
+        monitorRows();
+        setupRandomRefresh();
     }
     
     console.log("POD Content Script: Initialization complete, monitorRows and auto-refresh scheduled.");

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "BetBCK Helper",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Optional: jump to the BetBCK sports board from the dashboard Place Bet button and show an EV overlay. Does not run on the login splash.",
   "permissions": [
     "scripting",
