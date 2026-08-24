@@ -4,7 +4,7 @@ import copy
 from typing import Dict, Any, Optional, List, Union
 import logging
 try:
-    from rapidfuzz import fuzz
+    from fuzzywuzzy import fuzz
     FUZZY_MATCH_THRESHOLD = 82
 except ImportError:
     fuzz = None
@@ -1758,7 +1758,7 @@ def fuzzy_team_match(team1, team2):
 def calculate_name_similarity(team1, team2):
     """Calculate similarity score between two team names (0-1)."""
     if not fuzz:
-        # Fallback to exact match if rapidfuzz is not available
+        # Fallback to exact match if fuzzywuzzy is not available
         return 1.0 if normalize_team_name_for_matching(team1) == normalize_team_name_for_matching(team2) else 0.0
     t1 = normalize_team_name_for_matching(team1)
     t2 = normalize_team_name_for_matching(team2)
