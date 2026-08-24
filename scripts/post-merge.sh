@@ -11,6 +11,6 @@ cd frontend
 npm install --legacy-peer-deps --silent
 cd ..
 
-# Sync changed source files to GitHub
-echo "[post-merge] Syncing to GitHub..."
+# Pull-first auto-sync: GitHub wins when ahead; never upload Qubic over sbsports.
+echo "[post-merge] Syncing with GitHub (pull-first, stale-guard)..."
 python scripts/github_autosync.py

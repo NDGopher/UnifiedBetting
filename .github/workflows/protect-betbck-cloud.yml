@@ -1,0 +1,40 @@
+name: Protect BetBCK cloud URLs
+
+# Old Replit auto-sync uploaded stale Qubic files onto main. Until that daemon
+# is running the new pull-first script, revert any auto-sync that brings Qubic
+# back or strips the stale-guard from github_autosync.py.
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  revert-stale-autosync:
+    if: startsWith(github.event.head_commit.message, 'auto-sync:')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 8
+      - name: Revert stale auto-sync commits
+        run: |
+          set -euo pipefail
+          need_revert=0
+          if git grep -q 'Qubic/SecurityPage.php' HEAD -- backend/config.json backend/betbck_scraper.py backend/betbck_async_scraper.py backend/betbck_request_manager.py 2>/dev/null; then
+            echo "Qubic URLs detected on main after auto-sync."
+            need_revert=1
+          fi
+          if [ -f scripts/github_autosync.py ] && ! grep -q 'is_stale_regression' scripts/github_autosync.py; then
+            echo "github_autosync.py lost the stale-regression guard."
+            need_revert=1
+          fi
+          if [ "$need_revert" -eq 0 ]; then
+            echo "Auto-sync looks clean."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git revert --no-edit "${GITHUB_SHA}"
+          git push

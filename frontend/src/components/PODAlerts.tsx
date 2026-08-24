@@ -57,7 +57,7 @@ interface EventData {
   betbck_payload?: any;
 }
 
-const POLL_INTERVAL = 2000; // 2 seconds for fast POD alert updates
+const POLL_INTERVAL = 2000; // localhost only — more frequent = faster UI, not more BetBCK traffic
 const NEGATIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for negative EV alerts (match positive)
 const POSITIVE_EV_DISMISS_MS = 3 * 60 * 1000; // 3 minutes for positive EV alerts
 const MAX_RETRIES = 3; // Maximum number of retries before showing error
@@ -186,24 +186,17 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
     }
   }, [retryCount]);
 
-  // Fast poll when WebSocket is disconnected
+  // Always poll the local backend, even while SSE is connected.
+  // SSE is push (fastest); HTTP poll is the safety net so a dropped event
+  // cannot leave the board stale. This hits localhost only, not BetBCK.
   useEffect(() => {
-    if (isConnected) return;
     fetchEvents();
-    const poller = setInterval(fetchEvents, POLL_INTERVAL);
+    const poller = setInterval(() => fetchEvents(true), POLL_INTERVAL);
     return () => clearInterval(poller);
-  }, [fetchEvents, isConnected]);
-
-  // Safety net: always sync from backend every 30s regardless of WS state.
-  // Catches any alert card that was missed due to a dropped WS/SSE message.
-  useEffect(() => {
-    const safetyPoll = setInterval(() => fetchEvents(true), 30_000);
-    return () => clearInterval(safetyPoll);
   }, [fetchEvents]);
 
   // On every SSE reconnect, immediately re-fetch full state so alerts that
-  // arrived while the connection was down are not lost until the 30s safety
-  // poll fires. reconnectCount starts at 0, so skip the initial mount (=0).
+  // arrived while the connection was down are not lost.
   useEffect(() => {
     if (reconnectCount === 0) return;
     console.log(`[PODAlerts] SSE reconnected (count=${reconnectCount}) — syncing state`);
@@ -802,7 +795,31 @@ const PODAlerts: React.FC<PODAlertsProps> = () => {
 };
 
 const LiveEVModal: React.FC<{ event: EventData; market: Market; liveEvent?: EventData }> = ({ event, market, liveEvent }) => {
-  const sourceEvent = liveEvent || event;
+  const [polledEvent, setPolledEvent] = useState<EventData | undefined>(liveEvent);
+  useEffect(() => {
+    setPolledEvent(liveEvent);
+  }, [liveEvent]);
+  useEffect(() => {
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/get_active_events_data`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const updated =
+          (event.title && data[event.title]) ||
+          Object.values(data as { [id: string]: EventData }).find((e) => e.title === event.title);
+        if (!cancelled && updated) setPolledEvent(updated as EventData);
+      } catch {}
+    };
+    poll();
+    const interval = setInterval(poll, POLL_INTERVAL);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [event.title]);
+  const sourceEvent = polledEvent || liveEvent || event;
   const liveMarket =
     sourceEvent.markets?.find(
       (m) => m.market === market.market && m.selection === market.selection && m.line === market.line

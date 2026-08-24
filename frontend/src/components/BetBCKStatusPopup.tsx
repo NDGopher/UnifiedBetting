@@ -44,7 +44,6 @@ const BetBCKStatusPopup: React.FC = () => {
 
   // Fetch BetBCK status
   const fetchBetbckStatus = useCallback(async () => {
-    if (typeof document !== 'undefined' && document.hidden) return;
     try {
       const res = await fetch(`${API_BASE}/api/betbck/status`);
       if (res.ok) {
@@ -58,10 +57,10 @@ const BetBCKStatusPopup: React.FC = () => {
     }
   }, []);
 
-  // Poll BetBCK status every 8 seconds (local UI only — not BetBCK)
+  // Poll local backend every 2s (not BetBCK) so queue/session status stays live
   useEffect(() => {
     fetchBetbckStatus();
-    const statusPoller = setInterval(fetchBetbckStatus, 8000);
+    const statusPoller = setInterval(fetchBetbckStatus, 2000);
     return () => clearInterval(statusPoller);
   }, [fetchBetbckStatus]);
 
