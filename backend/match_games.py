@@ -1,9 +1,10 @@
 import json
 import logging
 import re
+import unicodedata
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta, timezone
-from utils.pod_utils import normalize_team_name_for_matching
+from utils.pod_utils import alias_normalize, normalize_team_name_for_matching
 from rapidfuzz import fuzz
 
 # Use the specialized matching logger
@@ -119,6 +120,184 @@ FUZZY_MATCH_THRESHOLD = 65  # Lowered from 82 to catch more matches
 MIN_COMPONENT_MATCH_SCORE = 60  # Lowered from 78
 ORIENTATION_CONFIDENCE_MARGIN = 10  # Lowered from 15
 
+# Words that appear in many unrelated club names. Used to compare the
+# distinctive core ("Cardiff" vs "Cardiff City") without treating
+# "Manchester United" as the same team as "Manchester City".
+_GENERIC_TEAM_WORDS = frozenset({
+    "city", "town", "united", "utd", "fc", "sc", "afc", "cf", "ac", "if", "bk",
+    "rovers", "county", "athletic", "wanderers", "hotspur", "villa", "palace",
+    "albion", "wednesday", "vale", "club", "calcio", "de", "the", "sv", "vfb",
+    "vfl", "as", "ss", "us", "sk", "fk", "deportivo", "cd", "rc", "kf",
+})
+
+# Same-club suffix spellings. "united" vs "utd" is not a different club;
+# "united" vs "city" is (Manchester United ≠ Manchester City).
+_GENERIC_SYNONYMS = (
+    frozenset({"united", "utd", "u"}),
+    frozenset({"fc", "cf", "afc", "sc", "ac", "fk", "sk", "bk", "if", "sv", "kf", "cd", "rc"}),
+)
+
+# Short cores that belong to more than one real club. Subset matching
+# ("Inter" ⊂ "Inter Miami") is not allowed for these.
+_AMBIGUOUS_SHORT_CORES = frozenset({
+    "inter", "real", "sporting", "athletic", "rangers", "dynamo", "dinamito",
+    "olympique", "olympic", "racing", "sport", "union", "madrid", "milan",
+})
+
+
+_CHAR_FOLD = str.maketrans({
+    "ø": "o", "Ø": "o",
+    "æ": "ae", "Æ": "ae",
+    "å": "a", "Å": "a",
+    "ö": "o", "Ö": "o",
+    "ä": "a", "Ä": "a",
+    "ü": "u", "Ü": "u",
+    "ß": "ss",
+    "ł": "l", "Ł": "l",
+    "đ": "d", "Đ": "d",
+    "ð": "d", "Ð": "d",
+    "þ": "th", "Þ": "th",
+    "ñ": "n", "Ñ": "n",
+    "ş": "s", "Ş": "s",
+    "ç": "c", "Ç": "c",
+})
+
+
+def _fold_team_text(name: str) -> str:
+    # ø/æ/å do not NFKD-decompose; map them first, then strip accents (é → e).
+    s = (name or "").translate(_CHAR_FOLD)
+    nk = unicodedata.normalize("NFKD", s)
+    return "".join(c for c in nk if not unicodedata.combining(c)).strip().lower()
+
+
+def canonical_team_name(name: str) -> str:
+    """Strip props/suffixes, fold accents, then collapse known club aliases."""
+    n = normalize_team_name_for_matching(name)
+    if not n:
+        return ""
+    n = _fold_team_text(n)
+    n = alias_normalize(n)
+    mapped = TEAM_NAME_MAP.get(n)
+    if mapped:
+        n = alias_normalize(_fold_team_text(mapped))
+    return n
+
+
+def _core_and_generic_tokens(name: str):
+    toks = [t for t in (name or "").lower().split() if t]
+    core = {t for t in toks if t not in _GENERIC_TEAM_WORDS and len(t) > 2}
+    generic = {t for t in toks if t in _GENERIC_TEAM_WORDS or len(t) <= 2}
+    return core, generic
+
+
+def _generics_conflict(ga, gb) -> bool:
+    """True when leftover suffixes point at different clubs (united vs city)."""
+    if not ga or not gb:
+        return False
+    if ga & gb:
+        return False
+    for group in _GENERIC_SYNONYMS:
+        if (ga & group) and (gb & group):
+            return False
+    return True
+
+
+def names_are_same_team(a: str, b: str) -> bool:
+    """True when two labels are the same club, allowing City/FC/Town aliases.
+
+    Rejects Manchester United vs Manchester City (same core, conflicting generic)
+    and Crawley Town vs Athlone Town (generic-only overlap).
+    """
+    if not a or not b:
+        return False
+    a = _fold_team_text(a)
+    b = _fold_team_text(b)
+    if a == b:
+        return True
+    ca, ga = _core_and_generic_tokens(a)
+    cb, gb = _core_and_generic_tokens(b)
+    tsr = fuzz.token_set_ratio(a, b) if fuzz else (100 if a == b else 0)
+    if ca and cb:
+        if ca == cb:
+            return not _generics_conflict(ga, gb)
+        if ca < cb or cb < ca:
+            shorter, longer = (ca, cb) if ca < cb else (cb, ca)
+            extra = longer - shorter
+            if shorter <= _AMBIGUOUS_SHORT_CORES and extra and not extra <= _GENERIC_TEAM_WORDS:
+                return False
+            return True
+        overlap = ca & cb
+        if not overlap:
+            return False
+        smaller = ca if len(ca) <= len(cb) else cb
+        if len(overlap) / len(smaller) >= 0.67 and tsr >= 80:
+            return True
+        return False
+    # Generic-only labels ("United", "FC") are not an identity.
+    return False
+
+
+def pair_orientation_score(bck_h: str, bck_a: str, pin_h: str, pin_a: str):
+    """Return (score, direct) for a two-team matchup. 0 if either side is a different club."""
+    _tsr = fuzz.token_set_ratio
+
+    def _side(a, b):
+        raw = _tsr(a, b)
+        if names_are_same_team(a, b) and raw >= 55:
+            return raw
+        return 0
+
+    h_d, a_d = _side(bck_h, pin_h), _side(bck_a, pin_a)
+    direct = (h_d + a_d) / 2 if h_d and a_d else 0
+    h_f, a_f = _side(bck_h, pin_a), _side(bck_a, pin_h)
+    flipped = (h_f + a_f) / 2 if h_f and a_f else 0
+    if direct >= flipped:
+        return direct, True
+    return flipped, False
+
+
+def normalize_sport_label(raw_sport: str, subtype: str = "") -> str:
+    """Map BetBCK SportType / Pinnacle Arcadia sport names onto matcher buckets."""
+    blob = f"{raw_sport or ''} {subtype or ''}".lower()
+    if not blob.strip():
+        return "other"
+    if "soccer" in blob:
+        return "soccer"
+    if "nfl" in blob or "ncaaf" in blob or "american football" in blob or "american-football" in blob:
+        return "football"
+    # Arcadia uses "Football" for NFL and "Soccer" for soccer. BetBCK uses SOCCER.
+    if blob.strip() in ("football",) or (blob.strip().startswith("football") and "soccer" not in blob):
+        if "premier" in blob or "liga" in blob or "bundesliga" in blob or "serie" in blob:
+            return "soccer"
+        return "football"
+    if "basketball" in blob or "nba" in blob or "ncaab" in blob or "wnba" in blob:
+        return "basketball"
+    if "baseball" in blob or "mlb" in blob:
+        return "mlb"
+    if "hockey" in blob or "nhl" in blob or "ice" in blob:
+        return "hockey"
+    if "ufc" in blob or "mma" in blob or "boxing" in blob or "martial" in blob:
+        return "ufc_boxing"
+    return "other"
+
+
+def related_sport_buckets(sport: str) -> list:
+    """Unknown-club games live in 'other'; still search soccer when that's the board."""
+    if sport == "soccer":
+        return ["soccer", "other"]
+    if sport == "other":
+        return ["other", "soccer"]
+    return [sport]
+
+
+def resolve_betbck_sport(game: Dict[str, Any], home_norm: str, away_norm: str) -> str:
+    labeled = normalize_sport_label(game.get("sport") or "", "")
+    if labeled == "other":
+        labeled = normalize_sport_label(game.get("sport_type") or "", game.get("sport_subtype") or "")
+    if labeled != "other":
+        return labeled
+    return determine_sport_from_teams(home_norm, away_norm)
+
 # --- Normalization ---
 def is_prop_market_by_name(home_team_name, away_team_name):
     if not home_team_name or not away_team_name: return False
@@ -217,28 +396,11 @@ def is_league_compatible(betbck_game: Dict[str, Any], pinnacle_event: Dict[str, 
     pin_away = pinnacle_event.get("away_team", "").lower()
     
     # Check for obvious mismatches based on team name patterns
-    # English football leagues
-    english_premier_teams = ["manchester united", "manchester city", "arsenal", "chelsea", "liverpool", "tottenham", "newcastle", "brighton", "west ham", "crystal palace", "fulham", "brentford", "everton", "nottingham forest", "sheffield united", "burnley", "luton town", "bournemouth", "wolves", "wolverhampton"]
-    english_championship_teams = ["leeds united", "leicester city", "southampton", "norwich city", "west brom", "hull city", "middlesbrough", "coventry city", "sunderland", "birmingham city", "blackburn rovers", "bristol city", "cardiff city", "huddersfield town", "ipswich town", "millwall", "plymouth argyle", "preston north end", "queens park rangers", "rotherham united", "sheffield wednesday", "stoke city", "swansea city", "watford"]
-    english_league1_teams = ["barnsley", "blackpool", "bolton wanderers", "bristol rovers", "burton albion", "cambridge united", "carlisle united", "charlton athletic", "cheltenham town", "derby county", "exeter city", "fleetwood town", "grimsby town", "leyton orient", "lincoln city", "northampton town", "oxford united", "peterborough united", "port vale", "reading", "shrewsbury town", "stevenage", "wigan athletic", "wycombe wanderers"]
-    english_league2_teams = ["accrington stanley", "afc wimbledon", "barrow", "bradford city", "colchester united", "crewe alexandra", "crawley town", "doncaster rovers", "forest green rovers", "gillingham", "harrogate town", "mansfield town", "mk dons", "morecambe", "newport county", "notts county", "salford city", "stockport county", "sutton united", "swindon town", "tranmere rovers", "walsall"]
-    
-    # Check if teams are from different English football divisions
-    betbck_english_teams = []
-    pin_english_teams = []
-    
-    for team_list, division in [(english_premier_teams, "Premier"), (english_championship_teams, "Championship"), (english_league1_teams, "League1"), (english_league2_teams, "League2")]:
-        if any(team in betbck_home or team in betbck_away for team in team_list):
-            betbck_english_teams.append(division)
-        if any(team in pin_home or team in pin_away for team in team_list):
-            pin_english_teams.append(division)
-    
-    # If both have English teams but from different divisions, likely incompatible
-    if betbck_english_teams and pin_english_teams:
-        if not any(div in betbck_english_teams for div in pin_english_teams):
-            logger.debug(f"[LEAGUE-MISMATCH] English divisions don't match: BetBCK={betbck_english_teams} vs Pinnacle={pin_english_teams}")
-            return False
-    
+    # (division lists used to reject FA Cup / mixed boards — that dropped real games) 
+    # English division lists go stale (promotions, cups). Two team names already
+    # identify the matchup; do not reject FA Cup / mixed-division games here.
+
+    # Check for international vs club competitions 
     # Check for cup competitions vs league games
     cup_indicators = ["cup", "trophy", "champions league", "europa league", "conference league", "fa cup", "carabao cup", "efl cup"]
     betbck_cup = any(indicator in betbck_home or indicator in betbck_away for indicator in cup_indicators)
@@ -369,17 +531,8 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             
         # Use sport field from Arcadia if available, fall back to team-name detection
         raw_sport = event.get('sport', '').strip()
-        if raw_sport:
-            # Normalize Arcadia sport names to our internal buckets
-            _rs = raw_sport.lower()
-            if 'basketball' in _rs:            sport = 'basketball'
-            elif 'baseball' in _rs:            sport = 'mlb'
-            elif 'football' in _rs or 'american' in _rs: sport = 'football'
-            elif 'soccer' in _rs or 'football' in _rs:  sport = 'soccer'
-            elif 'hockey' in _rs or 'ice' in _rs:       sport = 'hockey'
-            elif 'ufc' in _rs or 'boxing' in _rs or 'martial' in _rs: sport = 'ufc_boxing'
-            else:                              sport = _rs  # keep original as-is for unknown
-        else:
+        sport = normalize_sport_label(raw_sport, event.get('league') or "")
+        if sport == "other":
             sport = determine_sport_from_teams(home_team, away_team)
         if sport not in events_by_sport:
             events_by_sport[sport] = []
@@ -402,27 +555,13 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
         eid = event.get("event_id")
         if eid is not None:
             pin_norm_cache[eid] = (
-                normalize_team_name_for_matching(event.get("home_team", "")),
-                normalize_team_name_for_matching(event.get("away_team", "")),
+                canonical_team_name(event.get("home_team", "")),
+                canonical_team_name(event.get("away_team", "")),
             )
     logger.info(f"[MATCH] Pre-normalized {len(pin_norm_cache)} Pinnacle events")
 
-    # --- Sport category constants — defined once, not per-iteration ---
-    _basketball_sports = {"basketball", "nba", "wnba", "ncaab", "ncaa basketball", "euroleague", "fib"}
-    _football_sports   = {"football", "nfl", "ncaaf", "ncaa football", "college football", "american football"}
-    _baseball_sports   = {"baseball", "mlb", "minor league", "college baseball", "ncaa baseball"}
-    _soccer_sports     = {"soccer", "football", "mls", "premier league", "la liga", "bundesliga",
-                          "serie a", "ligue 1", "champions league", "europa league"}
-    _hockey_sports     = {"hockey", "nhl", "ncaa hockey", "college hockey"}
-
-    def _sport_category(league: str, sport: str) -> str | None:
-        combined = league + " " + sport
-        if any(s in combined for s in _basketball_sports): return "basketball"
-        if any(s in combined for s in _football_sports):   return "football"
-        if any(s in combined for s in _baseball_sports):   return "baseball"
-        if any(s in combined for s in _soccer_sports):     return "soccer"
-        if any(s in combined for s in _hockey_sports):     return "hockey"
-        return None
+    # Sport buckets already come from normalize_sport_label (Soccer vs NFL Football).
+    pair_candidates = []  # (score, game_idx, pinnacle_event, orientation_direct)
 
     for game_idx, betbck_game in enumerate(betbck_games):
         # Progress logging every 10 games
@@ -440,8 +579,8 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
         betbck_away_raw = betbck_game.get("betbck_site_away_team", "")
         logger.debug(f"[BETBCK] Raw teams: home='{betbck_home_raw}', away='{betbck_away_raw}'")
         logger.debug(f"[BETBCK] Raw odds: {betbck_game.get('betbck_site_odds', {})}")
-        norm_bck_home = normalize_team_name_for_matching(betbck_home_raw)
-        norm_bck_away = normalize_team_name_for_matching(betbck_away_raw)
+        norm_bck_home = canonical_team_name(betbck_home_raw)
+        norm_bck_away = canonical_team_name(betbck_away_raw)
         logger.debug(f"[NORM] BetBCK normalized: '{betbck_home_raw}' -> '{norm_bck_home}', '{betbck_away_raw}' -> '{norm_bck_away}'")
         
         if not norm_bck_home or not norm_bck_away:
@@ -457,48 +596,31 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
             
         logger.debug(f"[MATCH] Normalized BetBCK: '{norm_bck_home}' vs '{norm_bck_away}'")
         
-        # Determine sport of this BetBCK game — prefer explicit field, fall back to team-name detection
-        _raw_bck_sport = betbck_game.get('sport', '').strip().lower()
-        if _raw_bck_sport and _raw_bck_sport not in ('other', 'unknown', ''):
-            if 'basketball' in _raw_bck_sport:   betbck_sport = 'basketball'
-            elif 'baseball' in _raw_bck_sport:   betbck_sport = 'mlb'
-            elif 'football' in _raw_bck_sport or 'american' in _raw_bck_sport: betbck_sport = 'football'
-            elif 'soccer' in _raw_bck_sport:     betbck_sport = 'soccer'
-            elif 'hockey' in _raw_bck_sport or 'ice' in _raw_bck_sport: betbck_sport = 'hockey'
-            elif ('ufc' in _raw_bck_sport or 'boxing' in _raw_bck_sport
-                  or 'fighting' in _raw_bck_sport or 'mma' in _raw_bck_sport
-                  or 'martial' in _raw_bck_sport): betbck_sport = 'ufc_boxing'
-            else:                                 betbck_sport = _raw_bck_sport
-        else:
-            betbck_sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
+        betbck_sport = resolve_betbck_sport(betbck_game, norm_bck_home, norm_bck_away)
         logger.debug(f"[MATCH] BetBCK game sport: {betbck_sport}")
 
-        # Only match against events from the same sport, plus "other" bucket as fallback
-        relevant_events = events_by_sport.get(betbck_sport, [])
-        if not relevant_events and betbck_sport != 'other':
-            relevant_events = events_by_sport.get('other', [])
-        logger.debug(f"[MATCH] Found {len(relevant_events)} {betbck_sport} events to match against")
+        relevant_events = []
+        seen_eids = set()
+        for bucket in related_sport_buckets(betbck_sport):
+            for ev in events_by_sport.get(bucket, []):
+                eid = ev.get("event_id")
+                if eid in seen_eids:
+                    continue
+                seen_eids.add(eid)
+                relevant_events.append(ev)
+        logger.debug(f"[MATCH] Found {len(relevant_events)} {betbck_sport}(+related) events to match against")
         
         # Extra info-level log for ALT MLB games so we can diagnose matching failures
         _is_alt_mlb = (betbck_game.get('market_suffix') == 'ALT' and betbck_sport == 'mlb')
         if _is_alt_mlb:
             logger.info(f"[ALT-DEBUG] Processing ALT game: '{norm_bck_home}' vs '{norm_bck_away}' | relevant_events={len(relevant_events)}")
 
-        # Pre-compute betbck_sport_category once per BetBCK game (not per Pinnacle event)
-        _bck_league = betbck_game.get('league', '').lower()
-        _bck_sport  = betbck_game.get('sport', '').lower()
-        betbck_sport_category_outer = _sport_category(_bck_league, _bck_sport)
-        
         best_match = None
         best_score = 0
         best_orientation = None
         best_pinnacle_event = None
         
         for pinnacle_event in relevant_events:
-            _cur_mk = betbck_game.get('market_suffix')
-            if (pinnacle_event.get("event_id"), _cur_mk) in processed_pinnacle_keys:
-                continue
-                
             pin_home_raw = pinnacle_event.get("home_team", "")
             pin_away_raw = pinnacle_event.get("away_team", "")
             
@@ -507,7 +629,7 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 
             # --- ENHANCED LEAGUE & TIME CONTEXT CHECK ---
             # Check if games are from the same day (within 24 hours)
-            betbck_time = betbck_game.get("event_datetime", "")
+            betbck_time = betbck_game.get("event_datetime") or betbck_game.get("game_datetime") or ""
             pinnacle_time = pinnacle_event.get("event_datetime", "")
             
             # Log the teams and times for debugging
@@ -545,13 +667,18 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 logger.debug(f"[LEAGUE-SKIP] Incompatible leagues: BetBCK={betbck_game.get('league', 'Unknown')} vs Pinnacle={pinnacle_event.get('league', 'Unknown')}")
                 continue
 
-            # Sport-category filter — use pre-computed betbck value; compute pinnacle once per event
-            pinnacle_sport_category = _sport_category(
-                pinnacle_event.get('league', '').lower(),
-                pinnacle_event.get('sport', '').lower(),
+            # Sport-category filter — skip NFL vs soccer etc. Soccer/other is allowed.
+            pinnacle_sport_category = normalize_sport_label(
+                pinnacle_event.get("sport") or "", pinnacle_event.get("league") or ""
             )
-            if betbck_sport_category_outer and pinnacle_sport_category and betbck_sport_category_outer != pinnacle_sport_category:
-                logger.debug(f"[LEAGUE-CHECK] Skipping - BetBCK: {betbck_sport_category_outer} vs Pinnacle: {pinnacle_sport_category}")
+            if pinnacle_sport_category == "other":
+                pinnacle_sport_category = determine_sport_from_teams(pin_home_raw, pin_away_raw)
+            if (
+                betbck_sport not in ("other", "")
+                and pinnacle_sport_category not in ("other", "")
+                and pinnacle_sport_category not in related_sport_buckets(betbck_sport)
+            ):
+                logger.debug(f"[LEAGUE-CHECK] Skipping - BetBCK: {betbck_sport} vs Pinnacle: {pinnacle_sport_category}")
                 continue
             # --- END LEAGUE CHECK ---
 
@@ -577,126 +704,33 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 home_vs_home = fuzz.token_set_ratio(norm_bck_home, norm_pin_home)
                 away_vs_home = fuzz.token_set_ratio(norm_bck_away, norm_pin_home)
                 team_match   = max(home_vs_home, away_vs_home)
-                if team_match >= 75 and team_match > best_score:
-                    best_score = team_match
-                    best_match = pinnacle_event
-                    best_orientation = home_vs_home >= away_vs_home
-                    logger.debug(f"[SEASON-WINS] Matched '{norm_pin_home}' via team_match={team_match}")
+                if team_match >= 75:
+                    pair_candidates.append((team_match, game_idx, pinnacle_event, home_vs_home >= away_vs_home))
+                    if team_match > best_score:
+                        best_score = team_match
+                        best_match = pinnacle_event
+                        best_orientation = home_vs_home >= away_vs_home
+                    logger.debug(f"[SEASON-WINS] Candidate '{norm_pin_home}' via team_match={team_match}")
                 continue  # skip normal two-team scoring for this event
 
-            # Try both orientations using token_set_ratio which handles:
-            #  - extra tokens ("Philadelphia 76ers" vs "76ers")
-            #  - word reordering ("Inter Milan" vs "Milan Inter")
-            #  - common abbreviation differences
-            _tsr = fuzz.token_set_ratio
-            home_match_score  = _tsr(norm_bck_home, norm_pin_home)
-            away_match_score  = _tsr(norm_bck_away, norm_pin_away)
-            score_direct = (home_match_score + away_match_score) / 2 if home_match_score >= 55 and away_match_score >= 55 else 0
-
-            # Flipped orientation: BetBCK home vs Pinnacle away, BetBCK away vs Pinnacle home
-            home_flipped_score = _tsr(norm_bck_home, norm_pin_away)
-            away_flipped_score = _tsr(norm_bck_away, norm_pin_home)
-            score_flipped = (home_flipped_score + away_flipped_score) / 2 if home_flipped_score >= 55 and away_flipped_score >= 55 else 0
-            
-            logger.debug(f"[MATCH] Comparing: '{norm_bck_home} {norm_bck_away}' vs '{norm_pin_home} {norm_pin_away}' (direct: {score_direct}, flipped: {score_flipped})")
-            
-            if score_direct > best_score:
-                best_score = score_direct
+            score, is_direct = pair_orientation_score(
+                norm_bck_home, norm_bck_away, norm_pin_home, norm_pin_away
+            )
+            logger.debug(
+                f"[MATCH] Comparing: '{norm_bck_home} {norm_bck_away}' vs "
+                f"'{norm_pin_home} {norm_pin_away}' (score={score}, direct={is_direct})"
+            )
+            if score > best_score:
+                best_score = score
                 best_match = pinnacle_event
-                best_orientation = True
-                # Early termination: if we have a very high score, stop searching
-                if score_direct >= 95:  # Very high confidence match
-                    logger.debug(f"[MATCH] Early termination at score {score_direct}")
-                    break
-            if score_flipped > best_score:
-                best_score = score_flipped
-                best_match = pinnacle_event
-                best_orientation = False
-                # Early termination: if we have a very high score, stop searching
-                if score_flipped >= 95:  # Very high confidence match
-                    logger.debug(f"[MATCH] Early termination at score {score_flipped}")
-                    break
+                best_orientation = is_direct
+            if score >= FUZZY_MATCH_THRESHOLD:
+                pair_candidates.append((score, game_idx, pinnacle_event, is_direct))
                 
         if best_match and best_score >= FUZZY_MATCH_THRESHOLD:
-            processed_pinnacle_event_ids.add(best_match["event_id"])
-            # Don't track ALT games in processed_pinnacle_keys — Ace sends
-            # multiple ALT entries per game (alternate runlines, alternate totals,
-            # etc.) each with a different betbck_game_id, and all of them need
-            # to be able to match the same Pinnacle event.  If we add
-            # (event_id, 'ALT') here, the second ALT entry finds the key already
-            # present, skips the only viable Pinnacle event, and returns
-            # no_candidates.  Main / 1H games still get tracked as before.
-            if betbck_game.get('market_suffix') != 'ALT':
-                processed_pinnacle_keys.add((best_match["event_id"], betbck_game.get('market_suffix')))
-            logger.info(f"[MATCHED] SUCCESS: '{betbck_home_raw}' vs '{betbck_away_raw}' <-> '{best_match['home_team']}' vs '{best_match['away_team']}' | Score: {best_score} | Orientation: {'direct' if best_orientation else 'flipped'}")
-            
-            # Track this BetBCK game as matched within this run (local set, never persists)
-            matched_betbck_ids.add(betbck_game.get('betbck_game_id', f"{betbck_home_raw}_{betbck_away_raw}"))
-
-            # --- Explicitly map BetBCK odds to event ID home/away ---
-            # Use pre-normalized cache instead of calling normalize again
-            _cached_best = pin_norm_cache.get(best_match["event_id"], (None, None))
-            norm_event_home = _cached_best[0] or normalize_team_name_for_matching(best_match["home_team"])
-            norm_event_away = _cached_best[1] or normalize_team_name_for_matching(best_match["away_team"])
-            # Map BetBCK normalized names to event ID home/away
-            betbck_odds = betbck_game.get("betbck_site_odds", {})
-            # BetBCK top/bottom teams (as shown in UI)
-            betbck_top_team = norm_bck_home
-            betbck_bottom_team = norm_bck_away
-            top_ml = betbck_odds.get("site_top_team_moneyline_american")
-            bottom_ml = betbck_odds.get("site_bottom_team_moneyline_american")
-            # Map odds to event home/away
-            if betbck_top_team == norm_event_home and betbck_bottom_team == norm_event_away:
-                betbck_home_odds = top_ml
-                betbck_away_odds = bottom_ml
-            elif betbck_top_team == norm_event_away and betbck_bottom_team == norm_event_home:
-                betbck_home_odds = bottom_ml
-                betbck_away_odds = top_ml
-            else:
-                # Exact normalized names don't match (e.g. "ny knicks" vs "new york knicks" for NBA).
-                # Trust the orientation already determined by the fuzzy matcher — it's correct.
-                if best_orientation:  # direct: BetBCK top ≡ Pinnacle home
-                    betbck_home_odds = top_ml
-                    betbck_away_odds = bottom_ml
-                else:                 # flipped: BetBCK top ≡ Pinnacle away
-                    betbck_home_odds = bottom_ml
-                    betbck_away_odds = top_ml
-                logger.debug(
-                    f"[MAPPING] Exact name match failed; using fuzzy orientation="
-                    f"{'direct' if best_orientation else 'flipped'} for "
-                    f"top='{betbck_top_team}' vs event_home='{norm_event_home}', "
-                    f"bottom='{betbck_bottom_team}' vs event_away='{norm_event_away}'"
-                )
-            logger.debug(f"[MAPPING] Event: {best_match['home_team']} vs {best_match['away_team']} | BetBCK home odds: {betbck_home_odds}, away odds: {betbck_away_odds}")
-            # Determine sport for this match.
-            # Trust the explicit sport label carried from ace_game_to_betbck_format() /
-            # _determine_sport_from_league().  Only fall back to team-name detection when the
-            # sport is genuinely missing or unclassified — never overwrite a valid label like
-            # 'soccer' (that was the cause of Hammarby/AIK → 'other' and San Jose → 'ufc_boxing').
-            sport = betbck_game.get('sport', '').strip().lower()
-            if not sport or sport in ('unknown', 'other', ''):
-                sport = determine_sport_from_teams(norm_bck_home, norm_bck_away)
-            logger.debug(f"[MAPPING] Using sport '{sport}' for {norm_bck_home} vs {norm_bck_away}")
-            
-            matched_events.append({
-                "pinnacle_event_id": best_match["event_id"],
-                "pinnacle_home_team": best_match["home_team"],
-                "pinnacle_away_team": best_match["away_team"],
-                "betbck_game": betbck_game,
-                "match_confidence": best_score / 100.0,
-                "betbck_home_team": betbck_home_raw,
-                "betbck_away_team": betbck_away_raw,
-                "normalized_betbck_home": norm_bck_home,
-                "normalized_betbck_away": norm_bck_away,
-                "normalized_pinnacle_home": norm_event_home,
-                "normalized_pinnacle_away": norm_event_away,
-                "match_score": best_score,
-                "orientation": "direct" if best_orientation else "flipped",
-                "betbck_home_odds": betbck_home_odds,
-                "betbck_away_odds": betbck_away_odds,
-                "sport": sport,
-                "market_suffix": betbck_game.get('market_suffix'),
-            })
+            # Assignment happens after all pairs are scored so a weak first
+            # game cannot steal the Pinnacle event from a better later match.
+            pass
         else:
             best_score_str = f" (best score: {best_score})" if best_match else " (no candidates)"
             logger.warning(f"[NO MATCH] FAILED: '{betbck_home_raw}' vs '{betbck_away_raw}' (normalized: '{norm_bck_home}' vs '{norm_bck_away}'){best_score_str}")
@@ -708,8 +742,83 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 "norm_away": norm_bck_away,
                 "best_score": best_score if best_match else 0,
                 "best_pinnacle": f"{best_match['home_team']} vs {best_match['away_team']}" if best_match else None,
-                "reason": "below_threshold" if best_match else "no_candidates"
+                "reason": "below_threshold" if best_match else "no_candidates",
+                "game_idx": game_idx,
             })
+
+    # Highest-score pairs first so a weak alias cannot steal a Pinnacle event.
+    pair_candidates.sort(key=lambda item: (-item[0], item[1]))
+    assigned_bck = set()
+    for score, game_idx, best_match, best_orientation in pair_candidates:
+        betbck_game = betbck_games[game_idx]
+        if game_idx in assigned_bck:
+            continue
+        _mk = betbck_game.get("market_suffix")
+        pin_key = (best_match.get("event_id"), _mk)
+        if _mk != "ALT" and pin_key in processed_pinnacle_keys:
+            continue
+        assigned_bck.add(game_idx)
+        processed_pinnacle_event_ids.add(best_match["event_id"])
+        if _mk != "ALT":
+            processed_pinnacle_keys.add(pin_key)
+
+        betbck_home_raw = betbck_game.get("betbck_site_home_team", "")
+        betbck_away_raw = betbck_game.get("betbck_site_away_team", "")
+        norm_bck_home = canonical_team_name(betbck_home_raw)
+        norm_bck_away = canonical_team_name(betbck_away_raw)
+        _cached_best = pin_norm_cache.get(best_match["event_id"], (None, None))
+        norm_event_home = _cached_best[0] or canonical_team_name(best_match["home_team"])
+        norm_event_away = _cached_best[1] or canonical_team_name(best_match["away_team"])
+        betbck_odds = betbck_game.get("betbck_site_odds", {})
+        top_ml = betbck_odds.get("site_top_team_moneyline_american")
+        bottom_ml = betbck_odds.get("site_bottom_team_moneyline_american")
+        if best_orientation:
+            betbck_home_odds, betbck_away_odds = top_ml, bottom_ml
+        else:
+            betbck_home_odds, betbck_away_odds = bottom_ml, top_ml
+        sport = resolve_betbck_sport(betbck_game, norm_bck_home, norm_bck_away)
+        matched_betbck_ids.add(betbck_game.get("betbck_game_id", f"{betbck_home_raw}_{betbck_away_raw}"))
+        logger.info(
+            f"[MATCHED] SUCCESS: '{betbck_home_raw}' vs '{betbck_away_raw}' <-> "
+            f"'{best_match['home_team']}' vs '{best_match['away_team']}' | "
+            f"Score: {score} | Orientation: {'direct' if best_orientation else 'flipped'}"
+        )
+        matched_events.append({
+            "pinnacle_event_id": best_match["event_id"],
+            "pinnacle_home_team": best_match["home_team"],
+            "pinnacle_away_team": best_match["away_team"],
+            "betbck_game": betbck_game,
+            "match_confidence": score / 100.0,
+            "betbck_home_team": betbck_home_raw,
+            "betbck_away_team": betbck_away_raw,
+            "normalized_betbck_home": norm_bck_home,
+            "normalized_betbck_away": norm_bck_away,
+            "normalized_pinnacle_home": norm_event_home,
+            "normalized_pinnacle_away": norm_event_away,
+            "match_score": score,
+            "orientation": "direct" if best_orientation else "flipped",
+            "betbck_home_odds": betbck_home_odds,
+            "betbck_away_odds": betbck_away_odds,
+            "sport": sport,
+            "market_suffix": betbck_game.get("market_suffix"),
+        })
+
+    unmatched_idxs = {u.get("game_idx") for u in unmatched_betbck}
+    for score, game_idx, pin, _orient in pair_candidates:
+        if game_idx in assigned_bck or game_idx in unmatched_idxs:
+            continue
+        g = betbck_games[game_idx]
+        unmatched_betbck.append({
+            "betbck_home": g.get("betbck_site_home_team", ""),
+            "betbck_away": g.get("betbck_site_away_team", ""),
+            "norm_home": canonical_team_name(g.get("betbck_site_home_team", "")),
+            "norm_away": canonical_team_name(g.get("betbck_site_away_team", "")),
+            "best_score": score,
+            "best_pinnacle": f"{pin.get('home_team')} vs {pin.get('away_team')}",
+            "reason": "pin_taken_by_better_match",
+            "game_idx": game_idx,
+        })
+        unmatched_idxs.add(game_idx)
     
     # Log unmatched Pinnacle events
     for pinnacle_event in pinnacle_events:
@@ -720,8 +829,8 @@ def match_pinnacle_to_betbck(pinnacle_events: List[Dict[str, Any]], betbck_data:
                 "pinnacle_home": pinnacle_event.get("home_team", ""),
                 "pinnacle_away": pinnacle_event.get("away_team", ""),
                 "event_id": eid or "",
-                "norm_home": _cached[0] or normalize_team_name_for_matching(pinnacle_event.get("home_team", "")),
-                "norm_away": _cached[1] or normalize_team_name_for_matching(pinnacle_event.get("away_team", ""))
+                "norm_home": _cached[0] or canonical_team_name(pinnacle_event.get("home_team", "")),
+                "norm_away": _cached[1] or canonical_team_name(pinnacle_event.get("away_team", ""))
             })
     
     # Summary logging

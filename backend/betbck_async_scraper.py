@@ -450,6 +450,14 @@ class BetBCKAsyncScraper:
                 "away_team_total_under_line": str(line["Team2TotalPoints"]) if line.get("Team2TotalPoints") is not None else None,
                 "away_team_total_under_odds": _amer(line.get("Team2TtlPtsAdj2")),
             }
+            sport_type = str(line.get("SportType") or "").strip()
+            sport_subtype = str(line.get("SportSubTypeDisplay") or line.get("SportSubType") or "").strip()
+            game_dt = line.get("GameDateTime")
+            event_datetime = ""
+            if isinstance(game_dt, str) and game_dt.strip():
+                event_datetime = game_dt.strip().replace(" ", "T", 1)
+                if event_datetime.endswith(".000"):
+                    event_datetime = event_datetime[:-4]
             found.append({
                 "betbck_site_home_team": home,
                 "betbck_site_away_team": away,
@@ -457,9 +465,12 @@ class BetBCKAsyncScraper:
                 "market_suffix": market_suffix,
                 "betbck_site_odds": odds,
                 "lines": [],
-                "game_datetime": line.get("GameDateTime"),
-                "sport_type": str(line.get("SportType") or "").strip(),
-                "sport_subtype": str(line.get("SportSubTypeDisplay") or line.get("SportSubType") or "").strip(),
+                "game_datetime": game_dt,
+                "event_datetime": event_datetime,
+                "sport": sport_type,
+                "league": sport_subtype,
+                "sport_type": sport_type,
+                "sport_subtype": sport_subtype,
             })
         return found
 
