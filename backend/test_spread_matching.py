@@ -65,30 +65,47 @@ def test_filter_drops_41_pct_before_publish():
         {"market": "1H Spread", "selection": "Home", "line": "0.25", "ev": "41.65%"},
         {"market": "1H Spread", "selection": "Away", "line": "-0.25", "ev": "-60.14%"},
         {"market": "Total", "selection": "Under", "line": "2.5", "ev": "-2.10%"},
+        {"market": "Total", "selection": "Over", "line": "37.5", "ev": "N/A"},
     ])
-    assert len(kept) == 1
-    assert kept[0]["market"] == "Total"
+    assert len(kept) == 2
+    assert {k["line"] for k in kept} == {"2.5", "37.5"}
 
 
-def _pin_payload(home, away, fg_spreads, h1_spreads):
+def _total(points, nvp_over, nvp_under, am_over, am_under):
+    return {
+        "points": points,
+        "nvp_over": nvp_over,
+        "nvp_under": nvp_under,
+        "nvp_american_over": am_over,
+        "nvp_american_under": am_under,
+    }
+
+
+def _pin_payload(home, away, fg_spreads, h1_spreads, fg_totals=None, h1_totals=None):
+    num_0 = {
+        "money_line": {
+            "nvp_home": 1.91,
+            "nvp_away": 1.91,
+            "nvp_american_home": "-110",
+            "nvp_american_away": "-110",
+        },
+        "spreads": fg_spreads,
+    }
+    if fg_totals is not None:
+        num_0["totals"] = fg_totals
+    num_1 = {
+        "money_line": {},
+        "spreads": h1_spreads,
+    }
+    if h1_totals is not None:
+        num_1["totals"] = h1_totals
     return {
         "data": {
             "home": home,
             "away": away,
             "periods": {
-                "num_0": {
-                    "money_line": {
-                        "nvp_home": 1.91,
-                        "nvp_away": 1.91,
-                        "nvp_american_home": "-110",
-                        "nvp_american_away": "-110",
-                    },
-                    "spreads": fg_spreads,
-                },
-                "num_1": {
-                    "money_line": {},
-                    "spreads": h1_spreads,
-                },
+                "num_0": num_0,
+                "num_1": num_1,
             },
         }
     }
@@ -281,6 +298,72 @@ def test_wrong_plus_quarter_minus_135_never_publishes_29pct():
     assert spreads == [], f"trap +0.25/-289 must not publish: {spreads}"
 
 
+def test_preseason_missing_pin_number_shows_unpriced_rows():
+    """Pin 36.5 / 3.5 vs BCK 37.5 / ±2: show BCK lines, never EV-compare different numbers."""
+    bet = {
+        "pod_home_team": "Dallas Cowboys",
+        "pod_away_team": "New Orleans Saints",
+        "home_spreads": [{"line": "+2", "odds": "-110"}],
+        "away_spreads": [{"line": "-2", "odds": "-110"}],
+        "game_total_line": 37.5,
+        "game_total_over_odds": "-110",
+        "game_total_under_odds": "-110",
+    }
+    pin = _pin_payload(
+        "Dallas Cowboys",
+        "New Orleans Saints",
+        {"3.5": _spread(3.5, 1.91, 1.91, "-110", "-110")},
+        {},
+        fg_totals={"36.5": _total(36.5, 1.83, 1.91, "-125", "-110")},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    assert rows, "card must not be empty when BetBCK has lines"
+    totals = [r for r in rows if r.get("market") == "Total"]
+    spreads = [r for r in rows if r.get("market") == "Spread"]
+    assert len(totals) == 2
+    assert {r["selection"] for r in totals} == {"Over", "Under"}
+    for r in totals:
+        assert "37.5" in str(r["line"])
+        assert r["pinnacle_nvp"] == "N/A"
+        assert r["ev"] == "N/A"
+        assert r.get("unmatched_line") is True
+        assert r["pinnacle_nvp"] != "-125"
+    assert len(spreads) == 2
+    for r in spreads:
+        assert r["pinnacle_nvp"] == "N/A"
+        assert r["ev"] == "N/A"
+        assert r.get("unmatched_line") is True
+    for r in rows:
+        ev = str(r.get("ev") or "")
+        if ev.upper() != "N/A":
+            assert abs(float(ev.replace("%", ""))) < 15
+
+
+def test_matching_total_still_computes_ev():
+    bet = {
+        "pod_home_team": "Dallas Cowboys",
+        "pod_away_team": "New Orleans Saints",
+        "game_total_line": 37.5,
+        "game_total_over_odds": "-110",
+        "game_total_under_odds": "-110",
+    }
+    pin = _pin_payload(
+        "Dallas Cowboys",
+        "New Orleans Saints",
+        {},
+        {},
+        fg_totals={"37.5": _total(37.5, 1.91, 1.91, "-110", "-110")},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    totals = [r for r in rows if r.get("market") == "Total"]
+    assert len(totals) == 2
+    for r in totals:
+        assert r["pinnacle_nvp"] == "-110"
+        ev = float(str(r["ev"]).replace("%", ""))
+        assert abs(ev) < 1.0
+        assert not r.get("unmatched_line")
+
+
 def test_ev_table_does_not_publish_far_alt():
     from calculate_ev_table import build_ev_spread_rows
     pin = {"0.25": _spread(0.25, 1.2488, 5.02, "-402", "+402")}
@@ -318,6 +401,8 @@ def main():
         test_ev_table_does_not_publish_far_alt,
         test_nacional_asuncion_does_not_show_plus_quarter_at_minus_juice,
         test_wrong_plus_quarter_minus_135_never_publishes_29pct,
+        test_preseason_missing_pin_number_shows_unpriced_rows,
+        test_matching_total_still_computes_ev,
     ]
     failed = 0
     for fn in tests:

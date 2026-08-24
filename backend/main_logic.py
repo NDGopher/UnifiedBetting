@@ -14,6 +14,7 @@ from utils import normalize_team_name_for_matching, process_event_odds_for_displ
 from utils.pod_utils import (
     analyze_markets_for_ev,
     analyze_markets_multi_row,
+    bet_has_positive_ev,
     clean_pod_team_name_for_search,
     strip_pod_league_suffix,
     filter_realistic_ev_bets,
@@ -358,7 +359,7 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
 
         if alog:
             alog.set_result("ev_found" if any(
-                float(b.get("ev", "0%").replace("%", "")) > 0 for b in potential_bets
+                bet_has_positive_ev(b) for b in potential_bets
             ) else "found_no_ev")
 
         return {"status": "success", "data": betbck_data}

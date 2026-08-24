@@ -136,6 +136,50 @@ def ev_is_publishable(ev: Optional[float]) -> bool:
     return abs(ev) <= MAX_ABS_EV_TO_PUBLISH
 
 
+def ev_percent_value(ev_raw) -> Optional[float]:
+    """Parse an EV display string like '+2.10%' into a float percent, or None if unpriced."""
+    if ev_raw is None:
+        return None
+    try:
+        return float(str(ev_raw).replace("%", "").replace("+", "").strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def bet_has_positive_ev(bet: Optional[Dict]) -> bool:
+    if not isinstance(bet, dict):
+        return False
+    val = ev_percent_value(bet.get("ev"))
+    return val is not None and val > 0
+
+
+def _unmatched_line_row(
+    market: str,
+    selection: str,
+    line,
+    betbck_odds,
+    home_team: str,
+    away_team: str,
+) -> Dict:
+    """Display-only row: BetBCK has this number, Pinnacle does not. Never compute EV across different lines."""
+    line_str = "" if line is None else str(line)
+    if isinstance(line, float) and line_str.endswith(".0"):
+        line_str = str(int(line))
+    return {
+        "market": market,
+        "selection": selection,
+        "line": line_str,
+        "pinnacle_nvp": "N/A",
+        "pinnacle_limit": None,
+        "betbck_odds": betbck_odds if betbck_odds is not None else "N/A",
+        "ev": "N/A",
+        "home_team": home_team,
+        "away_team": away_team,
+        "bet": format_bet_description(market, selection, line_str, home_team, away_team),
+        "unmatched_line": True,
+    }
+
+
 def filter_realistic_ev_bets(bets: Optional[List[Dict]]) -> List[Dict]:
     """Drop rows whose |EV| is outside the publishable window. Safe to call twice."""
     if not bets:
@@ -181,10 +225,12 @@ def _match_spread_bets(
         if bet_line is None:
             continue
         best = None  # (juice_gap, row)
+        found_pin_number = False
         for pin_spread in pin_spreads.values():
             quote = pin_spread_quote_for_bet(pin_spread, bet_line, side, nvp_swapped)
             if not quote:
                 continue
+            found_pin_number = True
             nvp, nvp_am, line_out = quote
             bck_odds = spread.get("odds")
             if not spread_quotes_are_same_side(bck_odds, nvp_am):
@@ -230,6 +276,14 @@ def _match_spread_bets(
                 best = (juice_gap, row)
         if best:
             rows.append(best[1])
+        elif not found_pin_number:
+            logger.info(
+                f"[SpreadMatch] No Pinnacle number for {market} {selection} {bet_line} "
+                f"— showing BetBCK line without EV"
+            )
+            rows.append(_unmatched_line_row(
+                market, selection, bet_line, spread.get("odds"), home_team, away_team,
+            ))
     return rows
 
 
@@ -1147,6 +1201,8 @@ def _analyze_1h_markets_for_ev(
         # (populated by _build_1h_data_dict in the scraper — exact Over/Under known)
         if bet_1h_data.get('game_total_line') is not None:
             bck_line = normalize_total_line(bet_1h_data['game_total_line'])
+            matched_1h_over = False
+            matched_1h_under = False
             for total_key, pin_total in pin_totals.items():
                 if not isinstance(pin_total, dict):
                     continue
@@ -1159,6 +1215,7 @@ def _analyze_1h_markets_for_ev(
                             true_odds = pin_total.get('nvp_over')
                             if bet_odds and true_odds:
                                 ev = calculate_ev(bet_odds, true_odds)
+                                matched_1h_over = True
                                 potential_bets.append({
                                     'market': '1H Total',
                                     'selection': 'Over',
@@ -1177,6 +1234,7 @@ def _analyze_1h_markets_for_ev(
                             true_odds = pin_total.get('nvp_under')
                             if bet_odds and true_odds:
                                 ev = calculate_ev(bet_odds, true_odds)
+                                matched_1h_under = True
                                 potential_bets.append({
                                     'market': '1H Total',
                                     'selection': 'Under',
@@ -1192,6 +1250,22 @@ def _analyze_1h_markets_for_ev(
                         break  # Only one Pinnacle line can match; stop searching
                 except (ValueError, TypeError, AttributeError) as e:
                     logger.debug(f"[1H-Analysis] Error matching game_total line: {e}")
+            if not matched_1h_over and bet_1h_data.get('game_total_over_odds'):
+                logger.info(
+                    f"[1H-Analysis] No Pinnacle 1H total at {bck_line} — showing BetBCK Over without EV"
+                )
+                potential_bets.append(_unmatched_line_row(
+                    '1H Total', 'Over', bck_line, bet_1h_data.get('game_total_over_odds'),
+                    home_team, away_team,
+                ))
+            if not matched_1h_under and bet_1h_data.get('game_total_under_odds'):
+                logger.info(
+                    f"[1H-Analysis] No Pinnacle 1H total at {bck_line} — showing BetBCK Under without EV"
+                )
+                potential_bets.append(_unmatched_line_row(
+                    '1H Total', 'Under', bck_line, bet_1h_data.get('game_total_under_odds'),
+                    home_team, away_team,
+                ))
 
         else:
             # ── Fallback path: home_totals/away_totals (legacy format)
@@ -1209,12 +1283,14 @@ def _analyze_1h_markets_for_ev(
 
             all_lines = set(betbck_totals_ov) | set(betbck_totals_un)
             for bet_line in all_lines:
+                line_matched = False
                 for total_key, pin_total in pin_totals.items():
                     if not isinstance(pin_total, dict):
                         continue
                     pin_line = normalize_total_line(pin_total.get('points'))
                     try:
                         if pin_line is not None and math.isclose(float(bet_line), pin_line, abs_tol=0.01):
+                            line_matched = True
                             # Over
                             if bet_line in betbck_totals_ov and pin_total.get('nvp_american_over'):
                                 bet_odds = american_to_decimal(betbck_totals_ov[bet_line])
@@ -1250,6 +1326,17 @@ def _analyze_1h_markets_for_ev(
                             break
                     except (ValueError, TypeError, AttributeError) as e:
                         logger.debug(f"[1H-Analysis] Error matching legacy total line {bet_line}: {e}")
+                if not line_matched:
+                    if bet_line in betbck_totals_ov:
+                        potential_bets.append(_unmatched_line_row(
+                            '1H Total', 'Over', bet_line, betbck_totals_ov[bet_line],
+                            home_team, away_team,
+                        ))
+                    if bet_line in betbck_totals_un:
+                        potential_bets.append(_unmatched_line_row(
+                            '1H Total', 'Under', bet_line, betbck_totals_un[bet_line],
+                            home_team, away_team,
+                        ))
 
         logger.info(f"[AnalyzeMarkets] Found {len(potential_bets)} 1H EV opportunities")
         return potential_bets
@@ -1536,13 +1623,33 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
                                     'away_team': away_team,
                                     'bet': format_bet_description('Total', 'Under', str(pin_line), home_team, away_team)
                                 }
-        # Add best totals to potential bets
+        # Add best totals to potential bets. Different numbers (36.5 vs 37.5) are
+        # not EV-compared; show the BetBCK line with N/A NVP so the card is not blank.
         if best_over:
             del best_over['ev_val']
             potential_bets.append(best_over)
         if best_under:
             del best_under['ev_val']
             potential_bets.append(best_under)
+        for bck_total in betbck_totals:
+            if not best_over and bck_total.get('over_odds'):
+                logger.info(
+                    f"[AnalyzeMarkets] No Pinnacle total at {bck_total.get('line')} "
+                    f"— showing BetBCK Over without EV"
+                )
+                potential_bets.append(_unmatched_line_row(
+                    'Total', 'Over', bck_total.get('line'), bck_total.get('over_odds'),
+                    home_team, away_team,
+                ))
+            if not best_under and bck_total.get('under_odds'):
+                logger.info(
+                    f"[AnalyzeMarkets] No Pinnacle total at {bck_total.get('line')} "
+                    f"— showing BetBCK Under without EV"
+                )
+                potential_bets.append(_unmatched_line_row(
+                    'Total', 'Under', bck_total.get('line'), bck_total.get('under_odds'),
+                    home_team, away_team,
+                ))
         
         # --- 1H DATA PROCESSING (CRITICAL: Separate from full game) ---
         if bet_data_copy.get('1H_data'):
