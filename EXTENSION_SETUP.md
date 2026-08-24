@@ -62,13 +62,20 @@ When an alert fires:
 
 ## Step 4: (Optional) Load BetBCK Helper Extension
 
-The `betbck_extension/` folder contains a helper that shows an overlay popup on betbck.com with real-time EV data. To load it:
+The `betbck_extension/` folder is **optional**. Live POD alerts and BetBCK odds scraping work without it (the backend logs in via the cloud API).
+
+If loaded, Helper can:
+- Jump to the sbsports board and try to search when you click **Place Bet** on the dashboard
+- Show a small EV overlay on betbck.com
+- Intercept network calls on the sports board (debug only)
+
+It must **not** run on the login splash — v0.2.0 skips that page so the Login button works.
 
 1. Go to `chrome://extensions`
-2. Click **Load unpacked**
+2. Click **Load unpacked** (or **Reload** if it is already loaded)
 3. Select the folder: `betbck_extension/`
 
-This extension is optional — the backend scrapes BetBCK server-side automatically.
+Login on `https://betbck.com` first, then use Place Bet.
 
 ---
 
