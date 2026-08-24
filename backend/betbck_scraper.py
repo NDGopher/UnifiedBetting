@@ -29,13 +29,13 @@ except ImportError:
     print("[BetbckScraper] WARNING: Selenium library not found. Dynamic content (1H data) will not be available.")
     SELENIUM_AVAILABLE = False
 
-# Attempt to import fuzzywuzzy for robust team matching
+# rapidfuzz is a drop-in replacement for fuzzywuzzy (faster, no python-Levenshtein warning)
 try:
-    from fuzzywuzzy import fuzz
+    from rapidfuzz import fuzz
     FUZZY_MATCH_THRESHOLD = 65  # Threshold for team name matching (0-100)
-    print("[BetbckScraper] fuzzywuzzy library loaded.")
+    print("[BetbckScraper] rapidfuzz library loaded.")
 except ImportError:
-    print("[BetbckScraper] WARNING: fuzzywuzzy library not found. Team matching will rely on more exact normalization.")
+    print("[BetbckScraper] WARNING: rapidfuzz library not found. Team matching will rely on more exact normalization.")
     fuzz = None
     FUZZY_MATCH_THRESHOLD = 101 # Effectively disables fuzzy matching
 

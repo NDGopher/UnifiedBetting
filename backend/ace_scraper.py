@@ -2052,9 +2052,9 @@ class AceScraper:
             if not team1 or not team2:
                 return 0.0
             
-            # Use fuzzywuzzy if available, otherwise use simple string matching
+            # Use rapidfuzz if available, otherwise use simple string matching
             try:
-                from fuzzywuzzy import fuzz
+                from rapidfuzz import fuzz
                 # Try different fuzzy matching methods
                 ratio = fuzz.ratio(team1.lower(), team2.lower())
                 partial_ratio = fuzz.partial_ratio(team1.lower(), team2.lower())

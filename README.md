@@ -9,34 +9,44 @@ Real-time EV alert system for sports betting. A Chrome extension monitors Pinnac
 ```
 POD page (Chrome)
   → Chrome Extension (Odds Dropper)
-    → Backend API (FastAPI, port 8000)
+    → Backend API + dashboard (FastAPI, port 8000)
       ├── Swordfish API  → Pinnacle NVP
       └── BetBCK scraper → comparison odds
           → EV calculation
-            → Dashboard (React, port 5000)  ← WebSocket live updates
+            → Dashboard served at http://localhost:8000
 ```
 
 ---
 
 ## Quick Start — Local (Windows)
 
-### First-time setup
-```bat
-setup_dependencies.bat
-```
-Creates the Python venv and installs all packages.
+### Prerequisites
+- **Python 3.10+** (check "Add Python to PATH" during install)
+- **Node.js LTS** from https://nodejs.org (needed to build the dashboard once)
 
-### Every run
+### Run everything
+Double-click or from the repo root:
+
 ```bat
 start_local.bat
 ```
-Starts the backend (port 8000) and frontend (port 5000) in separate console windows.
-**No browser opens automatically.**
 
-Then manually open in Chrome:
-1. **http://localhost:5000** — the alert dashboard
-2. **https://www.pinnacleoddsdropper.com** — with Odds Dropper extension active
-3. **https://betbck.com** — so the extension can auto-search games
+That single command:
+1. Creates the Python venv and installs packages (first run)
+2. Runs `npm install` in `frontend/` if needed (first run)
+3. Builds the React dashboard if `frontend/build` is missing (first run, ~1–2 min)
+4. Starts **one** server at **http://localhost:8000** (API + dashboard together)
+5. Opens your browser
+
+Press Ctrl+C in that window to stop.
+
+Then in Chrome also open:
+1. **https://www.pinnacleoddsdropper.com** — with Odds Dropper extension active
+2. **https://betbck.com** — so the extension can auto-search games
+
+You do **not** need a second `npm start` window. `react-scripts start` is optional (live-reload only).
+
+To rebuild the dashboard after frontend code changes, delete `frontend\build` and run `start_local.bat` again.
 
 ---
 
