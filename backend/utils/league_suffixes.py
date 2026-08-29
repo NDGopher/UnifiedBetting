@@ -38,6 +38,14 @@ MULTIWORD_SUFFIXES: tuple = (
     'NCAA Volleyball',
     'NCAA Hockey',
     'NCAA Lacrosse',
+    # POD glues the subdivision onto the team: "CampbellNCAA FCS"
+    # Longer forms first so "NCAA FCS Football" does not stop at "NCAA FCS".
+    'NCAA FCS Football',
+    'NCAA FBS Football',
+    'NCAA Division I FCS',
+    'NCAA Division I FBS',
+    'NCAA FCS',
+    'NCAA FBS',
     # International / friendly suffixes
     'International',
     'Friendlies',
