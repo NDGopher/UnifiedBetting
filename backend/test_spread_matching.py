@@ -340,6 +340,29 @@ def test_preseason_missing_pin_number_shows_unpriced_rows():
             assert abs(float(ev.replace("%", ""))) < 15
 
 
+def test_cmu_plus_340_flips_home_plus_105_without_home_ml():
+    """New Mexico home favorite; only away ML +340 posted; BCK had home +10.5."""
+    bet = {
+        "pod_home_team": "New Mexico",
+        "pod_away_team": "Central Michigan",
+        "home_moneyline_american": None,
+        "away_moneyline_american": "+340",
+        "home_spreads": [{"line": "+10.5", "odds": "-105"}],
+        "away_spreads": [{"line": "-10.5", "odds": "-105"}],
+    }
+    pin = _pin_payload(
+        "New Mexico",
+        "Central Michigan",
+        {"-10.5": _spread(-10.5, 1.91, 1.91, "-110", "-110")},
+        {},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    home = next(r for r in rows if r.get("market") == "Spread" and r.get("selection") == "Home")
+    assert float(home["line"]) == -10.5
+    assert home["pinnacle_nvp"] == "-110"
+    assert home.get("unmatched_line") is not True
+
+
 def test_pitt_miami_cfb_flipped_signs_match_without_bck_ml():
     """Pitt is home favorite -16.5. BCK JSON had no ML and posted home +16.5."""
     bet = {
@@ -460,6 +483,7 @@ def main():
         test_nacional_asuncion_does_not_show_plus_quarter_at_minus_juice,
         test_wrong_plus_quarter_minus_135_never_publishes_29pct,
         test_preseason_missing_pin_number_shows_unpriced_rows,
+        test_cmu_plus_340_flips_home_plus_105_without_home_ml,
         test_pitt_miami_cfb_flipped_signs_match_without_bck_ml,
         test_cfb_home_dog_plus_line_is_not_flipped,
         test_align_skips_small_line_when_books_can_disagree,
