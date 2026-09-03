@@ -463,6 +463,155 @@ def filter_realistic_ev_bets(bets: Optional[List[Dict]]) -> List[Dict]:
     return kept
 
 
+# POD sometimes sends the game's Unix-ms start time as eventId (~13 digits).
+# Real Pinnacle IDs are ~10 digits.
+TIMESTAMP_EVENT_ID_MIN = 1_000_000_000_000
+
+
+def is_timestamp_event_id(event_id) -> bool:
+    try:
+        return int(event_id) > TIMESTAMP_EVENT_ID_MIN
+    except (TypeError, ValueError):
+        return False
+
+
+def fallback_moneyline_side(
+    team_for_bet: str,
+    pod_home: str,
+    pod_away: str,
+) -> Optional[str]:
+    """Which moneyline the POD alert is on: 'home', 'away', 'draw', or None.
+
+    Draw / empty / unknown must never be treated as away. That is how a Draw
+    no-vig of +394 was priced against Alianza +795 as fake +81% EV.
+    """
+    raw = (team_for_bet or "").strip()
+    if not raw:
+        return None
+    cleaned = clean_pod_team_name_for_search(raw)
+    tokens = {raw.lower(), cleaned.lower()}
+    if tokens & {"draw", "tie", "x"} or "draw" in raw.lower().split():
+        return "draw"
+    home = (pod_home or "").strip().lower()
+    away = (pod_away or "").strip().lower()
+    cl = cleaned.lower()
+    if cl and home and (cl in home or home in cl):
+        return "home"
+    if cl and away and (cl in away or away in cl):
+        return "away"
+    return None
+
+
+def _same_fallback_line(a, b) -> bool:
+    try:
+        if a is None or b is None or a == "" or b == "":
+            return False
+        return abs(float(a) - float(b)) < 0.011
+    except (TypeError, ValueError):
+        return str(a).strip() == str(b).strip()
+
+
+def _fallback_ev_string(pin_nvp, bck_odds) -> str:
+    if not pin_nvp or pin_nvp == "N/A" or not bck_odds or bck_odds == "N/A":
+        return "N/A"
+    try:
+        pin_dec = american_to_decimal(str(pin_nvp))
+        bck_dec = american_to_decimal(str(bck_odds))
+        if not pin_dec or not bck_dec:
+            return "N/A"
+        return f"{(bck_dec / pin_dec - 1) * 100:.2f}%"
+    except Exception:
+        return "N/A"
+
+
+def build_fallback_market_rows(
+    betbck_data: Optional[Dict],
+    *,
+    market_type: str = "",
+    team_for_bet: str = "",
+    line_value: str = "",
+    no_vig: Optional[str] = None,
+    pod_home: str = "",
+    pod_away: str = "",
+    event_id_suspect: bool = False,
+) -> List[Dict]:
+    """BetBCK-only card rows when Pinnacle analysis is empty.
+
+    Alert no-vig attaches only to the same market *and* selection. A Draw
+    moneyline NVP must never price home/away (or spreads/totals).
+
+    When the event ID is a timestamp / Swordfish mismatch, never compute EV.
+    """
+    if not betbck_data:
+        return []
+
+    mt = (market_type or "").strip().lower()
+    team_l = (team_for_bet or "").strip().lower()
+    ml_side = fallback_moneyline_side(team_for_bet, pod_home, pod_away)
+    allow_nvp = bool(no_vig) and no_vig != "N/A" and not event_id_suspect
+
+    def _row(market, selection, line, pin_nvp, bck_odds):
+        return {
+            "market": market,
+            "selection": selection,
+            "line": str(line) if line is not None else "",
+            "pinnacle_nvp": str(pin_nvp) if pin_nvp else "N/A",
+            "betbck_odds": str(bck_odds) if bck_odds else "N/A",
+            "ev": _fallback_ev_string(pin_nvp, bck_odds),
+            "row_type": "pod_fallback",
+        }
+
+    def _pin_for(use: bool):
+        return no_vig if (allow_nvp and use) else "N/A"
+
+    rows: List[Dict] = []
+    home_sel = pod_home or "Home"
+    away_sel = pod_away or "Away"
+
+    home_ml = betbck_data.get("home_moneyline_american")
+    away_ml = betbck_data.get("away_moneyline_american")
+    draw_ml = betbck_data.get("draw_moneyline_american")
+    if home_ml:
+        rows.append(_row("Moneyline", home_sel, "", _pin_for(mt == "moneyline" and ml_side == "home"), home_ml))
+    if draw_ml:
+        rows.append(_row("Moneyline", "Draw", "", _pin_for(mt == "moneyline" and ml_side == "draw"), draw_ml))
+    if away_ml:
+        rows.append(_row("Moneyline", away_sel, "", _pin_for(mt == "moneyline" and ml_side == "away"), away_ml))
+
+    for spread in betbck_data.get("home_spreads") or []:
+        rows.append(_row(
+            "Spread", home_sel, spread.get("line", ""),
+            _pin_for(mt == "spread" and ml_side == "home" and _same_fallback_line(spread.get("line"), line_value)),
+            spread.get("odds"),
+        ))
+    for spread in betbck_data.get("away_spreads") or []:
+        rows.append(_row(
+            "Spread", away_sel, spread.get("line", ""),
+            _pin_for(mt == "spread" and ml_side == "away" and _same_fallback_line(spread.get("line"), line_value)),
+            spread.get("odds"),
+        ))
+
+    tot_line = betbck_data.get("game_total_line")
+    tot_over = betbck_data.get("game_total_over_odds")
+    tot_under = betbck_data.get("game_total_under_odds")
+    tot_ok = _same_fallback_line(tot_line, line_value)
+    is_total = mt in ("total", "over/under", "totals")
+    if tot_over:
+        rows.append(_row(
+            "Total", "Over", tot_line or "",
+            _pin_for(is_total and tot_ok and ("over" in team_l or not team_l)),
+            tot_over,
+        ))
+    if tot_under:
+        rows.append(_row(
+            "Total", "Under", tot_line or "",
+            _pin_for(is_total and tot_ok and "under" in team_l),
+            tot_under,
+        ))
+
+    return filter_realistic_ev_bets(rows)
+
+
 def _match_spread_bets(
     bet_spreads: Optional[List],
     pin_spreads: Dict,

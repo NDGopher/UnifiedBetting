@@ -15,7 +15,13 @@ import threading
 import traceback
 from pod_event_manager import PodEventManager
 from main_logic import process_alert_and_scrape_betbck, analyze_markets_for_ev
-from utils.pod_utils import analyze_markets_multi_row, filter_realistic_ev_bets, bet_has_positive_ev
+from utils.pod_utils import (
+    analyze_markets_multi_row,
+    filter_realistic_ev_bets,
+    bet_has_positive_ev,
+    build_fallback_market_rows,
+    is_timestamp_event_id,
+)
 from odds_processing import fetch_live_pinnacle_event_odds
 from utils import process_event_odds_for_display
 import copy
@@ -110,6 +116,30 @@ _alert_rate_limit_window = 60  # 1 minute window
 _alert_rate_limit_max = 10     # Max 10 alerts per minute
 _alert_timestamps = []         # Track alert timestamps for rate limiting
 _alert_rate_limit_lock = threading.Lock()
+
+# Real Pinnacle IDs for a team pair, kept after the card expires so a later
+# POD timestamp-as-eventId can reuse Swordfish instead of inventing EV.
+_recent_valid_event_ids = {}
+_RECENT_VALID_EVENT_TTL = 30 * 60
+
+
+def _remember_valid_event_id(home: str, away: str, event_id, now: float) -> None:
+    if not home or not away or not event_id or is_timestamp_event_id(event_id):
+        return
+    _recent_valid_event_ids[(home, away)] = (str(event_id), now)
+
+
+def _lookup_recent_valid_event_id(home: str, away: str, now: float):
+    stale = [k for k, (_, ts) in _recent_valid_event_ids.items() if now - ts > _RECENT_VALID_EVENT_TTL]
+    for key in stale:
+        del _recent_valid_event_ids[key]
+    if not home or not away:
+        return None
+    for key in ((home, away), (away, home)):
+        hit = _recent_valid_event_ids.get(key)
+        if hit:
+            return hit[0]
+    return None
 
 def check_alert_rate_limit():
     """Check if we're within the alert rate limit (max 10 alerts per minute)"""
@@ -304,10 +334,18 @@ async def event_alert_worker(event_id):
                                 if (_ph == _eh and _pa == _ea) or (_ph == _ea and _pa == _eh):
                                     _matching_eid = _existing_eid
                                     break
+                        if not _matching_eid:
+                            _matching_eid = _lookup_recent_valid_event_id(_ph, _pa, now)
+                            if _matching_eid and _matching_eid != str(event_id):
+                                logger.info(
+                                    f"[PerEventQueue] Team-pair remap: POD id {event_id} ({_ph} vs {_pa}) "
+                                    f"reuses recent valid Pinnacle id {_matching_eid} "
+                                    f"(timestamp-as-id={is_timestamp_event_id(event_id)})."
+                                )
                         if _matching_eid:
                             logger.info(
                                 f"[PerEventQueue] Team-pair match: event {event_id} ({_ph} vs {_pa}) "
-                                f"maps to existing active card {_matching_eid} — treating as update, no new BetBCK scrape."
+                                f"maps to existing/recent card {_matching_eid}."
                             )
                             # Route to the existing event's update path by swapping event_id reference
                             event_id = _matching_eid
@@ -580,89 +618,28 @@ async def event_alert_worker(event_id):
                                 has_positive_ev = any(bet_has_positive_ev(b) for b in realistic_bets)
                                 betbck_data["potential_bets_analyzed"] = realistic_bets
 
-                                # FALLBACK: when Pinnacle data is unavailable (timestamp eventId),
-                                # EV analysis returns empty potential_bets.  Build market rows from
-                                # BetBCK odds + POD's noVigPriceFromAlert so the card shows something
-                                # useful rather than being blank. Never attach the alert NVP to a
-                                # different BetBCK number (36.5 vs 37.5).
+                                # FALLBACK: Pinnacle analysis empty (bad eventId / no periods).
+                                # Show BetBCK lines. Alert no-vig only on the same selection;
+                                # never price Draw NVP onto home/away. Suspect IDs get N/A EV.
                                 if not realistic_bets and betbck_data:
                                     _no_vig_raw = payload.get("noVigPriceFromAlert")
                                     _market_type = (payload.get("marketType") or "").strip()
-                                    _team_for_bet = (payload.get("teamForBet") or "").strip()
-                                    _line_val = str(payload.get("lineValueForBet") or "")
-                                    _mt_lower = _market_type.lower()
-                                    _team_bet_l = _team_for_bet.lower()
-
-                                    def _same_line(a, b):
-                                        try:
-                                            if a is None or b is None or a == "" or b == "":
-                                                return False
-                                            return abs(float(a) - float(b)) < 0.011
-                                        except (TypeError, ValueError):
-                                            return str(a).strip() == str(b).strip()
-
-                                    # Is the POD bet on the home or away side?
-                                    _bet_is_home = bool(
-                                        _team_for_bet and pod_home_clean and
-                                        clean_pod_team_name_for_search(_team_for_bet) in pod_home_clean
+                                    _fb = build_fallback_market_rows(
+                                        betbck_data,
+                                        market_type=_market_type,
+                                        team_for_bet=payload.get("teamForBet") or "",
+                                        line_value=str(payload.get("lineValueForBet") or ""),
+                                        no_vig=_no_vig_raw,
+                                        pod_home=pod_home_clean or "",
+                                        pod_away=pod_away_clean or "",
+                                        event_id_suspect=_event_id_suspect or is_timestamp_event_id(event_id),
                                     )
-
-                                    def _make_fallback_row(market, selection, line, pin_nvp, bck_odds):
-                                        ev_str = "N/A"
-                                        if pin_nvp and pin_nvp != "N/A" and bck_odds and bck_odds != "N/A":
-                                            try:
-                                                _p = american_to_decimal(float(str(pin_nvp)))
-                                                _b = american_to_decimal(float(str(bck_odds)))
-                                                ev_str = f"{(_b / _p - 1) * 100:.2f}%"
-                                            except Exception:
-                                                pass
-                                        return {
-                                            "market": market, "selection": selection,
-                                            "line": str(line), "pinnacle_nvp": str(pin_nvp) if pin_nvp else "N/A",
-                                            "betbck_odds": str(bck_odds) if bck_odds else "N/A",
-                                            "ev": ev_str, "row_type": "pod_fallback",
-                                        }
-
-                                    _fb = []
-                                    # Moneyline rows
-                                    _h_ml = betbck_data.get("home_moneyline_american")
-                                    _a_ml = betbck_data.get("away_moneyline_american")
-                                    if _h_ml:
-                                        _pin = _no_vig_raw if (_mt_lower == "moneyline" and _bet_is_home) else "N/A"
-                                        _fb.append(_make_fallback_row("Moneyline", pod_home_clean or "Home", "", _pin, _h_ml))
-                                    if _a_ml:
-                                        _pin = _no_vig_raw if (_mt_lower == "moneyline" and not _bet_is_home) else "N/A"
-                                        _fb.append(_make_fallback_row("Moneyline", pod_away_clean or "Away", "", _pin, _a_ml))
-                                    # Spread rows — only attach alert NVP when the BCK number matches
-                                    for _s in betbck_data.get("home_spreads", []):
-                                        _pin = _no_vig_raw if (
-                                            _mt_lower == "spread" and _bet_is_home and _same_line(_s.get("line"), _line_val)
-                                        ) else "N/A"
-                                        _fb.append(_make_fallback_row("Spread", pod_home_clean or "Home", _s.get("line", ""), _pin, _s.get("odds")))
-                                    for _s in betbck_data.get("away_spreads", []):
-                                        _pin = _no_vig_raw if (
-                                            _mt_lower == "spread" and not _bet_is_home and _same_line(_s.get("line"), _line_val)
-                                        ) else "N/A"
-                                        _fb.append(_make_fallback_row("Spread", pod_away_clean or "Away", _s.get("line", ""), _pin, _s.get("odds")))
-                                    # Total rows — Over 36.5 NVP must not be applied to BetBCK 37.5
-                                    _tot_line = betbck_data.get("game_total_line")
-                                    _tot_ov = betbck_data.get("game_total_over_odds")
-                                    _tot_un = betbck_data.get("game_total_under_odds")
-                                    _tot_matches = _same_line(_tot_line, _line_val)
-                                    _is_total_mkt = _mt_lower in ("total", "over/under", "totals")
-                                    if _tot_ov:
-                                        _pin = _no_vig_raw if (
-                                            _is_total_mkt and _tot_matches and ("over" in _team_bet_l or not _team_bet_l)
-                                        ) else "N/A"
-                                        _fb.append(_make_fallback_row("Total", "Over", _tot_line or "", _pin, _tot_ov))
-                                    if _tot_un:
-                                        _pin = _no_vig_raw if (
-                                            _is_total_mkt and _tot_matches and "under" in _team_bet_l
-                                        ) else "N/A"
-                                        _fb.append(_make_fallback_row("Total", "Under", _tot_line or "", _pin, _tot_un))
-
                                     if _fb:
-                                        logger.info(f"[PerEventQueue] Built {len(_fb)} fallback market rows (noVig={_no_vig_raw}, market={_market_type}) for event {event_id}")
+                                        logger.info(
+                                            f"[PerEventQueue] Built {len(_fb)} fallback market rows "
+                                            f"(noVig={_no_vig_raw}, market={_market_type}, "
+                                            f"suspect={_event_id_suspect}) for event {event_id}"
+                                        )
                                         realistic_bets = _fb
                                         betbck_data["potential_bets_analyzed"] = _fb
                                         has_positive_ev = any(bet_has_positive_ev(b) for b in _fb)
@@ -693,6 +670,8 @@ async def event_alert_worker(event_id):
                                         "event_id_suspect": _event_id_suspect,
                                     }
                                     pod_event_manager.add_active_event(event_id, event_data)
+                                    if not _event_id_suspect:
+                                        _remember_valid_event_id(pod_home_clean, pod_away_clean, event_id, now)
                                     updated_event = pod_event_manager.get_active_events().get(event_id)
                                     if updated_event:
                                         broadcast_pod_alert_safe(event_id, updated_event)
@@ -722,6 +701,12 @@ async def event_alert_worker(event_id):
                                 "pinnacle_data_processed": live_pinnacle_odds_processed,
                                 "has_positive_ev": has_positive_ev
                             })
+                            _remember_valid_event_id(
+                                event.get("cleaned_home_team") or pod_home_clean,
+                                event.get("cleaned_away_team") or pod_away_clean,
+                                event_id,
+                                now,
+                            )
                             updated_event = pod_event_manager.get_active_events().get(event_id)
                             if updated_event:
                                 broadcast_pod_alert_safe(event_id, updated_event)
