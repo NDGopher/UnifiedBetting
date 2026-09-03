@@ -1078,9 +1078,13 @@ def _american_ml_int(val):
     if val is None:
         return None
     try:
-        return int(round(float(str(val).strip())))
+        n = int(round(float(str(val).strip())))
     except (TypeError, ValueError):
         return None
+    # BetBCK CFB JSON uses 0 when no moneyline is posted.
+    if n == 0:
+        return None
+    return n
 
 
 def _simple_spread_float(line):
@@ -1636,6 +1640,7 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
             _event_date_str = event_date.strftime('%Y-%m-%d %H:%M') if event_date else None
             _bck_diff_h = abs((bck_game_date - event_date).total_seconds()) / 3600 if event_date else None
             _alog.log_bck_date(bck_date_str=_date_log, event_date_str=_event_date_str, diff_h=_bck_diff_h)
+        _align_spread_signs_with_moneyline(output_data)
         matches.append({"data": output_data, "bck_date": bck_game_date, "bck_home": raw_bck_l, "bck_away": raw_bck_v, "score": _match_score})
 
     # --- Pick best match after scanning all wrappers ---

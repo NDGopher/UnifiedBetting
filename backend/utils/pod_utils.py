@@ -64,6 +64,141 @@ def _parse_american_int(odds) -> Optional[int]:
         return None
 
 
+def _spread_line_float(line) -> Optional[float]:
+    if line is None:
+        return None
+    text = str(line).strip().lower().replace("pk", "0").replace("+", "")
+    if "," in text or "/" in text:
+        return None
+    try:
+        return float(text)
+    except (TypeError, ValueError):
+        return None
+
+
+def _format_aligned_spread_line(val: float):
+    if abs(val) < 0.001:
+        return "0"
+    if float(val) == int(val):
+        return str(int(val))
+    return f"{val:g}"
+
+
+def _negate_spread_list(spreads) -> None:
+    for spread in spreads or []:
+        if not isinstance(spread, dict):
+            continue
+        raw = _spread_line_float(spread.get("line"))
+        if raw is None:
+            continue
+        spread["line"] = _format_aligned_spread_line(-raw)
+
+
+def _usable_american_ml(odds) -> Optional[int]:
+    n = _parse_american_int(odds)
+    if n is None or n == 0:
+        return None
+    return n
+
+
+def _pin_main_hdp(pin_spreads: Optional[Dict]) -> Optional[float]:
+    """Pinnacle home's main posted handicap (even-juice line wins ties)."""
+    best = None  # (juice_gap, abs_hdp, hdp)
+    for pin_spread in (pin_spreads or {}).values():
+        if not isinstance(pin_spread, dict):
+            continue
+        hdp = pin_spread.get("hdp")
+        if hdp is None:
+            continue
+        try:
+            hdp_f = float(hdp)
+        except (TypeError, ValueError):
+            continue
+        am_h = _parse_american_int(pin_spread.get("nvp_american_home"))
+        am_a = _parse_american_int(pin_spread.get("nvp_american_away"))
+        gap = abs(am_h - am_a) if am_h is not None and am_a is not None else 10_000
+        cand = (gap, abs(hdp_f), hdp_f)
+        if best is None or cand < best:
+            best = cand
+    return None if best is None else best[2]
+
+
+def align_bck_spread_signs_to_pin(
+    home_spreads,
+    away_spreads,
+    pin_spreads=None,
+    pin_ml=None,
+    bck_home_ml=None,
+    bck_away_ml=None,
+    nvp_swapped: bool = False,
+) -> bool:
+    """Flip complementary BetBCK spread signs when the favorite is getting points.
+
+    Soccer already does this in the JSON parser from BetBCK moneylines. CFB
+    Get_LeagueLines2 often sends MoneyLine=0, so that parser check never runs
+    and Pitt -16.5 lands on home as +16.5 → signed Pin match fails (N/A).
+
+    Preference: same-book BCK ML, then Pin ML, then Pin main hdp when |line| >= 3
+    (clear favorite — do not flip a 1.5 pick'em the books can disagree on).
+    """
+    if not home_spreads or not away_spreads:
+        return False
+    if not isinstance(home_spreads[0], dict) or not isinstance(away_spreads[0], dict):
+        return False
+    h_line = _spread_line_float(home_spreads[0].get("line"))
+    a_line = _spread_line_float(away_spreads[0].get("line"))
+    if h_line is None or a_line is None:
+        return False
+    if abs(h_line + a_line) > 0.02 or abs(h_line) < 0.01:
+        return False
+
+    home_is_fav = None
+    bck_h = _usable_american_ml(bck_home_ml)
+    bck_a = _usable_american_ml(bck_away_ml)
+    if bck_h is not None and bck_a is not None and bck_h != bck_a:
+        home_is_fav = bck_h < bck_a
+    else:
+        pin_ml = pin_ml or {}
+        pin_h = _usable_american_ml(pin_ml.get("nvp_american_home"))
+        pin_a = _usable_american_ml(pin_ml.get("nvp_american_away"))
+        if pin_h is not None and pin_a is not None and pin_h != pin_a:
+            home_is_fav = pin_h < pin_a
+        else:
+            pin_hdp = _pin_main_hdp(pin_spreads)
+            if pin_hdp is None or abs(pin_hdp) < 3.0:
+                return False
+            if abs(abs(h_line) - abs(pin_hdp)) > 0.02:
+                return False
+            pod_home_hdp = -pin_hdp if nvp_swapped else pin_hdp
+            inverted = (
+                (pod_home_hdp < 0 and h_line > 0.01)
+                or (pod_home_hdp > 0 and h_line < -0.01)
+            )
+            if not inverted:
+                return False
+            _negate_spread_list(home_spreads)
+            _negate_spread_list(away_spreads)
+            logger.info(
+                f"[SpreadAlign] Flipped CFB/AH signs to Pin hdp {pod_home_hdp}: "
+                f"home {home_spreads[0].get('line')} / away {away_spreads[0].get('line')}"
+            )
+            return True
+
+    inverted = (
+        (home_is_fav and h_line > 0.01)
+        or ((not home_is_fav) and h_line < -0.01)
+    )
+    if not inverted:
+        return False
+    _negate_spread_list(home_spreads)
+    _negate_spread_list(away_spreads)
+    logger.info(
+        f"[SpreadAlign] Flipped spread signs (favorite was getting points): "
+        f"home {home_spreads[0].get('line')} / away {away_spreads[0].get('line')}"
+    )
+    return True
+
+
 def spread_quotes_are_same_side(bck_odds, pin_nvp_american) -> bool:
     """Reject pairing a plus-money dog with a heavy favorite — that's the other side."""
     bck = _parse_american_int(bck_odds)
@@ -1183,6 +1318,15 @@ def _analyze_1h_markets_for_ev(
         pin_spreads = pinnacle_1h_data.get('spreads', {})
         if not isinstance(pin_spreads, dict):
             pin_spreads = {}
+        align_bck_spread_signs_to_pin(
+            bet_1h_data.get('home_spreads'),
+            bet_1h_data.get('away_spreads'),
+            pin_spreads,
+            pin_ml,
+            bet_1h_data.get('home_moneyline_american'),
+            bet_1h_data.get('away_moneyline_american'),
+            nvp_swapped,
+        )
         potential_bets.extend(_match_spread_bets(
             bet_1h_data.get('home_spreads'), pin_spreads, 'home', nvp_swapped,
             '1H Spread', home_team, away_team, meta_limits,
@@ -1542,6 +1686,17 @@ def analyze_markets_for_ev(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
         pin_spreads = full_game.get('spreads')
         if not isinstance(pin_spreads, dict):
             pin_spreads = {}
+
+        # CFB often has no BetBCK ML. Flip inverted +/- so Pitt -16.5 matches Pin.
+        align_bck_spread_signs_to_pin(
+            bet_data_copy.get('home_spreads'),
+            bet_data_copy.get('away_spreads'),
+            pin_spreads,
+            ml,
+            bet_data_copy.get('home_moneyline_american'),
+            bet_data_copy.get('away_moneyline_american'),
+            _nvp_swapped,
+        )
 
         # Do not swap spread NVPs in place. Pinnacle hdp stays Pin-home's line;
         # matching uses _nvp_swapped to pick nvp_home vs nvp_away and the sign.
