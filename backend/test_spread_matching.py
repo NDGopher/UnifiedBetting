@@ -340,6 +340,57 @@ def test_preseason_missing_pin_number_shows_unpriced_rows():
             assert abs(float(ev.replace("%", ""))) < 15
 
 
+def test_soccer_fg_alt_flips_when_pin_only_has_opposite_sign():
+    """America de Cali +1.5 on BCK; Pin only lists home -1.5. No BCK ML."""
+    bet = {
+        "pod_home_team": "America de Cali",
+        "pod_away_team": "Alianza Valledupar",
+        "home_spreads": [{"line": "+1.5", "odds": "+105"}],
+        "away_spreads": [{"line": "-1.5", "odds": "-135"}],
+    }
+    pin = _pin_payload(
+        "America de Cali",
+        "Alianza Valledupar",
+        {
+            "-0.25": _spread(-0.25, 1.74, 2.20, "-135", "+120"),
+            "-1.5": _spread(-1.5, 1.91, 1.91, "-110", "-110"),
+        },
+        {},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    home = next(r for r in rows if r.get("market") == "Spread" and r.get("selection") == "Home")
+    assert float(home["line"]) == -1.5
+    assert home["pinnacle_nvp"] == "-110"
+    assert home.get("unmatched_line") is not True
+
+
+def test_soccer_1h_total_stays_na_when_pin_has_other_number():
+    """BCK 1H total 1.5 vs Pin 1H 1.0: show the BCK line, do not EV 1.5 vs 1.0."""
+    bet = {
+        "pod_home_team": "America de Cali",
+        "pod_away_team": "Alianza Valledupar",
+        "1H_data": {
+            "game_total_line": 1.5,
+            "game_total_over_odds": "+180",
+            "game_total_under_odds": "-255",
+        },
+    }
+    pin = _pin_payload(
+        "America de Cali",
+        "Alianza Valledupar",
+        {},
+        {"-0.5": _spread(-0.5, 1.91, 1.91, "-110", "-110")},
+        h1_totals={"1.0": _total(1.0, 1.91, 1.91, "-110", "-110")},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    h1t = [r for r in rows if r.get("market") == "1H Total"]
+    assert len(h1t) == 2
+    for r in h1t:
+        assert "1.5" in str(r["line"])
+        assert r["pinnacle_nvp"] == "N/A"
+        assert r["ev"] == "N/A"
+
+
 def test_cmu_plus_340_flips_home_plus_105_without_home_ml():
     """New Mexico home favorite; only away ML +340 posted; BCK had home +10.5."""
     bet = {
@@ -483,6 +534,8 @@ def main():
         test_nacional_asuncion_does_not_show_plus_quarter_at_minus_juice,
         test_wrong_plus_quarter_minus_135_never_publishes_29pct,
         test_preseason_missing_pin_number_shows_unpriced_rows,
+        test_soccer_fg_alt_flips_when_pin_only_has_opposite_sign,
+        test_soccer_1h_total_stays_na_when_pin_has_other_number,
         test_cmu_plus_340_flips_home_plus_105_without_home_ml,
         test_pitt_miami_cfb_flipped_signs_match_without_bck_ml,
         test_cfb_home_dog_plus_line_is_not_flipped,

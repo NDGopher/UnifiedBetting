@@ -163,6 +163,50 @@ def _usable_american_ml(odds) -> Optional[int]:
     return n
 
 
+def _pin_ladder_agrees_opposite(pin_spreads, bck_home_line, nvp_swapped: bool) -> bool:
+    """Pin has a favorite ladder on the opposite sign (not a lone 1.5 pick'em)."""
+    pos = neg = 0
+    for pin_spread in (pin_spreads or {}).values():
+        if not isinstance(pin_spread, dict):
+            continue
+        hdp = pin_spread.get("hdp")
+        if hdp is None:
+            continue
+        try:
+            pod = -float(hdp) if nvp_swapped else float(hdp)
+        except (TypeError, ValueError):
+            continue
+        if pod > 0.01:
+            pos += 1
+        elif pod < -0.01:
+            neg += 1
+    if bck_home_line > 0.01:
+        return neg >= 2
+    if bck_home_line < -0.01:
+        return pos >= 2
+    return False
+
+
+def _pin_offers_pod_home_line(pin_spreads, line_f, nvp_swapped: bool) -> bool:
+    """True if Pinnacle lists this number as the POD-home handicap."""
+    if line_f is None:
+        return False
+    for pin_spread in (pin_spreads or {}).values():
+        if not isinstance(pin_spread, dict):
+            continue
+        hdp = pin_spread.get("hdp")
+        if hdp is None:
+            continue
+        try:
+            hdp_f = float(hdp)
+        except (TypeError, ValueError):
+            continue
+        pod = -hdp_f if nvp_swapped else hdp_f
+        if math.isclose(pod, float(line_f), abs_tol=0.01):
+            return True
+    return False
+
+
 def _pin_main_hdp(pin_spreads: Optional[Dict]) -> Optional[float]:
     """Pinnacle home's main posted handicap (even-juice line wins ties)."""
     best = None  # (juice_gap, abs_hdp, hdp)
@@ -231,6 +275,21 @@ def align_bck_spread_signs_to_pin(
         if pin_h is not None and pin_a is not None and pin_h != pin_a:
             home_is_fav = pin_h < pin_a
         else:
+            # Soccer main is often 0.25 so |main|>=3 never fires, but Pin still
+            # lists the 1.5 alt. If Pin only has the opposite sign at this
+            # number and the rest of the ladder agrees, BCK sides are inverted.
+            if (
+                _pin_offers_pod_home_line(pin_spreads, -h_line, nvp_swapped)
+                and not _pin_offers_pod_home_line(pin_spreads, h_line, nvp_swapped)
+                and _pin_ladder_agrees_opposite(pin_spreads, h_line, nvp_swapped)
+            ):
+                _negate_spread_list(home_spreads)
+                _negate_spread_list(away_spreads)
+                logger.info(
+                    f"[SpreadAlign] Flipped to Pin-only opposite hdp: "
+                    f"home {home_spreads[0].get('line')} / away {away_spreads[0].get('line')}"
+                )
+                return True
             pin_hdp = _pin_main_hdp(pin_spreads)
             if pin_hdp is None or abs(pin_hdp) < 3.0:
                 return False
