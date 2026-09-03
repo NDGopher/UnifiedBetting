@@ -120,6 +120,46 @@ def test_flipped_soccer_ah_follows_ml_favorite():
     assert away_sp["odds"] == "+105"
 
 
+def test_flipped_cfb_maps_spread_via_orientation_without_ml():
+    """Miami listed first, Pitt is POD home. Spread is Team1 (Miami) +16.5. No ML."""
+    result = parse_specific_game_from_lines_json(
+        {"Lines": [_line(
+            Team1ID="Miami Ohio",
+            Team2ID="Pittsburgh",
+            Spread=16.5,
+            SpreadAdj1=-110,
+            SpreadAdj2=-110,
+            MoneyLine1=0,
+            MoneyLine2=0,
+            SportType="FOOTBALL",
+            SportSubType="NCAA",
+            SportSubTypeDisplay="NCAA Football",
+            PeriodDescription="Game",
+            GameNum=88001,
+        )]},
+        "Pittsburgh",
+        "Miami Ohio",
+        event_id="cfb-pitt",
+    )
+    assert result is not None
+    assert float(result["home_spreads"][0]["line"]) == -16.5
+    assert float(result["away_spreads"][0]["line"]) == 16.5
+
+
+def test_cfb_zero_ml_does_not_block_parse():
+    result = _parse([_line(
+        Team1ID="Hawaii",
+        Team2ID="UNLV",
+        Spread=3,
+        MoneyLine1=0,
+        MoneyLine2=0,
+        SportType="FOOTBALL",
+        SportSubType="NCAA",
+    )], home="Hawaii", away="UNLV")
+    assert result is not None
+    assert float(result["home_spreads"][0]["line"]) == 3
+
+
 if __name__ == "__main__":
     tests = [
         test_status_i_still_returns_spread_game,
@@ -129,6 +169,8 @@ if __name__ == "__main__":
         test_json_with_preamble_still_detected,
         test_no_moneyline_still_counts_as_found,
         test_flipped_soccer_ah_follows_ml_favorite,
+        test_flipped_cfb_maps_spread_via_orientation_without_ml,
+        test_cfb_zero_ml_does_not_block_parse,
     ]
     failed = 0
     for fn in tests:

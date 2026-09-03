@@ -6,6 +6,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from utils.pod_utils import (
+    align_bck_spread_signs_to_pin,
     analyze_markets_for_ev,
     filter_realistic_ev_bets,
     pin_spread_quote_for_bet,
@@ -339,6 +340,63 @@ def test_preseason_missing_pin_number_shows_unpriced_rows():
             assert abs(float(ev.replace("%", ""))) < 15
 
 
+def test_pitt_miami_cfb_flipped_signs_match_without_bck_ml():
+    """Pitt is home favorite -16.5. BCK JSON had no ML and posted home +16.5."""
+    bet = {
+        "pod_home_team": "Pittsburgh",
+        "pod_away_team": "Miami Ohio",
+        "home_moneyline_american": None,
+        "away_moneyline_american": None,
+        "home_spreads": [{"line": "+16.5", "odds": "-110"}],
+        "away_spreads": [{"line": "-16.5", "odds": "-110"}],
+    }
+    pin = _pin_payload(
+        "Pittsburgh",
+        "Miami Ohio",
+        {"-16.5": _spread(-16.5, 1.91, 1.91, "-110", "-110")},
+        {},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    spreads = [r for r in rows if r.get("market") == "Spread"]
+    assert len(spreads) == 2, f"expected priced CFB spreads, got {spreads}"
+    home = next(r for r in spreads if r.get("selection") == "Home")
+    assert float(home["line"]) == -16.5
+    assert home["pinnacle_nvp"] == "-110"
+    assert home.get("unmatched_line") is not True
+    ev = float(str(home["ev"]).replace("%", ""))
+    assert abs(ev) < 1.0
+    assert float(bet["home_spreads"][0]["line"]) == 16.5
+
+
+def test_cfb_home_dog_plus_line_is_not_flipped():
+    """Hawaii +3 vs Pin +3 must stay a dog line — do not invert a correct CFB card."""
+    bet = {
+        "pod_home_team": "Hawaii",
+        "pod_away_team": "UNLV",
+        "home_spreads": [{"line": "+3", "odds": "-110"}],
+        "away_spreads": [{"line": "-3", "odds": "-110"}],
+    }
+    pin = _pin_payload(
+        "Hawaii",
+        "UNLV",
+        {"3": _spread(3.0, 1.91, 1.91, "-110", "-110")},
+        {},
+    )
+    rows = analyze_markets_for_ev(bet, pin)
+    home = next(r for r in rows if r.get("market") == "Spread" and r.get("selection") == "Home")
+    assert float(home["line"]) == 3
+    assert home["pinnacle_nvp"] == "-110"
+
+
+def test_align_skips_small_line_when_books_can_disagree():
+    home = [{"line": "+1.5", "odds": "-110"}]
+    away = [{"line": "-1.5", "odds": "-110"}]
+    pin = {"-1.5": _spread(-1.5, 1.91, 1.91, "-110", "-110")}
+    flipped = align_bck_spread_signs_to_pin(home, away, pin)
+    assert flipped is False
+    assert home[0]["line"] == "+1.5"
+
+
 def test_matching_total_still_computes_ev():
     bet = {
         "pod_home_team": "Dallas Cowboys",
@@ -402,6 +460,9 @@ def main():
         test_nacional_asuncion_does_not_show_plus_quarter_at_minus_juice,
         test_wrong_plus_quarter_minus_135_never_publishes_29pct,
         test_preseason_missing_pin_number_shows_unpriced_rows,
+        test_pitt_miami_cfb_flipped_signs_match_without_bck_ml,
+        test_cfb_home_dog_plus_line_is_not_flipped,
+        test_align_skips_small_line_when_books_can_disagree,
         test_matching_total_still_computes_ev,
     ]
     failed = 0
