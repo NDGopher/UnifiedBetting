@@ -1118,7 +1118,9 @@ def _align_spread_signs_with_moneyline(output):
     away_ml = _american_ml_int(output.get("away_moneyline_american"))
     home_spreads = output.get("home_spreads") or []
     away_spreads = output.get("away_spreads") or []
-    if home_ml is None or away_ml is None or home_ml == away_ml:
+    if home_ml is None and away_ml is None:
+        return
+    if home_ml is not None and away_ml is not None and home_ml == away_ml:
         return
     if not home_spreads or not away_spreads:
         return
@@ -1128,7 +1130,12 @@ def _align_spread_signs_with_moneyline(output):
         return
     if abs(h_line + a_line) > 0.02:
         return
-    home_is_fav = home_ml < away_ml
+    if home_ml is not None and away_ml is not None:
+        home_is_fav = home_ml < away_ml
+    elif home_ml is not None:
+        home_is_fav = home_ml < 0
+    else:
+        home_is_fav = away_ml > 0
     inverted = (
         (home_is_fav and h_line > 0.01 and a_line < -0.01)
         or ((not home_is_fav) and h_line < -0.01 and a_line > 0.01)

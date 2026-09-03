@@ -146,6 +146,36 @@ def test_flipped_cfb_maps_spread_via_orientation_without_ml():
     assert float(result["away_spreads"][0]["line"]) == 16.5
 
 
+def test_cfb_single_away_ml_flips_favorite_getting_points():
+    """Flipped listing: Team1 is CMU (dog, +340) but Spread is -10.5 (not Team1's number).
+
+    Naive flip maps New Mexico to +10.5. Away ML +340 must force NM to lay -10.5.
+    """
+    result = parse_specific_game_from_lines_json(
+        {"Lines": [_line(
+            Team1ID="Central Michigan",
+            Team2ID="New Mexico",
+            Spread=-10.5,
+            SpreadAdj1=-105,
+            SpreadAdj2=-105,
+            MoneyLine1=340,
+            MoneyLine2=0,
+            SportType="FOOTBALL",
+            SportSubType="NCAA",
+            SportSubTypeDisplay="NCAA Football",
+            PeriodDescription="Game",
+            GameNum=88002,
+        )]},
+        "New Mexico",
+        "Central Michigan",
+        event_id="cfb-unm",
+    )
+    assert result is not None
+    assert result.get("away_moneyline_american") == "+340"
+    assert float(result["home_spreads"][0]["line"]) == -10.5
+    assert float(result["away_spreads"][0]["line"]) == 10.5
+
+
 def test_cfb_zero_ml_does_not_block_parse():
     result = _parse([_line(
         Team1ID="Hawaii",
@@ -170,6 +200,7 @@ if __name__ == "__main__":
         test_no_moneyline_still_counts_as_found,
         test_flipped_soccer_ah_follows_ml_favorite,
         test_flipped_cfb_maps_spread_via_orientation_without_ml,
+        test_cfb_single_away_ml_flips_favorite_getting_points,
         test_cfb_zero_ml_does_not_block_parse,
     ]
     failed = 0

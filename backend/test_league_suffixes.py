@@ -7,6 +7,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from utils.pod_utils import (
     clean_pod_team_name_for_search,
+    determine_betbck_search_term,
+    normalize_team_name_for_matching,
+    pick_betbck_search_token,
     strip_pod_league_suffix,
     strip_team_name_for_display,
 )
@@ -56,6 +59,32 @@ def test_ncaaf_ncaab_still_strip_before_bare_ncaa():
     assert strip_pod_league_suffix("DukeNCAAB") == "Duke"
 
 
+def test_new_mexico_is_not_chopped_to_new():
+    for raw in ("New Mexico", "NewMexico", "NewMexicoNCAA", "New MexicoNCAA"):
+        stripped = strip_pod_league_suffix(raw)
+        assert "mexico" in stripped.lower(), raw
+        assert stripped.lower() != "new", raw
+        assert "mexico" in normalize_team_name_for_matching(raw)
+        assert normalize_team_name_for_matching(raw) != "new"
+        display = strip_team_name_for_display(raw)
+        assert "mexico" in display.lower(), raw
+        assert display.lower() != "new", raw
+
+
+def test_soccer_mexico_suffix_still_strips():
+    assert strip_pod_league_suffix("AtlasMexico") == "Atlas"
+    assert "mexico" not in normalize_team_name_for_matching("AtlasMexico")
+
+
+def test_search_term_uses_mexico_not_new():
+    term = determine_betbck_search_term("New Mexico", "Central Michigan")
+    if isinstance(term, tuple):
+        term = term[0]
+    assert term.lower() == "mexico"
+    assert pick_betbck_search_token("new") == ""
+    assert pick_betbck_search_token("central michigan").lower() == "michigan"
+
+
 def main():
     tests = [
         test_campbell_ncaa_fcs_strips_to_campbell,
@@ -66,6 +95,9 @@ def main():
         test_ncaa_fcs_does_not_leave_ncaa_glued,
         test_unlv_bare_ncaa_suffix_strips,
         test_ncaaf_ncaab_still_strip_before_bare_ncaa,
+        test_new_mexico_is_not_chopped_to_new,
+        test_soccer_mexico_suffix_still_strips,
+        test_search_term_uses_mexico_not_new,
     ]
     failed = 0
     for fn in tests:

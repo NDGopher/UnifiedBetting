@@ -16,6 +16,7 @@ from utils.pod_utils import (
     analyze_markets_multi_row,
     bet_has_positive_ev,
     clean_pod_team_name_for_search,
+    pick_betbck_search_token,
     strip_pod_league_suffix,
     filter_realistic_ev_bets,
 )
@@ -191,19 +192,14 @@ def determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw):
         print(f"[DEBUG] Using known term for away team: '{search_term}'")
         return search_term, f"known_term map for away '{pod_away_clean}'"
 
-    parts = pod_home_clean.split()
-    if parts:
-        if len(parts) > 1 and len(parts[-1]) > 3 and parts[-1].lower() not in ['fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif', 'kc', 'sr', 'mg', 'us', 'br']:
-            search_term = parts[-1]
-            print(f"[DEBUG] Using last part of home team: '{search_term}'")
-            return search_term, f"last word of home team '{pod_home_clean}'"
-        elif len(parts[0]) > 2 and parts[0].lower() not in ['fc', 'sc', 'ac', 'if', 'bk', 'de', 'do', 'aif', 'kc', 'sr', 'mg', 'us', 'br']:
-            search_term = parts[0]
-            print(f"[DEBUG] Using first part of home team: '{search_term}'")
-            return search_term, f"first word of home team '{pod_home_clean}'"
-        else:
-            print(f"[DEBUG] Using full cleaned home team: '{pod_home_clean}'")
-            return pod_home_clean, f"full cleaned home team"
+    home_token = pick_betbck_search_token(pod_home_clean)
+    if home_token:
+        print(f"[DEBUG] Using home search token: '{home_token}'")
+        return home_token, f"search token from home team '{pod_home_clean}'"
+    away_token = pick_betbck_search_token(pod_away_clean)
+    if away_token:
+        print(f"[DEBUG] Home token too generic; using away search token: '{away_token}'")
+        return away_token, f"search token from away team '{pod_away_clean}' (home '{pod_home_clean}' was generic)"
     print(f"[DEBUG] Using full cleaned home team (fallback): '{pod_home_clean}'")
     return (pod_home_clean if pod_home_clean else ""), "fallback to full cleaned home team"
 
@@ -342,7 +338,9 @@ def process_alert_and_scrape_betbck(event_id, original_alert_details, processed_
                     bck_dec = a2d(bet.get("betbck_odds"))
                     pin_nvp_str = bet.get("pinnacle_nvp", "")
                     pin_nvp_dec = a2d(pin_nvp_str) if pin_nvp_str and pin_nvp_str != "N/A" else None
-                    ev_str = bet.get("ev", "0%").replace("%", "")
+                    ev_str = str(bet.get("ev", "0%") or "").replace("%", "").strip()
+                    if not ev_str or ev_str.upper() == "N/A":
+                        continue
                     ev_pct = float(ev_str) / 100.0
                     if bck_dec and pin_nvp_dec:
                         alog.log_ev(

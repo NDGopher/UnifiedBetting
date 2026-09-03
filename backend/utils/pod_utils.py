@@ -51,6 +51,68 @@ def calculate_ev(bet_decimal: float, true_decimal: float) -> float:
 # Filter at analysis time so Alert Log never flashes a fake +41% that we later dump.
 MAX_ABS_EV_TO_PUBLISH = 0.15
 
+# Place names whose second word is also a country. POD/country-stripping must
+# not turn "NewMexico" / "New Mexico" into "New".
+_PROTECTED_PLACE_KEYS = {
+    "newmexico": "New Mexico",
+    "newyork": "New York",
+    "newjersey": "New Jersey",
+    "newhampshire": "New Hampshire",
+    "newengland": "New England",
+    "neworleans": "New Orleans",
+    "newzealand": "New Zealand",
+    "newfoundland": "Newfoundland",
+    "northcarolina": "North Carolina",
+    "southcarolina": "South Carolina",
+    "northdakota": "North Dakota",
+    "southdakota": "South Dakota",
+    "westvirginia": "West Virginia",
+    "northkorea": "North Korea",
+    "southkorea": "South Korea",
+    "southafrica": "South Africa",
+    "saudiarabia": "Saudi Arabia",
+    "costarica": "Costa Rica",
+    "elsalvador": "El Salvador",
+    "srilanka": "Sri Lanka",
+    "puertorico": "Puerto Rico",
+}
+
+_WEAK_SEARCH_TOKENS = {
+    "new", "north", "south", "east", "west", "san", "los", "las", "el", "la",
+    "fort", "port", "mount", "mt", "st", "saint", "the", "fc", "sc", "cf",
+    "real", "de", "do", "da", "al",
+}
+
+
+def _alnum_key(name: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", (name or "").lower())
+
+
+def is_protected_place_name(name: str) -> bool:
+    key = _alnum_key(name)
+    if not key:
+        return False
+    if key in _PROTECTED_PLACE_KEYS:
+        return True
+    return any(key.startswith(prot) for prot in _PROTECTED_PLACE_KEYS)
+
+
+def _strip_breaks_protected_place(before: str, after: str) -> bool:
+    return is_protected_place_name(before) and not is_protected_place_name(after)
+
+
+def restore_protected_place_spacing(name: str) -> str:
+    """Keep 'NewMexico' as 'New Mexico' after league-suffix strip."""
+    if not name:
+        return name
+    key = _alnum_key(name)
+    spaced = _PROTECTED_PLACE_KEYS.get(key)
+    if not spaced:
+        return name
+    if " " in name.strip():
+        return name.strip()
+    return spaced
+
 
 def _parse_american_int(odds) -> Optional[int]:
     if odds is None:
@@ -157,6 +219,11 @@ def align_bck_spread_signs_to_pin(
     bck_a = _usable_american_ml(bck_away_ml)
     if bck_h is not None and bck_a is not None and bck_h != bck_a:
         home_is_fav = bck_h < bck_a
+    elif bck_h is not None and bck_a is None:
+        home_is_fav = bck_h < 0
+    elif bck_a is not None and bck_h is None:
+        # Only away ML posted (CMU +340): plus-money dog ⇒ home is the favorite.
+        home_is_fav = bck_a > 0
     else:
         pin_ml = pin_ml or {}
         pin_h = _usable_american_ml(pin_ml.get("nvp_american_home"))
@@ -935,6 +1002,8 @@ def normalize_team_name_for_matching(name):
             pattern = r'(\s+' + re.escape(suffix) + r'|' + re.escape(suffix) + r')$'
         if re.search(pattern, norm_name, flags=re.IGNORECASE):
             temp_name = re.sub(pattern, '', norm_name, flags=re.IGNORECASE, count=1).strip()
+            if _strip_breaks_protected_place(norm_name, temp_name):
+                continue
             if temp_name or len(norm_name) == len(suffix): 
                 norm_name = temp_name
     common_prefixes = ['if ', 'fc ', 'sc ', 'bk ', 'sk ', 'ac ', 'as ', 'fk ', 'cd ', 'ca ', 'afc ', 'cfr ', 'kc ', 'scr ']
@@ -1053,7 +1122,10 @@ def strip_pod_league_suffix(name: str) -> str:
         name, _re_ls.IGNORECASE
     )
     if _m and _m.start(2) > 0:
-        name = name[:_m.start(2)].strip()
+        stripped = name[:_m.start(2)].strip()
+        if not _strip_breaks_protected_place(name[:_m.end(2)], stripped):
+            name = stripped
+    name = restore_protected_place_spacing(name)
 
     # Trailing uppercase 'W' (WNBA women's leagues, e.g. "AcesW" → "Aces")
     # Only strip when preceded by a lowercase letter (not already a space)
@@ -2121,6 +2193,28 @@ def get_team_aliases(team_name):
     
     return [team_name]  # Return the original name if no aliases found 
 
+def pick_betbck_search_token(cleaned: str) -> str:
+    """Pick a distinctive BetBCK keyword. Never search 'new' for New Mexico."""
+    parts = [p for p in (cleaned or "").split() if p]
+    if not parts:
+        return ""
+    skip = {
+        'fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif',
+        'kc', 'sr', 'mg', 'us', 'br', 'town', 'rovers', 'county', 'athletic',
+        'wanderers', 'vale', 'albion', 'wednesday',
+    } | _WEAK_SEARCH_TOKENS
+    if len(parts) > 1 and len(parts[-1]) > 3 and parts[-1].lower() not in skip:
+        return parts[-1]
+    for part in reversed(parts):
+        if len(part) > 2 and part.lower() not in skip:
+            return part
+    if len(parts) > 1:
+        return cleaned
+    if parts[0].lower() not in _WEAK_SEARCH_TOKENS:
+        return parts[0]
+    return ""
+
+
 def determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw):
     # Clean team names FIRST before determining search term - use clean_pod_team_name_for_search to remove UEFA suffixes
     pod_home_clean = clean_pod_team_name_for_search(pod_home_team_raw)
@@ -2138,16 +2232,12 @@ def determine_betbck_search_term(pod_home_team_raw, pod_away_team_raw):
     if pod_away_clean.lower() in known_terms:
         return known_terms[pod_away_clean.lower()]
 
-    parts = pod_home_clean.split()
-    if parts:
-        if len(parts) > 1 and len(parts[-1]) > 3 and parts[-1].lower() not in ['fc', 'sc', 'united', 'city', 'club', 'de', 'do', 'ac', 'if', 'bk', 'aif', 'kc', 'sr', 'mg', 'us', 'br',
-                                                                                 'town', 'rovers', 'county', 'athletic', 'wanderers', 'vale', 'albion', 'wednesday']:
-            return parts[-1]
-        elif len(parts[0]) > 2 and parts[0].lower() not in ['fc', 'sc', 'ac', 'if', 'bk', 'de', 'do', 'aif', 'kc', 'sr', 'mg', 'us', 'br',
-                                                              'town', 'rovers', 'county', 'athletic', 'wanderers']:
-            return parts[0]
-        else:
-            return pod_home_clean
+    home_token = pick_betbck_search_token(pod_home_clean)
+    away_token = pick_betbck_search_token(pod_away_clean)
+    if home_token:
+        return home_token
+    if away_token:
+        return away_token
     return pod_home_clean if pod_home_clean else "" 
 
 PROP_INDICATORS_IN_TEAM_NAMES = [
