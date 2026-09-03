@@ -21,6 +21,7 @@ from utils.pod_utils import (
     bet_has_positive_ev,
     build_fallback_market_rows,
     is_timestamp_event_id,
+    should_publish_event_card,
 )
 from odds_processing import fetch_live_pinnacle_event_odds
 from utils import process_event_odds_for_display
@@ -619,8 +620,10 @@ async def event_alert_worker(event_id):
                                 betbck_data["potential_bets_analyzed"] = realistic_bets
 
                                 # FALLBACK: Pinnacle analysis empty (bad eventId / no periods).
-                                # Show BetBCK lines. Alert no-vig only on the same selection;
-                                # never price Draw NVP onto home/away. Suspect IDs get N/A EV.
+                                # Alert no-vig only on the same selection. After the 15% cap,
+                                # a leftover N/A-only / suspect card is not stored.
+                                _from_fallback = False
+                                _id_suspect = _event_id_suspect or is_timestamp_event_id(event_id)
                                 if not realistic_bets and betbck_data:
                                     _no_vig_raw = payload.get("noVigPriceFromAlert")
                                     _market_type = (payload.get("marketType") or "").strip()
@@ -632,13 +635,14 @@ async def event_alert_worker(event_id):
                                         no_vig=_no_vig_raw,
                                         pod_home=pod_home_clean or "",
                                         pod_away=pod_away_clean or "",
-                                        event_id_suspect=_event_id_suspect or is_timestamp_event_id(event_id),
+                                        event_id_suspect=_id_suspect,
                                     )
+                                    _from_fallback = True
                                     if _fb:
                                         logger.info(
                                             f"[PerEventQueue] Built {len(_fb)} fallback market rows "
                                             f"(noVig={_no_vig_raw}, market={_market_type}, "
-                                            f"suspect={_event_id_suspect}) for event {event_id}"
+                                            f"suspect={_id_suspect}) for event {event_id}"
                                         )
                                         realistic_bets = _fb
                                         betbck_data["potential_bets_analyzed"] = _fb
@@ -646,6 +650,17 @@ async def event_alert_worker(event_id):
 
                                 if not betbck_data:
                                     logger.warning(f"[PerEventQueue] No BetBCK data for event {event_id}, skipping broadcast")
+                                elif not should_publish_event_card(
+                                    realistic_bets,
+                                    event_id_suspect=_id_suspect,
+                                    from_fallback=_from_fallback,
+                                ):
+                                    logger.info(
+                                        f"[PerEventQueue] Not storing event {event_id} — "
+                                        f"suspect={_id_suspect} fallback={_from_fallback} "
+                                        f"priced_rows={sum(1 for b in realistic_bets if str(b.get('ev','')).upper() != 'N/A')}. "
+                                        f"A junk EV + N/A card is not published."
+                                    )
                                 else:
                                     cleaned_payload = payload.copy()
                                     cleaned_payload["homeTeam"] = strip_team_name_for_display(payload.get("homeTeam", ""))

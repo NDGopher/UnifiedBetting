@@ -612,6 +612,26 @@ def build_fallback_market_rows(
     return filter_realistic_ev_bets(rows)
 
 
+def should_publish_event_card(
+    bets: Optional[List[Dict]],
+    *,
+    event_id_suspect: bool = False,
+    from_fallback: bool = False,
+) -> bool:
+    """A card of one junk EV plus N/As must not be stored.
+
+    Suspect / timestamp IDs never publish. Fallback-only cards need at least
+    one priced EV that survived the 15% cap — leftover N/A rows are not a card.
+    """
+    if event_id_suspect:
+        return False
+    if not bets:
+        return False
+    if from_fallback:
+        return any(ev_percent_value(b.get("ev")) is not None for b in bets)
+    return True
+
+
 def _match_spread_bets(
     bet_spreads: Optional[List],
     pin_spreads: Dict,
