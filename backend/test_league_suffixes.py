@@ -44,6 +44,18 @@ def test_ncaa_fcs_does_not_leave_ncaa_glued():
     assert cleaned == "montana state"
 
 
+def test_unlv_bare_ncaa_suffix_strips():
+    raw = "UNLVNCAA"
+    assert strip_pod_league_suffix(raw) == "UNLV"
+    assert strip_team_name_for_display(raw) == "UNLV"
+    assert clean_pod_team_name_for_search(raw) == "unlv"
+
+
+def test_ncaaf_ncaab_still_strip_before_bare_ncaa():
+    assert strip_pod_league_suffix("GeorgiaNCAAF") == "Georgia"
+    assert strip_pod_league_suffix("DukeNCAAB") == "Duke"
+
+
 def main():
     tests = [
         test_campbell_ncaa_fcs_strips_to_campbell,
@@ -52,6 +64,8 @@ def main():
         test_existing_nfl_preseason_still_strips,
         test_existing_nba_abbrev_still_strips,
         test_ncaa_fcs_does_not_leave_ncaa_glued,
+        test_unlv_bare_ncaa_suffix_strips,
+        test_ncaaf_ncaab_still_strip_before_bare_ncaa,
     ]
     failed = 0
     for fn in tests:

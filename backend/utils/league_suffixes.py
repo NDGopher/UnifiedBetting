@@ -92,7 +92,8 @@ MULTIWORD_SUFFIXES: tuple = (
 LEAGUE_ABBREVS: tuple = (
     # Major North-American leagues
     'WNBA', 'NBA', 'NFL', 'NHL', 'MLB', 'MLS', 'NWSL', 'PWHL',
-    'NCAAF', 'NCAAB',
+    # Longer NCAA forms first — "TeamNCAAF" must not stop at bare "NCAA" → "TeamF".
+    'NCAAF', 'NCAAB', 'NCAA',
     'AFL', 'CFL', 'XFL', 'USFL',
     # MMA / combat sports (known abbreviations — new ones are handled by the
     # regex fallback below so you don't need to add every promotion here)
