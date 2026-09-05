@@ -59,6 +59,9 @@ def test_opposite_side_prices_rejected():
     assert spread_quotes_are_same_side("-130", "+402") is False
     assert spread_quotes_are_same_side("-110", "+100") is True
     assert spread_quotes_are_same_side("-110", "-115") is True
+    # Texas -17.5 +105 vs Pin -117 is the other team's juice, not a pick'em flip.
+    assert spread_quotes_are_same_side("+105", "-117", 17.5) is False
+    assert spread_quotes_are_same_side("+105", "-117", "-17.5") is False
 
 
 def test_filter_drops_41_pct_before_publish():
