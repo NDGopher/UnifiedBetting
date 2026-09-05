@@ -2065,6 +2065,73 @@ _ROW_TYPE_LABEL = {
     "reg_time": "RT ",
 }
 
+_QUARTER_SPORT_MARKERS = (
+    "football", "basketball", "nfl", "ncaaf", "ncaab", "cfb", "nba", "wnba", "cfl",
+)
+_PERIOD_SPORT_MARKERS = (
+    "hockey", "nhl", "ice hockey",
+)
+
+
+def _period_unit_letter(sport_blob: str = "", period_description: str = "") -> str:
+    """Q for football/basketball quarters, P for hockey periods."""
+    desc = (period_description or "").lower()
+    if "quarter" in desc or re.search(r"\b\dq\b", desc):
+        return "Q"
+    if "period" in desc and "quarter" not in desc:
+        return "P"
+    if "half" in desc:
+        return "H"
+    blob = (sport_blob or "").lower()
+    if any(m in blob for m in _QUARTER_SPORT_MARKERS):
+        return "Q"
+    if any(m in blob for m in _PERIOD_SPORT_MARKERS):
+        return "P"
+    return "P"
+
+
+def row_type_market_label(
+    row_type: str,
+    sport_type: str = "",
+    sport_subtype: str = "",
+    period_description: str = "",
+    league_name: str = "",
+) -> str:
+    """Prefix for a BetBCK period row. Football 1st quarter is 1Q, hockey is 1P."""
+    if row_type == "alt_line":
+        return "Alt "
+    if row_type == "reg_time":
+        return "RT "
+    if row_type == "half_1":
+        return "1H "
+    if row_type == "half_2":
+        return "2H "
+    blob = " ".join(x for x in (sport_type, sport_subtype, league_name) if x)
+    letter = _period_unit_letter(blob, period_description)
+    numbered = {
+        "period_1": f"1{letter} ",
+        "period_2": f"2{letter} ",
+        "period_3": f"3{letter} ",
+    }
+    return numbered.get(row_type, _ROW_TYPE_LABEL.get(row_type, ""))
+
+
+def _sport_blob_from_sources(*sources: Optional[Dict]) -> str:
+    parts = []
+    for src in sources:
+        if not isinstance(src, dict):
+            continue
+        for key in ("sport_type", "sport_subtype", "league_name", "sport"):
+            val = src.get(key)
+            if val:
+                parts.append(str(val))
+        pin = src.get("data") if isinstance(src.get("data"), dict) else {}
+        for key in ("league", "league_name", "sport"):
+            val = pin.get(key) or src.get(key)
+            if val:
+                parts.append(str(val))
+    return " ".join(parts)
+
 
 def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]:
     """
@@ -2077,7 +2144,8 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
       period_2  / half_2              → num_2
       period_3                        → num_3
 
-    Each non-full-game row gets its market labels prefixed (e.g. "1P Spread").
+    Each non-full-game row gets its market labels prefixed
+    (1Q Spread for football/basketball, 1P Spread for hockey).
     """
     row_data = bet_data.get("row_data") if isinstance(bet_data, dict) else None
     if not row_data:
@@ -2090,6 +2158,13 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
     periods = pin_data.get("periods") or {}
     if not isinstance(periods, dict):
         periods = {}
+
+    sport_blob = _sport_blob_from_sources(
+        bet_data,
+        pinnacle_data,
+        pin_data,
+        {"league_name": pinnacle_data.get("league_name")},
+    )
 
     all_bets: List[Dict] = []
 
@@ -2137,11 +2212,17 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
             _period1_already_handled = True
 
     if _period1_already_handled:
-        # Relabel "1H " → "1P " on bets already added by step 1's internal 1H path.
+        # 1H_data was actually a period_1 row (no true 1H). Relabel to 1Q/1P
+        # from sport: football/basketball → 1Q, hockey → 1P.
+        _p1_desc = ""
+        if isinstance(row_data.get("period_1"), dict):
+            _p1_desc = str(row_data["period_1"].get("period_description") or "")
+            sport_blob = sport_blob or _sport_blob_from_sources(row_data["period_1"])
+        _p1_letter = _period_unit_letter(sport_blob, _p1_desc)
         for _b in all_bets:
             mkt = _b.get("market", "")
             if mkt.startswith("1H "):
-                _b["market"] = "1P " + mkt[3:]
+                _b["market"] = f"1{_p1_letter} " + mkt[3:]
 
     for row_type, row_bet_data in row_data.items():
         if row_type in SKIP_TYPES:
@@ -2182,7 +2263,14 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
                         "(2-way BetBCK vs 3-way Pinnacle NVP is invalid)"
                     )
 
-            label = _ROW_TYPE_LABEL.get(row_type, "")
+            row_src = row_bet_data if isinstance(row_bet_data, dict) else {}
+            label = row_type_market_label(
+                row_type,
+                sport_type=str(row_src.get("sport_type") or bet_data.get("sport_type") or ""),
+                sport_subtype=str(row_src.get("sport_subtype") or bet_data.get("sport_subtype") or ""),
+                period_description=str(row_src.get("period_description") or ""),
+                league_name=str(pinnacle_data.get("league_name") or pin_data.get("league") or ""),
+            )
             for bet in period_bets:
                 if label:
                     bet["market"] = f"{label}{bet['market']}"
