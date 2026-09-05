@@ -2144,7 +2144,8 @@ def analyze_markets_multi_row(bet_data: Dict, pinnacle_data: Dict) -> List[Dict]
       period_2  / half_2              → num_2
       period_3                        → num_3
 
-    Each non-full-game row gets its market labels prefixed (e.g. "1P Spread").
+    Each non-full-game row gets its market labels prefixed
+    (1Q Spread for football/basketball, 1P Spread for hockey).
     """
     row_data = bet_data.get("row_data") if isinstance(bet_data, dict) else None
     if not row_data:
