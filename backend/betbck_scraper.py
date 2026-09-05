@@ -59,6 +59,36 @@ def _strip_generic_soccer_words(name: str) -> str:
     """Return *name* with pure generic soccer suffix words removed."""
     return ' '.join(t for t in name.split() if t not in _GENERIC_SOCCER_WORDS)
 
+
+def _expand_trailing_st(name: str) -> str:
+    """texas st / texas st. → texas state. Do not touch leading St. Louis."""
+    return re.sub(r"\bst\.?$", "state", (name or "").strip())
+
+
+def _team_name_pair_score(a: str, b: str) -> int:
+    """Score two team names for orientation.
+
+    token_set_ratio('texas', 'texas state') is 100 because the shorter
+    name is a subset. That ties Texas↔Texas St both ways, so Team1
+    (Texas St +17.5 +105) gets mapped onto Texas, then sign-align
+    flips the number and leaves the dog juice on the favorite.
+    """
+    a = _expand_trailing_st((a or "").strip().lower())
+    b = _expand_trailing_st((b or "").strip().lower())
+    if not a or not b:
+        return 0
+    if a == b:
+        return 100
+    ta, tb = set(a.split()), set(b.split())
+    subset = bool(ta and tb and (ta < tb or tb < ta))
+    if fuzz is None:
+        return 80 if subset else 0
+    sort_s = fuzz.token_sort_ratio(a, b)
+    set_s = fuzz.token_set_ratio(a, b)
+    if subset:
+        return min(sort_s, set_s, 79)
+    return max(sort_s, set_s)
+
 # --- Configuration Loading ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_PATH = os.path.join(SCRIPT_DIR, 'config.json')
@@ -944,10 +974,10 @@ def _score_team_pair(raw_bck_l, raw_bck_v, target_home, target_away):
     if fuzz is None:
         return False, True, scores, 0
 
-    ts_lh = fuzz.token_set_ratio(norm_l, norm_h)
-    ts_va = fuzz.token_set_ratio(norm_v, norm_a)
-    ts_la = fuzz.token_set_ratio(norm_l, norm_a)
-    ts_vh = fuzz.token_set_ratio(norm_v, norm_h)
+    ts_lh = _team_name_pair_score(norm_l, norm_h)
+    ts_va = _team_name_pair_score(norm_v, norm_a)
+    ts_la = _team_name_pair_score(norm_l, norm_a)
+    ts_vh = _team_name_pair_score(norm_v, norm_h)
     scores["token_set_h"] = max(ts_lh, ts_vh)
     scores["token_set_a"] = max(ts_va, ts_la)
     fwd = ts_lh + ts_va
@@ -1391,10 +1421,10 @@ def parse_specific_game_from_search_html(html_content, target_home_team_pod, tar
                 for bh in bck_l_aliases:
                     for pa in pod_a_aliases:
                         for bv in bck_v_aliases:
-                            s_hl = fuzz.token_set_ratio(ph, bh)
-                            s_av = fuzz.token_set_ratio(pa, bv)
-                            s_hv = fuzz.token_set_ratio(ph, bv)
-                            s_al = fuzz.token_set_ratio(pa, bh)
+                            s_hl = _team_name_pair_score(ph, bh)
+                            s_av = _team_name_pair_score(pa, bv)
+                            s_hv = _team_name_pair_score(ph, bv)
+                            s_al = _team_name_pair_score(pa, bh)
                             p_hl = fuzz.partial_ratio(ph, bh)
                             p_av = fuzz.partial_ratio(pa, bv)
                             print(f"[DEBUG] Comparing normalized: POD H='{ph}', A='{pa}' with BCK H='{bh}', A='{bv}' | token_set: (H-L {s_hl} A-V {s_av}) | partial: (H-L {p_hl} A-V {p_av}) (Event ID: {event_id})")

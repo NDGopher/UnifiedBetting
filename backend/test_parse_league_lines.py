@@ -6,7 +6,12 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from betbck_scraper import parse_specific_game_from_lines_json, parse_specific_game_from_search_html
+from betbck_scraper import (
+    _score_team_pair,
+    _team_name_pair_score,
+    parse_specific_game_from_lines_json,
+    parse_specific_game_from_search_html,
+)
 
 
 def _line(**kwargs):
@@ -176,6 +181,73 @@ def test_cfb_single_away_ml_flips_favorite_getting_points():
     assert float(result["away_spreads"][0]["line"]) == 10.5
 
 
+def test_texas_vs_texas_st_orientation_is_not_tied():
+    """token_set('texas','texas st') is 100 both ways. Extra 'state' must break the tie."""
+    assert _team_name_pair_score("texas st", "texas state") == 100
+    assert _team_name_pair_score("texas", "texas") == 100
+    assert _team_name_pair_score("texas st", "texas") < 82
+    assert _team_name_pair_score("texas", "texas state") < 82
+    matched, local_is_pod_home, _, _ = _score_team_pair(
+        "Texas St", "Texas", "Texas", "Texas State"
+    )
+    assert matched is True
+    assert local_is_pod_home is False
+
+
+def test_texas_1h_keeps_plus_105_on_texas_state():
+    """BetBCK lists Texas St first at +17.5 +105; Texas is -17.5 -115.
+
+    Wrong orientation + sign-align produced Texas -17.5 +105 (fake +18% EV).
+    """
+    import datetime
+    _soon = (datetime.datetime.now() + datetime.timedelta(hours=12)).strftime("%Y-%m-%d %H:%M:%S.000")
+    fg = _line(
+        Team1ID="Texas St",
+        Team2ID="Texas",
+        Spread=29.5,
+        SpreadAdj1=-105,
+        SpreadAdj2=-105,
+        MoneyLine1=0,
+        MoneyLine2=-2000,
+        SportType="FOOTBALL",
+        SportSubType="NCAA",
+        SportSubTypeDisplay="NCAA Football",
+        PeriodDescription="Game",
+        GameNum=88010,
+        GameDateTime=_soon,
+    )
+    h1 = _line(
+        Team1ID="Texas St",
+        Team2ID="Texas",
+        Spread=17.5,
+        SpreadAdj1=105,
+        SpreadAdj2=-115,
+        MoneyLine1=0,
+        MoneyLine2=-800,
+        SportType="FOOTBALL",
+        SportSubType="NCAA",
+        SportSubTypeDisplay="NCAA Football",
+        PeriodDescription="1st Half",
+        PeriodNumber=1,
+        GameNum=88010,
+        GameDateTime=_soon,
+    )
+    result = parse_specific_game_from_lines_json(
+        {"Lines": [fg, h1]},
+        "Texas",
+        "Texas State",
+        event_id="cfb-texas",
+    )
+    assert result is not None
+    h1_row = result["row_data"]["half_1"]
+    home_sp = h1_row["home_spreads"][0]
+    away_sp = h1_row["away_spreads"][0]
+    assert float(home_sp["line"]) == -17.5
+    assert home_sp["odds"] == "-115"
+    assert float(away_sp["line"]) == 17.5
+    assert away_sp["odds"] == "+105"
+
+
 def test_cfb_zero_ml_does_not_block_parse():
     result = _parse([_line(
         Team1ID="Hawaii",
@@ -201,6 +273,8 @@ if __name__ == "__main__":
         test_flipped_soccer_ah_follows_ml_favorite,
         test_flipped_cfb_maps_spread_via_orientation_without_ml,
         test_cfb_single_away_ml_flips_favorite_getting_points,
+        test_texas_vs_texas_st_orientation_is_not_tied,
+        test_texas_1h_keeps_plus_105_on_texas_state,
         test_cfb_zero_ml_does_not_block_parse,
     ]
     failed = 0

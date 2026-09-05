@@ -325,7 +325,7 @@ def align_bck_spread_signs_to_pin(
     return True
 
 
-def spread_quotes_are_same_side(bck_odds, pin_nvp_american) -> bool:
+def spread_quotes_are_same_side(bck_odds, pin_nvp_american, line=None) -> bool:
     """Reject pairing a plus-money dog with a heavy favorite — that's the other side."""
     bck = _parse_american_int(bck_odds)
     pin = _parse_american_int(pin_nvp_american)
@@ -336,6 +336,12 @@ def spread_quotes_are_same_side(bck_odds, pin_nvp_american) -> bool:
         if abs(bck - pin) >= 100 and max(abs(bck), abs(pin)) >= 200:
             return False
         return True
+    # +105 vs -117 on Texas -17.5 is the other team's juice, not a pick'em flip.
+    try:
+        if line is not None and str(line).strip() != "" and abs(float(line)) >= 3:
+            return False
+    except (TypeError, ValueError):
+        pass
     # -110 vs +100 is a normal pick'em juice flip. Heavy favorite vs dog is the wrong side.
     return abs(bck) < 200 and abs(pin) < 200
 
@@ -494,7 +500,7 @@ def _match_spread_bets(
             found_pin_number = True
             nvp, nvp_am, line_out = quote
             bck_odds = spread.get("odds")
-            if not spread_quotes_are_same_side(bck_odds, nvp_am):
+            if not spread_quotes_are_same_side(bck_odds, nvp_am, bet_line):
                 logger.info(
                     f"[SpreadMatch] Skip {market} {selection} {bet_line}: "
                     f"BCK {bck_odds} vs PIN {nvp_am} are opposite sides"
